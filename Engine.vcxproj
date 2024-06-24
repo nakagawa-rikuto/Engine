@@ -86,12 +86,14 @@
     <ClCompile Include="DXCommon.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RootSignature.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXCommon.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="RootSignature.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
