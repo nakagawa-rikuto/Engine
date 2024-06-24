@@ -12,15 +12,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 出力ウィンドウへの文字出力
 	OutputDebugStringA("Hello,DirectX!\n");
 
-	
 	// ウィンドウのxボタンが押されるまでループ
 	while (System::ProcessMessage() == 0) {
+
+		// フレームの開始
+		System::BeginFrame();
 
 		/* ////////////////////////////
 				　　ゲームの処理
 		*/ ////////////////////////////
+
+		//System::DrawTriangle();
+
+		// フレームの終了
+		System::EndFrame();
 	}
 
-	return 0;
+	System::Finalize();
 
+	return 0;
 }

@@ -2,12 +2,11 @@
 #include <string>
 
 // ウィンドウクラスの名前
-const wchar_t kWindowClassName[] = L"DirectX_MyEngine_WindowClass";
+const wchar_t WinApp::kWindowClassName[] = L"DirectX_MyEngine_WindowClass";
 
 /// <summary>
 /// シングルトンインスタンスの取得
 /// </summary>
-/// <returns></returns>
 WinApp* WinApp::GetInstance() {
 
 	static WinApp instance;
@@ -17,13 +16,8 @@ WinApp* WinApp::GetInstance() {
 /// <summary>
 /// ウィンドウプロージャ
 /// </summary>
-/// <param name="hwnd"></param>
-/// <param name="msg"></param>
-/// <param name="wparam"></param>
-/// <param name="lparam"></param>
-/// <returns></returns>
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-    // メッセージに応じたゲーム固有の処理
+	// メッセージに応じたゲーム固有の処理
 	switch (msg) {
 
 		// ウィンドウが破棄された
@@ -38,6 +32,9 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
+/// <summary>
+/// ゲームウィンドウの作成
+/// </summary>
 void WinApp::CreateGameWindow(const wchar_t* title, int32_t kClientWidth, int32_t kClientHeight) {
 
 	/* /////////////////////////////////////
@@ -85,14 +82,25 @@ void WinApp::CreateGameWindow(const wchar_t* title, int32_t kClientWidth, int32_
 		nullptr,                    // メニューハンドル
 		wndClass_.hInstance,        // インスタンスハンドル
 		nullptr);                   // オプション
-	
+
 	// ウィンドウを表示する
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
+void WinApp::TerminateGameWindow() {
+	// ウィンドウクラスを登録解除
+	UnregisterClass(wndClass_.lpszClassName, wndClass_.hInstance);
+
+	// COM 終了
+	CoUninitialize();
+}
+
+/// <summary>
+/// メッセージの処理
+/// </summary>
 bool WinApp::ProcessMessage() {
 	MSG msg{}; // メッセージ
-	
+
 	// Windowにメッセージが来てたら最優先で処理させる
 	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg); // キー入力メッセージの処理
@@ -109,5 +117,4 @@ bool WinApp::ProcessMessage() {
 /// <summary>
 /// ウィンドウハンドルの取得
 /// </summary>
-/// <returns></returns>
-HWND WinApp::GetHwnd(){ return hwnd_;}
+HWND WinApp::GetHwnd() { return hwnd_; }

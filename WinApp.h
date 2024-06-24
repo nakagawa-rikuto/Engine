@@ -8,6 +8,12 @@
 class WinApp {
 
 public:
+	// ウィンドウサイズ
+	static const int kWindowWidth = 1280; // 横幅
+	static const int kWindowHeight = 720; // 縦幅
+
+	// ウィンドウクラス名
+	static const wchar_t kWindowClassName[];
 
 	/// <summary>
 	/// シングルトンインスタンスの取得
@@ -31,7 +37,13 @@ public:
 	/// <param name="kWindowClassName"></param>
 	/// <param name="kClientWidth"></param>
 	/// <param name="kClientHeight"></param>
-	void CreateGameWindow(const wchar_t* title, int32_t kClientWidth, int32_t kClientHeight);
+	void CreateGameWindow(
+		const wchar_t* title, int32_t kClientWidth = kWindowWidth, int32_t kClientHeight = kWindowHeight);
+
+	/// <summary>
+	/// ゲームウィンドウの破棄
+	/// </summary>
+	void TerminateGameWindow();
 
 	/// <summary>
 	/// メッセージの処理
@@ -53,4 +65,3 @@ private:// メンバ変数
 	bool isFullScreen_ = false; // 
 	RECT windowRect_; // 
 };
-
