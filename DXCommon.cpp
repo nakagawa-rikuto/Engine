@@ -1,4 +1,3 @@
-
 #include "DXCommon.h"
 #include "Logger.h"
 
@@ -62,13 +61,13 @@ void DXCommon::Initialize(
 	CreateFence();
 
 	// DXCの初期化
-	//InitializeCompiler();
+	InitializeCompiler();
 
 	// ビューポート
-	//CreateViewport(backBufferWidth_, backBufferHeight_);
+	CreateViewport(backBufferWidth_, backBufferHeight_);
 
 	// シザー矩形
-	//CreateScissor(backBufferWidth_, backBufferHeight_);
+	CreateScissor(backBufferWidth_, backBufferHeight_);
 }
 
 void DXCommon::PreDraw() {
@@ -106,8 +105,8 @@ void DXCommon::PreDraw() {
 	// 全画面クリア
 	ClearRenderTarget();
 
-	//commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
-	//commandList_->RSSetScissorRects(1, &scissorRect_); // scissorRectを設定
+	commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
+	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorRectを設定
 }
 
 void DXCommon::PostDraw() {
@@ -453,27 +452,27 @@ void DXCommon::CreateScissor(const int32_t kClientWindth, const int32_t kClientH
 /// <summary>
 /// DXGFactoryの取得
 /// </summary>
-Microsoft::WRL::ComPtr<IDXGIFactory7> DXCommon::GetDXGFactory() const { return dxgiFactory_; }
+IDXGIFactory7* DXCommon::GetDXGFactory() const { return dxgiFactory_.Get(); }
 
 /// <summary>
 /// デバイスの取得
 /// </summary>
-Microsoft::WRL::ComPtr<ID3D12Device> DXCommon::GetDevice() const { return device_.Get(); }
+ID3D12Device* DXCommon::GetDevice() const { return device_.Get(); }
 
 /// <summary>
 /// dxcUtilsの取得
 /// </summary>
-Microsoft::WRL::ComPtr<IDxcUtils> DXCommon::GetDxcUtils() const { return dxcUtils_; }
+IDxcUtils* DXCommon::GetDxcUtils() const { return dxcUtils_.Get(); }
 
 /// <summary>
 /// dxcCompilerの取得
 /// </summary>
-Microsoft::WRL::ComPtr<IDxcCompiler3> DXCommon::GetDxcCompiler() const { return dxcCompiler_; }
+IDxcCompiler3* DXCommon::GetDxcCompiler() const { return dxcCompiler_.Get(); }
 
 /// <summary>
 /// IncludeHandlerの取得
 /// </summary>
-Microsoft::WRL::ComPtr<IDxcIncludeHandler> DXCommon::GetIncludeHandler() const { return includeHandler_; }
+IDxcIncludeHandler* DXCommon::GetIncludeHandler() const { return includeHandler_.Get(); }
 
 /// <summary>
 /// 描画コマンドリストの取得

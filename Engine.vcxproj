@@ -45,7 +45,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -61,6 +61,10 @@
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -81,21 +85,55 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BlendState.cpp" />
+    <ClCompile Include="CBufferData.cpp" />
+    <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="DXCommon.cpp" />
+    <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="PipelineStateObject.cpp" />
+    <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="RootSignature.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="VectorData.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlendState.h" />
+    <ClInclude Include="CBufferData.h" />
+    <ClInclude Include="Compiler.h" />
     <ClInclude Include="DXCommon.h" />
+    <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="PipelineStateObject.h" />
+    <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="RootSignature.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="VectorData.h" />
     <ClInclude Include="WinApp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Obj.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Obj.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

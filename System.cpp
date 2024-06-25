@@ -1,5 +1,4 @@
 #include "System.h"
-#include "WinApp.h"
 
 #include <d3d12.h>
 #include <algorithm>
@@ -8,8 +7,11 @@
 #include <span>
 #include <dxgidebug.h>
 #include <wrl.h>
-WinApp* System::winApp = nullptr;
-DXCommon* System::dXCommon = nullptr;
+
+WinApp* System::winApp_ = nullptr;
+DXCommon* System::dXCommon_ = nullptr;
+PipelineStateObject* System::pipeline_ = nullptr;
+Mesh* System::triangle_ = nullptr;
 
 /// <summary>
 /// ReportLiveObjects
@@ -38,12 +40,20 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	D3DResourceLeakChecker leakCheck;
 
 	// ゲームウィンドウの作成
-	winApp = WinApp::GetInstance();
-	winApp->CreateGameWindow(title, width, height);
+	winApp_ = WinApp::GetInstance();
+	winApp_->CreateGameWindow(title, width, height);
 
 	// DirectX初期化処理
-	dXCommon = DXCommon::GetInstance();
-	dXCommon->Initialize(winApp, width, height);
+	dXCommon_ = DXCommon::GetInstance();
+	dXCommon_->Initialize(winApp_, width, height);
+
+	// パイプラインの生成
+	pipeline_ = PipelineStateObject::GetInstance();
+	assert(dXCommon_->GetDevice());
+	pipeline_->CreatePSO(dXCommon_);
+
+	// Triangleの生成
+	triangle_ = Mesh::GetInstance();
 }
 
 /// <summary>
@@ -52,24 +62,64 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 void System::Finalize() {
 
 	// ゲームウィンドウの破棄
-	winApp->TerminateGameWindow();
+	winApp_->TerminateGameWindow();
 }
 
 /// <summary>
 /// フレーム開始処理
 /// </summary>
 void System::BeginFrame() {
-	dXCommon->PreDraw();
+	dXCommon_->PreDraw();
 }
 
 /// <summary>
 /// フレーム終了処理
 /// </summary>
 void System::EndFrame() {
-	dXCommon->PostDraw();
+	dXCommon_->PostDraw();
 }
 
 /// <summary>
 /// Windowsのメッセージを処理する
 /// </summary>
-int System::ProcessMessage() { return winApp->ProcessMessage(); }
+int System::ProcessMessage() { return winApp_->ProcessMessage(); }
+
+/// <summary>
+/// 三角形の描画
+/// </summary>
+void System::DrawTriangle(
+	VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData) {
+
+	// コマンドリストの生成
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = dXCommon_->GetCommandList();
+
+	// VertexResourceの生成
+	triangle_->CreateVertexBuffer(dXCommon_->GetDevice(), sizeof(VertexDataTriangle));
+
+	// データの書き込み
+	triangle_->WriteVertexBufferTriangle(TriangleLeftBottomPositionData, TriangleTopPositionData, TriangleRightBottomPositionData);
+
+	// VertexBufferViewの生成
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = triangle_->GetVertexBufferView();
+	// リソースの先頭のアドレスから使う
+	vertexBufferView.BufferLocation = triangle_->GetVertexBuffer()->GetGPUVirtualAddress();
+	// 使用するリソースのサイズは頂点3つ分のサイズ
+	vertexBufferView.SizeInBytes = sizeof(VertexDataTriangle) * 3;
+	// 1頂点あたりのサイズ
+	vertexBufferView.StrideInBytes = sizeof(VertexDataTriangle);
+
+	// ルートシグネイチャを設定
+	commandList->SetGraphicsRootSignature(pipeline_->GetRootSignature());
+
+	// パイプラインステートを設定
+	commandList->SetPipelineState(pipeline_->GetPSO());
+
+	// 頂点バッファを設定
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+
+	// 形状を設定
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// 描画コマンド
+	commandList->DrawInstanced(3, 1, 0, 0);
+}

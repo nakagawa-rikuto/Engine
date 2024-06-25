@@ -1,9 +1,10 @@
 #pragma once
-//#include "Mesh.h"
-
 #include "WinApp.h"
 #include "DXCommon.h"
-//#include "PipelineStateObject.h"
+#include "PipelineStateObject.h"
+#include "Mesh.h"
+
+#include "CBufferData.h"
 
 #include <memory>
 #include <d3d12.h>
@@ -37,13 +38,24 @@ public:
 	static void EndFrame();
 
 	/// <summary>
-	/// Windowsのメッセージを処理する
+	/// Windowsのメッセージを処理
 	/// </summary>
 	/// <returns></returns>
 	static int ProcessMessage();
 
+	/// <summary>
+	/// 三角形の描画
+	/// </summary>
+	/// <param name="TriangleLeftBottomPositionData"></param>
+	/// <param name="TriangleTopPositionData"></param>
+	/// <param name="TriangleRightBottomPositionData"></param>
+	static void DrawTriangle(
+		VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData);
+
 private:
 
-	static WinApp* winApp;
-	static DXCommon* dXCommon;
+	static WinApp* winApp_;
+	static DXCommon* dXCommon_;
+	static PipelineStateObject* pipeline_;
+	static Mesh* triangle_;
 };

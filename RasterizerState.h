@@ -8,7 +8,7 @@
 #include <dxcapi.h>
 #include <wrl.h>
 
-class RootSignature {
+class RasterizerState {
 
 public:
 
@@ -16,20 +16,21 @@ public:
 	/// シングルトンインスタンス
 	/// </summary>
 	/// <returns></returns>
-	static RootSignature* GetInstance();
+	static RasterizerState* GetInstance();
 
 	/// <summary>
-	/// ルートシグネイチャの生成
-	/// </summary>
-	void Create(ID3D12Device* device);
-
-	/// <summary>
-	/// ルートシグネイチャの取得
+	/// ラスタライザステートの設定
 	/// </summary>
 	/// <returns></returns>
-	ID3D12RootSignature* GetRootSignature()const;
+	void Setting();
+
+	/// <summary>
+	/// ラスタライザステートの取得
+	/// </summary>
+	/// <returns></returns>
+	D3D12_RASTERIZER_DESC GetRasterizerState()const;
 
 private:
 
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
+	D3D12_RASTERIZER_DESC rasterizerDesc_{}; // RasterizerState
 };

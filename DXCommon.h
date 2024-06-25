@@ -1,4 +1,5 @@
 
+
 #pragma once
 #include <Windows.h>
 #include <chrono>
@@ -58,31 +59,31 @@ public:
 	/// DXGFactoryの取得
 	/// </summary>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<IDXGIFactory7> GetDXGFactory()const;
+	IDXGIFactory7* GetDXGFactory()const;
 
 	/// <summary>
 	/// デバイスの取得
 	/// </summary>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<ID3D12Device> GetDevice()const;
+	ID3D12Device* GetDevice()const;
 
 	/// <summary>
 	/// DxcUtilsの取得
 	/// </summary>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<IDxcUtils> GetDxcUtils()const;
+	IDxcUtils* GetDxcUtils()const;
 
 	/// <summary>
 	/// DxcCompilerの取得
 	/// </summary>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<IDxcCompiler3> GetDxcCompiler()const;
+	IDxcCompiler3* GetDxcCompiler()const;
 
 	/// <summary>
 	/// IncludeHandlerの取得
 	/// </summary>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> GetIncludeHandler()const;
+	IDxcIncludeHandler* GetIncludeHandler()const;
 
 	/// <summary>
 	/// 描画コマンドリストの取得

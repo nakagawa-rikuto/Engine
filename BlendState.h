@@ -8,7 +8,7 @@
 #include <dxcapi.h>
 #include <wrl.h>
 
-class RootSignature {
+class BlendState {
 
 public:
 
@@ -16,20 +16,21 @@ public:
 	/// シングルトンインスタンス
 	/// </summary>
 	/// <returns></returns>
-	static RootSignature* GetInstance();
+	static BlendState* GetInstance();
 
 	/// <summary>
-	/// ルートシグネイチャの生成
-	/// </summary>
-	void Create(ID3D12Device* device);
-
-	/// <summary>
-	/// ルートシグネイチャの取得
+	/// ブレンドステートの設定
 	/// </summary>
 	/// <returns></returns>
-	ID3D12RootSignature* GetRootSignature()const;
+	void Setting();
+
+	/// <summary>
+	/// ブレンドステートの取得
+	/// </summary>
+	/// <returns></returns>
+	D3D12_BLEND_DESC GetBlendDesc();
 
 private:
 
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
+	D3D12_BLEND_DESC blendDesc_{}; // BlendState
 };
