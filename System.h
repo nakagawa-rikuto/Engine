@@ -3,6 +3,7 @@
 #include "DXCommon.h"
 #include "PipelineStateObject.h"
 #include "Mesh.h"
+#include "Material.h"
 
 #include "CBufferData.h"
 
@@ -58,4 +59,5 @@ private:
 	static DXCommon* dXCommon_;
 	static PipelineStateObject* pipeline_;
 	static Mesh* triangle_;
+	static Material* materialTriangle_;
 };

@@ -12,6 +12,7 @@ WinApp* System::winApp_ = nullptr;
 DXCommon* System::dXCommon_ = nullptr;
 PipelineStateObject* System::pipeline_ = nullptr;
 Mesh* System::triangle_ = nullptr;
+Material* System::materialTriangle_ = nullptr;
 
 /// <summary>
 /// ReportLiveObjects
@@ -54,6 +55,9 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 
 	// Triangleの生成
 	triangle_ = Mesh::GetInstance();
+
+	// MaterialTriangleの生成
+	materialTriangle_ = Material::GetInstance();
 }
 
 /// <summary>
@@ -99,6 +103,15 @@ void System::DrawTriangle(
 	// データの書き込み
 	triangle_->WriteVertexBufferTriangle(TriangleLeftBottomPositionData, TriangleTopPositionData, TriangleRightBottomPositionData);
 
+	// マテリアルリソースの生成
+	materialTriangle_->CreateMaterial(dXCommon_->GetDevice(), sizeof(MaterialData));
+
+	// マテリアルリソースのデータを設定
+	MaterialData data;
+	data.color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	materialTriangle_->WriteMaterial(&data);
+
 	// VertexBufferViewの生成
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = triangle_->GetVertexBufferView();
 	// リソースの先頭のアドレスから使う
@@ -113,6 +126,9 @@ void System::DrawTriangle(
 
 	// パイプラインステートを設定
 	commandList->SetPipelineState(pipeline_->GetPSO());
+
+	// マテリアルリソースを設定
+	commandList->SetGraphicsRootConstantBufferView(0, materialTriangle_->GetResource()->GetGPUVirtualAddress());
 
 	// 頂点バッファを設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);

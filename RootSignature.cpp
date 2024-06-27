@@ -29,6 +29,13 @@ void RootSignature::Create(ID3D12Device* device) {
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
+	// RootParameterの生成
+	rootParameters_[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使う
+	rootParameters_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
+	rootParameters_[0].Descriptor.ShaderRegister = 0; // レジスタ番号の指定
+	descriptionRootSignature.pParameters = rootParameters_; // ルートパラメータ配列へのポインタ
+	descriptionRootSignature.NumParameters = _countof(rootParameters_); // 配列の長さ
+
 	Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob_; // 
 
 	// シリアライズしてバイナリにする
