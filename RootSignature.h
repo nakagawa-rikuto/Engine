@@ -32,5 +32,5 @@ public:
 private:
 
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
-	D3D12_ROOT_PARAMETER rootParameters_[1]{};
+	D3D12_ROOT_PARAMETER rootParameters_[2]{};
 };

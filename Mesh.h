@@ -24,7 +24,7 @@ public:
 	/// <summary>
 	/// VertexResourceの生成
 	/// </summary>
-	void CreateVertexBuffer(ID3D12Device* device, size_t sizeInBytes);
+	void CreateVertexResource(ID3D12Device* device, size_t sizeInBytes);
 
 	/// <summary>
 	/// 三角形のデータの書き込み
@@ -32,7 +32,7 @@ public:
 	/// <param name="TriangleLeftBottomPositionData"></param>
 	/// <param name="TriangleTopPositionData"></param>
 	/// <param name="TriangleRightBottomPositionData"></param>
-	void WriteVertexBufferTriangle(
+	void WriteTriangleData(
 		VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData);
 
 	/// <summary>

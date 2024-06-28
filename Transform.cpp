@@ -1,4 +1,5 @@
-#include "Material.h"
+#include "Transform.h"
+#include "MyMath.h"
 
 #include <algorithm>
 #include <cassert>
@@ -10,15 +11,12 @@
 /// <summary>
 /// シングルトンインスタンスの取得
 /// </summary>
-Material* Material::GetInstance() {
-    static Material instance;
+Transform* Transform::GetInstance() {
+    static Transform instance;
     return &instance;
 }
 
-/// <summary>
-/// リソースの生成
-/// </summary>
-void Material::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
+void Transform::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 
 	// リソース用のヒープの設定
@@ -47,18 +45,27 @@ void Material::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
 	assert(SUCCEEDED(hr));
 }
 
-/// <summary>
-/// マテリアルデータの書き込み
-/// </summary>
-void Material::WriteData(MaterialData* material) {
+void Transform::WriteData(TransformationMatrix* data) {
+
 	// 書き込むためのアドレスを取得
 	buffer_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
 
-	// 色の書き込み
-	data_->color = material->color;
+	data_ = data;
 }
 
 /// <summary>
 /// リソースの取得
 /// </summary>
-ID3D12Resource* Material::GetBuffer() { return buffer_.Get(); }
+ID3D12Resource* Transform::GetBuffer() { return buffer_.Get(); }
+
+
+/// <summary>
+/// データの取得
+/// </summary>
+TransformationMatrix* Transform::GetData() { return data_; }
+
+/// <summary>
+/// データのセット
+/// </summary>
+/// <param name="data"></param>
+void Transform::SetData(TransformationMatrix* data) {data_ = data;}

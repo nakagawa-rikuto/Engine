@@ -33,6 +33,11 @@ void RootSignature::Create(ID3D12Device* device) {
 	rootParameters_[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使う
 	rootParameters_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 	rootParameters_[0].Descriptor.ShaderRegister = 0; // レジスタ番号の指定
+
+	rootParameters_[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使う
+	rootParameters_[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX; // VertexShaderで使う
+	rootParameters_[1].Descriptor.ShaderRegister = 0; // レジスタ番号の指定
+
 	descriptionRootSignature.pParameters = rootParameters_; // ルートパラメータ配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters_); // 配列の長さ
 

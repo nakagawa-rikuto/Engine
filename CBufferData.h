@@ -1,5 +1,6 @@
 #pragma once
 #include "VectorData.h"
+#include "MatrixData.h"
 
 #include <Windows.h>
 #include <chrono>
@@ -25,9 +26,28 @@ struct VertexDataSphere {
 	Vector4 position;
 };
 
+/// <summary>
+/// マテリアル
+/// </summary>
 struct MaterialData {
 
 	Vector4 color;
 };
 
+/// <summary>
+/// 位置・姿勢情報
+/// </summary>
+struct TransformInfo {
 
+	Vector3 scale;
+	Vector3 rotate;
+	Vector3 translate;
+};
+
+/// <summary>
+/// 
+/// </summary>
+struct TransformationMatrix {
+
+	Matrix4x4 WVP;
+};

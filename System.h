@@ -4,6 +4,7 @@
 #include "PipelineStateObject.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "Transform.h"
 
 #include "CBufferData.h"
 
@@ -51,7 +52,9 @@ public:
 	/// <param name="TriangleTopPositionData"></param>
 	/// <param name="TriangleRightBottomPositionData"></param>
 	static void DrawTriangle(
-		VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData);
+		VertexDataTriangle* TriangleLeftBottomPositionData, 
+		VertexDataTriangle* TriangleTopPositionData, 
+		VertexDataTriangle* TriangleRightBottomPositionData);
 
 private:
 
@@ -60,4 +63,5 @@ private:
 	static PipelineStateObject* pipeline_;
 	static Mesh* triangle_;
 	static Material* materialTriangle_;
+	static Transform* wvpTriangle_;
 };

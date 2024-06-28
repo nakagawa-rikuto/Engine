@@ -9,25 +9,26 @@
 
 #include "CBufferData.h"
 
-class Material {
+class Transform {
 
 public:
+
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>
 	/// <returns></returns>
-	static Material* GetInstance();
+	static Transform* GetInstance();
 
 	/// <summary>
-	///　リソースの生成
+	/// Resourceの生成
 	/// </summary>
 	void CreateResource(ID3D12Device* device, size_t sizeInBytes);
 
 	/// <summary>
-	/// マテリアルデータの書き込み
+	/// データの書き込み
 	/// </summary>
-	/// <param name="material"></param>
-	void WriteData(MaterialData* material);
+	/// <param name="transform"></param>
+	void WriteData(TransformationMatrix* data);
 
 	/// <summary>
 	/// リソースの取得
@@ -35,11 +36,21 @@ public:
 	/// <returns></returns>
 	ID3D12Resource* GetBuffer();
 
+	/// <summary>
+	/// データの取得
+	/// </summary>
+	/// <returns></returns>
+	TransformationMatrix* GetData();
+
+	/// <summary>
+	/// データのセット
+	/// </summary>
+	void SetData(TransformationMatrix* data);
+	
 private:
-	// リソース
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
 
-	// データ
-	MaterialData* data_;
+	TransformationMatrix* data_;
 };
 

@@ -18,7 +18,7 @@ Mesh* Mesh::GetInstance() {
 /// <summary>
 /// VertexResourceの生成
 /// </summary>
-void Mesh::CreateVertexBuffer(ID3D12Device* device, size_t sizeInBytes) {
+void Mesh::CreateVertexResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 
 	// 頂点リソース用のヒープの設定
@@ -50,7 +50,7 @@ void Mesh::CreateVertexBuffer(ID3D12Device* device, size_t sizeInBytes) {
 /// <summary>
 /// 三角形のデータの書き込み
 /// </summary>
-void Mesh::WriteVertexBufferTriangle(
+void Mesh::WriteTriangleData(
 	VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData) {
 
 	// 頂点リソース
