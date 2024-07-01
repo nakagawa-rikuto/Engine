@@ -35,9 +35,26 @@ public: // メンバ関数
 	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// キーの押下をチェック
+	/// </summary>
+	/// <param name="keyNumber"></param>
+	/// <returns></returns>
+	bool PushKey(BYTE keyNum);
+
+	/// <summary>
+	/// キーのトリガーをチェック
+	/// </summary>
+	/// <param name="keyNum"></param>
+	/// <returns></returns>
+	bool TriggerKey(BYTE keyNum);
+
 private:
 	Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
 	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_;
-	
+
+	BYTE key_[256] = {}; // 全キーの入力情報
+	BYTE preKye_[256] = {}; // 前回の全キーの状態
+	 
 };
 
