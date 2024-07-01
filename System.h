@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Transform.h"
+#include "Input.h"
 
 #include "CBufferData.h"
 
@@ -54,12 +55,14 @@ public:
 	static void DrawTriangle(
 		VertexDataTriangle* TriangleLeftBottomPositionData, 
 		VertexDataTriangle* TriangleTopPositionData, 
-		VertexDataTriangle* TriangleRightBottomPositionData);
+		VertexDataTriangle* TriangleRightBottomPositionData,
+		TransformationMatrix* worldMatrix);
 
 private:
 
 	static WinApp* winApp_;
 	static DXCommon* dXCommon_;
+	static Input* input_;
 	static PipelineStateObject* pipeline_;
 	static Mesh* triangle_;
 	static Material* materialTriangle_;

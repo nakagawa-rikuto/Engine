@@ -57,6 +57,12 @@ public:
 	/// <returns></returns>
 	HWND GetHwnd();
 
+	/// <summary>
+	/// ウィンドウclassの取得
+	/// </summary>
+	/// <returns></returns>
+	WNDCLASS GetWNDClass();
+
 private:// メンバ変数
 
 	WNDCLASS wndClass_{}; // ウィンドウクラス

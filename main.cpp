@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include "System.h"
+#include "Input.h"
 #include"MyMath.h"
 
 const wchar_t kWindowTitle[] = L"Engine";
@@ -9,6 +10,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// Systemの初期化
 	System::Initialize(kWindowTitle, 1280, 720);
+
+	// Inputの初期化
+	Input* input = nullptr;
+
+	// 入力の初期化
+	input = Input::GetInstance();
 
 	/* ///////////////////////////////////////////////
 						三角形の情報
@@ -22,8 +29,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	VertexDataTriangle triangle3;
 	triangle3.position = { 0.5f, -0.5f, 0.0f, 1.0f };
 
-	//TransformInfo transformTriangle;
-	//transformTriangle = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+	TransformInfo transformTriangle;
+	transformTriangle = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+	TransformationMatrix worldTransformTriangle;
 
 	/* ///////////////////////////////////////////////
 						カメラ情報
@@ -42,7 +51,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				　　ゲームの処理
 		*/ ////////////////////////////
 
-		//transformTriangle.rotate.y += 0.03f;
+		transformTriangle.rotate.y += 0.03f;
 
 		/* ////////////////////////////
 				　　描画の処理

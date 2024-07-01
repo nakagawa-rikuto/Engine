@@ -11,6 +11,7 @@
 
 WinApp* System::winApp_ = nullptr;
 DXCommon* System::dXCommon_ = nullptr;
+Input* System::input_ = nullptr;
 PipelineStateObject* System::pipeline_ = nullptr;
 Mesh* System::triangle_ = nullptr;
 Material* System::materialTriangle_ = nullptr;
@@ -49,6 +50,10 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// DirectX初期化処理
 	dXCommon_ = DXCommon::GetInstance();
 	dXCommon_->Initialize(winApp_, width, height);
+
+	// Inputの初期化
+	input_ = Input::GetInstance();
+	input_->Initialize(winApp_);
 
 	// パイプラインの生成
 	pipeline_ = PipelineStateObject::GetInstance();
@@ -97,7 +102,7 @@ int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 /// 三角形の描画
 /// </summary>
 void System::DrawTriangle(
-	VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData) {
+	VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData, TransformationMatrix* worldMatrix) {
 
 	// コマンドリストの生成
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = dXCommon_->GetCommandList();

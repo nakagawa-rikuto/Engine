@@ -118,3 +118,9 @@ bool WinApp::ProcessMessage() {
 /// ウィンドウハンドルの取得
 /// </summary>
 HWND WinApp::GetHwnd() { return hwnd_; }
+
+/// <summary>
+/// ウィンドウクラスの取得
+/// </summary>
+/// <returns></returns>
+WNDCLASS WinApp::GetWNDClass() { return wndClass_; }
