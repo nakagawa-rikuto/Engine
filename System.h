@@ -26,6 +26,11 @@ public:
 		const wchar_t* title, int width = 1280, int height = 720);
 
 	/// <summary>
+	/// システム全体の更新
+	/// </summary>
+	static void Update();
+
+	/// <summary>
 	/// システム全体の終了
 	/// </summary>
 	static void Finalize();

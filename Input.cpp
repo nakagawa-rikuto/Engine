@@ -22,3 +22,13 @@ void Input::Initialize(WinApp* winApp) {
 	// 排他的正業レベルのセット
 	hr = keyboard_->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 }
+
+void Input::Update() {
+
+	// キーボード情報の取得開始
+	keyboard_->Acquire();
+
+	// 全キーの入力情報
+	BYTE key[256] = {};
+	keyboard_->GetDeviceState(sizeof(key), key);
+}

@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/* ////////////////////////////
 				　　描画の処理
 		*/ ////////////////////////////
-		System::DrawTriangle(&triangle1, &triangle2, &triangle3);
+		System::DrawTriangle(&triangle1, &triangle2, &triangle3, &worldTransformTriangle);
 		//System::DrawTriangle(&triangle1, &triangle2, &triangle3, &transformTriangle);
 
 		// フレームの終了
