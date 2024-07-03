@@ -12,8 +12,6 @@
 #include <fstream>
 #include <sstream>
 
-//kajfdoiejkfjaoidjofkjalkejafijaoeikj
-
 #include "externals/imgui/imgui.h"
 #include "externals/imgui/imgui_impl_dx12.h"
 #include "externals/imgui/imgui_impl_win32.h"
@@ -98,6 +96,33 @@ struct DirectionalLight {
 struct ModelData {
 	std::vector<VertexData> vertices;
 };
+
+/// *****************************************************
+///　BlendMode
+/// *****************************************************
+enum BlendMode {
+	//!< ブレンドなし
+	kBlendModeNone,
+
+	//!< 通常ブレンド。
+	KBlendModeNormal,
+
+	//!< 加算
+	kBlendModeAdd,
+
+	//!< 減算
+	kBlendModeSubtract,
+	
+	//!< 乗算
+	kBlendModeMultily,
+
+	//!< スクリーン
+	kBlendModeScreen,
+
+	// 利用しない
+	kCountOfBlendMode,
+};
+
 
 // スフィアの分割数
 const uint32_t kSubdivision = 32;
@@ -324,6 +349,35 @@ D3D12_BLEND_DESC CreateBlendState() {
 
 	// すべての色要素を書き込む
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	// 加算合成
+	/*blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;*/
+
+	// 減算合成
+	/*blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE*/;
+
+	// 乗算合成
+	/*blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;*/
+
+	// スクリーン合成
+	/*blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;*/
+
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	return blendDesc;
 }
@@ -678,9 +732,9 @@ ModelData LoadObjFile(const std::string& directoryPath, const std::string& filen
 				Vector4 position = positions[elementIndices[0] - 1];
 				Vector2 texcoord = texcoords[elementIndices[1] - 1];
 				Vector3 normal = normals[elementIndices[2] - 1];
-				position.x *= -1.0f; // 位置の反転
+				//position.x *= -1.0f; // 位置の反転
 				position.y *= -1.0f;
-				normal.x *= -1.0f; // 法線の反転
+				//normal.x *= -1.0f; // 法線の反転
 				normal.y *= -1.0f;
 				VertexData vertex = { position, texcoord, normal };
 				modelData.vertices.push_back(vertex);
@@ -949,7 +1003,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	/// ModelDataを使う
 	/// *****************************************************
 	// モデル読み込み
-	ModelData modelData = LoadObjFile("Resources", "axis.obj");
+	ModelData modelData = LoadObjFile("Resources", "fence.obj");
 
 	// 頂点リソースを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResourceModel = CreateVertexResource(hr, device.Get(), sizeof(VertexData) * modelData.vertices.size());
@@ -1220,7 +1274,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	/// Textureの転送
 	/// *****************************************************
 	// Textureを読んで転送する
-	DirectX::ScratchImage mipImages = LoadTexTure("./Resources/uvChecker.png");
+	DirectX::ScratchImage mipImages = LoadTexTure("./Resources/fence.png");
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	Microsoft::WRL::ComPtr<ID3D12Resource> textureResource = CreateTextureResource(device.Get(), metadata);
 	UploadTextureData(textureResource.Get(), mipImages);
@@ -1608,6 +1662,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::SliderAngle("SphereRotateX", &transform.rotate.x);
 			ImGui::SliderAngle("SphereRotateY", &transform.rotate.y);
 			ImGui::SliderAngle("SphereRotateZ", &transform.rotate.z);
+			ImGui::ColorEdit4("Color", &materialDataModel->color.x);
+			ImGui::ColorEdit4("LigthColor", &directionalLightData->color.x);
+			ImGui::DragFloat3("LightDirection", &directionalLightData->direction.x, 0.01f);
+			ImGui::SliderAngle("LightIntensity", &directionalLightData->intensity);
 			ImGui::End();
 
 #endif // DEBUG
