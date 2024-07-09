@@ -166,6 +166,8 @@ private: // メンバ変数
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 	uint64_t fenceValue_ = 0;
 
+	std::chrono::steady_clock::time_point reference_; // 記録時間(FPS固定用)
+
 	D3D12_VIEWPORT viewPort_;
 
 	D3D12_RECT scissorRect_;
@@ -220,4 +222,14 @@ private:
 	/// シザー矩形
 	/// </summary>
 	void CreateScissor(const int32_t kClientWindth, const int32_t kClientHeight);
+
+	/// <summary>
+	/// FPS固定の初期化
+	/// </summary>
+	void InitializeFixFPS();
+
+	/// <summary>
+	/// FPS固定の更新
+	/// </summary>
+	void UpdateFixFPS();
 };

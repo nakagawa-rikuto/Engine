@@ -25,7 +25,7 @@ void Input::Initialize(WinApp* winApp) {
 
 void Input::Update() {
 
-	HRESULT hr;
+	//HRESULT hr;
 
 	// 前回のキー入力を保持
 	memcpy(preKye_, key_, sizeof(key_));
