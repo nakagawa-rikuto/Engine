@@ -23,11 +23,11 @@ Compiler* Compiler::GetInstance() {
 void Compiler::ShaderCompiler(DXCommon* dxCommon) {
 
 	// ObjVS
-	objVSBlob_ = CompileShader(L"Obj.VS.hlsl", L"vs_6_0",
+	objVSBlob_ = CompileShader(L"Resource/Shaders/Obj.VS.hlsl", L"vs_6_0",
 		dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 
 	// ObjPS
-	objPSBlob_ = CompileShader(L"Obj.PS.hlsl", L"ps_6_0",
+	objPSBlob_ = CompileShader(L"Resource/Shaders/Obj.PS.hlsl", L"ps_6_0",
 		dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 }
 

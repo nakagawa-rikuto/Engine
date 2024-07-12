@@ -54,6 +54,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Base/System;$(ProjectDir)/Base/WinApp;$(ProjectDir)/Base/PSO;$(ProjectDir)/Base/PSO/RootSignature;$(ProjectDir)/Base/PSO/InputLayout;$(ProjectDir)/Base/PSO/RasterizerState;$(ProjectDir)/Base/PSO/BlendState;$(ProjectDir)/Base/PSO/Compiler;$(ProjectDir)/Base/DirectXCommon;$(ProjectDir)/Base/Material;$(ProjectDir)/Base/Mesh;$(ProjectDir)/Base/Transform;$(ProjectDir)/Base/Data;$(ProjectDir)/Base/Input;$(ProjectDir)/Game/Scene;$(ProjectDir)/Base/Sprite;$(ProjectDir)/Base/Math;$(ProjectDir)/Base/Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -78,6 +79,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Base/System;$(ProjectDir)/Base/WinApp;$(ProjectDir)/Base/PSO;$(ProjectDir)/Base/PSO/RootSignature;$(ProjectDir)/Base/PSO/InputLayout;$(ProjectDir)/Base/PSO/RasterizerState;$(ProjectDir)/Base/PSO/BlendState;$(ProjectDir)/Base/PSO/Compiler;$(ProjectDir)/Base/DirectXCommon;$(ProjectDir)/Base/Material;$(ProjectDir)/Base/Mesh;$(ProjectDir)/Base/Transform;$(ProjectDir)/Base/Data;$(ProjectDir)/Base/Input;$(ProjectDir)/Game/Scene;$(ProjectDir)/Base/Sprite;$(ProjectDir)/Base/Math;$(ProjectDir)/Base/Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -91,60 +93,46 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BlendState.cpp" />
-    <ClCompile Include="CBufferData.cpp" />
-    <ClCompile Include="Compiler.cpp" />
-    <ClCompile Include="DXCommon.cpp" />
-    <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="InputLayout.cpp" />
-    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Base\Data\CBufferData.cpp" />
+    <ClCompile Include="Base\DirectXCommon\DXCommon.cpp" />
+    <ClCompile Include="Base\Input\Input.cpp" />
+    <ClCompile Include="Base\Log\Logger.cpp" />
+    <ClCompile Include="Base\Material\Material.cpp" />
+    <ClCompile Include="Base\Math\MyMath.cpp" />
+    <ClCompile Include="Base\Math\VectorData.cpp" />
+    <ClCompile Include="Base\Mesh\Mesh.cpp" />
+    <ClCompile Include="Base\PSO\BlendState\BlendState.cpp" />
+    <ClCompile Include="Base\PSO\Compiler\Compiler.cpp" />
+    <ClCompile Include="Base\PSO\InputLayout\InputLayout.cpp" />
+    <ClCompile Include="Base\PSO\PipelineStateObject.cpp" />
+    <ClCompile Include="Base\PSO\RasterizerState\RasterizerState.cpp" />
+    <ClCompile Include="Base\PSO\RootSignature\RootSignature.cpp" />
+    <ClCompile Include="Base\System\System.cpp" />
+    <ClCompile Include="Base\Transform\Transform.cpp" />
+    <ClCompile Include="Base\WinApp\WinApp.cpp" />
+    <ClCompile Include="Game\Scene\GameScene.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MyMath.cpp" />
-    <ClCompile Include="PipelineStateObject.cpp" />
-    <ClCompile Include="RasterizerState.cpp" />
-    <ClCompile Include="RootSignature.cpp" />
-    <ClCompile Include="System.cpp" />
-    <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="VectorData.cpp" />
-    <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BlendState.h" />
-    <ClInclude Include="CBufferData.h" />
-    <ClInclude Include="Compiler.h" />
-    <ClInclude Include="DXCommon.h" />
-    <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="InputLayout.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="MatrixData.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MyMath.h" />
-    <ClInclude Include="PipelineStateObject.h" />
-    <ClInclude Include="RasterizerState.h" />
-    <ClInclude Include="RootSignature.h" />
-    <ClInclude Include="System.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="VectorData.h" />
-    <ClInclude Include="WinApp.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Obj.PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Obj.VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
+    <ClInclude Include="Base\Data\CBufferData.h" />
+    <ClInclude Include="Base\DirectXCommon\DXCommon.h" />
+    <ClInclude Include="Base\Input\Input.h" />
+    <ClInclude Include="Base\Log\Logger.h" />
+    <ClInclude Include="Base\Material\Material.h" />
+    <ClInclude Include="Base\Math\MatrixData.h" />
+    <ClInclude Include="Base\Math\MyMath.h" />
+    <ClInclude Include="Base\Math\VectorData.h" />
+    <ClInclude Include="Base\Mesh\Mesh.h" />
+    <ClInclude Include="Base\PSO\BlendState\BlendState.h" />
+    <ClInclude Include="Base\PSO\Compiler\Compiler.h" />
+    <ClInclude Include="Base\PSO\InputLayout\InputLayout.h" />
+    <ClInclude Include="Base\PSO\PipelineStateObject.h" />
+    <ClInclude Include="Base\PSO\RasterizerState\RasterizerState.h" />
+    <ClInclude Include="Base\PSO\RootSignature\RootSignature.h" />
+    <ClInclude Include="Base\System\System.h" />
+    <ClInclude Include="Base\Transform\Transform.h" />
+    <ClInclude Include="Base\WinApp\WinApp.h" />
+    <ClInclude Include="Game\Scene\GameScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
