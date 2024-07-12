@@ -129,7 +129,6 @@ void System::DrawTriangle(
 
 	// wvpリソースのデータ設定
 	TransformationMatrix wvp;
-	//wvp.WVP = MakeAffineMatrix(data->scale, data->rotate, data->translate);
 	wvp.WVP = MakeIdenitiy4x4();
 	wvpTriangle_->WriteData(&wvp);
 
