@@ -32,7 +32,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	TransformInfo transformTriangle;
 	transformTriangle = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
-	TransformationMatrix worldTransformTriangle;
+	//TransformationMatrix worldTransformTriangle;
 
 	/* ///////////////////////////////////////////////
 						カメラ情報
@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/* ////////////////////////////
 				　　描画の処理
 		*/ ////////////////////////////
-		System::DrawTriangle(&triangle1, &triangle2, &triangle3, &worldTransformTriangle);
+		System::DrawTriangle(&triangle1, &triangle2, &triangle3);
 
 		// フレームの終了
 		System::EndFrame();

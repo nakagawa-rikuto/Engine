@@ -60,8 +60,7 @@ public:
 	static void DrawTriangle(
 		VertexDataTriangle* TriangleLeftBottomPositionData, 
 		VertexDataTriangle* TriangleTopPositionData, 
-		VertexDataTriangle* TriangleRightBottomPositionData,
-		TransformationMatrix* worldMatrix);
+		VertexDataTriangle* TriangleRightBottomPositionData);
 
 private:
 

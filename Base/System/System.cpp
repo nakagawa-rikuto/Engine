@@ -102,7 +102,7 @@ int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 /// 三角形の描画
 /// </summary>
 void System::DrawTriangle(
-	VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData, TransformationMatrix* worldMatrix) {
+	VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData) {
 
 	// コマンドリストの生成
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = dXCommon_->GetCommandList();
@@ -122,7 +122,7 @@ void System::DrawTriangle(
 	materialTriangle_->WriteData(&material);
 
 	// wvpResourceの生成
-	wvpTriangle_->CreateResource(dXCommon_->GetDevice(), sizeof(TransformationMatrix));
+	//wvpTriangle_->CreateResource(dXCommon_->GetDevice(), sizeof(TransformationMatrix));
 
 	// VertexBufferViewの生成
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = triangle_->GetVertexBufferView();
@@ -146,13 +146,13 @@ void System::DrawTriangle(
 	commandList->SetPipelineState(pipeline_->GetPSO());
 
 	// マテリアルリソースを設定
-	commandList->SetGraphicsRootConstantBufferView(0, materialTriangle_->GetBuffer()->GetGPUVirtualAddress());
+	//commandList->SetGraphicsRootConstantBufferView(0, materialTriangle_->GetBuffer()->GetGPUVirtualAddress());
 
 	// 頂点バッファを設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 
 	// CBVを設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvpTriangle_->GetBuffer()->GetGPUVirtualAddress());
+	//commandList->SetGraphicsRootConstantBufferView(1, wvpTriangle_->GetBuffer()->GetGPUVirtualAddress());
 
 	// 形状を設定
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
