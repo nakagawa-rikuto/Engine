@@ -146,13 +146,13 @@ void System::DrawTriangle(
 	commandList->SetPipelineState(pipeline_->GetPSO());
 
 	// マテリアルリソースを設定
-	//commandList->SetGraphicsRootConstantBufferView(0, materialTriangle_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, materialTriangle_->GetBuffer()->GetGPUVirtualAddress());
 
 	// 頂点バッファを設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 
 	// CBVを設定
-	//commandList->SetGraphicsRootConstantBufferView(1, wvpTriangle_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(1, wvpTriangle_->GetBuffer()->GetGPUVirtualAddress());
 
 	// 形状を設定
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
