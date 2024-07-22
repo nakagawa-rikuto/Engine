@@ -128,9 +128,9 @@ void System::DrawTriangle(
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = triangle_->GetVertexBufferView();
 
 	// wvpリソースのデータ設定
-	TransformationMatrix wvp;
+	/*TransformationMatrix wvp;
 	wvp.WVP = MakeIdenitiy4x4();
-	wvpTriangle_->WriteData(&wvp);
+	wvpTriangle_->WriteData(&wvp);*/
 
 	// リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = triangle_->GetVertexBuffer()->GetGPUVirtualAddress();
@@ -152,7 +152,7 @@ void System::DrawTriangle(
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 
 	// CBVを設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvpTriangle_->GetBuffer()->GetGPUVirtualAddress());
+	//commandList->SetGraphicsRootConstantBufferView(1, wvpTriangle_->GetBuffer()->GetGPUVirtualAddress());
 
 	// 形状を設定
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

@@ -17,20 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 入力の初期化
 	input = Input::GetInstance();
 
-	/* ///////////////////////////////////////////////
-						三角形の情報
-	*/ ///////////////////////////////////////////////
-	VertexDataTriangle triangle1;
-	triangle1.position = { -0.5f, -0.5f, 0.0f, 1.0f };
 
-	VertexDataTriangle triangle2;
-	triangle2.position = { 0.0f, 0.5f, 0.0f, 1.0f };
-
-	VertexDataTriangle triangle3;
-	triangle3.position = { 0.5f, -0.5f, 0.0f, 1.0f };
-
-	TransformInfo transformTriangle;
-	transformTriangle = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
 	//TransformationMatrix worldTransformTriangle;
 
@@ -44,6 +31,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ウィンドウのxボタンが押されるまでループ
 	while (System::ProcessMessage() == 0) {
 
+	/* ///////////////////////////////////////////////
+						三角形の情報
+	*/ ///////////////////////////////////////////////
+		VertexDataTriangle triangle1;
+		triangle1.position = { -0.5f, -0.5f, 0.0f, 1.0f };
+
+		VertexDataTriangle triangle2;
+		triangle2.position = { 0.0f, 0.5f, 0.0f, 1.0f };
+
+		VertexDataTriangle triangle3;
+		triangle3.position = { 0.5f, -0.5f, 0.0f, 1.0f };
+
+		TransformInfo transformTriangle;
+		transformTriangle = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
 		// フレームの開始
 		System::BeginFrame();
 
@@ -51,7 +53,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				　　ゲームの処理
 		*/ ////////////////////////////
 
-		transformTriangle.rotate.y += 0.03f;
+		//transformTriangle.rotate.y += 0.03f;
 
 		/* ////////////////////////////
 				　　描画の処理
