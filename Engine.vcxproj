@@ -98,8 +98,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\Input\Input.cpp" />
     <ClCompile Include="Base\Log\Logger.cpp" />
     <ClCompile Include="Base\Material\Material.cpp" />
-    <ClCompile Include="Base\Math\MyMath.cpp" />
-    <ClCompile Include="Base\Math\VectorData.cpp" />
+    <ClCompile Include="Base\Math\Matrix3x3.cpp" />
+    <ClCompile Include="Base\Math\Matrix4x4.cpp" />
+    <ClCompile Include="Base\Math\MatrixMath.cpp" />
+    <ClCompile Include="Base\Math\sMath.cpp" />
+    <ClCompile Include="Base\Math\Vector2.cpp" />
+    <ClCompile Include="Base\Math\Vector3.cpp" />
+    <ClCompile Include="Base\Math\Vector4.cpp" />
     <ClCompile Include="Base\Mesh\Mesh.cpp" />
     <ClCompile Include="Base\PSO\BlendState\BlendState.cpp" />
     <ClCompile Include="Base\PSO\Compiler\Compiler.cpp" />
@@ -112,6 +117,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\WinApp\WinApp.cpp" />
     <ClCompile Include="Game\Scene\GameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Base\Sprite\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h" />
@@ -119,9 +125,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\Input\Input.h" />
     <ClInclude Include="Base\Log\Logger.h" />
     <ClInclude Include="Base\Material\Material.h" />
-    <ClInclude Include="Base\Math\MatrixData.h" />
-    <ClInclude Include="Base\Math\MyMath.h" />
-    <ClInclude Include="Base\Math\VectorData.h" />
+    <ClInclude Include="Base\Math\Matrix3x3.h" />
+    <ClInclude Include="Base\Math\Matrix4x4.h" />
+    <ClInclude Include="Base\Math\MatrixMath.h" />
+    <ClInclude Include="Base\Math\sMath.h" />
+    <ClInclude Include="Base\Math\Vector2.h" />
+    <ClInclude Include="Base\Math\Vector3.h" />
+    <ClInclude Include="Base\Math\Vector4.h" />
     <ClInclude Include="Base\Mesh\Mesh.h" />
     <ClInclude Include="Base\PSO\BlendState\BlendState.h" />
     <ClInclude Include="Base\PSO\Compiler\Compiler.h" />
@@ -133,6 +143,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\Transform\Transform.h" />
     <ClInclude Include="Base\WinApp\WinApp.h" />
     <ClInclude Include="Game\Scene\GameScene.h" />
+    <ClInclude Include="Base\Sprite\Sprite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

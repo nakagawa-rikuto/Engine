@@ -51,7 +51,7 @@ public:
 	/// <summary>
 	/// 深度バッファのクリア
 	/// </summary>
-	//void ClearDepthBuffer();
+	void ClearDepthBuffer();
 
 	/// <summary>
 	/// DXGFactoryの取得
@@ -161,7 +161,12 @@ private: // メンバ変数
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_; // レンダーターゲットビュー
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2]; // レンダーターゲットビューのディスクリプタ
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_; // SRV(テクスチャ関連)
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_[99]{}; // SRVデスク
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_; // depthStencilResource
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_; // DSVハンドル	
 
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 	uint64_t fenceValue_ = 0;
@@ -194,14 +199,14 @@ private:
 	void CreateSwapChain();
 
 	/// <summary>
-	/// レンダーターゲットの生成
+	/// レンダーターゲットの生成(RTV)
 	/// </summary>
 	void CreateFinalRenderTargets();
 
 	/// <summary>
-	/// 深度バッファの生成
+	/// 深度バッファの生成(DSV)
 	/// </summary>
-	//void CreateDepthBuffer();
+	void CreateDepthBuffer();
 
 	/// <summary>
 	/// フェンスの生成

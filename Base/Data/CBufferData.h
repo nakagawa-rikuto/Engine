@@ -1,7 +1,4 @@
 #pragma once
-#include "VectorData.h"
-#include "MatrixData.h"
-
 #include <Windows.h>
 #include <chrono>
 #include <cstdlib>
@@ -10,20 +7,18 @@
 #include <dxcapi.h>
 #include <wrl.h>
 
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
+
 /// <summary>
 /// 三角形
 /// </summary>
-struct VertexDataTriangle {
+struct VertexData {
 
 	Vector4 position;
-};
-
-/// <summary>
-/// スフィア
-/// </summary>
-struct VertexDataSphere {
-
-	Vector4 position;
+	Vector2 texcoord;
+	Vector3 normal;
 };
 
 /// <summary>
@@ -32,6 +27,9 @@ struct VertexDataSphere {
 struct MaterialData {
 
 	Vector4 color;
+	int32_t enableLighting;
+	float padding[3];
+	Matrix4x4 uvTransform;
 };
 
 /// <summary>
@@ -45,9 +43,10 @@ struct TransformInfo {
 };
 
 /// <summary>
-/// 
+/// 座標変換行列データ
 /// </summary>
 struct TransformationMatrix {
 
 	Matrix4x4 WVP;
+	Matrix4x4 World;
 };

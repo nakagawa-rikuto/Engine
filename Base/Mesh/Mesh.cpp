@@ -51,10 +51,10 @@ void Mesh::CreateVertexResource(ID3D12Device* device, size_t sizeInBytes) {
 /// 三角形のデータの書き込み
 /// </summary>
 void Mesh::WriteTriangleData(
-	VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData) {
+	VertexData* TriangleLeftBottomPositionData, VertexData* TriangleTopPositionData, VertexData* TriangleRightBottomPositionData) {
 
 	// 頂点リソース
-	VertexDataTriangle* data;
+	VertexData* data;
 
 	// 書き込むためのアドレスを取得
 	vertexBuffer_->Map(

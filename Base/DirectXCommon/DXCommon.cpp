@@ -14,7 +14,8 @@
 #pragma comment(lib, "Winmm.lib")
 
 namespace {
-	const uint32_t kNumRTVDescriptor = 4;
+	const uint32_t kNumRTVDescriptor = 2;
+	const uint32_t kNumDSVDescriptor = 1;
 }
 
 /// <summary>
@@ -59,6 +60,9 @@ void DXCommon::Initialize(
 
 	// レンダーターゲットの生成
 	CreateFinalRenderTargets();
+
+	// 深度バッファの生成
+	CreateDepthBuffer();
 
 	// フェンスの生成
 	CreateFence();
@@ -105,11 +109,14 @@ void DXCommon::PreDraw() {
 	// 描画先のRTVを設定する
 	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, nullptr);
 
+	// 描画先のRTVとDSVを設定する
+
 	// 全画面クリア
 	ClearRenderTarget();
+	ClearDepthBuffer();
 
 	commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
-	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorRectを設定
+	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorを設定
 }
 
 void DXCommon::PostDraw() {
@@ -172,6 +179,14 @@ void DXCommon::ClearRenderTarget() {
 	// 指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f }; // 青色っぽい色。RGBAの順
 	commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex], clearColor, 0, nullptr);
+}
+
+/// <summary>
+/// 深度バッファのクリア
+/// </summary>
+void DXCommon::ClearDepthBuffer() {
+
+	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 /// <summary>
@@ -364,7 +379,7 @@ void DXCommon::CreateSwapChain() {
 }
 
 /// <summary>
-/// レンダーターゲットの生成
+/// レンダーターゲットの生成(RTV)
 /// </summary>
 void DXCommon::CreateFinalRenderTargets() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
@@ -385,18 +400,76 @@ void DXCommon::CreateFinalRenderTargets() {
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;  // 出力結果をSRGBに変換して書き込む
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;  // 2dテクスチャとして書き込む
 
-	// RTVを2つ作るのでディスクリプタを2つ用意
-	//D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
-
 	// まず1つ目を作る。1つ目は最初のところに作る。作る場所をコリらで指定してあげる必要がある
 	rtvHandles_[0] = GetCPUDescriptorHandle(rtvHeap_.Get(), rtvSize, 0);
 	device_->CreateRenderTargetView(swapChainResource_[0].Get(), &rtvDesc, rtvHandles_[0]);
 
-	//2つ目のディスクリプタハンドルを得る(自力で)
+	//2つ目のディスクリプタハンドルを得る
 	rtvHandles_[1].ptr = rtvHandles_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
 	//2つ目を作る
 	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc, rtvHandles_[1]);
+}
+
+/// <summary>
+/// 深度バッファの生成(DSV)
+/// </summary>
+void DXCommon::CreateDepthBuffer() {
+	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+
+	// 生成するResourceの設定
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Width = winApp_->kWindowWidth; // Textureの幅
+	resourceDesc.Height = winApp_->kWindowHeight; // Textureの高さ
+	resourceDesc.MipLevels = 1; // mipmapの数
+	resourceDesc.DepthOrArraySize = 1; // 奥行 or 配列Textureの配列数
+	resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // DepthStencilとして利用可能なフォーマット
+	resourceDesc.SampleDesc.Count = 1; // サンプリングカウント
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D; // 2次元
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // DepthStencilとして使う通知
+
+	// 利用するHeapの設定
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; // VRAM上に作る
+
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue{};
+	depthClearValue.DepthStencil.Depth = 1.0f; // 1.0f(最大値)でクリア
+	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // フォーマット。
+
+	// DepthStencilTextureをウィンドウのサイズで作成
+	hr = device_->CreateCommittedResource(
+		&heapProperties, // Heapの設定
+		D3D12_HEAP_FLAG_NONE, // HEapの特殊な設定
+		&resourceDesc, // Resourceの設定
+		D3D12_RESOURCE_STATE_DEPTH_WRITE, // 深度値を書き込む状態にしておく
+		&depthClearValue, // Clear最適値
+		IID_PPV_ARGS(&depthStencilResource_)); // 作成するResourceポインタへのポインタ
+	assert(SUCCEEDED(hr));
+	
+
+	// DSVの生成(レンダーターゲットビュー)
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // レンダーターゲットビュー用
+	heapDesc.NumDescriptors = kNumDSVDescriptor; // ダブルバッファ用に1つ以上
+	hr = device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&dsvHeap_));
+	// ディスクリプターヒープが作れなかったので起動できない
+	assert(SUCCEEDED(hr));
+
+	// RTVのサイズを取得
+	//NOTE:一応DSVのDescriptorSizeを取得しておく
+	const uint32_t dsvSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+
+	// DSVの設定
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
+
+	// DSVHeapの先頭にDSVをつくる
+	device_->CreateDepthStencilView(
+		depthStencilResource_.Get(), &dsvDesc, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
+
+	// 描画先のRTVとDSVを設定する
+	dsvHandle_ = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
 }
 
 /// <summary>

@@ -33,7 +33,7 @@ public:
 	/// <param name="TriangleTopPositionData"></param>
 	/// <param name="TriangleRightBottomPositionData"></param>
 	void WriteTriangleData(
-		VertexDataTriangle* TriangleLeftBottomPositionData, VertexDataTriangle* TriangleTopPositionData, VertexDataTriangle* TriangleRightBottomPositionData);
+		VertexData* TriangleLeftBottomPositionData, VertexData* TriangleTopPositionData, VertexData* TriangleRightBottomPositionData);
 
 	/// <summary>
 	/// VertexBufferの取得
@@ -49,13 +49,13 @@ public:
 
 private:
 
-	struct TriangleData {};
-	struct SphereData{};
-
-	// 頂点バッファ
+	// バッファリソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer_;
 
-	// 頂点バッファビュー
+	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	D3D12_VERTEX_BUFFER_VIEW indexBufferView_{};
+	
 };
 

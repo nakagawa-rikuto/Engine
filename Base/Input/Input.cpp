@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "sMath.h"
 
 Input* Input::GetInstance() {
 	static Input instance;
