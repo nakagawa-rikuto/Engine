@@ -1,5 +1,4 @@
 #include "Transform.h"
-#include "MyMath.h"
 
 #include <algorithm>
 #include <cassert>

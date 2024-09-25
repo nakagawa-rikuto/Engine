@@ -1,7 +1,7 @@
 #include "System.h"
 #include "GameScene.h"
 #include "Input.h"
-#include"MyMath.h"
+#include"sMath.h"
 
 const wchar_t kWindowTitle[] = L"Engine";
 

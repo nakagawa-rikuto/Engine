@@ -7,9 +7,12 @@
 #include <vector>
 #include <wrl.h>
 
-#include "VectorData.h"
 #include "CBufferData.h"
 #include "DXCommon.h"
+
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
 
 class Mesh {
 

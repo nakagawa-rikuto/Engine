@@ -102,12 +102,12 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 Matrix4x4 Inverse4x4(const Matrix4x4& m);
 
 /// <summary>
-/// ベクトル変換
+/// 座標変換
 /// </summary>
 /// <param name="v"></param>
 /// <param name="m"></param>
 /// <returns></returns>
-Vector3 Transform(const Vector3& v, const Matrix4x4& m);
+Vector3 TransformCoordinates(const Vector3& v, const Matrix4x4& m);
 
 
 

@@ -1,5 +1,4 @@
 #include "System.h"
-#include "MyMath.h"
 
 #include <d3d12.h>
 #include <algorithm>
@@ -8,6 +7,8 @@
 #include <span>
 #include <dxgidebug.h>
 #include <wrl.h>
+
+#include "sMath.h"
 
 WinApp* System::winApp_ = nullptr;
 DXCommon* System::dXCommon_ = nullptr;
@@ -206,7 +207,7 @@ void System::DrawTriangle(
 	*/ /////////////////////////////////////////////////////////////////////////////// 
 	// wvpリソースのデータ設定
 	TransformationMatrix wvp;
-	wvp.WVP = MakeIdenitiy4x4();
+	wvp.WVP = MakeIdentity4x4(); // 単位行列を入れておく
 	wvpTriangleSprite_->WriteData(&wvp);
 
 	/* ///////////////////////////////////////////////////////////////////////////////
@@ -302,7 +303,7 @@ void System::DrawSquare(
 	// wvpリソースのデータ設定
 	TransformationMatrix wvp;
 	wvpTriangleSprite_->WriteData(&wvp);
-	wvp.WVP = MakeIdenitiy4x4();
+	wvp.WVP = MakeIdentity4x4(); // 単位行列を入れておく
 
 	/* ///////////////////////////////////////////////////////////////////////////////
 										各々の設定
