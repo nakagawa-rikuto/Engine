@@ -3,7 +3,7 @@
 #include <numbers>
 
 ///=====================================================///
-/// π
+/// π（πを使用する際に用いる関数）
 ///=====================================================///
 float Pi() { return std::numbers::pi_v<float>; }
 
@@ -17,11 +17,6 @@ Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix) {
     result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2];
     return result;
 }
-
-///=====================================================///
-/// Vector3と行列の掛け算
-///=====================================================///
-//Vector3 Multiply(const Vector3& v, const Matrix4x4& m) { return Vector3(); }
 
 ///=====================================================///
 /// クロス積の計算

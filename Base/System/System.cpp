@@ -15,11 +15,9 @@ DXCommon* System::dXCommon_ = nullptr;
 Input* System::input_ = nullptr;
 PipelineStateObject* System::pipeline_ = nullptr;
 
-Mesh* System::triangle_ = nullptr;
-
-/* ///////////////////////////////////////////////////
-					    Sprite
-*/ ///////////////////////////////////////////////////
+///=====================================================/// 
+/// Sprite
+///=====================================================///
 // 三角形
 Sprite* System::triangleSprite_ = nullptr;
 Material* System::materialTriangleSprite_ = nullptr;
@@ -30,10 +28,14 @@ Sprite* System::squareSprite_ = nullptr;
 Material* System::materialSquareSprite_ = nullptr;
 Transform* System::wvpSquareSprite_ = nullptr;
 
+///=====================================================/// 
+/// Mesh
+///=====================================================///
+Mesh* System::triangle_ = nullptr;
 
-/// <summary>
-/// ReportLiveObjects
-/// </summary>
+///=====================================================/// 
+/// ReportLiveObjects()
+///=====================================================///
 struct D3DResourceLeakChecker {
 
 	~D3DResourceLeakChecker() {
@@ -48,10 +50,9 @@ struct D3DResourceLeakChecker {
 	}
 };
 
-
-/// <summary>
+///=====================================================/// 
 /// システム全体の初期化
-/// </summary>
+///=====================================================///
 void System::Initialize(const wchar_t* title, int width, int height) {
 
 	// ReportLiveObjects
@@ -77,9 +78,9 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// Triangleの生成
 	triangle_ = Mesh::GetInstance();
 
-	/* //////////////////////////////////////////
-					Sprite（三角形）
-	*/ //////////////////////////////////////////
+	///-------------------------------------------/// 
+    /// Sprite（三角形）
+    ///-------------------------------------------///
 	// スプライトの生成
 	triangleSprite_ = Sprite::GetInstance();
 	triangleSprite_->CreateVertexBuffer(dXCommon_->GetDevice(), sizeof(VertexData) * 3);
@@ -93,9 +94,9 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	wvpTriangleSprite_ = Transform::GetInstance();
 	wvpTriangleSprite_->CreateResource(dXCommon_->GetDevice(), sizeof(TransformationMatrix));
 
-	/* //////////////////////////////////////////
-					Sprite（四角形）
-	*/ //////////////////////////////////////////
+	///-------------------------------------------/// 
+    /// Sprite（四角形）
+    ///-------------------------------------------///
 	// スプライトの生成
 	squareSprite_ = Sprite::GetInstance();
 	squareSprite_->CreateVertexBuffer(dXCommon_->GetDevice(), sizeof(VertexData) * 6);
@@ -110,58 +111,57 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	wvpSquareSprite_->CreateResource(dXCommon_->GetDevice(), sizeof(TransformationMatrix));
 }
 
-/// <summary>
+///=====================================================/// 
 /// 更新
-/// </summary>
+///=====================================================///
 void System::Update() {
 
 	input_->Update();
 }
 
-/// <summary>
+///=====================================================/// 
 /// システム全体の終了
-/// </summary>
+///=====================================================///
 void System::Finalize() {
 
 	// ゲームウィンドウの破棄
 	winApp_->TerminateGameWindow();
 }
 
-/// <summary>
+///=====================================================/// 
 /// フレーム開始処理
-/// </summary>
+///=====================================================///
 void System::BeginFrame() {
 	dXCommon_->PreDraw();
 }
 
-/// <summary>
+///=====================================================/// 
 /// フレーム終了処理
-/// </summary>
+///=====================================================///
 void System::EndFrame() {
 	dXCommon_->PostDraw();
 }
 
-/// <summary>
+///=====================================================/// 
 /// Windowsのメッセージを処理する
-/// </summary>
+///=====================================================///
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-/// <summary>
+///=====================================================/// 
 /// 三角形の描画
-/// </summary>
+///=====================================================///
 void System::DrawTriangle(
-	Vector2* TriangleLeftBottomPositionData, 
-	Vector2* TriangleTopPositionData, 
+	Vector2* TriangleLeftBottomPositionData,
+	Vector2* TriangleTopPositionData,
 	Vector2* TriangleRightBottomPositionData) {
-	/* ///////////////////////////////////////////////////////////////////////////////
-										コマンドリストの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
+	///-------------------------------------------/// 
+	/// コマンドリストの生成
+	///-------------------------------------------///
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = dXCommon_->GetCommandList();
 
-	/* /////////////////////////////////////////////////////////////////////////////// 
-										VertexBufferの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
-
+	///-------------------------------------------/// 
+	/// VertexBufferの生成
+	///-------------------------------------------///
 	// VertexBufferViewの生成
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 
@@ -174,10 +174,9 @@ void System::DrawTriangle(
 	// 1頂点当たりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										IndexBufferの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
-	
+	///-------------------------------------------/// 
+	/// IndexBufferの生成
+	///-------------------------------------------///
 	// IndexBufferViewの生成
 	D3D12_INDEX_BUFFER_VIEW indexBufferView{};
 
@@ -193,26 +192,25 @@ void System::DrawTriangle(
 	// データの書き込み
 	triangleSprite_->WriteTriangle(TriangleLeftBottomPositionData, TriangleTopPositionData, TriangleRightBottomPositionData);
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										マテリアルの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
-
+	///-------------------------------------------/// 
+	/// マテリアルの生成
+	///-------------------------------------------///
 	// マテリアルリソースのデータを設定
 	MaterialData material;
 	material.color = Vector4(1.0f, 0.0f, 0.0f, 1.0f); // 赤色に設定
 	materialTriangleSprite_->WriteData(&material);
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										wvpResourceの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
+	///-------------------------------------------/// 
+	/// wvpResourceの生成
+	///-------------------------------------------///
 	// wvpリソースのデータ設定
 	TransformationMatrix wvp;
 	wvp.WVP = MakeIdentity4x4(); // 単位行列を入れておく
 	wvpTriangleSprite_->WriteData(&wvp);
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										各々の設定
-	*/ /////////////////////////////////////////////////////////////////////////////// 
+	///-------------------------------------------/// 
+	/// 各々の設定
+	///-------------------------------------------///
 	// ルートシグネイチャを設定
 	commandList->SetGraphicsRootSignature(pipeline_->GetRootSignature());
 
@@ -240,24 +238,23 @@ void System::DrawTriangle(
 	/* 三角形の描画をSpriteに変更 */
 }
 
-/// <summary>
+///=====================================================/// 
 /// 四角形の描画
-/// </summary>
+///=====================================================///
 void System::DrawSquare(
-	Vector2* SquareLeftTopPosition, 
-	Vector2* SquareRightTopPosition, 
-	Vector2* SquareLeftBottomPosition, 
+	Vector2* SquareLeftTopPosition,
+	Vector2* SquareRightTopPosition,
+	Vector2* SquareLeftBottomPosition,
 	Vector2* SquareRightBottomPosition) {
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										コマンドリストの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
+	///-------------------------------------------/// 
+	/// コマンドリストの生成
+	///-------------------------------------------///
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = dXCommon_->GetCommandList();
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										VertexBufferの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
-
+	///-------------------------------------------/// 
+	/// VertexBufferの生成
+	///-------------------------------------------///
 	// VertexBufferViewの生成
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 
@@ -269,10 +266,9 @@ void System::DrawSquare(
 	// 1頂点当たりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										IndexBufferの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
-
+	///-------------------------------------------/// 
+	/// IndexBufferの生成
+	///-------------------------------------------///
 	// IndexBufferViewの生成
 	D3D12_INDEX_BUFFER_VIEW indexBufferView{};
 
@@ -288,26 +284,25 @@ void System::DrawSquare(
 	// データの書き込み
 	triangleSprite_->WriteSquare(SquareLeftTopPosition, SquareRightTopPosition, SquareLeftBottomPosition, SquareRightBottomPosition);
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										マテリアルの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
-
+	///-------------------------------------------/// 
+	/// マテリアルの生成
+	///-------------------------------------------///
 	// マテリアルリソースのデータを設定
 	MaterialData material;
 	materialTriangleSprite_->WriteData(&material);
 	material.color = Vector4(1.0f, 0.0f, 0.0f, 1.0f); // 赤色に設定
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										wvpResourceの生成
-	*/ /////////////////////////////////////////////////////////////////////////////// 
+	///-------------------------------------------/// 
+	/// wvpResourceの生成
+	///-------------------------------------------///
 	// wvpリソースのデータ設定
 	TransformationMatrix wvp;
 	wvpTriangleSprite_->WriteData(&wvp);
 	wvp.WVP = MakeIdentity4x4(); // 単位行列を入れておく
 
-	/* ///////////////////////////////////////////////////////////////////////////////
-										各々の設定
-	*/ /////////////////////////////////////////////////////////////////////////////// 
+	///-------------------------------------------/// 
+	/// 各々の設定
+	///-------------------------------------------///
 	// RootSignature・PipelineStateの設定
 	//NOTE:使用するルートシグネイチャやパイプラインステートをそれぞれ変更できるようにするためにここで設定する
 	commandList->SetGraphicsRootSignature(pipeline_->GetRootSignature()); // ルートシグネイチャを設定

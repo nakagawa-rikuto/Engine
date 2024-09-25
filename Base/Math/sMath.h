@@ -14,6 +14,10 @@
 /// <returns></returns>
 float Pi();
 
+///=====================================================/// 
+/// ここから各々で使用する関数を書き込む
+///=====================================================///
+
 #pragma region 変換
 /// <summary>
 /// 座標変換
@@ -23,14 +27,6 @@ float Pi();
 /// <returns></returns>
 Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix);
 #pragma endregion
-
-/// <summary>
-/// Vector3と行列の掛け算
-/// </summary>
-/// <param name="v"></param>
-/// <param name="m"></param>
-/// <returns></returns>
-//Vector3 Multiply(const Vector3& v, const Matrix4x4& m);
 
 /// <summary>
 /// クロス積

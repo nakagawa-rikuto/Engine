@@ -6,17 +6,19 @@
 #include "Sprite.h"
 #include "Material.h"
 #include "Transform.h"
-#include "Input.h"
 
+#include "Input.h"
 #include "CBufferData.h"
 
 #include <memory>
 #include <d3d12.h>
 
+///=====================================================///
+/// システム
+///=====================================================///
 class System {
 
 public:
-
 	/// <summary>
 	/// システム全体の初期化
 	/// </summary>
@@ -83,9 +85,7 @@ private:
 	static Input* input_;                    // Input
 	static PipelineStateObject* pipeline_;   // PSO
 
-	/* ///////////////////////////////
-				   Sprite
-	*/ ///////////////////////////////
+	/// ===Sprite=== ///
 	// 三角形
 	static Sprite* triangleSprite_;
 	static Material* materialTriangleSprite_;
@@ -96,8 +96,6 @@ private:
 	static Material* materialSquareSprite_;
 	static Transform* wvpSquareSprite_;
 
-	/* ///////////////////////////////
-				  3dObject
-	*/ ///////////////////////////////
+	/// ===3dObject=== ///
 	static Mesh* triangle_;
 };
