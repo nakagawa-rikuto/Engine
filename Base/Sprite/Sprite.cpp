@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "SpriteCommon.h"
+#include "sMath.h"
 
 ///-------------------------------------------/// 
 /// シングルトン
@@ -18,8 +19,9 @@ void Sprite::Initialize(SpriteCommon* spriteCommon) {
 	this->spriteCommon_ = spriteCommon;
 
 	// Resourceの作成
-	vertexBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(vertexData_) * 6);
-	indexBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(indexData_) * 6);
+	vertexBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(VertexData) * 6);
+	indexBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(uint32_t) * 6);
+	materialBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(MaterialData) * 3);
 
 	// ResourceViewの作成
 	vertexBufferView_.BufferLocation = vertexBuffer_->GetGPUVirtualAddress(); // 先頭アドレスから使用
@@ -35,6 +37,13 @@ void Sprite::Initialize(SpriteCommon* spriteCommon) {
 		0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	indexBuffer_->Map(
 		0, nullptr, reinterpret_cast<void**>(&indexData_));
+	materialBuffer_->Map(
+		0, nullptr, reinterpret_cast<void**>(&materialData_));
+
+	// マテリアルデータの初期値を書き込む
+	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData_->enableLighting = false;
+	materialData_->uvTransform = MakeIdentity4x4();
 }
 
 ///-------------------------------------------/// 

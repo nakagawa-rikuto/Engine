@@ -29,10 +29,12 @@ private:
 	// バッファリソース内のデータを指すポインタ
 	VertexData* vertexData_ = nullptr;
 	uint32_t* indexData_ = nullptr;
+	MaterialData* materialData_ = nullptr;
 
 	// バッファリソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialBuffer_;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
