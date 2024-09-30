@@ -8,8 +8,8 @@
 #include <format>
 
 PipelineStateObject* PipelineStateObject::GetInstance() {
-	static PipelineStateObject instatnce;
-	return &instatnce;
+	static PipelineStateObject instance;
+	return &instance;
 }
 
 void PipelineStateObject::CreatePSO(DXCommon* dxCommon) {

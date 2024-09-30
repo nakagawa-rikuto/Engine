@@ -12,8 +12,10 @@
 
 WinApp* System::winApp_ = nullptr;
 DXCommon* System::dXCommon_ = nullptr;
+
+SpriteCommon* System::spriteCommon_ = nullptr;
+
 Input* System::input_ = nullptr;
-PipelineStateObject* System::pipeline_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -48,14 +50,14 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	dXCommon_ = DXCommon::GetInstance();
 	dXCommon_->Initialize(winApp_, width, height);
 
+	// スプライト共通部の生成
+	spriteCommon_ = SpriteCommon::GetInstance();
+	spriteCommon_->Initialize(dXCommon_);
+
 	// Inputの初期化
 	input_ = Input::GetInstance();
 	input_->Initialize(winApp_);
 
-	// パイプラインの生成
-	pipeline_ = PipelineStateObject::GetInstance();
-	assert(dXCommon_->GetDevice());
-	pipeline_->CreatePSO(dXCommon_);
 }
 
 ///=====================================================/// 
@@ -80,6 +82,7 @@ void System::Finalize() {
 ///=====================================================///
 void System::BeginFrame() {
 	dXCommon_->PreDraw();
+	spriteCommon_->PreDraw();
 }
 
 ///=====================================================/// 

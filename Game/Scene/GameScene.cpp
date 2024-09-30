@@ -3,7 +3,10 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+
+	delete sprite_;
+}
 
 
 /* ////////////////////////////////////////////////////////////
@@ -17,6 +20,8 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DXCommon::GetInstance();
 	input_ = Input::GetInstance();
+
+	sprite_->Initialize();
 }
 
 /* ////////////////////////////////////////////////////////////

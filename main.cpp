@@ -8,7 +8,6 @@ const wchar_t kWindowTitle[] = L"Engine";
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-
 	Input* input = nullptr; // Inputの宣言
 	GameScene* gameScene = nullptr; // GameSceneの宣言
 

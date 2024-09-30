@@ -117,6 +117,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\WinApp\WinApp.cpp" />
     <ClCompile Include="Game\Scene\GameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Base\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="Base\Sprite\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\Transform\Transform.h" />
     <ClInclude Include="Base\WinApp\WinApp.h" />
     <ClInclude Include="Game\Scene\GameScene.h" />
+    <ClInclude Include="Base\Sprite\SpriteCommon.h" />
     <ClInclude Include="Base\Sprite\Sprite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

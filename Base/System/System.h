@@ -1,7 +1,8 @@
 #pragma once
 #include "WinApp.h"
 #include "DXCommon.h"
-#include "PipelineStateObject.h"
+
+#include "SpriteCommon.h"
 
 #include "Input.h"
 #include "CBufferData.h"
@@ -54,6 +55,9 @@ private:
 
 	static WinApp* winApp_;                  // WinApp
 	static DXCommon* dXCommon_;              // DirectXCommon
+
 	static Input* input_;                    // Input
-	static PipelineStateObject* pipeline_;   // PSO
+
+	static SpriteCommon* spriteCommon_;      // SpriteCommon
+
 };
