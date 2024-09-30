@@ -205,8 +205,9 @@ void System::DrawTriangle(
 	///-------------------------------------------///
 	// wvpリソースのデータ設定
 	TransformationMatrix wvp;
-	wvp.WVP = MakeIdentity4x4(); // 単位行列を入れておく
 	wvpTriangleSprite_->WriteData(&wvp);
+	wvp.WVP = MakeIdentity4x4(); // 単位行列を入れておく
+	wvp.World = MakeIdentity4x4();
 
 	///-------------------------------------------/// 
 	/// 各々の設定
@@ -299,6 +300,7 @@ void System::DrawSquare(
 	TransformationMatrix wvp;
 	wvpTriangleSprite_->WriteData(&wvp);
 	wvp.WVP = MakeIdentity4x4(); // 単位行列を入れておく
+	wvp.World = MakeIdentity4x4();
 
 	///-------------------------------------------/// 
 	/// 各々の設定

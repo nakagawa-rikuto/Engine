@@ -54,6 +54,9 @@ public:
 	/// <returns></returns>
 	static int ProcessMessage();
 
+	///=====================================================/// 
+	/// スプライト
+	///=====================================================///
 	/// <summary>
 	/// 三角形の描画
 	/// </summary>
@@ -61,7 +64,7 @@ public:
 	/// <param name="TriangleTopPositionData"></param>
 	/// <param name="TriangleRightBottomPositionData"></param>
 	static void DrawTriangle(
-		Vector2* TriangleLeftBottomPositionData, 
+		Vector2* TriangleLeftBottomPositionData,
 		Vector2* TriangleTopPositionData,
 		Vector2* TriangleRightBottomPositionData);
 
