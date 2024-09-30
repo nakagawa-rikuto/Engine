@@ -43,11 +43,5 @@ private: /* メンバ変数 */
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-	
-	// 三角形の情報
-	Vector2 pos1;
-	Vector2 pos2;
-	Vector2 pos3;
-	Vector2 pos4;
 };
 

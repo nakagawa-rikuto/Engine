@@ -27,13 +27,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ウィンドウのxボタンが押されるまでループ
 	while (System::ProcessMessage() == 0) {
 
-		///* ///////////////////////////////////////////////
-		//					三角形の情報
-		//*/ ///////////////////////////////////////////////
-
-		//TransformInfo transformTriangle;
-		//transformTriangle = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
 		/* ////////////////////////////
 				　　更新の処理
 		*/ ////////////////////////////

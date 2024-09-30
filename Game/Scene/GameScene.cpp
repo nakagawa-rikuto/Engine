@@ -17,14 +17,6 @@ void GameScene::Initialize() {
 
 	dxCommon_ = DXCommon::GetInstance();
 	input_ = Input::GetInstance();
-
-	/* ////////////////////////////
-			  三角形の情報
-	*/ ////////////////////////////
-	pos1 = { 0.0f, 0.0f };
-	pos2 = { 1.0f, 0.0f };
-	pos3 = { 0.0f, 1.0f };
-	pos4 = { 1.0f, 1.0f };
 }
 
 /* ////////////////////////////////////////////////////////////
@@ -47,11 +39,6 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
-
-	System::DrawTriangle(&pos1, &pos2, &pos3);
-
-	System::DrawSquare(&pos1, &pos2, &pos3, &pos4);
-
 #pragma endregion
 }
 
