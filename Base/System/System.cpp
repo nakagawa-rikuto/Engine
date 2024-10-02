@@ -14,6 +14,7 @@ WinApp* System::winApp_ = nullptr;
 DXCommon* System::dXCommon_ = nullptr;
 
 SpriteCommon* System::spriteCommon_ = nullptr;
+Sprite* System::sprite_ = nullptr;
 
 Input* System::input_ = nullptr;
 
@@ -54,6 +55,10 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	spriteCommon_ = SpriteCommon::GetInstance();
 	spriteCommon_->Initialize(dXCommon_);
 
+	// スプライトの生成
+	sprite_ = Sprite::GetInstance();
+	sprite_->Initialize(spriteCommon_);
+
 	// Inputの初期化
 	input_ = Input::GetInstance();
 	input_->Initialize(winApp_);
@@ -66,6 +71,8 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 void System::Update() {
 
 	input_->Update();
+
+	sprite_->Update();
 }
 
 ///=====================================================/// 
@@ -83,6 +90,8 @@ void System::Finalize() {
 void System::BeginFrame() {
 	dXCommon_->PreDraw();
 	spriteCommon_->PreDraw();
+
+	sprite_->Draw();
 }
 
 ///=====================================================/// 

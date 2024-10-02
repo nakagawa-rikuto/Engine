@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+#include "DXCommon.h"
+
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
@@ -25,7 +27,7 @@ void SpriteCommon::Initialize(DXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	// パイプラインの生成
-	pipeline_ = PipelineStateObject::GetInstance();
+	pipeline_ = std::make_unique<PipelineStateObject>();
 	assert(dxCommon_->GetDevice());
 	pipeline_->CreatePSO(dxCommon_);
 }

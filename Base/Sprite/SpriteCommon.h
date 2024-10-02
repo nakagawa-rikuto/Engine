@@ -1,6 +1,11 @@
 #pragma once
-#include "DXCommon.h"
+
+#include <memory>
+
 #include "PipelineStateObject.h"
+
+/// ===前方宣言=== ///
+class DXCommon;
 
 /// <summary>
 /// スプライト共通武
@@ -39,6 +44,6 @@ private:
 	DXCommon* dxCommon_;
 
 	// グラフィックパイプライン
-	Microsoft::WRL::ComPtr<PipelineStateObject> pipeline_;
+	std::unique_ptr<PipelineStateObject> pipeline_;
 };
 

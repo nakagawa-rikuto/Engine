@@ -7,11 +7,29 @@
 #include <vector>
 #include <format>
 
+#include "DXCommon.h"
+
+///-------------------------------------------/// 
+/// コンストラクタ
+///-------------------------------------------///
+PipelineStateObject::PipelineStateObject() {}
+
+///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+PipelineStateObject::~PipelineStateObject() {}
+
+///-------------------------------------------/// 
+/// シングルトン
+///-------------------------------------------///
 PipelineStateObject* PipelineStateObject::GetInstance() {
 	static PipelineStateObject instance;
 	return &instance;
 }
 
+///-------------------------------------------/// 
+/// PSOの作成
+///-------------------------------------------///
 void PipelineStateObject::CreatePSO(DXCommon* dxCommon) {
 
 	HRESULT hr;

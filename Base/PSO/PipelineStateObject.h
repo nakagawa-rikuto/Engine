@@ -1,12 +1,26 @@
 #pragma once
-#include "DXCommon.h"
 #include "RootSignature.h"
 #include "InputLayout.h"
 #include "BlendState.h"
 #include "RasterizerState.h"
 #include "Compiler.h"
 
+/// ===前方宣言=== ///
+class DXCommon;
+
 class PipelineStateObject {
+
+public:
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	PipelineStateObject();
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~PipelineStateObject();
 
 public:
 

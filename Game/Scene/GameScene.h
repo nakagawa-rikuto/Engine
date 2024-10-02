@@ -3,10 +3,6 @@
 #include "Input.h"
 #include "System.h"
 
-#include "Sprite.h"
-
-#include "sMath.h"
-
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -46,8 +42,5 @@ private: /* メンバ変数 */
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-	
-	// スプライト
-	Sprite* sprite_;
 };
 

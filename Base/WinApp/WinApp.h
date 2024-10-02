@@ -15,6 +15,20 @@ public:
 	// ウィンドウクラス名
 	static const wchar_t kWindowClassName[];
 
+public:
+
+	/// <summary>
+	/// ウィンドウの横幅の取得
+	/// </summary>
+	/// <returns></returns>
+	static const int GetWindowWidth();
+	
+	/// <summary>
+	/// ウィンドウの縦幅の取得
+	/// </summary>
+	/// <returns></returns>
+	static const int GetWindowHeight();
+
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>

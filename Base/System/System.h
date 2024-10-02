@@ -3,6 +3,7 @@
 #include "DXCommon.h"
 
 #include "SpriteCommon.h"
+#include "Sprite.h"
 
 #include "Input.h"
 #include "CBufferData.h"
@@ -59,5 +60,5 @@ private:
 	static Input* input_;                    // Input
 
 	static SpriteCommon* spriteCommon_;      // SpriteCommon
-
+	static Sprite* sprite_;                  // Sprite
 };

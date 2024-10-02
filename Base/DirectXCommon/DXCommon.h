@@ -168,8 +168,8 @@ private: // メンバ変数
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_; // DSVハンドル	
 
-	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
-	uint64_t fenceValue_ = 0;
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence_; // Fence
+	uint64_t fenceValue_ = 0;  // FenceValue
 
 	std::chrono::steady_clock::time_point reference_; // 記録時間(FPS固定用)
 

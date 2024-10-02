@@ -4,18 +4,28 @@
 // ウィンドウクラスの名前
 const wchar_t WinApp::kWindowClassName[] = L"DirectX_MyEngine_WindowClass";
 
-/// <summary>
-/// シングルトンインスタンスの取得
-/// </summary>
+///-------------------------------------------/// 
+/// ウィンドウの横幅の取得
+///-------------------------------------------///
+const int WinApp::GetWindowWidth() { return kWindowWidth; }
+
+///-------------------------------------------/// 
+/// ウィンドウの縦幅の取得
+///-------------------------------------------///
+const int WinApp::GetWindowHeight() { return kWindowHeight; }
+
+///-------------------------------------------/// 
+/// シングルトン
+///-------------------------------------------///
 WinApp* WinApp::GetInstance() {
 
 	static WinApp instance;
 	return &instance;
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// ウィンドウプロージャ
-/// </summary>
+///-------------------------------------------///
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	// メッセージに応じたゲーム固有の処理
 	switch (msg) {
@@ -32,9 +42,9 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// ゲームウィンドウの作成
-/// </summary>
+///-------------------------------------------///
 void WinApp::CreateGameWindow(const wchar_t* title, int32_t kClientWidth, int32_t kClientHeight) {
 
 	/* /////////////////////////////////////
@@ -87,6 +97,9 @@ void WinApp::CreateGameWindow(const wchar_t* title, int32_t kClientWidth, int32_
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
+///-------------------------------------------/// 
+/// ゲームウィンドウの破棄
+///-------------------------------------------///
 void WinApp::TerminateGameWindow() {
 	// ウィンドウクラスを登録解除
 	UnregisterClass(wndClass_.lpszClassName, wndClass_.hInstance);
@@ -95,9 +108,9 @@ void WinApp::TerminateGameWindow() {
 	CoUninitialize();
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// メッセージの処理
-/// </summary>
+///-------------------------------------------///
 bool WinApp::ProcessMessage() {
 	MSG msg{}; // メッセージ
 
