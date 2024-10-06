@@ -7,12 +7,30 @@
 #include "sMath.h"
 
 ///-------------------------------------------/// 
-/// シングルトン
+/// Getter
 ///-------------------------------------------///
-Sprite* Sprite::GetInstance() {
-	static Sprite instance;
-	return &instance;
-}
+// 座標
+const Vector2& Sprite::GetPosition() const { return position_; }
+// 回転
+const float& Sprite::GetRotation() const { return rotation_; }
+// サイズ
+const Vector2& Sprite::GetSize() const { return size_; }
+// 色
+const Vector4& Sprite::GetColor() const { return color_; }
+
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+// 座標
+void Sprite::SetPosition(const Vector2& position) { this->position_ = position; }
+// 回転
+void Sprite::SetRotation(const float& rotation) { this->rotation_ = rotation; }
+// サイズ
+void Sprite::SetSize(const Vector2& size) { this->size_ = size; }
+// 色
+void Sprite::SetColor(const Vector4& color) { this->color_ = color; }
+
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -48,7 +66,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon) {
 		0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
 
 	// マテリアルデータの初期値を書き込む
-	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData_->color = color_;
 	materialData_->enableLighting = false;
 	materialData_->uvTransform = MakeIdentity4x4();
 
@@ -60,6 +78,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon) {
 	transform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
 }
 
+
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
@@ -68,6 +87,8 @@ void Sprite::Update() {
 	VertexDataWrite();
 	IndexDataWrite();
 	TransformDataWrite();
+
+	materialData_->color = color_;
 }
 
 ///-------------------------------------------/// 
@@ -93,6 +114,7 @@ void Sprite::Draw() {
 	// 描画(ドローコール)
 	spriteCommon_->GetDXCommon()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
+
 
 ///-------------------------------------------/// 
 /// Resourceの作成関数
@@ -129,12 +151,13 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Sprite::CreateResource(ID3D12Device* devi
 	return Resource;
 }
 
+
 ///-------------------------------------------/// 
 /// VertexResourceの書き込み
 ///-------------------------------------------///
 void Sprite::VertexDataWrite() {
 
-	vertexData_[0].position = { 0.0f, 180.0f, 0.0f, 1.0f };
+	vertexData_[0].position = { 0.0f, 1.0f, 0.0f, 1.0f };
 	vertexData_[0].texcoord = { 0.0f, 1.0f };
 	vertexData_[0].normal = { 0.0f, 0.0f, -1.0f };
 
@@ -142,14 +165,15 @@ void Sprite::VertexDataWrite() {
 	vertexData_[1].texcoord = { 0.0f, 0.0f };
 	vertexData_[1].normal = { 0.0f, 0.0f, -1.0f };
 
-	vertexData_[2].position = { 320.0f, 180.0f, 0.0f, 1.0f };
+	vertexData_[2].position = { 1.0f, 1.0f, 0.0f, 1.0f };
 	vertexData_[2].texcoord = { 1.0f, 1.0f };
 	vertexData_[2].normal = { 0.0f, 0.0f, -1.0f };
 
-	vertexData_[3].position = { 320.0f, 0.0f, 0.0f, 1.0f };
+	vertexData_[3].position = { 1.0f, 0.0f, 0.0f, 1.0f };
 	vertexData_[3].texcoord = { 1.0f, 0.0f };
 	vertexData_[3].normal = { 0.0f, 0.0f, -1.0f };
 }
+
 
 ///-------------------------------------------/// 
 /// IndexResourceの書き込み
@@ -164,10 +188,18 @@ void Sprite::IndexDataWrite() {
 	indexData_[5] = 2;
 }
 
+
 ///-------------------------------------------/// 
 /// TransformDataの書き込み
 ///-------------------------------------------///
 void Sprite::TransformDataWrite() {
+
+	// 座標の反映
+	transform_.translate = { position_.x, position_.y, 0.0f };
+	// 回転の反映
+	transform_.rotate = { 0.0, 0.0, rotation_ };
+	// サイズの反映
+	transform_.scale = { size_.x, size_.y, 1.0f };
 
 	// WorldMatrix
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);

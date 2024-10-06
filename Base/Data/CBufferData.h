@@ -14,7 +14,7 @@
 #include "Matrix4x4.h"
 
 /// <summary>
-/// 三角形
+/// VertexData
 /// </summary>
 struct VertexData {
 

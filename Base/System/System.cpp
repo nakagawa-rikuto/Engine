@@ -1,22 +1,18 @@
 #include "System.h"
 
-#include <d3d12.h>
-#include <algorithm>
-#include <cassert>
-#include <iterator>
-#include <span>
-#include <dxgidebug.h>
-#include <wrl.h>
+#include "WinApp.h"
+#include "DXCommon.h"
+#include "Input.h"
+
+#include "SpriteCommon.h"
 
 #include "sMath.h"
 
-WinApp* System::winApp_ = nullptr;
-DXCommon* System::dXCommon_ = nullptr;
+std::unique_ptr<WinApp> System::winApp_ = nullptr;
+std::unique_ptr<DXCommon> System::dXCommon_ = nullptr;
+std::unique_ptr<Input> System::input_ = nullptr;
 
-SpriteCommon* System::spriteCommon_ = nullptr;
-Sprite* System::sprite_ = nullptr;
-
-Input* System::input_ = nullptr;
+std::unique_ptr<SpriteCommon> System::spriteCommon_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -35,6 +31,12 @@ struct D3DResourceLeakChecker {
 	}
 };
 
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+// SpriteCommon
+SpriteCommon* System::GetSpriteCommon() { return spriteCommon_.get(); }
+
 ///=====================================================/// 
 /// システム全体の初期化
 ///=====================================================///
@@ -44,25 +46,20 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	D3DResourceLeakChecker leakCheck;
 
 	// ゲームウィンドウの作成
-	winApp_ = WinApp::GetInstance();
+	winApp_ = std::make_unique<WinApp>();
 	winApp_->CreateGameWindow(title, width, height);
 
 	// DirectX初期化処理
-	dXCommon_ = DXCommon::GetInstance();
-	dXCommon_->Initialize(winApp_, width, height);
-
-	// スプライト共通部の生成
-	spriteCommon_ = SpriteCommon::GetInstance();
-	spriteCommon_->Initialize(dXCommon_);
-
-	// スプライトの生成
-	sprite_ = Sprite::GetInstance();
-	sprite_->Initialize(spriteCommon_);
+	dXCommon_ = std::make_unique<DXCommon>();
+	dXCommon_->Initialize(winApp_.get(), width, height);
 
 	// Inputの初期化
-	input_ = Input::GetInstance();
-	input_->Initialize(winApp_);
+	input_ = std::make_unique<Input>();
+	input_->Initialize(winApp_.get());
 
+	// スプライト共通部の生成
+	spriteCommon_ = std::make_unique<SpriteCommon>();
+	spriteCommon_->Initialize(dXCommon_.get());
 }
 
 ///=====================================================/// 
@@ -71,8 +68,6 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 void System::Update() {
 
 	input_->Update();
-
-	sprite_->Update();
 }
 
 ///=====================================================/// 
@@ -90,8 +85,6 @@ void System::Finalize() {
 void System::BeginFrame() {
 	dXCommon_->PreDraw();
 	spriteCommon_->PreDraw();
-
-	sprite_->Draw();
 }
 
 ///=====================================================/// 
@@ -105,4 +98,3 @@ void System::EndFrame() {
 /// Windowsのメッセージを処理する
 ///=====================================================///
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
-

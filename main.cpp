@@ -1,6 +1,7 @@
 #include "System.h"
-#include "GameScene.h"
-#include "Input.h"
+
+#include "Sprite.h"
+
 #include"sMath.h"
 
 const wchar_t kWindowTitle[] = L"Engine";
@@ -8,19 +9,19 @@ const wchar_t kWindowTitle[] = L"Engine";
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	Input* input = nullptr; // Inputの宣言
-	GameScene* gameScene = nullptr; // GameSceneの宣言
-
 #pragma region 初期化
 	// Systemの初期化
 	System::Initialize(kWindowTitle, 1280, 720);
 
-	// 入力の初期化
-	input = Input::GetInstance();
+	std::vector<Sprite*> sprites_;
+	for (uint32_t i = 0; i < 5; ++i) {
+		Sprite* sprite = new Sprite();
+		sprite->Initialize(System::GetSpriteCommon());
+		sprite->SetSize(Vector2(50.0f, 50.0f));
+		sprite->SetPosition(Vector2(i * 150.0f, 0.0f));
+		sprites_.push_back(sprite);
+	}
 
-	// GameSceneの初期化
-	gameScene = new GameScene();
-	gameScene->Initialize();
 #pragma endregion
 
 	// ウィンドウのxボタンが押されるまでループ
@@ -30,7 +31,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				　　更新の処理
 		*/ ////////////////////////////
 		System::Update();
-		gameScene->Update();
+		
+		for (Sprite* sprite : sprites_) {
+
+			sprite->Update();
+		}
 
 		// フレームの開始
 		System::BeginFrame();
@@ -38,7 +43,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/* ////////////////////////////
 				　　描画の処理
 		*/ ////////////////////////////
-		gameScene->Draw();
+
+		// Spriteの描画
+		for (Sprite* sprite : sprites_) {
+
+			sprite->Draw();
+		}
 
 		// AL3のmasterを参考にする
 

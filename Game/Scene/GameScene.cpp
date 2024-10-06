@@ -4,10 +4,7 @@
 #include "sMath.h"
 
 GameScene::GameScene() {}
-
-GameScene::~GameScene() {
-}
-
+GameScene::~GameScene() {}
 
 /* ////////////////////////////////////////////////////////////
 					　Getter ・　Setter
@@ -42,6 +39,9 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
+
+
+
 #pragma endregion
 }
 
