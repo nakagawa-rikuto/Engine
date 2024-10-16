@@ -7,7 +7,7 @@
 #include <vector>
 #include <format>
 
-#include "DXCommon.h"
+#include "Base/DirectXCommon/DXCommon.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ

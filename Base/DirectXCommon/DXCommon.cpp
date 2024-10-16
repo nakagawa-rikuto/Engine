@@ -1,5 +1,6 @@
 #include "DXCommon.h"
-#include "Logger.h"
+#include "Base/Log/Logger.h"
+#include "Base/WinApp/WinApp.h"
 
 #include <algorithm>
 #include <cassert>
@@ -7,6 +8,10 @@
 #include <timeapi.h>
 #include <vector>
 #include <format>
+
+#include "imgui.h"
+#include "imgui_impl_dx12.h"
+#include "imgui_impl_win32.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -18,21 +23,20 @@ namespace {
 	const uint32_t kNumDSVDescriptor = 1;
 }
 
-/// <summary>
+/// ===最大テクスチャ数=== ///
+const uint32_t DXCommon::kMaxSRVCount = 512;
+
+///-------------------------------------------/// 
 /// シングルトンインスタンスの取得
-/// </summary>
-/// <returns></returns>
+///-------------------------------------------///
 DXCommon* DXCommon::GetInstance() {
 	static DXCommon instance;
 	return &instance;
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// 初期化
-/// </summary>
-/// <param name="winApp"></param>
-/// <param name="backBufferWidth"></param>
-/// <param name="backBufferHeight"></param>
+///-------------------------------------------///
 void DXCommon::Initialize(
 	WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
 	// nullptrチェック
@@ -58,6 +62,9 @@ void DXCommon::Initialize(
 	// スワップチェーンの生成
 	CreateSwapChain();
 
+	// シェーダリソースの生成
+	CreateShaderResource();
+
 	// レンダーターゲットの生成
 	CreateFinalRenderTargets();
 
@@ -67,16 +74,22 @@ void DXCommon::Initialize(
 	// フェンスの生成
 	CreateFence();
 
-	// DXCの初期化
-	InitializeCompiler();
-
 	// ビューポート
 	CreateViewport(backBufferWidth_, backBufferHeight_);
 
 	// シザー矩形
 	CreateScissor(backBufferWidth_, backBufferHeight_);
+
+	// DXCの初期化
+	InitializeCompiler();
+
+	// ImGuiの初期化
+	InitializeImGui();
 }
 
+///-------------------------------------------/// 
+/// 描画前処理
+///-------------------------------------------///
 void DXCommon::PreDraw() {
 
 	// これから書き込むバックバッファのインデックスを取得
@@ -119,6 +132,9 @@ void DXCommon::PreDraw() {
 	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorを設定
 }
 
+///-------------------------------------------/// 
+/// 描画後処理
+///-------------------------------------------///
 void DXCommon::PostDraw() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 
@@ -170,9 +186,9 @@ void DXCommon::PostDraw() {
 	assert(SUCCEEDED(hr));
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// レンダーターゲットのクリア
-/// </summary>
+///-------------------------------------------///
 void DXCommon::ClearRenderTarget() {
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -181,43 +197,38 @@ void DXCommon::ClearRenderTarget() {
 	commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex], clearColor, 0, nullptr);
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// 深度バッファのクリア
-/// </summary>
+///-------------------------------------------///
 void DXCommon::ClearDepthBuffer() {
 
 	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-/// <summary>
-/// CPUのディスクリプターハンドルの取得 
-/// </summary>
-D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
-	ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+///-------------------------------------------/// 
+/// 各でスクリプタハンドルの取得用関数
+///-------------------------------------------///
+// SRVの指定番号のCPUでスクリプタハンドルを取得する
+D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetSRVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(srvHeap_, descriptorSizeSRV_, index); }
 
-	// ディスクリプタの先頭を取得
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
+// SRVの指定番号のGPUでスクリプタハンドルを取得する
+D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetSRVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(srvHeap_, descriptorSizeSRV_, index); }
 
-	return handleCPU;
-}
+// RTVの指定番号のCPUでスクリプタハンドルを取得する
+D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetRTVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV_, index); }
 
-/// <summary>
-/// GPUのディスクリプターハンドルの取得
-/// </summary>
-D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetGPUDescriptorHandle(
-	ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+// RTVの指定番号のGPUでスクリプタハンドルを取得する
+D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetRTVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(rtvHeap_, descriptorSizeRTV_, index); }
 
-	// ディスクリプタの先頭を取得
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
+// DSVの指定番号のCPUでスクリプタハンドルを取得する
+D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetDSVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
 
-	return handleGPU;
-}
+// DSVの指定番号のGPUでスクリプタハンドルを取得する
+D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetDSVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
 
-/// <summary>
+///-------------------------------------------/// 
 /// DXGIデバイス初期化
-/// </summary>
+///-------------------------------------------///
 void DXCommon::InitializeDXGIDevice() {
 
 	/* /////////////////////////////////////////////////////
@@ -324,9 +335,9 @@ void DXCommon::InitializeDXGIDevice() {
 #endif
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// コマンド関連の初期化
-/// </summary>
+///-------------------------------------------///
 void DXCommon::InitializeCommand() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 
@@ -347,25 +358,24 @@ void DXCommon::InitializeCommand() {
 	assert(SUCCEEDED(hr));
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// スワップチェーンの生成
-/// </summary>
+///-------------------------------------------///
 void DXCommon::CreateSwapChain() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 
 	// スワップチェーンを生成する
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-	swapChainDesc.Width = backBufferWidth_;      // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
-	swapChainDesc.Height = backBufferHeight_;     // 画面の高さ。ウィンドウのクライアント領域を同じものにしておく
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 色の形式
-	swapChainDesc.SampleDesc.Count = 1;  // マルチサンプルしない
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // 描画のターゲットとして利用する
-	swapChainDesc.BufferCount = 2;  // ダブルバッファ
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;  // モニタに移したら、中身を破棄
+	swapChainDesc_.Width = backBufferWidth_;      // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
+	swapChainDesc_.Height = backBufferHeight_;     // 画面の高さ。ウィンドウのクライアント領域を同じものにしておく
+	swapChainDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 色の形式
+	swapChainDesc_.SampleDesc.Count = 1;  // マルチサンプルしない
+	swapChainDesc_.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // 描画のターゲットとして利用する
+	swapChainDesc_.BufferCount = 2;  // ダブルバッファ
+	swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;  // モニタに移したら、中身を破棄
 
 	// コマンドキュー、ウィンドウハンドル、設定を渡して生成する
 	hr = dxgiFactory_->CreateSwapChainForHwnd(
-		commandQueue_.Get(), winApp_->GetHwnd(), &swapChainDesc,
+		commandQueue_.Get(), winApp_->GetHwnd(), &swapChainDesc_,
 		nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 
@@ -378,16 +388,20 @@ void DXCommon::CreateSwapChain() {
 	assert(SUCCEEDED(hr));
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// レンダーターゲットの生成(RTV)
-/// </summary>
+///-------------------------------------------///
 void DXCommon::CreateFinalRenderTargets() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+
+	// DescriptorSizeを取得
+	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	// RTVの生成(レンダーターゲットビュー)
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー用
 	heapDesc.NumDescriptors = kNumRTVDescriptor; // ダブルバッファ用に2つ以上
+	heapDesc.Flags = false ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	hr = device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&rtvHeap_));
 	// ディスクリプターヒープが作れなかったので起動できない
 	assert(SUCCEEDED(hr));
@@ -396,25 +410,27 @@ void DXCommon::CreateFinalRenderTargets() {
 	const uint32_t rtvSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	// RTVの設定(レンダーターゲットビュー)
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;  // 出力結果をSRGBに変換して書き込む
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;  // 2dテクスチャとして書き込む
+	rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;  // 出力結果をSRGBに変換して書き込む
+	rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;  // 2dテクスチャとして書き込む
 
 	// まず1つ目を作る。1つ目は最初のところに作る。作る場所をコリらで指定してあげる必要がある
 	rtvHandles_[0] = GetCPUDescriptorHandle(rtvHeap_.Get(), rtvSize, 0);
-	device_->CreateRenderTargetView(swapChainResource_[0].Get(), &rtvDesc, rtvHandles_[0]);
+	device_->CreateRenderTargetView(swapChainResource_[0].Get(), &rtvDesc_, rtvHandles_[0]);
 
 	//2つ目のディスクリプタハンドルを得る
 	rtvHandles_[1].ptr = rtvHandles_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//2つ目を作る
-	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc, rtvHandles_[1]);
+	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc_, rtvHandles_[1]);
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// 深度バッファの生成(DSV)
-/// </summary>
+///-------------------------------------------///
 void DXCommon::CreateDepthBuffer() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+
+	// DescriptorSizeの取得
+	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	// 生成するResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
@@ -445,13 +461,13 @@ void DXCommon::CreateDepthBuffer() {
 		&depthClearValue, // Clear最適値
 		IID_PPV_ARGS(&depthStencilResource_)); // 作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
-	
+
 
 	// DSVの生成(レンダーターゲットビュー)
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // レンダーターゲットビュー用
-	heapDesc.NumDescriptors = kNumDSVDescriptor; // ダブルバッファ用に1つ以上
-	hr = device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&dsvHeap_));
+	heapDesc_.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // レンダーターゲットビュー用
+	heapDesc_.NumDescriptors = kNumDSVDescriptor; // ダブルバッファ用に1つ以上
+	heapDesc_.Flags = false ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	hr = device_->CreateDescriptorHeap(&heapDesc_, IID_PPV_ARGS(&dsvHeap_));
 	// ディスクリプターヒープが作れなかったので起動できない
 	assert(SUCCEEDED(hr));
 
@@ -472,9 +488,28 @@ void DXCommon::CreateDepthBuffer() {
 	dsvHandle_ = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
 }
 
-/// <summary>
+///-------------------------------------------/// 
+/// SRVの生成
+///-------------------------------------------///
+void DXCommon::CreateShaderResource() {
+	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+
+	// DescriptorSizeの取得
+	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// SRVの生成(シェーダーリソース）
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV; // レンダーターゲットビュー用
+	heapDesc.NumDescriptors = kMaxSRVCount; // ダブルバッファ用に2つ以上
+	heapDesc.Flags = true ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	hr = device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&srvHeap_));
+	// ディスクリプターヒープが作れなかったので起動できない
+	assert(SUCCEEDED(hr));
+}
+
+///-------------------------------------------/// 
 /// フェンスの生成
-/// </summary>
+///-------------------------------------------///
 void DXCommon::CreateFence() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 
@@ -483,9 +518,9 @@ void DXCommon::CreateFence() {
 	assert(SUCCEEDED(hr));
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// DXCの初期化
-/// </summary>
+///-------------------------------------------///
 void DXCommon::InitializeCompiler() {
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 
@@ -502,9 +537,9 @@ void DXCommon::InitializeCompiler() {
 	assert(SUCCEEDED(hr));
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// ビューポート
-/// </summary>
+///-------------------------------------------///
 void DXCommon::CreateViewport(const int32_t kClientWindth, const int32_t kClientHeight) {
 
 	// クライアント領域のサイズと一緒にして画面全体に表示
@@ -516,9 +551,9 @@ void DXCommon::CreateViewport(const int32_t kClientWindth, const int32_t kClient
 	viewPort_.MaxDepth = 1.0f;
 }
 
-/// <summary>
+///-------------------------------------------/// 
 /// シザー矩形
-/// </summary>
+///-------------------------------------------///
 void DXCommon::CreateScissor(const int32_t kClientWindth, const int32_t kClientHeight) {
 
 	// 基本的にビューポートと同じ矩形が構成されるようにする
@@ -528,16 +563,36 @@ void DXCommon::CreateScissor(const int32_t kClientWindth, const int32_t kClientH
 	scissorRect_.bottom = kClientHeight;
 }
 
-/// <summary>
+///-------------------------------------------/// 
+/// ImGuiの初期化
+///-------------------------------------------///
+void DXCommon::InitializeImGui() {
+
+	IMGUI_CHECKVERSION(); //　バージョンチェック
+	ImGui::CreateContext(); // コンテキストの生成
+	ImGui::StyleColorsDark(); // スタイルの設定
+	ImGui_ImplWin32_Init(winApp_->GetHwnd()); // Win32用の初期化 
+	ImGui_ImplDX12_Init( // DirectX12用の初期化
+		device_.Get(),
+		swapChainDesc_.BufferCount,
+		rtvDesc_.Format,
+		srvHeap_.Get(),
+		srvHeap_->GetCPUDescriptorHandleForHeapStart(),
+		srvHeap_->GetGPUDescriptorHandleForHeapStart());
+}
+
+///-------------------------------------------/// 
 /// FPS固定の初期化
-/// </summary>
+///-------------------------------------------///
 void DXCommon::InitializeFixFPS() {
 
 	// 現在の時間を記録する
 	reference_ = std::chrono::steady_clock::now();
 }
 
-// FPS固定の更新
+///-------------------------------------------/// 
+/// FPS固定の更新
+///-------------------------------------------///
 void DXCommon::UpdateFixFPS() {
 
 	// 1/60秒ピッタリの時間
@@ -566,32 +621,45 @@ void DXCommon::UpdateFixFPS() {
 	reference_ = std::chrono::steady_clock::now();
 }
 
-/// <summary>
-/// DXGFactoryの取得
-/// </summary>
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+// DXGFactoryの取得
 IDXGIFactory7* DXCommon::GetDXGFactory() const { return dxgiFactory_.Get(); }
 
-/// <summary>
-/// デバイスの取得
-/// </summary>
+// デバイスの取得
 ID3D12Device* DXCommon::GetDevice() const { return device_.Get(); }
 
-/// <summary>
-/// dxcUtilsの取得
-/// </summary>
+// dxcUtilsの取得
 IDxcUtils* DXCommon::GetDxcUtils() const { return dxcUtils_.Get(); }
 
-/// <summary>
-/// dxcCompilerの取得
-/// </summary>
+//  dxcCompilerの取得
 IDxcCompiler3* DXCommon::GetDxcCompiler() const { return dxcCompiler_.Get(); }
 
-/// <summary>
-/// IncludeHandlerの取得
-/// </summary>
+// IncludeHandlerの取得
 IDxcIncludeHandler* DXCommon::GetIncludeHandler() const { return includeHandler_.Get(); }
 
-/// <summary>
-/// 描画コマンドリストの取得
-/// </summary>
+// 描画コマンドリストの取得
 ID3D12GraphicsCommandList* DXCommon::GetCommandList() const { return commandList_.Get(); }
+
+// CPUのディスクリプターハンドルの取得 
+D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
+	const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+
+	// ディスクリプタの先頭を取得
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	handleCPU.ptr += (descriptorSize * index);
+
+	return handleCPU;
+}
+
+// GPUのディスクリプターハンドルの取得
+D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetGPUDescriptorHandle(
+	const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+
+	// ディスクリプタの先頭を取得
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	handleGPU.ptr += (descriptorSize * index);
+
+	return handleGPU;
+}

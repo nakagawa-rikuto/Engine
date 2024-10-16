@@ -1,17 +1,22 @@
 #include "System.h"
 
-#include "WinApp.h"
-#include "DXCommon.h"
-#include "Input.h"
+#include "Base/WinApp/WinApp.h"
+#include "Base/DirectXCommon/DXCommon.h"
+#include "Base/Input/Input.h"
 
-#include "SpriteCommon.h"
+#include "Base/TextrueManager/TextureManager.h"
 
-#include "sMath.h"
+#include "Base/Sprite/SpriteCommon.h"
 
+#include "Base/Math/sMath.h"
+
+// Engine
 std::unique_ptr<WinApp> System::winApp_ = nullptr;
 std::unique_ptr<DXCommon> System::dXCommon_ = nullptr;
 std::unique_ptr<Input> System::input_ = nullptr;
 
+// Sprite
+std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
 std::unique_ptr<SpriteCommon> System::spriteCommon_ = nullptr;
 
 ///=====================================================/// 
@@ -36,6 +41,8 @@ struct D3DResourceLeakChecker {
 ///-------------------------------------------///
 // SpriteCommon
 SpriteCommon* System::GetSpriteCommon() { return spriteCommon_.get(); }
+// DXCommon
+DXCommon* System::GetDXCommon() { return dXCommon_.get(); }
 
 ///=====================================================/// 
 /// システム全体の初期化
@@ -56,6 +63,10 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// Inputの初期化
 	input_ = std::make_unique<Input>();
 	input_->Initialize(winApp_.get());
+
+	// TextrueManagerの初期化
+	textureManager_ = std::make_unique<TextureManager>();
+	textureManager_->Initialize(dXCommon_.get());
 
 	// スプライト共通部の生成
 	spriteCommon_ = std::make_unique<SpriteCommon>();
@@ -98,3 +109,29 @@ void System::EndFrame() {
 /// Windowsのメッセージを処理する
 ///=====================================================///
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
+
+#pragma region Sprite関連
+///-------------------------------------------/// 
+/// テクスチャ読み込み
+///-------------------------------------------///
+void System::LoadTexture(const std::string& filePath) {
+
+	textureManager_->LoadTexture(filePath);
+}
+
+///-------------------------------------------/// 
+/// SRVインデックス開始番号の取得
+///-------------------------------------------///
+uint32_t System::GetTextureIndexByFilePath(const std::string& filePath) {
+	
+	return textureManager_->GetTextureIndexByFilePath(filePath);
+}
+
+///-------------------------------------------/// 
+/// GPUハンドルの取得
+///-------------------------------------------///
+D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(uint32_t textureIndex) {
+	
+	return textureManager_->GetSRVHandleGPU(textureIndex);
+}
+#pragma endregion

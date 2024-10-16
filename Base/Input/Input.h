@@ -7,14 +7,15 @@
 #include <vector>
 #include <wrl.h>
 
-#include "WinApp.h"
-
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-/// <summary>
+/// ===前方宣言=== ///
+class WinApp;
+
+///=====================================================/// 
 /// 入力
-/// </summary>
+///=====================================================///
 class Input {
 
 public: // メンバ関数

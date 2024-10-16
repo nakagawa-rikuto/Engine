@@ -7,9 +7,10 @@
 #include <dxcapi.h>
 #include <wrl.h>
 
-#include "DXCommon.h"
-
 #pragma comment(lib, "dxcompiler.lib")
+
+/// ===前方宣言=== ///
+class DXCommon;
 
 class Compiler {
 

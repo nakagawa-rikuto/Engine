@@ -1,13 +1,32 @@
 #pragma once
-#include "CBufferData.h"
+/// ===include=== ///
+#include "Base/Data/CBufferData.h"
+#include "Base/ComPtr/ComPtr.h"
 
 /// ===前方宣言=== ///
 class SpriteCommon;
 
-/// <summary>
+///=====================================================/// 
 /// スプライト
-/// </summary>
+///=====================================================///
 class Sprite {
+public: /// ===基本的な関数=== ///
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize(SpriteCommon* spriteCommon, std::string textureFilePath);
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw();
+
 public:/// ===Getter=== ///
 
 	/// <summary>
@@ -60,23 +79,6 @@ public:/// ===Setter=== ///
 	/// <param name="color"></param>
 	void SetColor(const Vector4& color);
 
-public: /// ===基本的な関数=== ///
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize(SpriteCommon* spriteCommon);
-
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
-
 private:
 
 	// SpriteCommon
@@ -90,14 +92,17 @@ private:
 	TransformInfo transform_; 	// Transform(scale, rotate, transform)
 
 	// バッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> materialBuffer_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> wvpBuffer_;
+	ComPtr<ID3D12Resource> vertexBuffer_;
+	ComPtr<ID3D12Resource> indexBuffer_;
+	ComPtr<ID3D12Resource> materialBuffer_;
+	ComPtr<ID3D12Resource> wvpBuffer_;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+
+	// テクスチャ番号
+	uint32_t textureIndex = 0;
 
 	// 座標
 	Vector2 position_ = { 0.0f, 0.0f };

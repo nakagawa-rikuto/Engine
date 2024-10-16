@@ -1,7 +1,8 @@
 #pragma once
-#include "DXCommon.h"
-#include "Input.h"
-#include "System.h"
+
+/// ===前方宣言=== ///
+class DXCommon;
+class Input;
 
 /// <summary>
 /// ゲームシーン

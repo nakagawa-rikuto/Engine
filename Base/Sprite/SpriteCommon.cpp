@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "DXCommon.h"
+#include "Base/DirectXCommon/DXCommon.h"
 
 ///-------------------------------------------/// 
 /// Getter

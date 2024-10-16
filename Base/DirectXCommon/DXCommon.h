@@ -7,15 +7,15 @@
 #include <dxcapi.h>
 #include <wrl.h>
 
-#include "WinApp.h"
-
 #pragma comment(lib, "dxcompiler.lib")
+
+/// ===前方宣言=== ///
+class WinApp;
 
 /// <summary>
 /// DirectX汎用
 /// </summary>
 class DXCommon {
-
 public:
 
 	/// <summary>
@@ -108,30 +108,58 @@ public:
 	size_t GetBackBufferCount()const;
 
 	/// <summary>
-	/// CPUのディスクリプターハンドルの取得
+	/// SRVの指定番号のCPUでスクリプタハンドルを取得する
 	/// </summary>
-	/// <param name="descriptorHeap"></param>
-	/// <param name="descriptorSize"></param>
 	/// <param name="index"></param>
 	/// <returns></returns>
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
-		ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
 
 	/// <summary>
-	/// GPUのディスクリプターハンドルの取得
+	/// SRVの指定番号のGPUでスクリプタハンドルを取得する
 	/// </summary>
-	/// <param name="descriptorHeap"></param>
-	/// <param name="descriptorSize"></param>
 	/// <param name="index"></param>
 	/// <returns></returns>
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(
-		ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
+
+	/// <summary>
+	/// RTVの指定番号のCPUでスクリプタハンドルを取得する
+	/// </summary>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
+
+	/// <summary>
+	/// RTVの指定番号のGPUでスクリプタハンドルを取得する
+	/// </summary>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
+
+	/// <summary>
+	/// DSVの指定番号のCPUでスクリプタハンドルを取得する
+	/// </summary>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
+
+	/// <summary>
+	/// DSVの指定番号のGPUでスクリプタハンドルを取得する
+	/// </summary>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
 
 	/// <summary>
 	/// レンダーターゲットをセットする
 	/// </summary>
 	/// <param name="sRGB"></param>
 	//void SetRenderTargets(bool sRGB);
+
+public:
+
+	/// ===定数=== ///
+	// SRV
+	static const uint32_t kMaxSRVCount; // 最大SRV数（最大テクスチャ枚数）
 
 private: // メンバ変数
 
@@ -148,35 +176,52 @@ private: // メンバ変数
 	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_; // DxcCompiler
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_; // includeHandler
 
+	/// ===command=== ///
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_; // CommandList
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_; // CommandAllocator
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_; // CommandQueue
 
+	/// ===swapChain=== ///
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_; // SwapChain
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
 	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource_[2];
 
+	/// ===backBuffer=== ///
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_; // BackBuffer
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer_; // 
 
+	/// ===RTV=== ///
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_; // レンダーターゲットビュー
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2]; // レンダーターゲットビューのディスクリプタ
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{}; // レンダーターゲットビューのデスク
+	uint32_t descriptorSizeRTV_; // RTV(DescriptorSize)
 
+	/// ===SRV=== ///
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_; // SRV(テクスチャ関連)
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_[99]{}; // SRVデスク
+	uint32_t descriptorSizeSRV_; // SRV(DescriptorSize)
 
+	/// ===DSV=== ///
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_; // depthStencilResource
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc_{}; // DSVデスク
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_; // DSVハンドル	
+	uint32_t descriptorSizeDSV_; // // DSV(DescriptorSize)
 
+	/// ===fence=== ///
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_; // Fence
 	uint64_t fenceValue_ = 0;  // FenceValue
 
+	/// ===FPS固定=== ///
 	std::chrono::steady_clock::time_point reference_; // 記録時間(FPS固定用)
 
-	D3D12_VIEWPORT viewPort_;
+	/// ===viewPort=== ///
+	D3D12_VIEWPORT viewPort_; // ビューポート
 
-	D3D12_RECT scissorRect_;
+	/// ===scissor=== ///
+	D3D12_RECT scissorRect_; // シザー矩形
 
+	/// ===backBufferSize=== ///
 	int32_t backBufferWidth_ = 0;
 	int32_t backBufferHeight_ = 0;
 
@@ -209,6 +254,11 @@ private:
 	void CreateDepthBuffer();
 
 	/// <summary>
+	/// シェーダーリソースの生成(SRV)
+	/// </summary>
+	void CreateShaderResource();
+
+	/// <summary>
 	/// フェンスの生成
 	/// </summary>
 	void CreateFence();
@@ -229,6 +279,11 @@ private:
 	void CreateScissor(const int32_t kClientWindth, const int32_t kClientHeight);
 
 	/// <summary>
+	/// ImGuiの初期化
+	/// </summary>
+	void InitializeImGui();
+
+	/// <summary>
 	/// FPS固定の初期化
 	/// </summary>
 	void InitializeFixFPS();
@@ -237,4 +292,24 @@ private:
 	/// FPS固定の更新
 	/// </summary>
 	void UpdateFixFPS();
+
+	/// <summary>
+	/// CPUのディスクリプターハンドルの取得
+	/// </summary>
+	/// <param name="descriptorHeap"></param>
+	/// <param name="descriptorSize"></param>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
+		const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
+
+	/// <summary>
+	/// GPUのディスクリプターハンドルの取得
+	/// </summary>
+	/// <param name="descriptorHeap"></param>
+	/// <param name="descriptorSize"></param>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(
+		const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
 };

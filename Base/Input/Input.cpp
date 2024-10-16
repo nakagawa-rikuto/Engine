@@ -1,5 +1,7 @@
-#include "Input.h"
-#include "sMath.h"
+#include "Base/Input/Input.h"
+
+#include "Base//WinApp/WinApp.h"
+#include "Base/Math/sMath.h"
 
 Input* Input::GetInstance() {
 	static Input instance;

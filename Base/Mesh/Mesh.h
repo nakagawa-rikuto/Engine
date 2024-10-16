@@ -1,5 +1,9 @@
 #pragma once
+/// ===include=== ///
+// Window
 #include <Windows.h>
+
+// c++
 #include <cstdint>
 #include <d3d12.h>
 #include <string>
@@ -7,12 +11,10 @@
 #include <vector>
 #include <wrl.h>
 
-#include "CBufferData.h"
-#include "DXCommon.h"
+#include "Base/Data/CBufferData.h"
 
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
+/// ===前方宣言=== ///
+class DXCommon;
 
 class Mesh {
 

@@ -2,9 +2,14 @@
 
 #include <cassert>
 
-#include "WinApp.h"
-#include "SpriteCommon.h"
-#include "sMath.h"
+#include "Base/System/System.h"
+#include "Base/WinApp/WinApp.h"
+#include "Base/DirectXCommon/DXCommon.h"
+
+#include "Base/Sprite/SpriteCommon.h"
+#include "Base/TextrueManager/TextureManager.h"
+
+#include "Base/Math/sMath.h"
 
 ///-------------------------------------------/// 
 /// Getter
@@ -35,10 +40,12 @@ void Sprite::SetColor(const Vector4& color) { this->color_ = color; }
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Sprite::Initialize(SpriteCommon* spriteCommon) {
+void Sprite::Initialize(SpriteCommon* spriteCommon, std::string textureFilePath) {
+
+	assert(spriteCommon);
 
 	// 引数で受け取ってメンバ変数に記録する
-	this->spriteCommon_ = spriteCommon;
+	spriteCommon_ = spriteCommon;
 
 	// Resourceの作成
 	vertexBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(VertexData) * 6);
@@ -76,6 +83,9 @@ void Sprite::Initialize(SpriteCommon* spriteCommon) {
 
 	// TransformInfoの設定
 	transform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
+
+	// 単位行列を書き込んでおく
+	textureIndex = System::GetTextureIndexByFilePath(textureFilePath);
 }
 
 
@@ -109,7 +119,7 @@ void Sprite::Draw() {
 	spriteCommon_->GetDXCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpBuffer_->GetGPUVirtualAddress());
 
 	// テクスチャの設定
-	//spriteCommon_->GetDXCommon()->GetCommandList()->SetGraphicsRootDescriptorTable()
+	spriteCommon_->GetDXCommon()->GetCommandList()->SetGraphicsRootDescriptorTable(2, System::GetSRVHandleGPU(textureIndex));
 
 	// 描画(ドローコール)
 	spriteCommon_->GetDXCommon()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);

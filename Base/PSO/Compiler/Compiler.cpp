@@ -1,5 +1,7 @@
 #include "Compiler.h"
-#include "Logger.h"
+
+#include "Base/Log/Logger.h"
+#include "Base/DirectXCommon/DXCommon.h"
 
 #include <algorithm>
 #include <cassert>

@@ -54,7 +54,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Base/System;$(ProjectDir)/Base/WinApp;$(ProjectDir)/Base/PSO;$(ProjectDir)/Base/PSO/RootSignature;$(ProjectDir)/Base/PSO/InputLayout;$(ProjectDir)/Base/PSO/RasterizerState;$(ProjectDir)/Base/PSO/BlendState;$(ProjectDir)/Base/PSO/Compiler;$(ProjectDir)/Base/DirectXCommon;$(ProjectDir)/Base/Material;$(ProjectDir)/Base/Mesh;$(ProjectDir)/Base/Transform;$(ProjectDir)/Base/Data;$(ProjectDir)/Base/Input;$(ProjectDir)/Game/Scene;$(ProjectDir)/Base/Sprite;$(ProjectDir)/Base/Math;$(ProjectDir)/Base/Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/externals/imgui;$(ProjectDir)/externals/DirectXTex;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,7 +79,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Base/System;$(ProjectDir)/Base/WinApp;$(ProjectDir)/Base/PSO;$(ProjectDir)/Base/PSO/RootSignature;$(ProjectDir)/Base/PSO/InputLayout;$(ProjectDir)/Base/PSO/RasterizerState;$(ProjectDir)/Base/PSO/BlendState;$(ProjectDir)/Base/PSO/Compiler;$(ProjectDir)/Base/DirectXCommon;$(ProjectDir)/Base/Material;$(ProjectDir)/Base/Mesh;$(ProjectDir)/Base/Transform;$(ProjectDir)/Base/Data;$(ProjectDir)/Base/Input;$(ProjectDir)/Game/Scene;$(ProjectDir)/Base/Sprite;$(ProjectDir)/Base/Math;$(ProjectDir)/Base/Log;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals/imgui;$(ProjectDir)externals/DirectXTex;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,11 +115,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\System\System.cpp" />
     <ClCompile Include="Base\Transform\Transform.cpp" />
     <ClCompile Include="Base\WinApp\WinApp.cpp" />
+    <ClCompile Include="externals\imgui\imgui.cpp" />
+    <ClCompile Include="externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\Scene\GameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Base\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="Base\Sprite\Sprite.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="Base\TextrueManager\TextureManager.cpp" />
+    <ClCompile Include="Base\StringUtility\StringUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h" />
@@ -144,10 +152,28 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\System\System.h" />
     <ClInclude Include="Base\Transform\Transform.h" />
     <ClInclude Include="Base\WinApp\WinApp.h" />
+    <ClInclude Include="Base\ComPtr\ComPtr.h" />
+    <ClInclude Include="externals\imgui\imconfig.h" />
+    <ClInclude Include="externals\imgui\imgui.h" />
+    <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="externals\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="externals\imgui\imgui_internal.h" />
+    <ClInclude Include="externals\imgui\imstb_rectpack.h" />
+    <ClInclude Include="externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\Scene\GameScene.h" />
     <ClInclude Include="Base\Sprite\SpriteCommon.h" />
     <ClInclude Include="Base\Sprite\Sprite.h" />
-    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="Base\TextrueManager\TextureManager.h" />
+    <ClInclude Include="Base\StringUtility\StringUtility.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

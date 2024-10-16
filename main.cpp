@@ -1,8 +1,17 @@
-#include "System.h"
+/// ===include=== ///
+// Engine
+#include "Base/System/System.h"
 
-#include "Sprite.h"
+// Sprite
+#include "Base/Sprite/Sprite.h"
+#include "Base/TextrueManager/TextureManager.h"
 
-#include"sMath.h"
+// Math
+#include"Base/Math/sMath.h"
+
+// c++
+#include <memory>
+#include <string>
 
 const wchar_t kWindowTitle[] = L"Engine";
 
@@ -13,13 +22,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// Systemの初期化
 	System::Initialize(kWindowTitle, 1280, 720);
 
-	std::vector<Sprite*> sprites_;
+	// テクスチャの読み込み
+	const std::string& uvTexture = "./Resource/uvChecker.png";
+	System::LoadTexture(uvTexture);
+
+	std::vector<std::unique_ptr<Sprite>> sprites_;
 	for (uint32_t i = 0; i < 5; ++i) {
-		Sprite* sprite = new Sprite();
-		sprite->Initialize(System::GetSpriteCommon());
+		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
+		sprite->Initialize(System::GetSpriteCommon(), uvTexture);
 		sprite->SetSize(Vector2(50.0f, 50.0f));
 		sprite->SetPosition(Vector2(i * 150.0f, 0.0f));
-		sprites_.push_back(sprite);
+		sprites_.push_back(std::move(sprite));
 	}
 
 #pragma endregion
@@ -31,8 +44,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				　　更新の処理
 		*/ ////////////////////////////
 		System::Update();
-		
-		for (Sprite* sprite : sprites_) {
+
+		for (auto& sprite : sprites_) {
 
 			sprite->Update();
 		}
@@ -45,7 +58,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		*/ ////////////////////////////
 
 		// Spriteの描画
-		for (Sprite* sprite : sprites_) {
+		for (auto& sprite : sprites_) {
 
 			sprite->Draw();
 		}

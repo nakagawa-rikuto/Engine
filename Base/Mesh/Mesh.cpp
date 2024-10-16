@@ -1,11 +1,14 @@
 #include "Mesh.h"
 
+// c++
 #include <algorithm>
 #include <cassert>
 #include <thread>
 #include <timeapi.h>
 #include <vector>
 #include <format>
+
+#include "Base/DirectXCommon/DXCommon.h"
 
 /// <summary>
 /// シングルトンインスタンスの取得

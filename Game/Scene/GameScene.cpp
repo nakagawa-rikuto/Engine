@@ -1,7 +1,10 @@
-#include "GameScene.h"
-#include "System.h"
+#include "Game/Scene/GameScene.h"
 
-#include "sMath.h"
+#include "Base/System/System.h"
+#include "Base/DirectXCommon/DXCommon.h"
+#include "Base/Input/Input.h"
+
+#include "Base/Math/sMath.h"
 
 GameScene::GameScene() {}
 GameScene::~GameScene() {}
