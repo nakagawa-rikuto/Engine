@@ -136,7 +136,7 @@ void DXCommon::PreDraw() {
 /// 描画後処理
 ///-------------------------------------------///
 void DXCommon::PostDraw() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	//コマンドリストの内容を確定させる。　すべてのコマンドを積んでからCloseすること
 	hr = commandList_->Close();
@@ -339,7 +339,7 @@ void DXCommon::InitializeDXGIDevice() {
 /// コマンド関連の初期化
 ///-------------------------------------------///
 void DXCommon::InitializeCommand() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	// コマンドキューの生成
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
@@ -362,7 +362,7 @@ void DXCommon::InitializeCommand() {
 /// スワップチェーンの生成
 ///-------------------------------------------///
 void DXCommon::CreateSwapChain() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	// スワップチェーンを生成する
 	swapChainDesc_.Width = backBufferWidth_;      // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
@@ -392,7 +392,7 @@ void DXCommon::CreateSwapChain() {
 /// レンダーターゲットの生成(RTV)
 ///-------------------------------------------///
 void DXCommon::CreateFinalRenderTargets() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	// DescriptorSizeを取得
 	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -427,7 +427,7 @@ void DXCommon::CreateFinalRenderTargets() {
 /// 深度バッファの生成(DSV)
 ///-------------------------------------------///
 void DXCommon::CreateDepthBuffer() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	// DescriptorSizeの取得
 	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -492,7 +492,7 @@ void DXCommon::CreateDepthBuffer() {
 /// SRVの生成
 ///-------------------------------------------///
 void DXCommon::CreateShaderResource() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	// DescriptorSizeの取得
 	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -511,7 +511,7 @@ void DXCommon::CreateShaderResource() {
 /// フェンスの生成
 ///-------------------------------------------///
 void DXCommon::CreateFence() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	// 初期値0でFenceを作る
 	hr = device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
@@ -522,7 +522,7 @@ void DXCommon::CreateFence() {
 /// DXCの初期化
 ///-------------------------------------------///
 void DXCommon::InitializeCompiler() {
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
+	HRESULT hr;
 
 	// dxcUtils
 	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
