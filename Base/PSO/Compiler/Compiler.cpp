@@ -9,6 +9,7 @@
 #include <timeapi.h>
 #include <vector>
 #include <format>
+#include <cassert>
 
 /// <summary>
 /// シングルトンインスタンス
@@ -27,10 +28,12 @@ void Compiler::ShaderCompiler(DXCommon* dxCommon) {
 	// ObjVS
 	objVSBlob_ = CompileShader(L"Resource/Shaders/Obj.VS.hlsl", L"vs_6_0",
 		dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+	assert(objVSBlob_ != nullptr);
 
 	// ObjPS
 	objPSBlob_ = CompileShader(L"Resource/Shaders/Obj.PS.hlsl", L"ps_6_0",
 		dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+	assert(objPSBlob_ != nullptr);
 }
 
 /// <summary>

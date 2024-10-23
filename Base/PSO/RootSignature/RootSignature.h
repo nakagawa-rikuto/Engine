@@ -29,8 +29,12 @@ public:
 	/// <returns></returns>
 	ID3D12RootSignature* GetRootSignature()const;
 
+
+
 private:
 
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
-	D3D12_ROOT_PARAMETER rootParameters_[2]{};
+	D3D12_ROOT_PARAMETER rootParameters_[4]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRange_[1]{};
+
 };

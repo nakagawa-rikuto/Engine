@@ -188,7 +188,6 @@ private: // メンバ変数
 
 	/// ===backBuffer=== ///
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_; // BackBuffer
-	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer_; // 
 
 	/// ===RTV=== ///
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_; // レンダーターゲットビュー

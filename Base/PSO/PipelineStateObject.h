@@ -56,4 +56,12 @@ private:
 	std::unique_ptr<Compiler> compiler_;
 
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
+
+private:/// ====== ///
+
+	/// <summary>
+	/// DepthStencilDecの生成
+	/// </summary>
+	/// <returns></returns>
+	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilDesc();
 };

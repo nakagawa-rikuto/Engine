@@ -239,4 +239,7 @@
       <Filter>imgui</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\Shaders\Obj.hlsli" />
+  </ItemGroup>
 </Project>

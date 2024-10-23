@@ -64,6 +64,7 @@ void PipelineStateObject::CreatePSO(DXCommon* dxCommon) {
 		compiler_->GetObjPS()->GetBufferPointer(), compiler_->GetObjPS()->GetBufferSize() }; // PixlShader
 	graphicsPipelineStateDesc.BlendState = blendState_->GetBlendDesc(); // BlendState
 	graphicsPipelineStateDesc.RasterizerState = rasterizerState_->GetRasterizerState(); // RasterizerState
+	graphicsPipelineStateDesc.DepthStencilState = CreateDepthStencilDesc();
 
 	// 書き込むRTVの情報
 	graphicsPipelineStateDesc.NumRenderTargets = 1;
@@ -90,3 +91,24 @@ ID3D12PipelineState* PipelineStateObject::GetPSO() { return graphicsPipelineStat
 /// RootSignatureの取得
 /// </summary>
 ID3D12RootSignature* PipelineStateObject::GetRootSignature() {return rootSignature_->GetRootSignature();}
+
+///-------------------------------------------/// 
+/// DepthStencilDesc
+///-------------------------------------------///
+D3D12_DEPTH_STENCIL_DESC PipelineStateObject::CreateDepthStencilDesc() {
+
+	// DepthStencilDescの設定
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+
+	// Depthの機能を有効化
+	depthStencilDesc.DepthEnable = true;
+
+	// 書き込みします
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+
+	// 比較関数はLessEqual。
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+	return depthStencilDesc;
+
+}
