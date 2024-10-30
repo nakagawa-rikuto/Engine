@@ -33,7 +33,7 @@
     <ClCompile Include="Base\Log\Logger.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Material\Material.cpp">
+    <ClCompile Include="Base\Buffer\Material\Material3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Base\Math\sMath.cpp">
@@ -57,7 +57,7 @@
     <ClCompile Include="Base\PSO\RootSignature\RootSignature.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\PipelineStateObject.cpp">
+    <ClCompile Include="Base\PSO\PipelineStateObjectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Base\System\System.cpp">
@@ -69,7 +69,7 @@
     <ClCompile Include="Game\Scene\GameScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Transform\Transform.cpp">
+    <ClCompile Include="Base\Buffer\Transform\Transform3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Base\Sprite\Sprite.cpp">
@@ -96,7 +96,7 @@
     <ClCompile Include="Base\Sprite\SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\TextrueManager\TextureManager.cpp">
+    <ClCompile Include="Base\TextureManager\TextureManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -123,6 +123,24 @@
     <ClCompile Include="Base\StringUtility\StringUtility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Base\Buffer\Transform\Transform2D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Buffer\Material\Material2D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Buffer\Index\IndexBuffer2D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Buffer\Index\IndexBuffer3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Buffer\Vertex\VertexBuffer2D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Buffer\Vertex\VertexBuffer3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h">
@@ -137,7 +155,7 @@
     <ClInclude Include="Base\Log\Logger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Material\Material.h">
+    <ClInclude Include="Base\Buffer\Material\Material3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\Math\sMath.h">
@@ -161,7 +179,7 @@
     <ClInclude Include="Base\PSO\RootSignature\RootSignature.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\PipelineStateObject.h">
+    <ClInclude Include="Base\PSO\PipelineStateObjectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\System\System.h">
@@ -173,7 +191,7 @@
     <ClInclude Include="Game\Scene\GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Transform\Transform.h">
+    <ClInclude Include="Base\Buffer\Transform\Transform3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\Sprite\Sprite.h">
@@ -200,7 +218,7 @@
     <ClInclude Include="Base\Sprite\SpriteCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\TextrueManager\TextureManager.h">
+    <ClInclude Include="Base\TextureManager\TextureManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -233,13 +251,31 @@
     <ClInclude Include="Base\ComPtr\ComPtr.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Base\PSO\PipelineStateObjectType.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Buffer\Transform\Transform2D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Buffer\Material\Material2D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Buffer\Index\IndexBuffer2D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Buffer\Index\IndexBuffer3D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Buffer\Vertex\VertexBuffer2D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Buffer\Vertex\VertexBuffer3D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
       <Filter>imgui</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resource\Shaders\Obj.hlsli" />
   </ItemGroup>
 </Project>

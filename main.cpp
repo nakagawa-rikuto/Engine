@@ -4,7 +4,7 @@
 
 // Sprite
 #include "Base/Sprite/Sprite.h"
-#include "Base/TextrueManager/TextureManager.h"
+#include "Base/TextureManager/TextureManager.h"
 
 // Math
 #include"Base/Math/sMath.h"
@@ -26,11 +26,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	const std::string& uvTexture = "./Resource/uvChecker.png";
 	System::LoadTexture(uvTexture);
 
+	const std::string& monsterBall = "./Resource/monsterBall.png";
+	System::LoadTexture(monsterBall);
+
 	std::vector<std::unique_ptr<Sprite>> sprites_;
 	for (uint32_t i = 0; i < 5; ++i) {
 		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
-		sprite->Initialize(System::GetSpriteCommon(), uvTexture);
-		sprite->SetSize(Vector2(50.0f, 50.0f));
+		sprite->Initialize(monsterBall);
+		sprite->SetSize(Vector2(100.0f, 100.0f));
 		sprite->SetPosition(Vector2(i * 150.0f, 0.0f));
 		sprites_.push_back(std::move(sprite));
 	}
@@ -58,10 +61,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		*/ ////////////////////////////
 
 		// Spriteの描画
-		for (auto& sprite : sprites_) {
+		/*for (auto& sprite : sprites_) {
 
 			sprite->Draw();
-		}
+		}*/
+
+		sprites_.front()->Draw();
 
 		// AL3のmasterを参考にする
 

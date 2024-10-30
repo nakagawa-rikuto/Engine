@@ -1,15 +1,18 @@
 #include "System.h"
 
+// Engine
 #include "Base/WinApp/WinApp.h"
 #include "Base/DirectXCommon/DXCommon.h"
 #include "Base/Input/Input.h"
 
-#include "Base/TextrueManager/TextureManager.h"
-
+// Sprite
+#include "Base/TextureManager/TextureManager.h"
 #include "Base/Sprite/SpriteCommon.h"
 
+// Math
 #include "Base/Math/sMath.h"
 
+/// ===宣言=== ///
 // Engine
 std::unique_ptr<WinApp> System::winApp_ = nullptr;
 std::unique_ptr<DXCommon> System::dXCommon_ = nullptr;
@@ -36,21 +39,13 @@ struct D3DResourceLeakChecker {
 	}
 };
 
-///-------------------------------------------/// 
-/// Getter
-///-------------------------------------------///
-// SpriteCommon
-SpriteCommon* System::GetSpriteCommon() { return spriteCommon_.get(); }
-// DXCommon
-DXCommon* System::GetDXCommon() { return dXCommon_.get(); }
-
 ///=====================================================/// 
 /// システム全体の初期化
 ///=====================================================///
 void System::Initialize(const wchar_t* title, int width, int height) {
 
 	// ReportLiveObjects
-	D3DResourceLeakChecker leakCheck;
+	static D3DResourceLeakChecker leakCheck;
 
 	// ゲームウィンドウの作成
 	winApp_ = std::make_unique<WinApp>();
@@ -63,7 +58,7 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// Inputの初期化
 	input_ = std::make_unique<Input>();
 	input_->Initialize(winApp_.get());
-
+	
 	// TextrueManagerの初期化
 	textureManager_ = std::make_unique<TextureManager>();
 	textureManager_->Initialize(dXCommon_.get());
@@ -135,3 +130,11 @@ D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(uint32_t textureIndex) {
 	return textureManager_->GetSRVHandleGPU(textureIndex);
 }
 #pragma endregion
+
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+// device
+ID3D12Device* System::GetDXDevice() { return dXCommon_->GetDevice(); }
+// CommandList
+ID3D12GraphicsCommandList* System::GetDXCommandList() { return dXCommon_->GetCommandList(); }

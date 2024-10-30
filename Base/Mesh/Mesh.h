@@ -38,7 +38,7 @@ public:
 	/// <param name="TriangleTopPositionData"></param>
 	/// <param name="TriangleRightBottomPositionData"></param>
 	void WriteTriangleData(
-		VertexData* TriangleLeftBottomPositionData, VertexData* TriangleTopPositionData, VertexData* TriangleRightBottomPositionData);
+		VertexData3D* TriangleLeftBottomPositionData, VertexData3D* TriangleTopPositionData, VertexData3D* TriangleRightBottomPositionData);
 
 	/// <summary>
 	/// VertexBufferの取得

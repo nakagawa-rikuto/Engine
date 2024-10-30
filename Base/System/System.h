@@ -1,7 +1,6 @@
 #pragma once
 /// ===include=== ///
 // C++
-#include <memory>
 #include <string>
 #include <d3d12.h>
 #include <algorithm>
@@ -10,6 +9,7 @@
 #include <span>
 #include <dxgidebug.h>
 #include <wrl.h>
+#include <memory>
 
 /// ===前方宣言=== ///
 // Engine
@@ -24,80 +24,46 @@ class TextureManager;
 /// システム
 ///=====================================================///
 class System {
-
-public:/// ===Getter=== ///
-
-	/// <summary>
-	/// SpriteCommonの取得
-	/// </summary>
-	/// <returns></returns>
-	static SpriteCommon* GetSpriteCommon();
-
-	/// <summary>
-	/// DXCommonの取得
-	/// </summary>
-	/// <returns></returns>
-	static DXCommon* GetDXCommon();
-
-public:/// ===開発者用関数=== ///
-	/// <summary>
-	/// システム全体の初期化
-	/// </summary>
-	/// <param name="title"></param>
-	/// <param name="width"></param>
-	/// <param name="height"></param>
-	static void Initialize(
-		const wchar_t* title, int width = 1280, int height = 720);
-
-	/// <summary>
-	/// システム全体の更新
-	/// </summary>
+public:/// ===開発者用関数(システム)=== ///
+	
+	// システム全体の初期化
+	static void Initialize(const wchar_t* title, int width = 1280, int height = 720);
+	// システム全体の更新
 	static void Update();
-
-	/// <summary>
-	/// システム全体の終了
-	/// </summary>
+	// システム全体の終了
 	static void Finalize();
-
-	/// <summary>
-	/// フレーム開始処理
-	/// </summary>
+	// フレーム開始処理
 	static void BeginFrame();
-
-	/// <summary>
-	/// フレーム終了処理
-	/// </summary>
+	// フレーム終了処理
 	static void EndFrame();
-
-	/// <summary>
-	/// Windowsのメッセージを処理
-	/// </summary>
-	/// <returns></returns>
+	// Windowsのメッセージを処理
 	static int ProcessMessage();
+
+public:/// ===開発者用関数(その他)=== ///
+
+	///-------------------------------------------/// 
+	///テクスチャ関連
+	///-------------------------------------------///
+	// SRVインデックス開始番号の取得
+	static uint32_t GetTextureIndexByFilePath(const std::string& filePath);
+	// GPUハンドルの取得
+	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(uint32_t textureIndex);
 
 public:/// ===プログラマー用関数=== ///
 
-	/// <summary>
-	/// テクスチャ読み込み
-	/// </summary>
-	/// <param name="filePath"></param>
+	///-------------------------------------------/// 
+	///テクスチャ関連
+	///-------------------------------------------///
+	// テクスチャの読み込み
 	static void LoadTexture(const std::string& filePath);
 
-	/// <summary>
-	/// SRVインデックス開始番号の取得
-	/// </summary>
-	/// <param name="filePath"></param>
-	/// <returns></returns>
-	static uint32_t GetTextureIndexByFilePath(const std::string& filePath);
+public:/// ===開発者用関数(Getter)=== ///
+	// deviceの取得
+	static ID3D12Device* GetDXDevice();
+	// CommandListの取得
+	static ID3D12GraphicsCommandList* GetDXCommandList();
 
-	/// <summary>
-	/// GPUハンドルの取得
-	/// </summary>
-	/// <param name="textureIndex"></param>
-	/// <returns></returns>
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(uint32_t textureIndex);
-
-private:
+private:/// ===Variables(変数)=== ///
 
 	static std::unique_ptr<WinApp> winApp_;           // WinApp
 	static std::unique_ptr<DXCommon> dXCommon_;       // DirectXCommon

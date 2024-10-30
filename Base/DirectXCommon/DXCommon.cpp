@@ -138,25 +138,20 @@ void DXCommon::PreDraw() {
 void DXCommon::PostDraw() {
 	HRESULT hr;
 
-	//コマンドリストの内容を確定させる。　すべてのコマンドを積んでからCloseすること
+	// コマンドリストの内容を確定させる。
+   // すべてのコマンドを積んでからCloseすること
 	hr = commandList_->Close();
 	assert(SUCCEEDED(hr));
 
-	/* ///////////////////
-		コマンドをキックする
-	*/ ///////////////////
 	// GPUコマンドリストの実行を行わせる
 	ID3D12CommandList* commandList[] = { commandList_.Get() };
-	commandQueue_->ExecuteCommandLists(1, commandList);
+	commandQueue_->ExecuteCommandLists(1, commandList); // コマンドリストをキック
 
 	//GPUとOSに画面の交換を行うように通知する
-	swapChain_->Present(1, 0);
+	swapChain_->Present(1, 0); // スワップチェーンのバッファを表示
 
-	/* ///////////////////
-		GPUにSignalを送る
-	*/ ///////////////////
 	// GPUがここまでたどり着いたときに、Fenceの当た値を指定した値に代入するようにSignalを送る
-	commandQueue_->Signal(fence_.Get(), ++fenceValue_);
+	commandQueue_->Signal(fence_.Get(), ++fenceValue_); // フェンスを更新
 
 	// Fenceの値が指定したSignal値にたどり着いているか確認する
 	// GetCompletedValueの初期値はFence作成時に渡した初期値
@@ -164,26 +159,26 @@ void DXCommon::PostDraw() {
 
 		// FenceのSignalを待つためのイベントを作成する
 		HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-		assert(fenceEvent != nullptr);
+		assert(fenceEvent != nullptr); // イベントの作成が成功したか確認
 
 		// 指定したSignalにたどり着いていないので、たどり着くまで待つようにイベントを設定する
-		fence_->SetEventOnCompletion(fenceValue_, fenceEvent);
+		fence_->SetEventOnCompletion(fenceValue_, fenceEvent); // フェンスのシグナル設定
 
 		// イベント待つ
-		WaitForSingleObject(fenceEvent, INFINITE);
+		WaitForSingleObject(fenceEvent, INFINITE); // 指定のイベントがシグナル状態になるまで待機
 
 		//イベントの解放
-		CloseHandle(fenceEvent);
+		CloseHandle(fenceEvent); // イベントハンドルの解放
 	}
 
 	// FPS固定
-	UpdateFixFPS();
+	UpdateFixFPS(); // フレームレートを固定する処理
 
 	// 次のフレーム用のコマンドリストを準備
-	hr = commandAllocator_->Reset();
-	assert(SUCCEEDED(hr));
-	hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
-	assert(SUCCEEDED(hr));
+	hr = commandAllocator_->Reset(); // コマンドアロケータをリセット
+	assert(SUCCEEDED(hr)); // リセットが成功したか確認
+	hr = commandList_->Reset(commandAllocator_.Get(), nullptr); // 新しいコマンドリストをリセット
+	assert(SUCCEEDED(hr)); // リセットが成功したか確認
 }
 
 ///-------------------------------------------/// 

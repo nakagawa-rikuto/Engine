@@ -16,17 +16,15 @@ struct DirectionalLight
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+//SRV‚Ìregister‚Ít
+Texture2D<float4> gTexture : register(t0);
+// Sampler‚Ìregister‚Ís
+SamplerState gSampler : register(s0);
 
 struct PixlShaderOutput
 {
     float4 color : SV_TARGET0;
 };
-
-//SRV‚Ìregister‚Ít
-Texture2D<float4> gTexture : register(t0);
-
-// Sampler‚Ìregister‚Ís
-SamplerState gSampler : register(s0);
 
 
 PixlShaderOutput main(VertexShaderOutput input)
@@ -62,4 +60,4 @@ PixlShaderOutput main(VertexShaderOutput input)
     }
     
     return output;
-}}
+}

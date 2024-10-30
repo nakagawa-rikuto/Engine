@@ -17,19 +17,34 @@
 #include "Base/Math/Matrix4x4.h"
 
 /// <summary>
-/// VertexData
+/// VertexData(2D)
 /// </summary>
-struct VertexData {
+struct VertexData2D {
+	Vector4 position;
+	Vector2 texcoord;
+};
 
+/// <summary>
+/// VertexData(3D)
+/// </summary>
+struct VertexData3D {
 	Vector4 position;
 	Vector2 texcoord;
 	Vector3 normal;
 };
 
 /// <summary>
-/// マテリアル
+/// MaterialData(2D)
 /// </summary>
-struct MaterialData {
+struct MaterialData2D {
+	Vector4 color;
+	Matrix4x4 uvTransform;
+};
+
+/// <summary>
+/// MaterialData(3D)
+/// </summary>
+struct MaterialData3D {
 
 	Vector4 color;
 	int32_t enableLighting;
@@ -38,20 +53,25 @@ struct MaterialData {
 };
 
 /// <summary>
-/// 位置・姿勢情報
+/// TransformationMatrix(2D)
 /// </summary>
-struct TransformInfo {
-
-	Vector3 scale;
-	Vector3 rotate;
-	Vector3 translate;
+struct TransformationMatrix2D {
+	Matrix4x4 WVP;
 };
 
 /// <summary>
-/// 座標変換行列データ
+/// TransformationMatrix(3D)
 /// </summary>
-struct TransformationMatrix {
-
+struct TransformationMatrix3D {
 	Matrix4x4 WVP;
 	Matrix4x4 World;
+};
+
+/// <summary>
+/// WorldTransform
+/// </summary>
+struct WorldTransform {
+	Vector3 scale;
+	Vector3 rotate;
+	Vector3 translate;
 };
