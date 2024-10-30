@@ -22,16 +22,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// Systemの初期化
 	System::Initialize(kWindowTitle, 1280, 720);
 
-	// テクスチャの読み込み
-	const std::string& uvTexture = "./Resource/uvChecker.png";
-	System::LoadTexture(uvTexture);
+	//// テクスチャの読み込み
+	//const std::string& uvTexture = "./Resource/uvChecker.png";
+	//System::LoadTexture(uvTexture);
 
 	const std::string& monsterBall = "./Resource/monsterBall.png";
 	System::LoadTexture(monsterBall);
 
 	std::vector<std::unique_ptr<Sprite>> sprites_;
-	for (uint32_t i = 0; i < 5; ++i) {
+	for (uint32_t i = 0; i < 1; ++i) {
 		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
+		//sprite->Initialize(monsterBall);
 		sprite->Initialize(monsterBall);
 		sprite->SetSize(Vector2(100.0f, 100.0f));
 		sprite->SetPosition(Vector2(i * 150.0f, 0.0f));

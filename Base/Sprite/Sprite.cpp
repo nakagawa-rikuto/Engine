@@ -91,6 +91,8 @@ void Sprite::Initialize(std::string textureFilePath) {
 
 	// 単位行列を書き込んでおく
 	textureIndex = System::GetTextureIndexByFilePath(textureFilePath);
+
+	color_.x = 0.0;
 }
 
 
@@ -100,6 +102,8 @@ void Sprite::Initialize(std::string textureFilePath) {
 void Sprite::Update() {
 
 	TransformDataWrite();
+
+	color_.x += 0.03f;
 
 	materialData_->color = color_;
 }
@@ -124,6 +128,7 @@ void Sprite::Draw() {
 	// wvpMatrixBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 
+	D3D12_GPU_DESCRIPTOR_HANDLE handle = System::GetSRVHandleGPU(textureIndex);
 	// テクスチャの設定
 	commandList->SetGraphicsRootDescriptorTable(2, System::GetSRVHandleGPU(textureIndex));
 

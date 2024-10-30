@@ -21,6 +21,12 @@ PixlShaderOutput main(VertexShaderOutput input)
 {
     PixlShaderOutput output;
     
+    if (gMaterial.color.x < 1.0f)
+    {
+        output.color = float4(1, 0, 0, 1);
+        return output;        
+    }
+    
     float4 transformdUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
     
     //Texture‚ðSampling‚·‚é
