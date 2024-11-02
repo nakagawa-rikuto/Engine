@@ -1,4 +1,8 @@
 #pragma once
+/// ===Includ=== ///
+#include "Base/ComPtr/ComPtr.h"
+
+
 #define DIRECTINPUT_VERSION   0x0800   // DirectInputのバージョン指定
 #include <cassert>
 #include <dinput.h>
@@ -51,8 +55,8 @@ public: // メンバ関数
 	bool TriggerKey(BYTE keyNum);
 
 private:
-	Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
-	Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard_;
+	ComPtr<IDirectInput8> directInput_;
+	ComPtr<IDirectInputDevice8> keyboard_;
 
 	BYTE key_[256] = {}; // 全キーの入力情報
 	BYTE preKye_[256] = {}; // 前回の全キーの状態

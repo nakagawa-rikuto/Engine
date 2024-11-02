@@ -46,7 +46,7 @@ IDxcBlob* Compiler::GetObjPS() { return objPSBlob_.Get(); }
 ///-------------------------------------------/// 
 /// CompileShader関数
 ///-------------------------------------------///
-Microsoft::WRL::ComPtr<IDxcBlob> Compiler::CompileShader(
+ComPtr<IDxcBlob> Compiler::CompileShader(
 	const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
 
 	HRESULT hr;

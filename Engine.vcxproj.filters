@@ -33,7 +33,7 @@
     <ClCompile Include="Base\Log\Logger.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Material\Material3D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Material\Material3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Base\Math\sMath.cpp">
@@ -69,7 +69,7 @@
     <ClCompile Include="Game\Scene\GameScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Transform\Transform3D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Transform\Transform3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Base\Sprite\Sprite.cpp">
@@ -123,22 +123,22 @@
     <ClCompile Include="Base\StringUtility\StringUtility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Transform\Transform2D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Transform\Transform2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Material\Material2D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Material\Material2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Index\IndexBuffer2D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Index\IndexBuffer3D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Vertex\VertexBuffer2D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Buffer\Vertex\VertexBuffer3D.cpp">
+    <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,7 +155,7 @@
     <ClInclude Include="Base\Log\Logger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Material\Material3D.h">
+    <ClInclude Include="Base\PSO\Buffer\Material\Material3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\Math\sMath.h">
@@ -191,7 +191,7 @@
     <ClInclude Include="Game\Scene\GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Transform\Transform3D.h">
+    <ClInclude Include="Base\PSO\Buffer\Transform\Transform3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\Sprite\Sprite.h">
@@ -254,22 +254,22 @@
     <ClInclude Include="Base\PSO\PipelineStateObjectType.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Transform\Transform2D.h">
+    <ClInclude Include="Base\PSO\Buffer\Transform\Transform2D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Material\Material2D.h">
+    <ClInclude Include="Base\PSO\Buffer\Material\Material2D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Index\IndexBuffer2D.h">
+    <ClInclude Include="Base\PSO\Buffer\Index\IndexBuffer2D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Index\IndexBuffer3D.h">
+    <ClInclude Include="Base\PSO\Buffer\Index\IndexBuffer3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Vertex\VertexBuffer2D.h">
+    <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Buffer\Vertex\VertexBuffer3D.h">
+    <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

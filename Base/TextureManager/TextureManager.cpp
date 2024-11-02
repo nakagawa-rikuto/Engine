@@ -160,7 +160,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 	/// ***************************
 	/// Resourceの生成
 	/// ***************************
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
+	ComPtr<ID3D12Resource> resource = nullptr;
 	HRESULT hr = dxCommon_->GetDevice()->CreateCommittedResource(
 		&heapProperties, // Heapの設定
 		D3D12_HEAP_FLAG_NONE, // Heapの特殊な設定。
@@ -175,7 +175,7 @@ ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexM
 ///-------------------------------------------/// 
 /// データを転送する
 ///-------------------------------------------///
-void TextureManager::UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
+void TextureManager::UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages) {
 
 	// Meta情報を取得
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();

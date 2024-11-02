@@ -125,7 +125,7 @@ private:/// ===Functions(関数)=== ///
 	/// <param name="device"></param>
 	/// <param name="sizeInBytes"></param>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateResource(ID3D12Device* device, size_t sizeInBytes);
+	ComPtr<ID3D12Resource> CreateResource(ID3D12Device* device, size_t sizeInBytes);
 
 	/// <summary>
 	/// VertexResourceへの書き込み

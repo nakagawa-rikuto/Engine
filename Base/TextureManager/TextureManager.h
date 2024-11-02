@@ -76,6 +76,8 @@ private:/// ===Functions(関数)=== ///
 	// TextureResourceの作成
 	ComPtr<ID3D12Resource> CreateTextureResource( const DirectX::TexMetadata& metadata);
 	// データを転送する
-	void UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
+	void UploadTextureData(
+		
+		ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 };
 

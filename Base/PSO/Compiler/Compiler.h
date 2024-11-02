@@ -45,8 +45,8 @@ public:
 private:
 
 	//　ObjectShader
-	Microsoft::WRL::ComPtr<IDxcBlob> objVSBlob_;
-	Microsoft::WRL::ComPtr<IDxcBlob> objPSBlob_;
+	ComPtr<IDxcBlob> objVSBlob_;
+	ComPtr<IDxcBlob> objPSBlob_;
 
 	/// <summary>
 	/// CompileShader関数
@@ -57,7 +57,7 @@ private:
 	/// <param name="dxcCompiler"></param>
 	/// <param name="includeHandler"></param>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
+	ComPtr<IDxcBlob> CompileShader(
 		// CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
 

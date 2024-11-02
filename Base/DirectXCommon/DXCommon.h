@@ -1,10 +1,16 @@
 #pragma once
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
+/// ====Include== ///
+// Engine
+#include "Base//ComPtr/ComPtr.h"
+
+// DirectX
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <dxcapi.h>
+
+// c++
+#include <cstdlib>
+#include <chrono>
 #include <wrl.h>
 
 #pragma comment(lib, "dxcompiler.lib")
@@ -169,46 +175,46 @@ private: // メンバ変数
 	/* //////////////////
 		　Direct3D関連
 	*/ //////////////////
-	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_; // DXGIFactory
-	Microsoft::WRL::ComPtr<ID3D12Device> device_; // D3D12Device
+	ComPtr<IDXGIFactory7> dxgiFactory_; // DXGIFactory
+	ComPtr<ID3D12Device> device_; // D3D12Device
 
-	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_; // DxcUtils
-	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_; // DxcCompiler
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_; // includeHandler
+	ComPtr<IDxcUtils> dxcUtils_; // DxcUtils
+	ComPtr<IDxcCompiler3> dxcCompiler_; // DxcCompiler
+	ComPtr<IDxcIncludeHandler> includeHandler_; // includeHandler
 
 	/// ===command=== ///
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_; // CommandList
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_; // CommandAllocator
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_; // CommandQueue
+	ComPtr<ID3D12GraphicsCommandList> commandList_; // CommandList
+	ComPtr<ID3D12CommandAllocator> commandAllocator_; // CommandAllocator
+	ComPtr<ID3D12CommandQueue> commandQueue_; // CommandQueue
 
 	/// ===swapChain=== ///
-	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_; // SwapChain
+	ComPtr<IDXGISwapChain4> swapChain_; // SwapChain
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
-	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource_[2];
+	ComPtr<ID3D12Resource> swapChainResource_[2];
 
 	/// ===backBuffer=== ///
-	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers_; // BackBuffer
+	std::vector<ComPtr<ID3D12Resource>> backBuffers_; // BackBuffer
 
 	/// ===RTV=== ///
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_; // レンダーターゲットビュー
+	ComPtr<ID3D12DescriptorHeap> rtvHeap_; // レンダーターゲットビュー
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2]; // レンダーターゲットビューのディスクリプタ
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{}; // レンダーターゲットビューのデスク
 	uint32_t descriptorSizeRTV_; // RTV(DescriptorSize)
 
 	/// ===SRV=== ///
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap_; // SRV(テクスチャ関連)
+	ComPtr<ID3D12DescriptorHeap> srvHeap_; // SRV(テクスチャ関連)
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_[99]{}; // SRVデスク
 	uint32_t descriptorSizeSRV_; // SRV(DescriptorSize)
 
 	/// ===DSV=== ///
-	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_; // depthStencilResource
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV
+	ComPtr<ID3D12Resource> depthStencilResource_; // depthStencilResource
+	ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc_{}; // DSVデスク
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_; // DSVハンドル	
 	uint32_t descriptorSizeDSV_; // // DSV(DescriptorSize)
 
 	/// ===fence=== ///
-	Microsoft::WRL::ComPtr<ID3D12Fence> fence_; // Fence
+	ComPtr<ID3D12Fence> fence_; // Fence
 	uint64_t fenceValue_ = 0;  // FenceValue
 
 	/// ===FPS固定=== ///
@@ -225,6 +231,16 @@ private: // メンバ変数
 	int32_t backBufferHeight_ = 0;
 
 private:
+
+	/// <summary>
+	/// デバッグレイヤー
+	/// </summary>
+	void DebugLayer();
+
+	/// <summary>
+	/// エラー・警告
+	/// </summary>
+	void DebugInfo();
 
 	/// <summary>
 	/// DXGIデバイス初期化
@@ -300,7 +316,7 @@ private:
 	/// <param name="index"></param>
 	/// <returns></returns>
 	static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
-		const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
+		const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	/// <summary>
 	/// GPUのディスクリプターハンドルの取得
@@ -310,5 +326,5 @@ private:
 	/// <param name="index"></param>
 	/// <returns></returns>
 	static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(
-		const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
+		const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
 };

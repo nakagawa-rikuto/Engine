@@ -12,6 +12,7 @@
 #include <wrl.h>
 
 #include "Base/Data/CBufferData.h"
+#include "Base/ComPtr/ComPtr.h"
 
 /// ===前方宣言=== ///
 class DXCommon;
@@ -55,8 +56,10 @@ public:
 private:
 
 	// バッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer_;
+	
+	
+	ComPtr<ID3D12Resource> vertexBuffer_;
+	ComPtr<ID3D12Resource> indexBuffer_;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

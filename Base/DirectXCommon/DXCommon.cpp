@@ -53,8 +53,14 @@ void DXCommon::Initialize(
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
 
+	// デバッグレイヤー
+	DebugLayer();
+
 	// DXGIデバイスの初期化
 	InitializeDXGIDevice();
+
+	// エラー・警告
+	DebugInfo();
 
 	// コマンド関連の初期化
 	InitializeCommand();
@@ -222,6 +228,63 @@ D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetDSVCPUDescriptorHandle(uint32_t index) 
 D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetDSVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
 
 ///-------------------------------------------/// 
+/// デバッグレイヤー
+///-------------------------------------------///
+void DXCommon::DebugLayer() {
+	ComPtr<ID3D12Debug1> debugController = nullptr;
+	if ((SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))) {
+
+		// デバッグレイヤーを有効化
+		debugController->EnableDebugLayer();
+
+		// さらにGPU側でもチェックを行うようにする
+		debugController->SetEnableGPUBasedValidation(TRUE);
+	}
+}
+
+///-------------------------------------------/// 
+/// エラー・警告
+///-------------------------------------------///
+void DXCommon::DebugInfo() {
+	ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
+	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+
+		// やばいエラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+
+		// エラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+
+		// 警告時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+
+		// 解放
+		//infoQueue->Release();
+
+		/// *****************************************************
+		/// エラーと警告の抑制
+		/// *****************************************************
+		// 抑制するメッセージ
+		D3D12_MESSAGE_ID denyIds[] = {
+			// Windows11でのDXGIデバッグレイヤーとDX12デバッグレイヤーの相互作用バグによるエラーメッセージ
+			// https:/stackoverflow.com/questions/69805245/DirectX-12-application-is-crashing-in-windows11
+			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
+		};
+
+		// 抑制するレベル
+		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
+		D3D12_INFO_QUEUE_FILTER filter{};
+		filter.DenyList.NumIDs = _countof(denyIds);
+		filter.DenyList.pIDList = denyIds;
+		filter.DenyList.NumSeverities = _countof(severities);
+		filter.DenyList.pSeverityList = severities;
+
+		// 指定したメッセージの表示を抑制する
+		infoQueue->PushStorageFilter(&filter);
+	}
+}
+
+///-------------------------------------------/// 
 /// DXGIデバイス初期化
 ///-------------------------------------------///
 void DXCommon::InitializeDXGIDevice() {
@@ -238,7 +301,7 @@ void DXCommon::InitializeDXGIDevice() {
 	assert(SUCCEEDED(hr));
 
 	// 使用するアダプタ用の変数
-	Microsoft::WRL::ComPtr<IDXGIAdapter4> useAdapter = nullptr;
+	ComPtr<IDXGIAdapter4> useAdapter = nullptr;
 
 	//良い順にアダプタを頼む
 	for (UINT i = 0; dxgiFactory_->EnumAdapterByGpuPreference(
@@ -294,7 +357,7 @@ void DXCommon::InitializeDXGIDevice() {
 	/* /////////////////////////////////////////////////////
 						エラー・警告、即ち停止
 	*/ /////////////////////////////////////////////////////
-	Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
+	ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
 	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 
 		// やばいエラー時に止まる
@@ -639,7 +702,7 @@ ID3D12GraphicsCommandList* DXCommon::GetCommandList() const { return commandList
 
 // CPUのディスクリプターハンドルの取得 
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
-	const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 
 	// ディスクリプタの先頭を取得
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
@@ -650,7 +713,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
 
 // GPUのディスクリプターハンドルの取得
 D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetGPUDescriptorHandle(
-	const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 
 	// ディスクリプタの先頭を取得
 	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
