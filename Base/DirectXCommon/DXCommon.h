@@ -24,11 +24,8 @@ class WinApp;
 class DXCommon {
 public:
 
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static DXCommon* GetInstance();
+	DXCommon() = default;
+	~DXCommon() = default;
 
 	/// <summary>
 	/// 初期化

@@ -60,7 +60,7 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// Inputの初期化
 	input_ = std::make_unique<Input>();
 	input_->Initialize(winApp_.get());
-	
+
 	// TextrueManagerの初期化
 	textureManager_ = std::make_unique<TextureManager>();
 	textureManager_->Initialize(dXCommon_.get());
@@ -89,6 +89,17 @@ void System::Finalize() {
 
 	// ゲームウィンドウの破棄
 	winApp_->TerminateGameWindow();
+
+	// 手動の解放
+	winApp_.reset();
+	dXCommon_.reset();
+	input_.reset();
+	textureManager_.reset();
+	srvManager_.reset();
+	spriteCommon_.reset();
+
+	// COMの終了
+	CoUninitialize();
 }
 
 ///=====================================================/// 
@@ -124,7 +135,7 @@ void System::LoadTexture(const std::string& filePath) {
 /// SRVインデックス開始番号の取得
 ///-------------------------------------------///
 uint32_t System::GetTextureIndexByFilePath(const std::string& filePath) {
-	
+
 	return textureManager_->GetTextureIndexByFilePath(filePath);
 }
 
@@ -132,7 +143,7 @@ uint32_t System::GetTextureIndexByFilePath(const std::string& filePath) {
 /// GPUハンドルの取得
 ///-------------------------------------------///
 D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(uint32_t textureIndex) {
-	
+
 	return textureManager_->GetSRVHandleGPU(textureIndex);
 }
 #pragma endregion

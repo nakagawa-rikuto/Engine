@@ -25,6 +25,11 @@ class SRVManager;
 /// システム
 ///=====================================================///
 class System {
+public:
+
+	System() = default;
+	~System() = default;
+
 public:/// ===開発者用関数(システム)=== ///
 	
 	// システム全体の初期化

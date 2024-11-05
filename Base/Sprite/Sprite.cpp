@@ -91,8 +91,6 @@ void Sprite::Initialize(std::string textureFilePath) {
 
 	// 単位行列を書き込んでおく
 	textureIndex = System::GetTextureIndexByFilePath(textureFilePath);
-
-	color_.x = 0.0;
 }
 
 
@@ -102,8 +100,6 @@ void Sprite::Initialize(std::string textureFilePath) {
 void Sprite::Update() {
 
 	TransformDataWrite();
-
-	color_.x += 0.03f;
 
 	materialData_->color = color_;
 }

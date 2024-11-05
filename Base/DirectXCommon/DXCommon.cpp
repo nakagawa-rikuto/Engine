@@ -24,14 +24,6 @@ const uint32_t DXCommon::kNumDSVDescriptor = 1;
 const uint32_t DXCommon::kMaxSRVCount = 512;
 
 ///-------------------------------------------/// 
-/// シングルトンインスタンスの取得
-///-------------------------------------------///
-DXCommon* DXCommon::GetInstance() {
-	static DXCommon instance;
-	return &instance;
-}
-
-///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void DXCommon::Initialize(

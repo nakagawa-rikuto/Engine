@@ -1,9 +1,5 @@
 #pragma once
 
-/// ===前方宣言=== ///
-class DXCommon;
-class Input;
-
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -37,8 +33,6 @@ public: /* メンバ関数 */
 	void Draw();
 
 private: /* メンバ変数 */
-	DXCommon* dxCommon_ = nullptr;
-	Input* input_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

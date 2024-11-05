@@ -17,9 +17,6 @@ GameScene::~GameScene() {}
 							初期化
 */ ////////////////////////////////////////////////////////////
 void GameScene::Initialize() {
-
-	dxCommon_ = DXCommon::GetInstance();
-	input_ = Input::GetInstance();
 }
 
 /* ////////////////////////////////////////////////////////////
@@ -33,7 +30,7 @@ void GameScene::Update() {}
 void GameScene::Draw() {
 
 	// コマンドリストの取得
-	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	ID3D12GraphicsCommandList* commandList = System::GetDXCommandList();
 
 #pragma region 背景スプライト描画
 #pragma endregion
