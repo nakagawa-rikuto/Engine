@@ -18,9 +18,9 @@
 /// ===前方宣言=== ///
 class WinApp;
 
-/// <summary>
+///=====================================================/// 
 /// DirectX汎用
-/// </summary>
+///=====================================================///
 class DXCommon {
 public:
 
@@ -33,9 +33,6 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="winApp"></param>
-	/// <param name="backBufferWidth"></param>
-	/// <param name="backBufferHeight"></param>
 	void Initialize(
 		WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight);
 
@@ -48,6 +45,20 @@ public:
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
+
+	/// <summary>
+	/// Heapの生成
+	/// </summary>
+	ComPtr<ID3D12DescriptorHeap> CreateRTVHeap(); // RTV
+	ComPtr<ID3D12DescriptorHeap> CreateDSVHeap(); // DSV
+	ComPtr<ID3D12DescriptorHeap> CreateSRVHeap(); // SRV
+
+	/// <summary>
+	/// DescriptorSizeの取得
+	/// </summary>
+	const uint32_t GetRTVDescriptorSize();
+	const uint32_t GetDSVDescriptorSize();
+	const uint32_t GetSRVDescriptorSize();
 
 	/// <summary>
 	/// レンダーターゲットのクリア
@@ -161,11 +172,16 @@ public:
 	/// <param name="sRGB"></param>
 	//void SetRenderTargets(bool sRGB);
 
-public:
+public:/// ===定数=== ///
+	
+	// RTV
+	static const uint32_t kNumRTVDescriptor; // RTVの数
 
-	/// ===定数=== ///
+	// DSV 
+	static const uint32_t kNumDSVDescriptor; // DSVの数
+
 	// SRV
-	static const uint32_t kMaxSRVCount; // 最大SRV数（最大テクスチャ枚数）
+	static const uint32_t kMaxSRVCount; // 最大SRV数（最大テクスチャ枚数）	
 
 private: // メンバ変数
 
@@ -177,7 +193,6 @@ private: // メンバ変数
 	*/ //////////////////
 	ComPtr<IDXGIFactory7> dxgiFactory_; // DXGIFactory
 	ComPtr<ID3D12Device> device_; // D3D12Device
-
 	ComPtr<IDxcUtils> dxcUtils_; // DxcUtils
 	ComPtr<IDxcCompiler3> dxcCompiler_; // DxcCompiler
 	ComPtr<IDxcIncludeHandler> includeHandler_; // includeHandler
@@ -201,11 +216,6 @@ private: // メンバ変数
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{}; // レンダーターゲットビューのデスク
 	uint32_t descriptorSizeRTV_; // RTV(DescriptorSize)
 
-	/// ===SRV=== ///
-	ComPtr<ID3D12DescriptorHeap> srvHeap_; // SRV(テクスチャ関連)
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_[99]{}; // SRVデスク
-	uint32_t descriptorSizeSRV_; // SRV(DescriptorSize)
-
 	/// ===DSV=== ///
 	ComPtr<ID3D12Resource> depthStencilResource_; // depthStencilResource
 	ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV
@@ -213,9 +223,17 @@ private: // メンバ変数
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_; // DSVハンドル	
 	uint32_t descriptorSizeDSV_; // // DSV(DescriptorSize)
 
+	/// ===SRV=== ///
+	ComPtr<ID3D12DescriptorHeap> srvHeap_; // SRV(テクスチャ関連)
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_[99]{}; // SRVデスク
+	uint32_t descriptorSizeSRV_; // SRV(DescriptorSize)
+
 	/// ===fence=== ///
 	ComPtr<ID3D12Fence> fence_; // Fence
 	uint64_t fenceValue_ = 0;  // FenceValue
+
+	/// ===バリア=== ///
+	D3D12_RESOURCE_BARRIER barrier_{};
 
 	/// ===FPS固定=== ///
 	std::chrono::steady_clock::time_point reference_; // 記録時間(FPS固定用)
@@ -257,6 +275,11 @@ private:
 	/// スワップチェーンの生成
 	/// </summary>
 	void CreateSwapChain();
+
+	/// <summary>
+	/// ディスクリプタヒープの生成
+	/// </summary>
+	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
 	/// <summary>
 	/// レンダーターゲットの生成(RTV)

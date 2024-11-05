@@ -8,6 +8,7 @@
 // Sprite
 #include "Base/TextureManager/TextureManager.h"
 #include "Base/Sprite/SpriteCommon.h"
+#include "Base/SRVManager/SRVManager.h"
 
 // Math
 #include "Base/Math/sMath.h"
@@ -20,6 +21,7 @@ std::unique_ptr<Input> System::input_ = nullptr;
 
 // Sprite
 std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
+std::unique_ptr<SRVManager> System::srvManager_ = nullptr;
 std::unique_ptr<SpriteCommon> System::spriteCommon_ = nullptr;
 
 ///=====================================================/// 
@@ -62,6 +64,10 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// TextrueManagerの初期化
 	textureManager_ = std::make_unique<TextureManager>();
 	textureManager_->Initialize(dXCommon_.get());
+
+	// SRVManagerの初期化
+	srvManager_ = std::make_unique<SRVManager>();
+	srvManager_->Initialize(dXCommon_.get());
 
 	// スプライト共通部の生成
 	spriteCommon_ = std::make_unique<SpriteCommon>();

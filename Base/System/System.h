@@ -19,6 +19,7 @@ class Input;
 // Sprite
 class SpriteCommon;
 class TextureManager;
+class SRVManager;
 
 ///=====================================================///
 /// システム
@@ -71,5 +72,6 @@ private:/// ===Variables(変数)=== ///
 
 	static std::unique_ptr<TextureManager> textureManager_;   // TextureManager
 	static std::unique_ptr<SpriteCommon> spriteCommon_;      // SpriteCommon
+	static std::unique_ptr<SRVManager> srvManager_;          // SRVManager
 
 };

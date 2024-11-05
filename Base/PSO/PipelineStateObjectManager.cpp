@@ -85,6 +85,7 @@ void PipelineStateObjectManager::CreatePipelineState(DXCommon* dxCommon) {
 	HRESULT hr;
 
 	// PSOの取得
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_{};
 	graphicsPipelineStateDesc_.pRootSignature = rootSignature_->GetRootSignature(); // RootSignature
 	graphicsPipelineStateDesc_.InputLayout = inputLayout_->GetInputLayout(); // InputLayout
 	graphicsPipelineStateDesc_.VS = {
@@ -98,6 +99,9 @@ void PipelineStateObjectManager::CreatePipelineState(DXCommon* dxCommon) {
 	// 書き込むRTVの情報
 	graphicsPipelineStateDesc_.NumRenderTargets = 1;
 	graphicsPipelineStateDesc_.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+	// 書き込むDSVの情報
+	graphicsPipelineStateDesc_.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// 利用するトポロジ(形状)のタイプ。三角形
 	graphicsPipelineStateDesc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

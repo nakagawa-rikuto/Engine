@@ -134,6 +134,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\PSO\Buffer\Material\Material2D.cpp" />
     <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.cpp" />
     <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.cpp" />
+    <ClCompile Include="Base\SRVManager\SRVManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h" />
@@ -179,6 +180,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\PSO\Buffer\Index\IndexBuffer3D.h" />
     <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.h" />
     <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.h" />
+    <ClInclude Include="Base\SRVManager\SRVManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

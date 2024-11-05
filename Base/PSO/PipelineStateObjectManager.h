@@ -53,7 +53,6 @@ private:
 	std::unique_ptr<Compiler> compiler_;
 
 	ComPtr<ID3D12PipelineState> graphicsPipelineState_;
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_{};
 
 private:/// ====== ///
 

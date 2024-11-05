@@ -140,9 +140,6 @@ void Sprite::Draw() {
 ///-------------------------------------------/// 
 /// Resourceの作成関数
 ///-------------------------------------------///
-
-
-
 ComPtr<ID3D12Resource> Sprite::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 
