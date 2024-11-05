@@ -1,28 +1,25 @@
-
 #pragma once
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
+/// ===Include=== ///
+// Engine
+#include "Base/PSO/PipelineStateObjectType.h"
+
+// c++
 #include <d3d12.h>
-#include <dxgi1_6.h>
-#include <dxcapi.h>
-#include <wrl.h>
 
+///=====================================================/// 
+/// BlendState
+///=====================================================///
 class BlendState {
-
 public:
 
-	/// <summary>
-	/// シングルトンインスタンス
-	/// </summary>
-	/// <returns></returns>
-	static BlendState* GetInstance();
+	BlendState() = default;
+	~BlendState() = default;
 
 	/// <summary>
-	/// ブレンドステートの設定
+	/// ブレンドステートの生成
 	/// </summary>
 	/// <returns></returns>
-	void Setting();
+	void Create();
 
 	/// <summary>
 	/// ブレンドステートの取得

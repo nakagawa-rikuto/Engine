@@ -1,31 +1,34 @@
 #pragma once
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
+/// ===Include=== ///
+// Engine
+#include "Base/ComPtr/ComPtr.h"
+#include "Base/PSO/PipelineStateObjectType.h"
+
+// directX
 #include <d3d12.h>
-#include <dxgi1_6.h>
 #include <dxcapi.h>
-#include <wrl.h>
+
+// c++
+#include <string>
 
 #pragma comment(lib, "dxcompiler.lib")
 
 /// ===前方宣言=== ///
 class DXCommon;
 
+///=====================================================/// 
+/// Compiler
+///=====================================================///
 class Compiler {
-
 public:
 
-	/// <summary>
-	/// シングルトンインスタンス
-	/// </summary>
-	/// <returns></returns>
-	static Compiler* GetInstance();
+	Compiler() = default;
+	~Compiler() = default;
 
 	/// <summary>
 	/// shaderをコンパイルする
 	/// </summary>
-	void ShaderCompiler(DXCommon* dxCommon);
+	void Initialize(DXCommon* dxCommon, PipelinType Type);
 
 	/// <summary>
 	/// ObjectVertexShaderBlobの取得
@@ -42,8 +45,8 @@ public:
 private:
 
 	//　ObjectShader
-	Microsoft::WRL::ComPtr<IDxcBlob> objVSBlob_;
-	Microsoft::WRL::ComPtr<IDxcBlob> objPSBlob_;
+	ComPtr<IDxcBlob> objVSBlob_;
+	ComPtr<IDxcBlob> objPSBlob_;
 
 	/// <summary>
 	/// CompileShader関数
@@ -54,7 +57,7 @@ private:
 	/// <param name="dxcCompiler"></param>
 	/// <param name="includeHandler"></param>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<IDxcBlob> CompileShader(
+	ComPtr<IDxcBlob> CompileShader(
 		// CompilerするShaderファイルへのパス
 		const std::wstring& filePath,
 

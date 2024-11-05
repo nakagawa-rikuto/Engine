@@ -97,7 +97,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\DirectXCommon\DXCommon.cpp" />
     <ClCompile Include="Base\Input\Input.cpp" />
     <ClCompile Include="Base\Log\Logger.cpp" />
-    <ClCompile Include="Base\Material\Material.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Material\Material3D.cpp" />
     <ClCompile Include="Base\Math\Matrix3x3.cpp" />
     <ClCompile Include="Base\Math\Matrix4x4.cpp" />
     <ClCompile Include="Base\Math\MatrixMath.cpp" />
@@ -109,11 +109,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\PSO\BlendState\BlendState.cpp" />
     <ClCompile Include="Base\PSO\Compiler\Compiler.cpp" />
     <ClCompile Include="Base\PSO\InputLayout\InputLayout.cpp" />
-    <ClCompile Include="Base\PSO\PipelineStateObject.cpp" />
+    <ClCompile Include="Base\PSO\PipelineStateObjectManager.cpp" />
     <ClCompile Include="Base\PSO\RasterizerState\RasterizerState.cpp" />
     <ClCompile Include="Base\PSO\RootSignature\RootSignature.cpp" />
     <ClCompile Include="Base\System\System.cpp" />
-    <ClCompile Include="Base\Transform\Transform.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Transform\Transform3D.cpp" />
     <ClCompile Include="Base\WinApp\WinApp.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
@@ -123,18 +123,25 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\Scene\GameScene.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer2D.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer3D.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Base\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="Base\Sprite\Sprite.cpp" />
-    <ClCompile Include="Base\TextrueManager\TextureManager.cpp" />
+    <ClCompile Include="Base\TextureManager\TextureManager.cpp" />
     <ClCompile Include="Base\StringUtility\StringUtility.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Transform\Transform2D.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Material\Material2D.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.cpp" />
+    <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.cpp" />
+    <ClCompile Include="Base\SRVManager\SRVManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h" />
     <ClInclude Include="Base\DirectXCommon\DXCommon.h" />
     <ClInclude Include="Base\Input\Input.h" />
     <ClInclude Include="Base\Log\Logger.h" />
-    <ClInclude Include="Base\Material\Material.h" />
+    <ClInclude Include="Base\PSO\Buffer\Material\Material3D.h" />
     <ClInclude Include="Base\Math\Matrix3x3.h" />
     <ClInclude Include="Base\Math\Matrix4x4.h" />
     <ClInclude Include="Base\Math\MatrixMath.h" />
@@ -146,11 +153,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\PSO\BlendState\BlendState.h" />
     <ClInclude Include="Base\PSO\Compiler\Compiler.h" />
     <ClInclude Include="Base\PSO\InputLayout\InputLayout.h" />
-    <ClInclude Include="Base\PSO\PipelineStateObject.h" />
+    <ClInclude Include="Base\PSO\PipelineStateObjectManager.h" />
+    <ClInclude Include="Base\PSO\PipelineStateObjectType.h" />
     <ClInclude Include="Base\PSO\RasterizerState\RasterizerState.h" />
     <ClInclude Include="Base\PSO\RootSignature\RootSignature.h" />
     <ClInclude Include="Base\System\System.h" />
-    <ClInclude Include="Base\Transform\Transform.h" />
+    <ClInclude Include="Base\PSO\Buffer\Transform\Transform3D.h" />
     <ClInclude Include="Base\WinApp\WinApp.h" />
     <ClInclude Include="Base\ComPtr\ComPtr.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
@@ -164,8 +172,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Scene\GameScene.h" />
     <ClInclude Include="Base\Sprite\SpriteCommon.h" />
     <ClInclude Include="Base\Sprite\Sprite.h" />
-    <ClInclude Include="Base\TextrueManager\TextureManager.h" />
+    <ClInclude Include="Base\TextureManager\TextureManager.h" />
     <ClInclude Include="Base\StringUtility\StringUtility.h" />
+    <ClInclude Include="Base\PSO\Buffer\Transform\Transform2D.h" />
+    <ClInclude Include="Base\PSO\Buffer\Material\Material2D.h" />
+    <ClInclude Include="Base\PSO\Buffer\Index\IndexBuffer2D.h" />
+    <ClInclude Include="Base\PSO\Buffer\Index\IndexBuffer3D.h" />
+    <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.h" />
+    <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.h" />
+    <ClInclude Include="Base\SRVManager\SRVManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

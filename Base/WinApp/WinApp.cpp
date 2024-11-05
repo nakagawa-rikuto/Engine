@@ -103,9 +103,6 @@ void WinApp::CreateGameWindow(const wchar_t* title, int32_t kClientWidth, int32_
 void WinApp::TerminateGameWindow() {
 	// ウィンドウクラスを登録解除
 	UnregisterClass(wndClass_.lpszClassName, wndClass_.hInstance);
-
-	// COM 終了
-	CoUninitialize();
 }
 
 ///-------------------------------------------/// 

@@ -1,27 +1,29 @@
 
 #pragma once
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
+/// ===include=== ///
+// Engine
+#include "Base/ComPtr/ComPtr.h"
+#include "Base/PSO/PipelineStateObjectType.h"
+
+// c++
 #include <d3d12.h>
-#include <dxgi1_6.h>
-#include <dxcapi.h>
-#include <wrl.h>
 
+/// ===前方宣言=== ///
+class DXCommon;
+
+///=====================================================/// 
+/// ルートシグネイチャ
+///=====================================================///
 class RootSignature {
-
 public:
 
-	/// <summary>
-	/// シングルトンインスタンス
-	/// </summary>
-	/// <returns></returns>
-	static RootSignature* GetInstance();
+	RootSignature() = default;
+	~RootSignature() = default;
 
-	/// <summary>
+	/// <summary> 
 	/// ルートシグネイチャの生成
 	/// </summary>
-	void Create(ID3D12Device* device);
+	void Create(DXCommon* dxCommon, PipelinType Type);
 
 	/// <summary>
 	/// ルートシグネイチャの取得
@@ -29,8 +31,14 @@ public:
 	/// <returns></returns>
 	ID3D12RootSignature* GetRootSignature()const;
 
+
+
 private:
 
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
-	D3D12_ROOT_PARAMETER rootParameters_[2]{};
+	
+	ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
+
+	ComPtr<ID3DBlob> signatureBlob_; // 
+	ComPtr<ID3DBlob> errorBlob_; // エラーオブジェクト
+
 };

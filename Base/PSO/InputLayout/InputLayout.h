@@ -1,26 +1,24 @@
-
 #pragma once
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
+/// ===Include=== ///
+// Engine
+#include "Base/PSO/PipelineStateObjectType.h"
+
+// c++
 #include <d3d12.h>
-#include <dxgi1_6.h>
-#include <dxcapi.h>
-#include <wrl.h>
 
+///=====================================================/// 
+/// InputLayout
+///=====================================================///
 class InputLayout {
-
 public:
 
-	/// <summary>
-	/// シングルトンインスタンス
-	/// </summary>
-	static InputLayout* GetInstance();
+	InputLayout() = default;
+	~InputLayout() = default;
 
 	/// <summary>
 	/// InputLayoutを設定
 	/// </summary>
-	void Setting();
+	void Create(PipelinType Type);
 
 	/// <summary>
 	/// インプットレイアウトの取得

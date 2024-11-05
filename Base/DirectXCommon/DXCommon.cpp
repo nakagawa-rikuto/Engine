@@ -18,21 +18,10 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "Winmm.lib")
 
-namespace {
-	const uint32_t kNumRTVDescriptor = 2;
-	const uint32_t kNumDSVDescriptor = 1;
-}
-
-/// ===最大テクスチャ数=== ///
+/// ===定数=== ///
+const uint32_t DXCommon::kNumRTVDescriptor = 2;
+const uint32_t DXCommon::kNumDSVDescriptor = 1;
 const uint32_t DXCommon::kMaxSRVCount = 512;
-
-///-------------------------------------------/// 
-/// シングルトンインスタンスの取得
-///-------------------------------------------///
-DXCommon* DXCommon::GetInstance() {
-	static DXCommon instance;
-	return &instance;
-}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -53,8 +42,14 @@ void DXCommon::Initialize(
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
 
+	// デバッグレイヤー
+	DebugLayer();
+
 	// DXGIデバイスの初期化
 	InitializeDXGIDevice();
+
+	// エラー・警告
+	DebugInfo();
 
 	// コマンド関連の初期化
 	InitializeCommand();
@@ -62,14 +57,14 @@ void DXCommon::Initialize(
 	// スワップチェーンの生成
 	CreateSwapChain();
 
-	// シェーダリソースの生成
-	CreateShaderResource();
-
 	// レンダーターゲットの生成
 	CreateFinalRenderTargets();
 
 	// 深度バッファの生成
 	CreateDepthBuffer();
+
+	// シェーダリソースの生成
+	CreateShaderResource();
 
 	// フェンスの生成
 	CreateFence();
@@ -99,28 +94,26 @@ void DXCommon::PreDraw() {
 		　 バリアを張る
 	*/ ///////////////////
 	// TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier{};
-
 	// 今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 
 	// Noneにしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = swapChainResource_[backBufferIndex].Get();
+	barrier_.Transition.pResource = swapChainResource_[backBufferIndex].Get();
 
 	// 遷移前(現在)のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 
 	// 遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
 	// TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier);
+	commandList_->ResourceBarrier(1, &barrier_);
 
 	// 描画先のRTVを設定する
-	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, nullptr);
+	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, &dsvHandle_);
 
 	// 描画先のRTVとDSVを設定する
 
@@ -128,6 +121,11 @@ void DXCommon::PreDraw() {
 	ClearRenderTarget();
 	ClearDepthBuffer();
 
+	// 描画用のDescriptorHeapの設定
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvHeap_.Get() };
+	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
+
+	// コマンドを積む
 	commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
 	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorを設定
 }
@@ -138,25 +136,27 @@ void DXCommon::PreDraw() {
 void DXCommon::PostDraw() {
 	HRESULT hr;
 
-	//コマンドリストの内容を確定させる。　すべてのコマンドを積んでからCloseすること
+	// RenderTargetからPresentにする
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+
+	// TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrier_);
+
+	// コマンドリストの内容を確定させる。
+   // すべてのコマンドを積んでからCloseすること
 	hr = commandList_->Close();
 	assert(SUCCEEDED(hr));
 
-	/* ///////////////////
-		コマンドをキックする
-	*/ ///////////////////
 	// GPUコマンドリストの実行を行わせる
 	ID3D12CommandList* commandList[] = { commandList_.Get() };
-	commandQueue_->ExecuteCommandLists(1, commandList);
+	commandQueue_->ExecuteCommandLists(1, commandList); // コマンドリストをキック
 
 	//GPUとOSに画面の交換を行うように通知する
-	swapChain_->Present(1, 0);
+	swapChain_->Present(1, 0); // スワップチェーンのバッファを表示
 
-	/* ///////////////////
-		GPUにSignalを送る
-	*/ ///////////////////
 	// GPUがここまでたどり着いたときに、Fenceの当た値を指定した値に代入するようにSignalを送る
-	commandQueue_->Signal(fence_.Get(), ++fenceValue_);
+	commandQueue_->Signal(fence_.Get(), ++fenceValue_); // フェンスを更新
 
 	// Fenceの値が指定したSignal値にたどり着いているか確認する
 	// GetCompletedValueの初期値はFence作成時に渡した初期値
@@ -164,27 +164,42 @@ void DXCommon::PostDraw() {
 
 		// FenceのSignalを待つためのイベントを作成する
 		HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-		assert(fenceEvent != nullptr);
+		assert(fenceEvent != nullptr); // イベントの作成が成功したか確認
 
 		// 指定したSignalにたどり着いていないので、たどり着くまで待つようにイベントを設定する
-		fence_->SetEventOnCompletion(fenceValue_, fenceEvent);
+		fence_->SetEventOnCompletion(fenceValue_, fenceEvent); // フェンスのシグナル設定
 
 		// イベント待つ
-		WaitForSingleObject(fenceEvent, INFINITE);
+		WaitForSingleObject(fenceEvent, INFINITE); // 指定のイベントがシグナル状態になるまで待機
 
 		//イベントの解放
-		CloseHandle(fenceEvent);
+		CloseHandle(fenceEvent); // イベントハンドルの解放
 	}
 
 	// FPS固定
-	UpdateFixFPS();
+	UpdateFixFPS(); // フレームレートを固定する処理
 
 	// 次のフレーム用のコマンドリストを準備
-	hr = commandAllocator_->Reset();
-	assert(SUCCEEDED(hr));
-	hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
-	assert(SUCCEEDED(hr));
+	hr = commandAllocator_->Reset(); // コマンドアロケータをリセット
+	assert(SUCCEEDED(hr)); // リセットが成功したか確認
+	hr = commandList_->Reset(commandAllocator_.Get(), nullptr); // 新しいコマンドリストをリセット
+	assert(SUCCEEDED(hr)); // リセットが成功したか確認
 }
+
+///-------------------------------------------/// 
+/// DescriptorHeapの生成
+///-------------------------------------------///
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap() {return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kNumRTVDescriptor, false);}
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap() {return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, kNumDSVDescriptor, false);}
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap() {return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);}
+
+///-------------------------------------------/// 
+/// DescriptorSizeの取得
+///-------------------------------------------///
+const uint32_t DXCommon::GetRTVDescriptorSize() { return device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV); }
+const uint32_t DXCommon::GetDSVDescriptorSize() { return device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV); }
+const uint32_t DXCommon::GetSRVDescriptorSize() { return device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV); }
+
 
 ///-------------------------------------------/// 
 /// レンダーターゲットのクリア
@@ -227,6 +242,63 @@ D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetDSVCPUDescriptorHandle(uint32_t index) 
 D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetDSVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
 
 ///-------------------------------------------/// 
+/// デバッグレイヤー
+///-------------------------------------------///
+void DXCommon::DebugLayer() {
+	ComPtr<ID3D12Debug1> debugController = nullptr;
+	if ((SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))) {
+
+		// デバッグレイヤーを有効化
+		debugController->EnableDebugLayer();
+
+		// さらにGPU側でもチェックを行うようにする
+		debugController->SetEnableGPUBasedValidation(TRUE);
+	}
+}
+
+///-------------------------------------------/// 
+/// エラー・警告
+///-------------------------------------------///
+void DXCommon::DebugInfo() {
+	ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
+	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+
+		// やばいエラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+
+		// エラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+
+		// 警告時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+
+		// 解放
+		//infoQueue->Release();
+
+		/// *****************************************************
+		/// エラーと警告の抑制
+		/// *****************************************************
+		// 抑制するメッセージ
+		D3D12_MESSAGE_ID denyIds[] = {
+			// Windows11でのDXGIデバッグレイヤーとDX12デバッグレイヤーの相互作用バグによるエラーメッセージ
+			// https:/stackoverflow.com/questions/69805245/DirectX-12-application-is-crashing-in-windows11
+			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
+		};
+
+		// 抑制するレベル
+		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
+		D3D12_INFO_QUEUE_FILTER filter{};
+		filter.DenyList.NumIDs = _countof(denyIds);
+		filter.DenyList.pIDList = denyIds;
+		filter.DenyList.NumSeverities = _countof(severities);
+		filter.DenyList.pSeverityList = severities;
+
+		// 指定したメッセージの表示を抑制する
+		infoQueue->PushStorageFilter(&filter);
+	}
+}
+
+///-------------------------------------------/// 
 /// DXGIデバイス初期化
 ///-------------------------------------------///
 void DXCommon::InitializeDXGIDevice() {
@@ -243,7 +315,7 @@ void DXCommon::InitializeDXGIDevice() {
 	assert(SUCCEEDED(hr));
 
 	// 使用するアダプタ用の変数
-	Microsoft::WRL::ComPtr<IDXGIAdapter4> useAdapter = nullptr;
+	ComPtr<IDXGIAdapter4> useAdapter = nullptr;
 
 	//良い順にアダプタを頼む
 	for (UINT i = 0; dxgiFactory_->EnumAdapterByGpuPreference(
@@ -299,7 +371,7 @@ void DXCommon::InitializeDXGIDevice() {
 	/* /////////////////////////////////////////////////////
 						エラー・警告、即ち停止
 	*/ /////////////////////////////////////////////////////
-	Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
+	ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
 	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 
 		// やばいエラー時に止まる
@@ -389,14 +461,30 @@ void DXCommon::CreateSwapChain() {
 }
 
 ///-------------------------------------------/// 
+/// ディスクリプタヒープの生成
+///-------------------------------------------///
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDescriptorHeap(
+	D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+	ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+	descriptorHeapDesc.Type = heapType;
+	descriptorHeapDesc.NumDescriptors = numDescriptors;
+	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	HRESULT hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	assert(SUCCEEDED(hr));
+	return descriptorHeap;
+}
+
+///-------------------------------------------/// 
 /// レンダーターゲットの生成(RTV)
 ///-------------------------------------------///
 void DXCommon::CreateFinalRenderTargets() {
 	HRESULT hr;
 
-	// DescriptorSizeを取得
-	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
+	// DescriptorSizeを取得,Heapの生成
+	rtvHeap_ = CreateRTVHeap();
+	descriptorSizeRTV_ = GetRTVDescriptorSize();
+	
 	// RTVの生成(レンダーターゲットビュー)
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー用
@@ -429,7 +517,8 @@ void DXCommon::CreateFinalRenderTargets() {
 void DXCommon::CreateDepthBuffer() {
 	HRESULT hr;
 
-	// DescriptorSizeの取得
+	// DescriptorSizeの取得, Heapの生成
+	dsvHeap_ = CreateDSVHeap();
 	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	// 生成するResourceの設定
@@ -462,19 +551,6 @@ void DXCommon::CreateDepthBuffer() {
 		IID_PPV_ARGS(&depthStencilResource_)); // 作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
 
-
-	// DSVの生成(レンダーターゲットビュー)
-	heapDesc_.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // レンダーターゲットビュー用
-	heapDesc_.NumDescriptors = kNumDSVDescriptor; // ダブルバッファ用に1つ以上
-	heapDesc_.Flags = false ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = device_->CreateDescriptorHeap(&heapDesc_, IID_PPV_ARGS(&dsvHeap_));
-	// ディスクリプターヒープが作れなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	// RTVのサイズを取得
-	//NOTE:一応DSVのDescriptorSizeを取得しておく
-	const uint32_t dsvSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
 	// DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format
@@ -489,22 +565,12 @@ void DXCommon::CreateDepthBuffer() {
 }
 
 ///-------------------------------------------/// 
-/// SRVの生成
+/// シェーダーリソースの生成(SRV)
 ///-------------------------------------------///
 void DXCommon::CreateShaderResource() {
-	HRESULT hr;
 
-	// DescriptorSizeの取得
-	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	// SRVの生成(シェーダーリソース）
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV; // レンダーターゲットビュー用
-	heapDesc.NumDescriptors = kMaxSRVCount; // ダブルバッファ用に2つ以上
-	heapDesc.Flags = true ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&srvHeap_));
-	// ディスクリプターヒープが作れなかったので起動できない
-	assert(SUCCEEDED(hr));
+	srvHeap_ = CreateSRVHeap();
+	descriptorSizeSRV_ = GetSRVDescriptorSize();
 }
 
 ///-------------------------------------------/// 
@@ -644,7 +710,7 @@ ID3D12GraphicsCommandList* DXCommon::GetCommandList() const { return commandList
 
 // CPUのディスクリプターハンドルの取得 
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
-	const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 
 	// ディスクリプタの先頭を取得
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
@@ -655,7 +721,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
 
 // GPUのディスクリプターハンドルの取得
 D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetGPUDescriptorHandle(
-	const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 
 	// ディスクリプタの先頭を取得
 	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();

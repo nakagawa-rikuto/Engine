@@ -5,20 +5,6 @@
 #include "Base/DirectXCommon/DXCommon.h"
 
 ///-------------------------------------------/// 
-/// Getter
-///-------------------------------------------///
-// DXCommon
-DXCommon* SpriteCommon::GetDXCommon() const { return dxCommon_; }
-
-///-------------------------------------------/// 
-/// シングルトン
-///-------------------------------------------///
-SpriteCommon* SpriteCommon::GetInstance() {
-	static SpriteCommon instance;
-	return &instance;
-}
-
-///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void SpriteCommon::Initialize(DXCommon* dxCommon) {
@@ -27,9 +13,9 @@ void SpriteCommon::Initialize(DXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	// パイプラインの生成
-	pipeline_ = std::make_unique<PipelineStateObject>();
+	pipeline_ = std::make_unique<PipelineStateObjectManager>();
 	assert(dxCommon_->GetDevice());
-	pipeline_->CreatePSO(dxCommon_);
+	pipeline_->Create(dxCommon_, PipelinType::Obj2D);
 }
 
 ///-------------------------------------------/// 
@@ -37,12 +23,22 @@ void SpriteCommon::Initialize(DXCommon* dxCommon) {
 ///-------------------------------------------///
 void SpriteCommon::PreDraw() {
 
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+
 	// ルートシグネイチャをセット
-	dxCommon_->GetCommandList()->SetGraphicsRootSignature(pipeline_->GetRootSignature());
+	commandList->SetGraphicsRootSignature(pipeline_->GetRootSignature());
 
 	// グラフィックパイプラインステートをセット
-	dxCommon_->GetCommandList()->SetPipelineState(pipeline_->GetPSO());
+	commandList->SetPipelineState(pipeline_->GetPSO());
 
 	// プリミティブトポロジーをセット
-	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+///-------------------------------------------/// 
+/// 共通描画後処理
+///-------------------------------------------///
+void SpriteCommon::PostDraw() {
+
+
 }

@@ -1,21 +1,14 @@
-#include "Transform.h"
+#include "IndexBuffer2D.h"
 
-#include <algorithm>
 #include <cassert>
-#include <thread>
-#include <timeapi.h>
-#include <vector>
-#include <format>
 
-/// <summary>
-/// シングルトンインスタンスの取得
-/// </summary>
-Transform* Transform::GetInstance() {
-    static Transform instance;
-    return &instance;
-}
+IndexBuffer2D::IndexBuffer2D() {}
+IndexBuffer2D::~IndexBuffer2D() {}
 
-void Transform::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
+///-------------------------------------------/// 
+///リソースの作成
+///-------------------------------------------///
+void IndexBuffer2D::Create(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 
 	// リソース用のヒープの設定
@@ -44,27 +37,23 @@ void Transform::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
 	assert(SUCCEEDED(hr));
 }
 
-void Transform::WriteData(TransformationMatrix* data) {
-
+///-------------------------------------------/// 
+/// データの書き込み
+///-------------------------------------------///
+void IndexBuffer2D::WriteData(uint32_t* data) {
 	// 書き込むためのアドレスを取得
 	buffer_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
 
 	data_ = data;
 }
 
-/// <summary>
-/// リソースの取得
-/// </summary>
-ID3D12Resource* Transform::GetBuffer() { return buffer_.Get(); }
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+ID3D12Resource* IndexBuffer2D::GetBuffer() { return buffer_.Get(); }
+uint32_t* IndexBuffer2D::GetData() { return data_; }
 
-
-/// <summary>
-/// データの取得
-/// </summary>
-TransformationMatrix* Transform::GetData() { return data_; }
-
-/// <summary>
-/// データのセット
-/// </summary>
-/// <param name="data"></param>
-void Transform::SetData(TransformationMatrix* data) {data_ = data;}
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void IndexBuffer2D::SetData(uint32_t* data) { data_ = data; }

@@ -1,28 +1,25 @@
-
 #pragma once
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
+/// ===Include=== ///
+// Engine
+#include "Base/PSO/PipelineStateObjectType.h"
+
+// directX
 #include <d3d12.h>
-#include <dxgi1_6.h>
-#include <dxcapi.h>
-#include <wrl.h>
 
+///=====================================================/// 
+/// RasterizerState
+///=====================================================///
 class RasterizerState {
-
 public:
 
-	/// <summary>
-	/// シングルトンインスタンス
-	/// </summary>
-	/// <returns></returns>
-	static RasterizerState* GetInstance();
+	RasterizerState() = default;
+	~RasterizerState() = default;
 
 	/// <summary>
 	/// ラスタライザステートの設定
 	/// </summary>
 	/// <returns></returns>
-	void Setting();
+	void Create(PipelinType Type);
 
 	/// <summary>
 	/// ラスタライザステートの取得

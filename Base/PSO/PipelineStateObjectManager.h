@@ -1,39 +1,36 @@
 #pragma once
+/// ===Include=== ///
+// Engine
 #include "Base//PSO/RootSignature/RootSignature.h"
 #include "Base//PSO/InputLayout/InputLayout.h"
 #include "Base//PSO/BlendState/BlendState.h"
 #include "Base//PSO/RasterizerState/RasterizerState.h"
 #include "Base//PSO/Compiler/Compiler.h"
 
+// directX
+#include <d3d12.h>
+#include <dxgidebug.h>
+#include <dxgi1_6.h>
+#include <dxcapi.h>
+
+// c++
+#include <memory>
+#include <array>
+#include <cassert>
+
 /// ===前方宣言=== ///
 class DXCommon;
 
-class PipelineStateObject {
-
+class PipelineStateObjectManager {
 public:
 
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	PipelineStateObject();
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~PipelineStateObject();
-
-public:
-
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static PipelineStateObject* GetInstance();
+	PipelineStateObjectManager();
+	~PipelineStateObjectManager();
 
 	/// <summary>
 	/// PSOの生成
 	/// </summary>
-	void CreatePSO(DXCommon* dxCommon);
+	void Create(DXCommon* dxCommon, PipelinType Type);
 
 	/// <summary>
 	/// PSOを取得
@@ -55,5 +52,18 @@ private:
 	std::unique_ptr<RasterizerState> rasterizerState_;
 	std::unique_ptr<Compiler> compiler_;
 
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
+	ComPtr<ID3D12PipelineState> graphicsPipelineState_;
+
+private:/// ====== ///
+
+	/// <summary>
+	/// DepthStencilDecの生成
+	/// </summary>
+	/// <returns></returns>
+	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilDesc();
+
+	/// <summary>
+	/// PipelineStateの生成
+	/// </summary>
+	void CreatePipelineState(DXCommon* dxCommon);
 };

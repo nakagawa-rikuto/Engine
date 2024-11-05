@@ -1,34 +1,24 @@
 #pragma once
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
-#include <d3d12.h>
-#include <dxgi1_6.h>
-#include <dxcapi.h>
-#include <wrl.h>
-
+/// ===Include=== ///
 #include "Base/Data/CBufferData.h"
+#include "Base/ComPtr/ComPtr.h"
 
-class Transform {
-
+class Transform3D {
 public:
 
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static Transform* GetInstance();
+	Transform3D();
+	~Transform3D();
 
 	/// <summary>
 	/// Resourceの生成
 	/// </summary>
-	void CreateResource(ID3D12Device* device, size_t sizeInBytes);
+	void Create(ID3D12Device* device, size_t sizeInBytes);
 
 	/// <summary>
 	/// データの書き込み
 	/// </summary>
 	/// <param name="transform"></param>
-	void WriteData(TransformationMatrix* data);
+	void WriteData(TransformationMatrix3D* data);
 
 	/// <summary>
 	/// リソースの取得
@@ -40,17 +30,17 @@ public:
 	/// データの取得
 	/// </summary>
 	/// <returns></returns>
-	TransformationMatrix* GetData();
+	TransformationMatrix3D* GetData();
 
 	/// <summary>
 	/// データのセット
 	/// </summary>
-	void SetData(TransformationMatrix* data);
+	void SetData(TransformationMatrix3D* data);
 	
 private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
 
-	TransformationMatrix* data_;
+	TransformationMatrix3D* data_;
 };
 

@@ -20,35 +20,19 @@ class TextureManager {
 
 public:/// ===基本的な関数=== ///
 	
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
+	// コンストラクタ
 	TextureManager() = default;
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
+	// デストラクタ
 	~TextureManager() = default;
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	// 初期化
 	void Initialize(DXCommon* dxCommon);
 
 public:/// ===Getter=== ///
 
-	/// <summary>
-	/// テクスチャ番号からGPUハンドルを取得
-	/// </summary>
-	/// <param name="textureIndex"></param>
-	/// <returns></returns>
+	// テクスチャ番号からGPUハンドルを取得
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(uint32_t textureIndex);
-
-	/// <summary>
-	/// SRVインデックス開始番号
-	/// </summary>
-	/// <param name="filePath"></param>
-	/// <returns></returns>
+	// SRVインデックス開始番号
 	uint32_t GetTextureIndexByFilePath(const std::string& filePath);
 
 public:/// ===Variables(変数)=== ///
@@ -64,13 +48,6 @@ public:/// ===Functions(関数)=== ///
 	/// </summary>
 	/// <param name="filePath"></param>
 	void LoadTexture(const std::string& filePath);
-
-	/// <summary>
-	/// データを転送する
-	/// </summary>
-	/// <param name="texture"></param>
-	/// <param name="mipImages"></param>
-	void UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 
 private:/// ===Variables(変数)=== ///
 	
@@ -94,13 +71,13 @@ private:/// ===Variables(変数)=== ///
 	std::vector<TextureData> textureDatas_;
 
 private:/// ===Functions(関数)=== ///
-
-	/// <summary>
-	/// TextureResourceの作成
-	/// </summary>
-	/// <param name="device"></param>
-	/// <param name="metadata"></param>
-	/// <returns></returns>
+	// ミップマップの生成
+	DirectX::ScratchImage Load(const std::string& filePath);
+	// TextureResourceの作成
 	ComPtr<ID3D12Resource> CreateTextureResource( const DirectX::TexMetadata& metadata);
+	// データを転送する
+	void UploadTextureData(
+		
+		ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 };
 

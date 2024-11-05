@@ -12,6 +12,7 @@
 #include <wrl.h>
 
 #include "Base/Data/CBufferData.h"
+#include "Base/ComPtr/ComPtr.h"
 
 /// ===前方宣言=== ///
 class DXCommon;
@@ -38,7 +39,7 @@ public:
 	/// <param name="TriangleTopPositionData"></param>
 	/// <param name="TriangleRightBottomPositionData"></param>
 	void WriteTriangleData(
-		VertexData* TriangleLeftBottomPositionData, VertexData* TriangleTopPositionData, VertexData* TriangleRightBottomPositionData);
+		VertexData3D* TriangleLeftBottomPositionData, VertexData3D* TriangleTopPositionData, VertexData3D* TriangleRightBottomPositionData);
 
 	/// <summary>
 	/// VertexBufferの取得
@@ -55,8 +56,10 @@ public:
 private:
 
 	// バッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer_;
+	
+	
+	ComPtr<ID3D12Resource> vertexBuffer_;
+	ComPtr<ID3D12Resource> indexBuffer_;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};

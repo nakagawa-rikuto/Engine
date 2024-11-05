@@ -1,24 +1,14 @@
-#include "Material.h"
+#include "IndexBuffer2D.h"
 
-#include <algorithm>
 #include <cassert>
-#include <thread>
-#include <timeapi.h>
-#include <vector>
-#include <format>
 
-/// <summary>
-/// シングルトンインスタンスの取得
-/// </summary>
-Material* Material::GetInstance() {
-    static Material instance;
-    return &instance;
-}
+IndexBuffer2D::IndexBuffer2D() {}
+IndexBuffer2D::~IndexBuffer2D() {}
 
-/// <summary>
-/// リソースの生成
-/// </summary>
-void Material::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
+///-------------------------------------------/// 
+///リソースの作成
+///-------------------------------------------///
+void IndexBuffer2D::Create(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 
 	// リソース用のヒープの設定
@@ -47,18 +37,23 @@ void Material::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
 	assert(SUCCEEDED(hr));
 }
 
-/// <summary>
-/// マテリアルデータの書き込み
-/// </summary>
-void Material::WriteData(MaterialData* material) {
+///-------------------------------------------/// 
+/// データの書き込み
+///-------------------------------------------///
+void IndexBuffer2D::WriteData(uint32_t* data) {
 	// 書き込むためのアドレスを取得
 	buffer_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
 
-	// 色の書き込み
-	data_->color = material->color;
+	data_ = data;
 }
 
-/// <summary>
-/// リソースの取得
-/// </summary>
-ID3D12Resource* Material::GetBuffer() { return buffer_.Get(); }
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+ID3D12Resource* IndexBuffer2D::GetBuffer() { return buffer_.Get(); }
+uint32_t* IndexBuffer2D::GetData() { return data_; }
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void IndexBuffer2D::SetData(uint32_t* data) { data_ = data; }

@@ -6,8 +6,7 @@
 #include "Base/WinApp/WinApp.h"
 #include "Base/DirectXCommon/DXCommon.h"
 
-#include "Base/Sprite/SpriteCommon.h"
-#include "Base/TextrueManager/TextureManager.h"
+#include "Base/TextureManager/TextureManager.h"
 
 #include "Base/Math/sMath.h"
 
@@ -40,49 +39,55 @@ void Sprite::SetColor(const Vector4& color) { this->color_ = color; }
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Sprite::Initialize(SpriteCommon* spriteCommon, std::string textureFilePath) {
+void Sprite::Initialize(std::string textureFilePath) {
 
-	assert(spriteCommon);
+	// コマンドリストのポインタ
+	ID3D12Device* device = System::GetDXDevice();
 
-	// 引数で受け取ってメンバ変数に記録する
-	spriteCommon_ = spriteCommon;
-
+	// Resourceの生成
+	vertex_ = std::make_unique<VertexBuffer2D>();
+	index_ = std::make_unique<IndexBuffer2D>();
+	material_ = std::make_unique<Material2D>();
+	wvp_ = std::make_unique<Transform2D>();
 	// Resourceの作成
-	vertexBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(VertexData) * 6);
-	indexBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(uint32_t) * 6);
-	materialBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(MaterialData) * 3);
-	wvpBuffer_ = CreateResource(spriteCommon_->GetDXCommon()->GetDevice(), sizeof(TransformationMatrix));
+	vertex_->Create(device, sizeof(VertexData2D) * 6);
+	index_->Create(device, sizeof(uint32_t) * 6);
+	material_->Create(device, sizeof(MaterialData2D) * 3);
+	wvp_->Create(device, sizeof(TransformationMatrix2D));
 
 	// ResourceViewの作成
-	vertexBufferView_.BufferLocation = vertexBuffer_->GetGPUVirtualAddress(); // 先頭アドレスから使用
-	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 6; // 使用するサイズ（頂点6つ分）
-	vertexBufferView_.StrideInBytes = sizeof(VertexData); // １頂点当たりのサイズ
+	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress(); // 先頭アドレスから使用
+	vertexBufferView_.SizeInBytes = sizeof(VertexData2D) * 6; // 使用するサイズ（頂点6つ分）
+	vertexBufferView_.StrideInBytes = sizeof(VertexData2D); // １頂点当たりのサイズ
 
-	indexBufferView_.BufferLocation = indexBuffer_->GetGPUVirtualAddress(); // 先頭のアドレスから使用
+	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress(); // 先頭のアドレスから使用
 	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6; // 使用するサイズ（６つ分）
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT; // uint32_tとする
 
 	// 書き込むためのアドレスを取得
-	vertexBuffer_->Map(
-		0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	indexBuffer_->Map(
-		0, nullptr, reinterpret_cast<void**>(&indexData_));
-	materialBuffer_->Map(
-		0, nullptr, reinterpret_cast<void**>(&materialData_));
-	wvpBuffer_->Map(
-		0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
+	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	index_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
+
+	/*vertex_->WriteData(vertexData_);
+	index_->WriteData(indexData_);
+	material_->WriteData(materialData_);
+	wvp_->WriteData(wvpMatrixData_);*/
 
 	// マテリアルデータの初期値を書き込む
 	materialData_->color = color_;
-	materialData_->enableLighting = false;
 	materialData_->uvTransform = MakeIdentity4x4();
 
 	// 単位行列を書き込んでおく
 	wvpMatrixData_->WVP = MakeIdentity4x4();
-	wvpMatrixData_->World = MakeIdentity4x4();
+
+	// Dataの書き込み
+	VertexDataWrite();
+	IndexDataWrite();
 
 	// TransformInfoの設定
-	transform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
+	worldTransform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
 
 	// 単位行列を書き込んでおく
 	textureIndex = System::GetTextureIndexByFilePath(textureFilePath);
@@ -94,8 +99,6 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, std::string textureFilePath)
 ///-------------------------------------------///
 void Sprite::Update() {
 
-	VertexDataWrite();
-	IndexDataWrite();
 	TransformDataWrite();
 
 	materialData_->color = color_;
@@ -106,30 +109,34 @@ void Sprite::Update() {
 ///-------------------------------------------///
 void Sprite::Draw() {
 
+	// コマンドリストのポインタ
+	ID3D12GraphicsCommandList* commandList = System::GetDXCommandList();
+
 	// VertexBufferViewの設定
-	spriteCommon_->GetDXCommon()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 
 	// IndexBufferViewの設定
-	spriteCommon_->GetDXCommon()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	commandList->IASetIndexBuffer(&indexBufferView_);
 
 	// Materialの設定
-	spriteCommon_->GetDXCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialBuffer_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, material_->GetBuffer()->GetGPUVirtualAddress());
 
 	// wvpMatrixBufferの設定
-	spriteCommon_->GetDXCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpBuffer_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 
+	D3D12_GPU_DESCRIPTOR_HANDLE handle = System::GetSRVHandleGPU(textureIndex);
 	// テクスチャの設定
-	spriteCommon_->GetDXCommon()->GetCommandList()->SetGraphicsRootDescriptorTable(2, System::GetSRVHandleGPU(textureIndex));
+	commandList->SetGraphicsRootDescriptorTable(2, System::GetSRVHandleGPU(textureIndex));
 
 	// 描画(ドローコール)
-	spriteCommon_->GetDXCommon()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 
 ///-------------------------------------------/// 
 /// Resourceの作成関数
 ///-------------------------------------------///
-Microsoft::WRL::ComPtr<ID3D12Resource> Sprite::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
+ComPtr<ID3D12Resource> Sprite::CreateResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 
 	// 頂点リソース用のヒープの設定
@@ -153,7 +160,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Sprite::CreateResource(ID3D12Device* devi
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	// 実際に頂点リソースを作る
-	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
+	ComPtr<ID3D12Resource> Resource = nullptr;
 	hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&Resource));
 	assert(SUCCEEDED(hr));
@@ -169,19 +176,15 @@ void Sprite::VertexDataWrite() {
 
 	vertexData_[0].position = { 0.0f, 1.0f, 0.0f, 1.0f };
 	vertexData_[0].texcoord = { 0.0f, 1.0f };
-	vertexData_[0].normal = { 0.0f, 0.0f, -1.0f };
 
 	vertexData_[1].position = { 0.0f, 0.0f, 0.0f, 1.0f };
 	vertexData_[1].texcoord = { 0.0f, 0.0f };
-	vertexData_[1].normal = { 0.0f, 0.0f, -1.0f };
 
 	vertexData_[2].position = { 1.0f, 1.0f, 0.0f, 1.0f };
 	vertexData_[2].texcoord = { 1.0f, 1.0f };
-	vertexData_[2].normal = { 0.0f, 0.0f, -1.0f };
 
 	vertexData_[3].position = { 1.0f, 0.0f, 0.0f, 1.0f };
 	vertexData_[3].texcoord = { 1.0f, 0.0f };
-	vertexData_[3].normal = { 0.0f, 0.0f, -1.0f };
 }
 
 
@@ -205,22 +208,18 @@ void Sprite::IndexDataWrite() {
 void Sprite::TransformDataWrite() {
 
 	// 座標の反映
-	transform_.translate = { position_.x, position_.y, 0.0f };
+	worldTransform_.translate = { position_.x, position_.y, 0.0f };
 	// 回転の反映
-	transform_.rotate = { 0.0, 0.0, rotation_ };
+	worldTransform_.rotate = { 0.0, 0.0, rotation_ };
 	// サイズの反映
-	transform_.scale = { size_.x, size_.y, 1.0f };
+	worldTransform_.scale = { size_.x, size_.y, 1.0f };
 
 	// WorldMatrix
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-
+	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	// ViewMatrix
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
-
 	// ProjectionMatrix
 	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(WinApp::GetWindowWidth()), static_cast<float>(WinApp::GetWindowHeight()), 0.0f, 100.0f);
 
 	wvpMatrixData_->WVP = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-	wvpMatrixData_->World = worldMatrix;
-
 }
