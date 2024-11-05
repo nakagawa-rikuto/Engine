@@ -21,19 +21,37 @@ const float& Sprite::GetRotation() const { return rotation_; }
 const Vector2& Sprite::GetSize() const { return size_; }
 // 色
 const Vector4& Sprite::GetColor() const { return color_; }
+// アンカーポイント
+const Vector2& Sprite::GetAnchorPoint() const { return anchorPoint_; }
+// フリップ
+const bool& Sprite::GetFlipX() const { return isFlipX_; }
+const bool& Sprite::GetFlipY() const { return isFlipY_; }
+// テクスチャ左上座標
+const Vector2& Sprite::GetTextureLeftTop() const { return textureLeftTop_; }
+// テクスチャ切り出しサイズ
+const Vector2& Sprite::GetTextureSize() const { return textureSize_; }
 
 
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
 // 座標
-void Sprite::SetPosition(const Vector2& position) { this->position_ = position; }
+void Sprite::SetPosition(const Vector2& position) { position_ = position; }
 // 回転
-void Sprite::SetRotation(const float& rotation) { this->rotation_ = rotation; }
+void Sprite::SetRotation(const float& rotation) { rotation_ = rotation; }
 // サイズ
-void Sprite::SetSize(const Vector2& size) { this->size_ = size; }
+void Sprite::SetSize(const Vector2& size) { size_ = size; }
 // 色
-void Sprite::SetColor(const Vector4& color) { this->color_ = color; }
+void Sprite::SetColor(const Vector4& color) { color_ = color; }
+// アンカーポイント
+void Sprite::SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; }
+// フリップ
+void Sprite::SetFlipX(const bool& flip) { isFlipX_ = flip; }
+void Sprite::SetFlipY(const bool& flip) { isFlipY_ = flip; }
+// テクスチャ左上座標
+void Sprite::SetTextureLeftTop(const Vector2& textureLeftTop) { textureLeftTop_ = textureLeftTop; }
+// テクスチャ切り出しサイズ
+void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = textureSize; }
 
 
 ///-------------------------------------------/// 
@@ -91,6 +109,9 @@ void Sprite::Initialize(std::string textureFilePath) {
 
 	// 単位行列を書き込んでおく
 	textureIndex = System::GetTextureIndexByFilePath(textureFilePath);
+
+	// テクスチャメタデータを取得
+	AdjustTextureSize();
 }
 
 
@@ -98,6 +119,10 @@ void Sprite::Initialize(std::string textureFilePath) {
 /// 更新
 ///-------------------------------------------///
 void Sprite::Update() {
+
+	// Dataの書き込み
+	UpdateVertexDataWrite();
+	SpecifyRange();
 
 	TransformDataWrite();
 
@@ -173,18 +198,68 @@ ComPtr<ID3D12Resource> Sprite::CreateResource(ID3D12Device* device, size_t sizeI
 /// VertexResourceの書き込み
 ///-------------------------------------------///
 void Sprite::VertexDataWrite() {
-
+	// 左下
 	vertexData_[0].position = { 0.0f, 1.0f, 0.0f, 1.0f };
 	vertexData_[0].texcoord = { 0.0f, 1.0f };
-
+	// 左上
 	vertexData_[1].position = { 0.0f, 0.0f, 0.0f, 1.0f };
 	vertexData_[1].texcoord = { 0.0f, 0.0f };
-
+	// 右下
 	vertexData_[2].position = { 1.0f, 1.0f, 0.0f, 1.0f };
 	vertexData_[2].texcoord = { 1.0f, 1.0f };
-
+	// 右上
 	vertexData_[3].position = { 1.0f, 0.0f, 0.0f, 1.0f };
 	vertexData_[3].texcoord = { 1.0f, 0.0f };
+}
+
+///-------------------------------------------///  
+/// UpdateVertexDataWrite
+///-------------------------------------------///
+void Sprite::UpdateVertexDataWrite() {
+
+	float left = 0.0f - anchorPoint_.x;
+	float right = 1.0f - anchorPoint_.x;
+	float top = 0.0f - anchorPoint_.y;
+	float bottom = 1.0f - anchorPoint_.y;
+
+	// 左右反転
+	if (isFlipX_) {
+		left = -left;
+		right = -right;
+	}
+
+	// 上下反転
+	if (isFlipY_) {
+		top = -top;
+		bottom = -bottom;
+	}
+
+	// 左下
+	vertexData_[0].position = { left, bottom, 0.0f, 1.0f };
+	// 左上
+	vertexData_[1].position = { left, top, 0.0f, 1.0f };
+	// 右下
+	vertexData_[2].position = { right, bottom, 0.0f, 1.0f };
+	// 右上
+	vertexData_[3].position = { right, top, 0.0f, 1.0f };
+}
+
+///-------------------------------------------/// 
+/// テクスチャ範囲指定
+///-------------------------------------------///
+void Sprite::SpecifyRange() {
+	const DirectX::TexMetadata& metadata =
+		System::GetMetaData(textureIndex);
+	float tex_left = textureLeftTop_.x / metadata.width;
+	float tex_right = (textureLeftTop_.x + textureSize_.x) / metadata.width;
+	float tex_top = textureLeftTop_.y / metadata.height;
+	float tex_bottom = (textureLeftTop_.y + textureSize_.y) / metadata.height;
+
+	// 頂点リソースにデータを書き込む
+	vertexData_[0].texcoord = { tex_left, tex_bottom };
+	vertexData_[1].texcoord = { tex_left, tex_top };
+	vertexData_[2].texcoord = { tex_right, tex_bottom };
+	vertexData_[3].texcoord = { tex_right, tex_top };
 }
 
 
@@ -222,4 +297,18 @@ void Sprite::TransformDataWrite() {
 	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(WinApp::GetWindowWidth()), static_cast<float>(WinApp::GetWindowHeight()), 0.0f, 100.0f);
 
 	wvpMatrixData_->WVP = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+}
+
+///-------------------------------------------/// 
+/// テクスチャサイズをイメージに合わせる
+///-------------------------------------------///
+void Sprite::AdjustTextureSize() {
+	// テクスチャメタデータを取得
+	const DirectX::TexMetadata& metadata = System::GetMetaData(textureIndex);
+
+	textureSize_.x = static_cast<float>(metadata.width);
+	textureSize_.y = static_cast<float>(metadata.height);
+
+	// 画像サイズをテクスチャサイズに合わせる
+	size_ = textureSize_;
 }

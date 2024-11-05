@@ -25,23 +25,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
 	System::LoadTexture(uvTexture);
-
 	const std::string& monsterBall = "./Resource/monsterBall.png";
 	System::LoadTexture(monsterBall);
 
-	std::vector<std::unique_ptr<Sprite>> sprites_;
-	for (uint32_t i = 0; i < 5; ++i) {
-		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
-		if (i == 3) {
-			sprite->Initialize(monsterBall);
-		} else {
-			sprite->Initialize(uvTexture);
-		}
-		
-		sprite->SetSize(Vector2(100.0f, 100.0f));
-		sprite->SetPosition(Vector2(i * 150.0f, 0.0f));
-		sprites_.push_back(std::move(sprite));
-	}
+	// スプライト
+	std::unique_ptr<Sprite> sprite;
+	sprite = std::make_unique<Sprite>();
+	sprite->Initialize(uvTexture);
+	sprite->SetPosition(Vector2(640.0f, 360.0f));      // Vector2
+	sprite->SetRotation(0.0f);                         // float
+	sprite->SetSize(Vector2(500.0f, 500.f));           // Vector2	
+	//sprite->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // Vector4
+	sprite->SetAnchorPoint(Vector2(0.5f, 0.5f));       // Vector2
+	sprite->SetTextureSize(Vector2(64.0f, 64.0f));     // Vector2
+
+	float rotation = 0.0f;
 
 #pragma endregion
 
@@ -53,10 +51,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		*/ ////////////////////////////
 		System::Update();
 
-		for (auto& sprite : sprites_) {
+		//rotation += 0.1f;
 
-			sprite->Update();
-		}
+		sprite->SetRotation(rotation);
+
+		// Spriteの更新
+		sprite->Update();
 
 		// フレームの開始
 		System::BeginFrame();
@@ -66,14 +66,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		*/ ////////////////////////////
 
 		// Spriteの描画
-		for (auto& sprite : sprites_) {
-
-			sprite->Draw();
-		}
-
-		//sprites_.front()->Draw();
-
-		// AL3のmasterを参考にする
+		sprite->Draw();
 
 		// フレームの終了
 		System::EndFrame();

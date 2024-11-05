@@ -143,8 +143,14 @@ uint32_t System::GetTextureIndexByFilePath(const std::string& filePath) {
 /// GPUハンドルの取得
 ///-------------------------------------------///
 D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(uint32_t textureIndex) {
-
 	return textureManager_->GetSRVHandleGPU(textureIndex);
+}
+
+///-------------------------------------------/// 
+/// メタデータの取得
+///-------------------------------------------///
+const DirectX::TexMetadata& System::GetMetaData(uint32_t textureIndex) {
+	return textureManager_->GetMetaData(textureIndex);
 }
 #pragma endregion
 

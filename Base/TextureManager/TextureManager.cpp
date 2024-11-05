@@ -100,6 +100,17 @@ uint32_t TextureManager::GetTextureIndexByFilePath(const std::string& filePath) 
 }
 
 ///-------------------------------------------/// 
+/// メタデータの取得
+///-------------------------------------------///
+const DirectX::TexMetadata& TextureManager::GetMetaData(uint32_t textureIndex) {
+	// 範囲外指定違反チェック
+	assert(textureIndex < textureDatas_.size());
+
+	TextureData& textureData = textureDatas_[textureIndex];
+	return textureData.metadata;
+}
+
+///-------------------------------------------/// 
 /// GPUハンドルの取得
 ///-------------------------------------------///
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSRVHandleGPU(uint32_t textureIndex) {

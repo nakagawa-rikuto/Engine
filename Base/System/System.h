@@ -1,5 +1,8 @@
 #pragma once
 /// ===include=== ///
+// DirectXTex
+#include "DirectXTex.h"
+
 // C++
 #include <string>
 #include <d3d12.h>
@@ -54,6 +57,8 @@ public:/// ===開発者用関数(その他)=== ///
 	static uint32_t GetTextureIndexByFilePath(const std::string& filePath);
 	// GPUハンドルの取得
 	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(uint32_t textureIndex);
+	// メタデータの取得
+	static const DirectX::TexMetadata& GetMetaData(uint32_t textureIndex);
 
 public:/// ===プログラマー用関数=== ///
 

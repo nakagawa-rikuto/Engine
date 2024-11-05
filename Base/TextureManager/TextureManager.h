@@ -34,6 +34,8 @@ public:/// ===Getter=== ///
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(uint32_t textureIndex);
 	// SRVインデックス開始番号
 	uint32_t GetTextureIndexByFilePath(const std::string& filePath);
+	// メタデータの取得
+	const DirectX::TexMetadata& GetMetaData(uint32_t textureIndex);
 
 public:/// ===Variables(変数)=== ///
 
