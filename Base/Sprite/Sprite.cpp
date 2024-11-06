@@ -134,6 +134,14 @@ void Sprite::Update() {
 ///-------------------------------------------///
 void Sprite::Draw() {
 
+	// Dataの書き込み
+	UpdateVertexDataWrite();
+	SpecifyRange();
+
+	TransformDataWrite();
+
+	materialData_->color = color_;
+
 	// コマンドリストのポインタ
 	ID3D12GraphicsCommandList* commandList = System::GetDXCommandList();
 
