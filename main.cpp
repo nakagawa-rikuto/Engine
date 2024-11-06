@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sprite->Initialize(uvTexture);
 	sprite->SetPosition(Vector2(640.0f, 360.0f));      // Vector2
 	sprite->SetRotation(0.0f);                         // float
-	sprite->SetSize(Vector2(500.0f, 500.f));           // Vector2	
+	sprite->SetSize(Vector2(100.0f, 100.f));           // Vector2	
 	//sprite->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // Vector4
 	sprite->SetAnchorPoint(Vector2(0.5f, 0.5f));       // Vector2
 	sprite->SetTextureSize(Vector2(64.0f, 64.0f));     // Vector2
@@ -51,12 +51,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		*/ ////////////////////////////
 		System::Update();
 
-		//rotation += 0.1f;
+		rotation += 0.1f;
 
 		sprite->SetRotation(rotation);
-
-		// Spriteの更新
-		sprite->Update();
 
 		// フレームの開始
 		System::BeginFrame();
