@@ -6,8 +6,6 @@
 #include "Base/WinApp/WinApp.h"
 #include "Base/DirectXCommon/DXCommon.h"
 
-#include "Base/TextureManager/TextureManager.h"
-
 #include "Base/Math/sMath.h"
 
 ///-------------------------------------------/// 

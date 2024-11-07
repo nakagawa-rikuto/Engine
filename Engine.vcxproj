@@ -105,7 +105,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\Math\Vector2.cpp" />
     <ClCompile Include="Base\Math\Vector3.cpp" />
     <ClCompile Include="Base\Math\Vector4.cpp" />
-    <ClCompile Include="Base\Mesh\Mesh.cpp" />
     <ClCompile Include="Base\PSO\BlendState\BlendState.cpp" />
     <ClCompile Include="Base\PSO\Compiler\Compiler.cpp" />
     <ClCompile Include="Base\PSO\InputLayout\InputLayout.cpp" />
@@ -135,6 +134,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.cpp" />
     <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.cpp" />
     <ClCompile Include="Base\SRVManager\SRVManager.cpp" />
+    <ClCompile Include="Base\Model\Model.cpp" />
+    <ClCompile Include="Base\ModelManager\ModelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h" />
@@ -149,7 +150,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\Math\Vector2.h" />
     <ClInclude Include="Base\Math\Vector3.h" />
     <ClInclude Include="Base\Math\Vector4.h" />
-    <ClInclude Include="Base\Mesh\Mesh.h" />
     <ClInclude Include="Base\PSO\BlendState\BlendState.h" />
     <ClInclude Include="Base\PSO\Compiler\Compiler.h" />
     <ClInclude Include="Base\PSO\InputLayout\InputLayout.h" />
@@ -181,6 +181,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.h" />
     <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.h" />
     <ClInclude Include="Base\SRVManager\SRVManager.h" />
+    <ClInclude Include="Base\Model\Model.h" />
+    <ClInclude Include="Base\ModelManager\ModelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
