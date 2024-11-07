@@ -20,7 +20,6 @@ class WinApp;
 class DXCommon;
 class Input;
 // Sprite
-class SpriteCommon;
 class TextureManager;
 class SRVManager;
 
@@ -69,6 +68,8 @@ public:/// ===プログラマー用関数=== ///
 	static void LoadTexture(const std::string& filePath);
 
 public:/// ===開発者用関数(Getter)=== ///
+	// DXCommonの取得
+	static DXCommon* GetDXCommon();
 	// deviceの取得
 	static ID3D12Device* GetDXDevice();
 	// CommandListの取得
@@ -81,7 +82,6 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<Input> input_;             // Input
 
 	static std::unique_ptr<TextureManager> textureManager_;   // TextureManager
-	static std::unique_ptr<SpriteCommon> spriteCommon_;      // SpriteCommon
 	static std::unique_ptr<SRVManager> srvManager_;          // SRVManager
 
 };

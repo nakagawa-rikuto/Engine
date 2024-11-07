@@ -1,29 +1,33 @@
-#include "PipelineStateObjectManager.h"
+#include "PipelineStateObjectCommon.h"
 
 #include <cassert>
 
+#include "Base/System/System.h"
 #include "Base/DirectXCommon/DXCommon.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ
 ///-------------------------------------------///
-PipelineStateObjectManager::PipelineStateObjectManager() {}
+PipelineStateObjectCommon::PipelineStateObjectCommon() = default;
 
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-PipelineStateObjectManager::~PipelineStateObjectManager() {
+PipelineStateObjectCommon::~PipelineStateObjectCommon() {
 
 	rootSignature_.reset();
 	inputLayout_.reset();
 	rasterizerState_.reset();
+	depthStencil_.reset();
 	compiler_.reset();
 }
 
 ///-------------------------------------------/// 
 /// PSOの作成
 ///-------------------------------------------///
-void PipelineStateObjectManager::Create(DXCommon* dxCommon, PipelinType Type) {
+void PipelineStateObjectCommon::Create(PipelinType Type, BlendMode Mode) {
+
+	DXCommon* dxCommon = System::GetDXCommon();
 
 	// RootSignatureの生成
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -35,11 +39,15 @@ void PipelineStateObjectManager::Create(DXCommon* dxCommon, PipelinType Type) {
 
 	// BlendStateの生成
 	blendState_ = std::make_unique<BlendState>();
-	blendState_->Create();
+	blendState_->Create(Mode);
 
 	// RasterizerStateの生成
 	rasterizerState_ = std::make_unique<RasterizerState>();
 	rasterizerState_->Create(Type);
+
+	// DepthStencilの生成
+	depthStencil_ = std::make_unique<DepthStencil>();
+	depthStencil_->Create(Type);
 
 	// Compilerの初期化
 	compiler_ = std::make_unique<Compiler>();
@@ -49,20 +57,21 @@ void PipelineStateObjectManager::Create(DXCommon* dxCommon, PipelinType Type) {
 	CreatePipelineState(dxCommon);
 }
 
-/// <summary>
-/// PSOの取得
-/// </summary>
-ID3D12PipelineState* PipelineStateObjectManager::GetPSO() { return graphicsPipelineState_.Get(); }
+///-------------------------------------------/// 
+/// パイプラインの設定
+///-------------------------------------------///
+void PipelineStateObjectCommon::SetPSO(ID3D12GraphicsCommandList* commandList) {
 
-/// <summary>
-/// RootSignatureの取得
-/// </summary>
-ID3D12RootSignature* PipelineStateObjectManager::GetRootSignature() {return rootSignature_->GetRootSignature();}
+	// RootSignatureの設定
+	commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());
+	// PSOの設定
+	commandList->SetPipelineState(graphicsPipelineState_.Get());
+}
 
 ///-------------------------------------------/// 
 /// DepthStencilDesc
 ///-------------------------------------------///
-D3D12_DEPTH_STENCIL_DESC PipelineStateObjectManager::CreateDepthStencilDesc() {
+D3D12_DEPTH_STENCIL_DESC PipelineStateObjectCommon::CreateDepthStencilDesc() {
 
 	// DepthStencilDescの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
@@ -80,12 +89,13 @@ D3D12_DEPTH_STENCIL_DESC PipelineStateObjectManager::CreateDepthStencilDesc() {
 
 }
 
-void PipelineStateObjectManager::CreatePipelineState(DXCommon* dxCommon) {
-
+///-------------------------------------------/// 
+/// パイプラインの作成
+///-------------------------------------------///
+void PipelineStateObjectCommon::CreatePipelineState(DXCommon* dxCommon) {
 	HRESULT hr;
 
 	// PSOの取得
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_{};
 	graphicsPipelineStateDesc_.pRootSignature = rootSignature_->GetRootSignature(); // RootSignature
 	graphicsPipelineStateDesc_.InputLayout = inputLayout_->GetInputLayout(); // InputLayout
 	graphicsPipelineStateDesc_.VS = {
@@ -94,7 +104,7 @@ void PipelineStateObjectManager::CreatePipelineState(DXCommon* dxCommon) {
 		compiler_->GetObjPS()->GetBufferPointer(), compiler_->GetObjPS()->GetBufferSize() }; // PixlShader
 	graphicsPipelineStateDesc_.BlendState = blendState_->GetBlendDesc(); // BlendState
 	graphicsPipelineStateDesc_.RasterizerState = rasterizerState_->GetRasterizerState(); // RasterizerState
-	graphicsPipelineStateDesc_.DepthStencilState = CreateDepthStencilDesc();
+	graphicsPipelineStateDesc_.DepthStencilState = depthStencil_->GetDepthStencilDesc(); // DepthStencil
 
 	// 書き込むRTVの情報
 	graphicsPipelineStateDesc_.NumRenderTargets = 1;
