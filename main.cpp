@@ -33,14 +33,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<Sprite> sprite;
 	sprite = std::make_unique<Sprite>();
 	sprite->Initialize();                              // BlendMode変更可　sprite->Initialize(BlendMode::kBlendModeAdd);  
-	sprite->SetTexture(uvTexture);
-	sprite->SetPosition(Vector2(640.0f, 360.0f));      // Vector2
-	sprite->SetRotation(0.0f);                         // float
-	sprite->SetSize(Vector2(100.0f, 100.f));           // Vector2	
-	sprite->SetColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // Vector4
-	sprite->SetAnchorPoint(Vector2(0.5f, 0.5f));       // Vector2
-	sprite->SetTextureSize(Vector2(64.0f, 64.0f));     // Vector2
+	sprite->SetTexture(uvTexture);                     // テクスチャの設定(これがないと描画できない)
+	sprite->SetPosition(Vector2(640.0f, 360.0f));      // 場所の設定(初期値は0,0)
+	sprite->SetRotation(0.0f);                         // 回転の設定(初期値は0.0);
+	sprite->SetSize(Vector2(100.0f, 100.f));           // サイズの設定(初期値は640, 360)
+	sprite->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f)); // カラーの設定(初期値は1,1,1,1)
+	sprite->SetAnchorPoint(Vector2(0.5f, 0.5f));       // アンカーポイントの設定(初期値は0,0)
+	sprite->SetTextureSize(Vector2(64.0f, 64.0f));     // テクスチャサイズの設定(初期値は100.0f, 100.0f)
 
+	// 回転
 	float rotation = 0.0f;
 
 #pragma endregion
