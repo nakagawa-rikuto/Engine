@@ -7,6 +7,8 @@
 #include "Base//PSO/RasterizerState/RasterizerState.h"
 #include "Base//PSO/Compiler/Compiler.h"
 
+#include "Base/PSO/PipelineStateObjectType.h"
+
 // directX
 #include <d3d12.h>
 #include <dxgidebug.h>
@@ -21,28 +23,18 @@
 /// ===前方宣言=== ///
 class DXCommon;
 
-class PipelineStateObjectManager {
+class PipelineStateObjectCommon {
 public:
 
-	PipelineStateObjectManager();
-	~PipelineStateObjectManager();
+	PipelineStateObjectCommon();
+	~PipelineStateObjectCommon();
 
 	/// <summary>
 	/// PSOの生成
 	/// </summary>
-	void Create(DXCommon* dxCommon, PipelinType Type);
+	void Create(DXCommon* dxCommon, PipelinType Type, BlendMode mode);
 
-	/// <summary>
-	/// PSOを取得
-	/// </summary>
-	/// <returns></returns>
-	ID3D12PipelineState* GetPSO();
-
-	/// <summary>
-	/// RootSignatureの取得
-	/// </summary>
-	/// <returns></returns>
-	ID3D12RootSignature* GetRootSignature();
+	void SetPSO(ID3D12GraphicsCommandList* command, BlendMode mode);
 
 private:
 

@@ -2,7 +2,7 @@
 /// ===include=== ///
 #include <memory>
 
-#include "Base/PSO/PipelineStateObjectManager.h"
+#include "Base/PSO/PipelineStateObjectCommon.h"
 #include "Base/PSO/PipelineStateObjectType.h"
 
 /// ===前方宣言=== ///
@@ -37,6 +37,6 @@ private:
 	DXCommon* dxCommon_;
 
 	// グラフィックパイプライン
-	std::unique_ptr<PipelineStateObjectManager> pipeline_;
+	std::unique_ptr<PipelineStateObjectCommon> pipeline_;
 };
 

@@ -13,7 +13,7 @@ void SpriteCommon::Initialize(DXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	// パイプラインの生成
-	pipeline_ = std::make_unique<PipelineStateObjectManager>();
+	pipeline_ = std::make_unique<PipelineStateObjectCommon>();
 	assert(dxCommon_->GetDevice());
 	pipeline_->Create(dxCommon_, PipelinType::Obj2D);
 }

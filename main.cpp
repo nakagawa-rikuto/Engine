@@ -31,7 +31,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// スプライト
 	std::unique_ptr<Sprite> sprite;
 	sprite = std::make_unique<Sprite>();
-	sprite->Initialize(uvTexture);
+	sprite->Initialize();
+	sprite->SetTexture(uvTexture);
 	sprite->SetPosition(Vector2(640.0f, 360.0f));      // Vector2
 	sprite->SetRotation(0.0f);                         // float
 	sprite->SetSize(Vector2(100.0f, 100.f));           // Vector2	

@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\PSO\BlendState\BlendState.cpp" />
     <ClCompile Include="Base\PSO\Compiler\Compiler.cpp" />
     <ClCompile Include="Base\PSO\InputLayout\InputLayout.cpp" />
-    <ClCompile Include="Base\PSO\PipelineStateObjectManager.cpp" />
+    <ClCompile Include="Base\PSO\PipelineStateObjectCommon.cpp" />
     <ClCompile Include="Base\PSO\RasterizerState\RasterizerState.cpp" />
     <ClCompile Include="Base\PSO\RootSignature\RootSignature.cpp" />
     <ClCompile Include="Base\System\System.cpp" />
@@ -153,7 +153,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Base\PSO\BlendState\BlendState.h" />
     <ClInclude Include="Base\PSO\Compiler\Compiler.h" />
     <ClInclude Include="Base\PSO\InputLayout\InputLayout.h" />
-    <ClInclude Include="Base\PSO\PipelineStateObjectManager.h" />
+    <ClInclude Include="Base\PSO\PipelineStateObjectCommon.h" />
     <ClInclude Include="Base\PSO\PipelineStateObjectType.h" />
     <ClInclude Include="Base\PSO\RasterizerState\RasterizerState.h" />
     <ClInclude Include="Base\PSO\RootSignature\RootSignature.h" />

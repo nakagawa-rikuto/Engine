@@ -21,15 +21,6 @@ const float& Sprite::GetRotation() const { return rotation_; }
 const Vector2& Sprite::GetSize() const { return size_; }
 // 色
 const Vector4& Sprite::GetColor() const { return color_; }
-// アンカーポイント
-const Vector2& Sprite::GetAnchorPoint() const { return anchorPoint_; }
-// フリップ
-const bool& Sprite::GetFlipX() const { return isFlipX_; }
-const bool& Sprite::GetFlipY() const { return isFlipY_; }
-// テクスチャ左上座標
-const Vector2& Sprite::GetTextureLeftTop() const { return textureLeftTop_; }
-// テクスチャ切り出しサイズ
-const Vector2& Sprite::GetTextureSize() const { return textureSize_; }
 
 
 ///-------------------------------------------/// 
@@ -48,6 +39,8 @@ void Sprite::SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorP
 // フリップ
 void Sprite::SetFlipX(const bool& flip) { isFlipX_ = flip; }
 void Sprite::SetFlipY(const bool& flip) { isFlipY_ = flip; }
+// テクスチャ
+void Sprite::SetTexture(std::string textureFilePath) {textureIndex = System::GetTextureIndexByFilePath(textureFilePath);}
 // テクスチャ左上座標
 void Sprite::SetTextureLeftTop(const Vector2& textureLeftTop) { textureLeftTop_ = textureLeftTop; }
 // テクスチャ切り出しサイズ
@@ -57,7 +50,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Sprite::Initialize(std::string textureFilePath) {
+void Sprite::Initialize() {
 
 	// コマンドリストのポインタ
 	ID3D12Device* device = System::GetDXDevice();
@@ -88,11 +81,6 @@ void Sprite::Initialize(std::string textureFilePath) {
 	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
 
-	/*vertex_->WriteData(vertexData_);
-	index_->WriteData(indexData_);
-	material_->WriteData(materialData_);
-	wvp_->WriteData(wvpMatrixData_);*/
-
 	// マテリアルデータの初期値を書き込む
 	materialData_->color = color_;
 	materialData_->uvTransform = MakeIdentity4x4();
@@ -106,9 +94,6 @@ void Sprite::Initialize(std::string textureFilePath) {
 
 	// TransformInfoの設定
 	worldTransform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
-
-	// 単位行列を書き込んでおく
-	textureIndex = System::GetTextureIndexByFilePath(textureFilePath);
 
 	// テクスチャメタデータを取得
 	AdjustTextureSize();

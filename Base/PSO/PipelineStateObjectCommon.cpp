@@ -1,4 +1,4 @@
-#include "PipelineStateObjectManager.h"
+#include "PipelineStateObjectCommon.h"
 
 #include <cassert>
 
@@ -7,12 +7,12 @@
 ///-------------------------------------------/// 
 /// コンストラクタ
 ///-------------------------------------------///
-PipelineStateObjectManager::PipelineStateObjectManager() {}
+PipelineStateObjectCommon::PipelineStateObjectCommon() = default;
 
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-PipelineStateObjectManager::~PipelineStateObjectManager() {
+PipelineStateObjectCommon::~PipelineStateObjectCommon() {
 
 	rootSignature_.reset();
 	inputLayout_.reset();
@@ -23,7 +23,7 @@ PipelineStateObjectManager::~PipelineStateObjectManager() {
 ///-------------------------------------------/// 
 /// PSOの作成
 ///-------------------------------------------///
-void PipelineStateObjectManager::Create(DXCommon* dxCommon, PipelinType Type) {
+void PipelineStateObjectCommon::Create(DXCommon* dxCommon, PipelinType Type) {
 
 	// RootSignatureの生成
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -52,17 +52,17 @@ void PipelineStateObjectManager::Create(DXCommon* dxCommon, PipelinType Type) {
 /// <summary>
 /// PSOの取得
 /// </summary>
-ID3D12PipelineState* PipelineStateObjectManager::GetPSO() { return graphicsPipelineState_.Get(); }
+ID3D12PipelineState* PipelineStateObjectCommon::GetPSO() { return graphicsPipelineState_.Get(); }
 
 /// <summary>
 /// RootSignatureの取得
 /// </summary>
-ID3D12RootSignature* PipelineStateObjectManager::GetRootSignature() {return rootSignature_->GetRootSignature();}
+ID3D12RootSignature* PipelineStateObjectCommon::GetRootSignature() {return rootSignature_->GetRootSignature();}
 
 ///-------------------------------------------/// 
 /// DepthStencilDesc
 ///-------------------------------------------///
-D3D12_DEPTH_STENCIL_DESC PipelineStateObjectManager::CreateDepthStencilDesc() {
+D3D12_DEPTH_STENCIL_DESC PipelineStateObjectCommon::CreateDepthStencilDesc() {
 
 	// DepthStencilDescの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
@@ -80,7 +80,7 @@ D3D12_DEPTH_STENCIL_DESC PipelineStateObjectManager::CreateDepthStencilDesc() {
 
 }
 
-void PipelineStateObjectManager::CreatePipelineState(DXCommon* dxCommon) {
+void PipelineStateObjectCommon::CreatePipelineState(DXCommon* dxCommon) {
 
 	HRESULT hr;
 
