@@ -11,6 +11,19 @@
 #include "Base/Math/sMath.h"
 
 ///-------------------------------------------/// 
+/// コンストラクタ、デストラクタ
+///-------------------------------------------///
+Sprite::Sprite() = default;
+Sprite::~Sprite() {
+	vertex_.reset();
+	index_.reset();
+	material_.reset();
+	wvp_.reset();
+	pipelineCommon_.reset();
+}
+
+
+///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
 // 座標
@@ -50,7 +63,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Sprite::Initialize() {
+void Sprite::Initialize(BlendMode mode) {
 
 	// コマンドリストのポインタ
 	ID3D12Device* device = System::GetDXDevice();
@@ -60,6 +73,11 @@ void Sprite::Initialize() {
 	index_ = std::make_unique<IndexBuffer2D>();
 	material_ = std::make_unique<Material2D>();
 	wvp_ = std::make_unique<Transform2D>();
+
+	// パイプラインの生成
+	pipelineCommon_ = std::make_unique<PipelineStateObjectCommon>();
+	pipelineCommon_->Create(PipelinType::Obj2D, mode);
+
 	// Resourceの作成
 	vertex_->Create(device, sizeof(VertexData2D) * 6);
 	index_->Create(device, sizeof(uint32_t) * 6);
@@ -129,6 +147,12 @@ void Sprite::Draw() {
 
 	// コマンドリストのポインタ
 	ID3D12GraphicsCommandList* commandList = System::GetDXCommandList();
+
+	// PSOの設定
+	pipelineCommon_->SetPSO(commandList);
+
+	// プリミティブトポロジーをセット
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);

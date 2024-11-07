@@ -127,7 +127,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer2D.cpp" />
     <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer3D.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Base\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="Base\Sprite\Sprite.cpp" />
     <ClCompile Include="Base\TextureManager\TextureManager.cpp" />
     <ClCompile Include="Base\StringUtility\StringUtility.cpp" />
@@ -172,7 +171,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\Scene\GameScene.h" />
-    <ClInclude Include="Base\Sprite\SpriteCommon.h" />
     <ClInclude Include="Base\Sprite\Sprite.h" />
     <ClInclude Include="Base\TextureManager\TextureManager.h" />
     <ClInclude Include="Base\StringUtility\StringUtility.h" />

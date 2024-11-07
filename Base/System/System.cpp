@@ -7,7 +7,6 @@
 
 // Sprite
 #include "Base/TextureManager/TextureManager.h"
-#include "Base/Sprite/SpriteCommon.h"
 #include "Base/SRVManager/SRVManager.h"
 
 // Math
@@ -22,7 +21,6 @@ std::unique_ptr<Input> System::input_ = nullptr;
 // Sprite
 std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
 std::unique_ptr<SRVManager> System::srvManager_ = nullptr;
-std::unique_ptr<SpriteCommon> System::spriteCommon_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -68,10 +66,6 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// SRVManagerの初期化
 	srvManager_ = std::make_unique<SRVManager>();
 	srvManager_->Initialize(dXCommon_.get());
-
-	// スプライト共通部の生成
-	spriteCommon_ = std::make_unique<SpriteCommon>();
-	spriteCommon_->Initialize(dXCommon_.get());
 }
 
 ///=====================================================/// 
@@ -96,7 +90,6 @@ void System::Finalize() {
 	input_.reset();
 	textureManager_.reset();
 	srvManager_.reset();
-	spriteCommon_.reset();
 
 	// COMの終了
 	CoUninitialize();
@@ -107,7 +100,6 @@ void System::Finalize() {
 ///=====================================================///
 void System::BeginFrame() {
 	dXCommon_->PreDraw();
-	spriteCommon_->PreDraw();
 }
 
 ///=====================================================/// 
@@ -154,9 +146,12 @@ const DirectX::TexMetadata& System::GetMetaData(uint32_t textureIndex) {
 }
 #pragma endregion
 
+
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
+// DXCommon
+DXCommon* System::GetDXCommon() { return dXCommon_.get(); }
 // device
 ID3D12Device* System::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList

@@ -1,3 +1,4 @@
+
 #pragma once
 /// ===Include=== ///
 // Engine
@@ -19,7 +20,7 @@ public:
 	/// ブレンドステートの生成
 	/// </summary>
 	/// <returns></returns>
-	void Create();
+	void Create(BlendMode mode);
 
 	/// <summary>
 	/// ブレンドステートの取得

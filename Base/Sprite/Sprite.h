@@ -8,6 +8,9 @@
 #include "Base/Buffer/Material/Material2D.h"
 #include "Base/Buffer/Transform/Transform2D.h"
 
+#include "Base/PSO/PipelineStateObjectCommon.h"
+#include "Base/PSO/PipelineStateObjectType.h"
+
 #include <memory>
 
 ///=====================================================/// 
@@ -16,10 +19,13 @@
 class Sprite {
 public: /// ===基本的な関数=== ///
 
+	Sprite();
+	~Sprite();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(BlendMode mode = BlendMode::KBlendModeNormal);
 
 	/// <summary>
 	/// 更新
@@ -66,6 +72,15 @@ public:/// ===Setter=== ///
 
 private:/// ===Variables(変数)=== ///
 
+	// バッファリソース
+	std::unique_ptr<VertexBuffer2D> vertex_;
+	std::unique_ptr<IndexBuffer2D> index_;
+	std::unique_ptr<Material2D> material_;
+	std::unique_ptr<Transform2D> wvp_;
+
+	// パイプライン
+	std::unique_ptr<PipelineStateObjectCommon> pipelineCommon_;
+
 	// バッファリソース内のデータを指すポインタ
 	VertexData2D* vertexData_ = nullptr;
 	uint32_t* indexData_ = nullptr;
@@ -74,12 +89,6 @@ private:/// ===Variables(変数)=== ///
 
 	// WorldTransform
 	WorldTransform worldTransform_; 	// Transform(scale, rotate, transform)
-
-	// バッファリソース
-	std::unique_ptr<VertexBuffer2D> vertex_;
-	std::unique_ptr<IndexBuffer2D> index_;
-	std::unique_ptr<Material2D> material_;
-	std::unique_ptr<Transform2D> wvp_;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
