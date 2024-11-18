@@ -2,15 +2,15 @@
 /// ===include=== ///
 #include "Base/Data/CBufferData.h"
 #include "Base/ComPtr/ComPtr.h"
-
-#include "Base/Buffer/Vertex/VertexBuffer2D.h"
-#include "Base/Buffer/Index/IndexBuffer2D.h"
-#include "Base/Buffer/Material/Material2D.h"
-#include "Base/Buffer/Transform/Transform2D.h"
-
+// buffer
+#include "Base/PSO/Buffer/Vertex/VertexBuffer2D.h"
+#include "Base/PSO/Buffer/Index/IndexBuffer2D.h"
+#include "Base/PSO/Buffer/Material/Material2D.h"
+#include "Base/PSO/Buffer/Transform/Transform2D.h"
+// pipeline
 #include "Base/PSO/PipelineStateObjectCommon.h"
 #include "Base/PSO/PipelineStateObjectType.h"
-
+//c++
 #include <memory>
 
 ///=====================================================/// 
@@ -87,34 +87,25 @@ private:/// ===Variables(変数)=== ///
 	MaterialData2D* materialData_ = nullptr;
 	TransformationMatrix2D* wvpMatrixData_ = nullptr;
 
-	// WorldTransform
-	WorldTransform worldTransform_; 	// Transform(scale, rotate, transform)
-
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-	/// ===テクスチャ情報=== ///
-	// テクスチャ番号
-	uint32_t textureIndex = 1;
-	// 座標
-	Vector2 position_ = { 0.0f, 0.0f };
-	// 回転
-	float rotation_ = 0.0f;
-	// サイズ
-	Vector2 size_ = { 640.0f, 360.0f };
-	// 色
-	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	// アンカーポイント
-	Vector2 anchorPoint_ = { 0.0f, 0.0f };
-	// 左右フリップ
-	bool isFlipX_ = false;
-	// 上下フリップ
-	bool isFlipY_ = false;
-	// テクスチャ左上
-	Vector2 textureLeftTop_ = { 0.0f, 0.0f };
-	// テクスチャ切り出しサイズ
-	Vector2 textureSize_ = { 100.0f, 100.0f };
+	// WorldTransform
+	WorldTransform worldTransform_; // Transform(scale, rotate, transform)
+
+	/// ===スプライト情報=== ///
+	uint32_t textureIndex = 0;                   // テクスチャ番号
+	Vector2 position_ = { 0.0f, 0.0f };          // 座標
+	float rotation_ = 0.0f;                      // 回転
+	Vector2 size_ = { 640.0f, 360.0f };          // サイズ
+	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f }; // 色
+	Vector2 anchorPoint_ = { 0.0f, 0.0f };       // アンカーポイント
+	bool isFlipX_ = false;                       // 左右フリップ
+	bool isFlipY_ = false;                       // 上下フリップ
+	Vector2 textureLeftTop_ = { 0.0f, 0.0f };    // テクスチャ左上
+	Vector2 textureSize_ = { 100.0f, 100.0f };   // テクスチャ切り出しサイズ
+	bool isLoadTexture_ = false;
 
 private:/// ===Functions(関数)=== ///
 
@@ -134,11 +125,6 @@ private:/// ===Functions(関数)=== ///
 	void UpdateVertexDataWrite();
 
 	/// <summary>
-	/// テクスチャ範囲指定
-	/// </summary>
-	void SpecifyRange();
-
-	/// <summary>
 	/// IndexResourceへの書き込み
 	/// </summary>
 	void IndexDataWrite();
@@ -147,6 +133,11 @@ private:/// ===Functions(関数)=== ///
 	/// Transform情報の書き込み
 	/// </summary>
 	void TransformDataWrite();
+
+	/// <summary>
+	/// テクスチャ範囲指定
+	/// </summary>
+	void SpecifyRange();
 
 	/// <summary>
 	/// テクスチャサイズをイメージに合わせる

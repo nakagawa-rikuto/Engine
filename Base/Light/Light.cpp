@@ -1,14 +1,11 @@
-#include "IndexBuffer2D.h"
+#include "Light.h"
 
 #include <cassert>
 
-IndexBuffer2D::IndexBuffer2D() {}
-IndexBuffer2D::~IndexBuffer2D() {}
-
 ///-------------------------------------------/// 
-///リソースの作成
+/// リソースの生成
 ///-------------------------------------------///
-void IndexBuffer2D::Create(ID3D12Device* device, size_t sizeInBytes) {
+void Light::Create(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 
 	// リソース用のヒープの設定
@@ -38,22 +35,6 @@ void IndexBuffer2D::Create(ID3D12Device* device, size_t sizeInBytes) {
 }
 
 ///-------------------------------------------/// 
-/// データの書き込み
-///-------------------------------------------///
-void IndexBuffer2D::WriteData(uint32_t* data) {
-	// 書き込むためのアドレスを取得
-	buffer_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
-
-	data_ = data;
-}
-
-///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
-ID3D12Resource* IndexBuffer2D::GetBuffer() { return buffer_.Get(); }
-uint32_t* IndexBuffer2D::GetData() { return data_; }
-
-///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-void IndexBuffer2D::SetData(uint32_t* data) { data_ = data; }
+ID3D12Resource* Light::GetBuffer() { return buffer_.Get(); }

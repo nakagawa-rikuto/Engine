@@ -39,9 +39,6 @@
     <ClCompile Include="Base\Math\sMath.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Mesh\Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Base\PSO\BlendState\BlendState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -88,9 +85,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Base\Math\MatrixMath.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\Sprite\SpriteCommon.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Base\TextureManager\TextureManager.cpp">
@@ -147,6 +141,15 @@
     <ClCompile Include="Base\PSO\DepthStencil\DepthStencil.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Base\Model\Model.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\ModelManager\ModelManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Light\Light.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h">
@@ -165,9 +168,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\Math\sMath.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\Mesh\Mesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\PSO\BlendState\BlendState.h">
@@ -216,9 +216,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\Math\MatrixMath.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\Sprite\SpriteCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Base\TextureManager\TextureManager.h">
@@ -284,10 +281,31 @@
     <ClInclude Include="Base\PSO\DepthStencil\DepthStencil.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Base\Model\Model.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\ModelManager\ModelManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Light\Light.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
       <Filter>imgui</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj3D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj2D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj2D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj.VS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\Shaders\Obj3D.hlsli" />
+    <None Include="Resource\Shaders\Obj.hlsli" />
   </ItemGroup>
 </Project>

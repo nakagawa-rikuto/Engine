@@ -68,26 +68,6 @@ void PipelineStateObjectCommon::SetPSO(ID3D12GraphicsCommandList* commandList) {
 	commandList->SetPipelineState(graphicsPipelineState_.Get());
 }
 
-///-------------------------------------------/// 
-/// DepthStencilDesc
-///-------------------------------------------///
-D3D12_DEPTH_STENCIL_DESC PipelineStateObjectCommon::CreateDepthStencilDesc() {
-
-	// DepthStencilDescの設定
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-
-	// Depthの機能を有効化
-	depthStencilDesc.DepthEnable = true;
-
-	// 書き込みします
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-
-	// 比較関数はLessEqual。
-	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-
-	return depthStencilDesc;
-
-}
 
 ///-------------------------------------------/// 
 /// パイプラインの作成

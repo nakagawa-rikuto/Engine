@@ -7,6 +7,9 @@
 #include "Base/TextureManager/TextureManager.h"
 #include "Base/PSO/PipelineStateObjectType.h"
 
+// Model
+#include "Base/Model/Model.h"
+
 // Math
 #include"Base/Math/sMath.h"
 
@@ -34,15 +37,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sprite = std::make_unique<Sprite>();
 	sprite->Initialize();                              // BlendMode変更可　sprite->Initialize(BlendMode::kBlendModeAdd);  
 	sprite->SetTexture(uvTexture);                     // テクスチャの設定(これがないと描画できない)
-	sprite->SetPosition(Vector2(640.0f, 360.0f));      // 場所の設定(初期値は0,0)
+	/* // テクスチャの使い方
+	sprite->SetPosition(Vector2(0.0f, 0.0f));          // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                         // 回転の設定(初期値は0.0);
 	sprite->SetSize(Vector2(100.0f, 100.f));           // サイズの設定(初期値は640, 360)
 	sprite->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f)); // カラーの設定(初期値は1,1,1,1)
-	sprite->SetAnchorPoint(Vector2(0.5f, 0.5f));       // アンカーポイントの設定(初期値は0,0)
+	sprite->SetAnchorPoint(Vector2(0.0f, 0.0f));       // アンカーポイントの設定(初期値は0,0)
 	sprite->SetTextureSize(Vector2(64.0f, 64.0f));     // テクスチャサイズの設定(初期値は100.0f, 100.0f)
+	*/
 
-	// 回転
-	float rotation = 0.0f;
+	// モデルの読み込み
+	const std::string& planeModel = "plane";
+	System::LoadModel(planeModel);
+	const std::string& axisModel = "axis";
+	System::LoadModel(axisModel);
+
+	// モデル
+	std::unique_ptr<Model> model;
+	model = std::make_unique<Model>();
+	model->Initialize(axisModel);
+	/* // モデルの使い方
+	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));
+	model->SetScale(Vector3(0.0f, 0.0f, 0.0f));
+	model->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	*/
 
 #pragma endregion
 
@@ -54,10 +73,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		*/ ////////////////////////////
 		System::Update();
 
-		rotation += 0.1f;
-
-		sprite->SetRotation(rotation);
-
 		// フレームの開始
 		System::BeginFrame();
 
@@ -67,6 +82,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// Spriteの描画
 		sprite->Draw();
+
+		// Modelの描画
+		model->Draw();
 
 		// フレームの終了
 		System::EndFrame();

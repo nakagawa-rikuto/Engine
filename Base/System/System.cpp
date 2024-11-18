@@ -9,6 +9,9 @@
 #include "Base/TextureManager/TextureManager.h"
 #include "Base/SRVManager/SRVManager.h"
 
+// Model
+#include "Base/ModelManager/ModelManager.h"
+
 // Math
 #include "Base/Math/sMath.h"
 
@@ -17,10 +20,11 @@
 std::unique_ptr<WinApp> System::winApp_ = nullptr;
 std::unique_ptr<DXCommon> System::dXCommon_ = nullptr;
 std::unique_ptr<Input> System::input_ = nullptr;
-
 // Sprite
 std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
 std::unique_ptr<SRVManager> System::srvManager_ = nullptr;
+// Model
+std::unique_ptr<ModelManager> System::modelManager_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -51,21 +55,25 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	winApp_ = std::make_unique<WinApp>();
 	winApp_->CreateGameWindow(title, width, height);
 
-	// DirectX初期化処理
+	// DirectXの生成
 	dXCommon_ = std::make_unique<DXCommon>();
 	dXCommon_->Initialize(winApp_.get(), width, height);
 
-	// Inputの初期化
+	// Inputの生成
 	input_ = std::make_unique<Input>();
 	input_->Initialize(winApp_.get());
 
-	// TextrueManagerの初期化
+	// TextrueManagerの生成
 	textureManager_ = std::make_unique<TextureManager>();
 	textureManager_->Initialize(dXCommon_.get());
 
-	// SRVManagerの初期化
+	// SRVManagerの生成
 	srvManager_ = std::make_unique<SRVManager>();
 	srvManager_->Initialize(dXCommon_.get());
+
+	// ModelManagerの生成	
+	modelManager_ = std::make_unique<ModelManager>();
+	modelManager_->Initialize(dXCommon_.get());
 }
 
 ///=====================================================/// 
@@ -115,37 +123,22 @@ void System::EndFrame() {
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 
 #pragma region Sprite関連
-///-------------------------------------------/// 
-/// テクスチャ読み込み
-///-------------------------------------------///
-void System::LoadTexture(const std::string& filePath) {
-
-	textureManager_->LoadTexture(filePath);
-}
-
-///-------------------------------------------/// 
-/// SRVインデックス開始番号の取得
-///-------------------------------------------///
-uint32_t System::GetTextureIndexByFilePath(const std::string& filePath) {
-
-	return textureManager_->GetTextureIndexByFilePath(filePath);
-}
-
-///-------------------------------------------/// 
-/// GPUハンドルの取得
-///-------------------------------------------///
-D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(uint32_t textureIndex) {
-	return textureManager_->GetSRVHandleGPU(textureIndex);
-}
-
-///-------------------------------------------/// 
-/// メタデータの取得
-///-------------------------------------------///
-const DirectX::TexMetadata& System::GetMetaData(uint32_t textureIndex) {
-	return textureManager_->GetMetaData(textureIndex);
-}
+// テクスチャ読み込み
+void System::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
+// SRVインデックス開始番号の取得
+uint32_t System::GetTextureIndexByFilePath(const std::string& filePath) {return textureManager_->GetTextureIndexByFilePath(filePath);}
+// GPUハンドルの取得
+D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(uint32_t textureIndex) {return textureManager_->GetSRVHandleGPU(textureIndex);}
+// メタデータの取得
+const DirectX::TexMetadata& System::GetMetaData(uint32_t textureIndex) {return textureManager_->GetMetaData(textureIndex);}
 #pragma endregion
 
+#pragma region Model関連
+// モデルの読み込み
+void System::LoadModel(const std::string& filename) { modelManager_->LoadModel("Resource", filename); }
+// モデルデータの取得
+ModelData System::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
+#pragma endregion
 
 ///-------------------------------------------/// 
 /// Getter
