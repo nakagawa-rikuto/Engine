@@ -147,6 +147,9 @@
     <ClCompile Include="Base\ModelManager\ModelManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Base\Light\Light.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Data\CBufferData.h">
@@ -284,10 +287,25 @@
     <ClInclude Include="Base\ModelManager\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Base\Light\Light.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
       <Filter>imgui</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj3D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj2D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj2D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Obj.VS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\Shaders\Obj3D.hlsli" />
+    <None Include="Resource\Shaders\Obj.hlsli" />
   </ItemGroup>
 </Project>

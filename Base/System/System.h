@@ -1,5 +1,7 @@
 #pragma once
 /// ===include=== ///
+#include "Base/Data/CBufferData.h"
+
 // DirectXTex
 #include "DirectXTex.h"
 
@@ -22,6 +24,8 @@ class Input;
 // Sprite
 class TextureManager;
 class SRVManager;
+// Model
+class ModelManager;
 
 ///=====================================================///
 /// システム
@@ -50,7 +54,7 @@ public:/// ===開発者用関数(システム)=== ///
 public:/// ===開発者用関数(その他)=== ///
 
 	///-------------------------------------------/// 
-	///テクスチャ関連
+	/// テクスチャ関連
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
 	static uint32_t GetTextureIndexByFilePath(const std::string& filePath);
@@ -59,13 +63,24 @@ public:/// ===開発者用関数(その他)=== ///
 	// メタデータの取得
 	static const DirectX::TexMetadata& GetMetaData(uint32_t textureIndex);
 
+	///-------------------------------------------/// 
+	/// モデル関連
+	///-------------------------------------------///
+	static ModelData GetModelData(const std::string& filename);
+
 public:/// ===プログラマー用関数=== ///
 
 	///-------------------------------------------/// 
-	///テクスチャ関連
+	/// テクスチャ関連
 	///-------------------------------------------///
 	// テクスチャの読み込み
 	static void LoadTexture(const std::string& filePath);
+
+	///-------------------------------------------/// 
+	/// モデル関連
+	///-------------------------------------------///
+	// モデルの読み込み
+	static void LoadModel(const std::string& filename);
 
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
@@ -84,4 +99,5 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<TextureManager> textureManager_;   // TextureManager
 	static std::unique_ptr<SRVManager> srvManager_;          // SRVManager
 
+	static std::unique_ptr<ModelManager> modelManager_;    // ModelManager
 };

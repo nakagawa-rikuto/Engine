@@ -34,7 +34,7 @@ struct VertexData3D {
 };
 
 /// <summary>
-/// MaterialData(2D)
+/// Material(2D)
 /// </summary>
 struct MaterialData2D {
 	Vector4 color;
@@ -42,7 +42,7 @@ struct MaterialData2D {
 };
 
 /// <summary>
-/// MaterialData(3D)
+/// Material(3D)
 /// </summary>
 struct MaterialData3D {
 
@@ -74,4 +74,29 @@ struct WorldTransform {
 	Vector3 scale;
 	Vector3 rotate;
 	Vector3 translate;
+};
+
+/// <summary>
+/// マテリアルデータ
+/// </summary>
+struct  MaterialData {
+	std::string textureFilePath;
+	uint32_t textureIndex;
+};
+
+/// <summary>
+/// モデルデータ
+/// </summary>
+struct ModelData {
+	std::vector<VertexData3D> vertices;
+	MaterialData material;
+};
+
+/// <summary>
+/// 平行光源の拡張
+/// </summary>
+struct DirectionalLight {
+	Vector4 color;     // ライトの色
+	Vector3 direction; // ライトの向き
+	float intensity;   // ライトの明るさ(輝度)
 };

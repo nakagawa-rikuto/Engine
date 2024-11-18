@@ -55,12 +55,6 @@ private:
 private:/// ====== ///
 
 	/// <summary>
-	/// DepthStencilDecの生成
-	/// </summary>
-	/// <returns></returns>
-	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilDesc();
-
-	/// <summary>
 	/// PipelineStateの生成
 	/// </summary>
 	void CreatePipelineState(DXCommon* dxCommon);

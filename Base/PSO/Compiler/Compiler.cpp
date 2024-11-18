@@ -21,6 +21,19 @@ void Compiler::Initialize(DXCommon* dxCommon, PipelinType Type) {
 		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj2D.PS.hlsl", L"ps_6_0",
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objPSBlob_ != nullptr);
+
+	} else if(Type == PipelinType::Obj3D){
+
+		// ObjVS
+		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj3D.VS.hlsl", L"vs_6_0",
+			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+		assert(objVSBlob_ != nullptr);
+
+		// ObjPS
+		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj3D.PS.hlsl", L"ps_6_0",
+			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+		assert(objPSBlob_ != nullptr);
+
 	} else {
 
 		// ObjVS
