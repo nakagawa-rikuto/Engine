@@ -68,6 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	*/
 
 	Vector3 rotate = { 0.0f, 0.0f, 0.0f };
+	Vector2 size = { 100.0f, 100.0f };
 
 #pragma endregion
 
@@ -83,11 +84,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("model");
 		ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
 		ImGui::End();
+
+		ImGui::Begin("sprite");
+		ImGui::DragFloat2("size", &size.x, 0.1f);
+		ImGui::End();
 #endif // _DEBUG
 		
 		rotate.y += 0.1f;
+		rotate.x += 0.1f;
+		rotate.z -= 0.1f;
 
 		model->SetRotate(rotate);
+		sprite->SetSize(size);
 
 		/* ////////////////////////////
 				　　描画の処理
