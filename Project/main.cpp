@@ -1,20 +1,16 @@
 /// ===include=== ///
 // Engine
 #include "Engine/Core/System.h"
-
-// Sprite
+// Game
 #include "Game/2d/Sprite.h"
-#include "Game/Data/PipelineStateObjectType.h"
-// Model
 #include "Game/3d/Model.h"
-
+#include "Game/Data/PipelineStateObjectType.h"
 // Math
 #include"Math/sMath.h"
-
 // c++
 #include <memory>
 #include <string>
-
+// ImGui
 #ifdef _DEBUG
 #include <imGui.h>
 #endif // _DEBUG
