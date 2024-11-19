@@ -44,6 +44,16 @@ public:
 	void PostDraw();
 
 	/// <summary>
+	/// ImGuiの開始処理
+	/// </summary>
+	void BeginImGui();
+
+	/// <summary>
+	/// ImGuiの終了処理
+	/// </summary>
+	void EndImGui();
+
+	/// <summary>
 	/// Heapの生成
 	/// </summary>
 	ComPtr<ID3D12DescriptorHeap> CreateRTVHeap(); // RTV

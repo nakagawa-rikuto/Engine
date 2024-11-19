@@ -1,6 +1,12 @@
 #include "WinApp.h"
 #include <string>
 
+#ifdef _DEBUG
+#include <imGui.h>
+#endif // _DEBUG
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 // ウィンドウクラスの名前
 const wchar_t WinApp::kWindowClassName[] = L"DirectX_MyEngine_WindowClass";
 

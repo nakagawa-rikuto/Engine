@@ -136,6 +136,12 @@ void DXCommon::PreDraw() {
 void DXCommon::PostDraw() {
 	HRESULT hr;
 
+	// ImGuiの内部コマンドを生成する
+	ImGui::Render();
+
+	// 実際のCommandListのImGuiの描画コマンドを積む
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_.Get());
+
 	// RenderTargetからPresentにする
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
@@ -645,6 +651,28 @@ void DXCommon::InitializeImGui() {
 		srvHeap_.Get(),
 		srvHeap_->GetCPUDescriptorHandleForHeapStart(),
 		srvHeap_->GetGPUDescriptorHandleForHeapStart());
+}
+
+///-------------------------------------------/// 
+/// ImGuiの開始処理
+///-------------------------------------------///
+void DXCommon::BeginImGui() {
+	// フレームの先頭でImGuiに、ここからフレームが始まる旨を告げる
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の初期に置き換える
+	ImGui::ShowDemoWindow();
+}
+
+///-------------------------------------------/// 
+/// ImGuiの終了処理
+///-------------------------------------------///
+void DXCommon::EndImGui() {
+	// ImGuiの終了処理.。
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 ///-------------------------------------------/// 

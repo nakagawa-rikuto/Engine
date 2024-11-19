@@ -17,6 +17,11 @@
 #include <memory>
 #include <string>
 
+#ifdef _DEBUG
+#include <imGui.h>
+#endif // _DEBUG
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 const wchar_t kWindowTitle[] = L"Engine";
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -63,22 +68,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	model->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	*/
 
+	Vector3 rotate = { 0.0f, 0.0f, 0.0f };
+
 #pragma endregion
 
 	// ウィンドウのxボタンが押されるまでループ
 	while (System::ProcessMessage() == 0) {
-
+		System::BeginImGui();
 		/* ////////////////////////////
 				　　更新の処理
 		*/ ////////////////////////////
 		System::Update();
 
-		// フレームの開始
-		System::BeginFrame();
+#ifdef _DEBUG
+		ImGui::Begin("model");
+		ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
+		ImGui::End();
+#endif // _DEBUG
+		
+		rotate.y += 0.1f;
+
+		model->SetRotate(rotate);
 
 		/* ////////////////////////////
 				　　描画の処理
 		*/ ////////////////////////////
+		// フレームの開始
+		System::BeginFrame();
 
 		// Spriteの描画
 		sprite->Draw();
@@ -90,6 +106,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		System::EndFrame();
 	}
 
+	System::EndImGui();
 	System::Finalize();
 
 	return 0;

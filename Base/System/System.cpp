@@ -122,6 +122,16 @@ void System::EndFrame() {
 ///=====================================================///
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 
+///=====================================================/// 
+/// ImGuiの開始処理
+///=====================================================///
+void System::BeginImGui() { return dXCommon_->BeginImGui(); }
+
+///=====================================================/// 
+/// ImGuiの終了処理
+///=====================================================///
+void System::EndImGui() { return dXCommon_->EndImGui(); }
+
 #pragma region Sprite関連
 // テクスチャ読み込み
 void System::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}

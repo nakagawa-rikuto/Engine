@@ -16,6 +16,8 @@
 #include <wrl.h>
 #include <memory>
 
+
+
 /// ===前方宣言=== ///
 // Engine
 class WinApp;
@@ -50,6 +52,10 @@ public:/// ===開発者用関数(システム)=== ///
 	static void EndFrame();
 	// Windowsのメッセージを処理
 	static int ProcessMessage();
+	// ImGuiの開始処理
+	static void BeginImGui();
+	// ImGuiの終了処理
+	static void EndImGui();
 
 public:/// ===開発者用関数(その他)=== ///
 
