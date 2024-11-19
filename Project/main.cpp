@@ -1,17 +1,15 @@
 /// ===include=== ///
 // Engine
-#include "Base/System/System.h"
+#include "Engine/Core/System.h"
 
 // Sprite
-#include "Base/Sprite/Sprite.h"
-#include "Base/TextureManager/TextureManager.h"
-#include "Base/PSO/PipelineStateObjectType.h"
-
+#include "Game/2d/Sprite.h"
+#include "Game/Data/PipelineStateObjectType.h"
 // Model
-#include "Base/Model/Model.h"
+#include "Game/3d/Model.h"
 
 // Math
-#include"Base/Math/sMath.h"
+#include"Math/sMath.h"
 
 // c++
 #include <memory>
