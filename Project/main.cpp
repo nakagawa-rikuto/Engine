@@ -1,17 +1,15 @@
 /// ===include=== ///
 // Engine
-#include "Base/System/System.h"
+#include "Engine/Core/System.h"
 
 // Sprite
-#include "Base/Sprite/Sprite.h"
-#include "Base/TextureManager/TextureManager.h"
-#include "Base/PSO/PipelineStateObjectType.h"
-
+#include "Game/2d/Sprite.h"
+#include "Game/Data/PipelineStateObjectType.h"
 // Model
-#include "Base/Model/Model.h"
+#include "Game/3d/Model.h"
 
 // Math
-#include"Base/Math/sMath.h"
+#include"Math/sMath.h"
 
 // c++
 #include <memory>
@@ -68,6 +66,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	*/
 
 	Vector3 rotate = { 0.0f, 0.0f, 0.0f };
+	Vector2 size = { 100.0f, 100.0f };
 
 #pragma endregion
 
@@ -83,11 +82,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("model");
 		ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
 		ImGui::End();
+
+		ImGui::Begin("sprite");
+		ImGui::DragFloat2("size", &size.x, 0.1f);
+		ImGui::End();
 #endif // _DEBUG
 		
 		rotate.y += 0.1f;
+		rotate.x += 0.1f;
+		rotate.z -= 0.1f;
 
 		model->SetRotate(rotate);
+		sprite->SetSize(size);
 
 		/* ////////////////////////////
 				　　描画の処理

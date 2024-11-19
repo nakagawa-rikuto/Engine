@@ -114,109 +114,106 @@
     <ClCompile Include="Game\Scene\GameScene.cpp">
       <Filter>ソース ファイル\application\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Input\Input.cpp">
+    <ClCompile Include="Engine\Input\Input.cpp">
       <Filter>ソース ファイル\engine\io</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Math\Matrix4x4.cpp">
+    <ClCompile Include="Math\Matrix4x4.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Model\Model.cpp">
+    <ClCompile Include="Game\3d\Model.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Math\Matrix3x3.cpp">
+    <ClCompile Include="Math\Matrix3x3.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Math\sMath.cpp">
+    <ClCompile Include="Math\sMath.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Sprite\Sprite.cpp">
+    <ClCompile Include="Game\2d\Sprite.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Math\Vector2.cpp">
+    <ClCompile Include="Math\Vector2.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Math\Vector4.cpp">
+    <ClCompile Include="Math\Vector4.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Math\Vector3.cpp">
+    <ClCompile Include="Math\Vector3.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\PipelineStateObjectCommon.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\PipelineStateObjectCommon.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Base\ModelManager\ModelManager.cpp">
+    <ClCompile Include="Engine\Managers\ModelManager.cpp">
       <Filter>ソース ファイル\engine\base\manager</Filter>
     </ClCompile>
-    <ClCompile Include="Base\TextureManager\TextureManager.cpp">
+    <ClCompile Include="Engine\Managers\TextureManager.cpp">
       <Filter>ソース ファイル\engine\base\manager</Filter>
     </ClCompile>
-    <ClCompile Include="Base\System\System.cpp">
+    <ClCompile Include="Engine\Core\System.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\BlendState\BlendState.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\BlendState.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Compiler\Compiler.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\Compiler.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\DepthStencil\DepthStencil.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\DepthStencil.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Base\DirectXCommon\DXCommon.cpp">
+    <ClCompile Include="Engine\Core\DXCommon.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Material\Material2D.cpp">
+    <ClCompile Include="Engine\2d\Material2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Material\Material3D.cpp">
+    <ClCompile Include="Engine\3d\Material3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\InputLayout\InputLayout.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\InputLayout.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer2D.cpp">
+    <ClCompile Include="Engine\2d\IndexBuffer2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Index\IndexBuffer3D.cpp">
+    <ClCompile Include="Engine\3d\IndexBuffer3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Data\CBufferData.cpp">
-      <Filter>ソース ファイル\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\Light\Light.cpp">
+    <ClCompile Include="Engine\Graphics\Light.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Math\MatrixMath.cpp">
+    <ClCompile Include="Math\MatrixMath.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\RasterizerState\RasterizerState.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\RasterizerState.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\RootSignature\RootSignature.cpp">
+    <ClCompile Include="Engine\Graphics\Pipeline\RootSignature.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Base\SRVManager\SRVManager.cpp">
+    <ClCompile Include="Engine\Managers\SRVManager.cpp">
       <Filter>ソース ファイル\engine\base\manager</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Transform\Transform2D.cpp">
+    <ClCompile Include="Engine\2d\Transform2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Transform\Transform3D.cpp">
+    <ClCompile Include="Engine\3d\Transform3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.cpp">
+    <ClCompile Include="Engine\2d\VertexBuffer2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.cpp">
+    <ClCompile Include="Engine\3d\VertexBuffer3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Base\WinApp\WinApp.cpp">
+    <ClCompile Include="Engine\Core\WinApp.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\Log\Logger.cpp">
+    <ClCompile Include="Engine\Core\Logger.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\StringUtility\StringUtility.cpp">
+    <ClCompile Include="Engine\Core\StringUtility.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -248,116 +245,116 @@
     <ClInclude Include="Game\Scene\GameScene.h">
       <Filter>ヘッダー ファイル\application\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\BlendState\BlendState.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\BlendState.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Data\CBufferData.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\Compiler.h">
+      <Filter>ヘッダー ファイル\engine\base\pso</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\ComPtr.h">
       <Filter>ヘッダー ファイル\engine</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Compiler\Compiler.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\DepthStencil.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Base\ComPtr\ComPtr.h">
-      <Filter>ヘッダー ファイル\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\PSO\DepthStencil\DepthStencil.h">
-      <Filter>ヘッダー ファイル\engine\base\pso</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\DirectXCommon\DXCommon.h">
+    <ClInclude Include="Engine\Core\DXCommon.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Index\IndexBuffer2D.h">
+    <ClInclude Include="Engine\2d\IndexBuffer2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Index\IndexBuffer3D.h">
+    <ClInclude Include="Engine\3d\IndexBuffer3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Input\Input.h">
+    <ClInclude Include="Engine\Input\Input.h">
       <Filter>ヘッダー ファイル\engine\io</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\InputLayout\InputLayout.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\InputLayout.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Light\Light.h">
+    <ClInclude Include="Engine\Graphics\Light.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Log\Logger.h">
+    <ClInclude Include="Engine\Core\Logger.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Material\Material2D.h">
+    <ClInclude Include="Engine\2d\Material2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Material\Material3D.h">
+    <ClInclude Include="Engine\3d\Material3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Math\Matrix3x3.h">
+    <ClInclude Include="Math\Matrix3x3.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Math\Matrix4x4.h">
+    <ClInclude Include="Math\Matrix4x4.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Math\MatrixMath.h">
+    <ClInclude Include="Math\MatrixMath.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Model\Model.h">
+    <ClInclude Include="Game\3d\Model.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\ModelManager\ModelManager.h">
+    <ClInclude Include="Engine\Managers\ModelManager.h">
       <Filter>ヘッダー ファイル\engine\base\manager</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\PipelineStateObjectCommon.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectCommon.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\PipelineStateObjectType.h">
+    <ClInclude Include="Game\Data\PipelineStateObjectType.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\RasterizerState\RasterizerState.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\RasterizerState.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\RootSignature\RootSignature.h">
+    <ClInclude Include="Engine\Graphics\Pipeline\RootSignature.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Math\sMath.h">
+    <ClInclude Include="Math\sMath.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Sprite\Sprite.h">
+    <ClInclude Include="Game\2d\Sprite.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\SRVManager\SRVManager.h">
+    <ClInclude Include="Engine\Managers\SRVManager.h">
       <Filter>ヘッダー ファイル\engine\base\manager</Filter>
     </ClInclude>
-    <ClInclude Include="Base\StringUtility\StringUtility.h">
+    <ClInclude Include="Engine\Core\StringUtility.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\System\System.h">
+    <ClInclude Include="Engine\Core\System.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\TextureManager\TextureManager.h">
+    <ClInclude Include="Engine\Managers\TextureManager.h">
       <Filter>ヘッダー ファイル\engine\base\manager</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Transform\Transform2D.h">
+    <ClInclude Include="Engine\2d\Transform2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Transform\Transform3D.h">
+    <ClInclude Include="Engine\3d\Transform3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Math\Vector2.h">
+    <ClInclude Include="Math\Vector2.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Math\Vector3.h">
+    <ClInclude Include="Math\Vector3.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\Math\Vector4.h">
+    <ClInclude Include="Math\Vector4.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\WinApp\WinApp.h">
+    <ClInclude Include="Engine\Core\WinApp.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer2D.h">
+    <ClInclude Include="Engine\2d\VertexBuffer2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Base\PSO\Buffer\Vertex\VertexBuffer3D.h">
+    <ClInclude Include="Engine\3d\VertexBuffer3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\CData.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

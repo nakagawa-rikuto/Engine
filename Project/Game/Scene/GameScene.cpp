@@ -1,11 +1,14 @@
 #include "Game/Scene/GameScene.h"
+// Engine
+#include "Engine/Core/System.h"
+#include "Engine/Core/DXCommon.h"
+#include "Engine/Input/Input.h"
+// Math
+#include "Math/sMath.h"
 
-#include "Base/System/System.h"
-#include "Base/DirectXCommon/DXCommon.h"
-#include "Base/Input/Input.h"
-
-#include "Base/Math/sMath.h"
-
+///-------------------------------------------/// 
+/// コンストラクタ、デストラクタ
+///-------------------------------------------///
 GameScene::GameScene() {}
 GameScene::~GameScene() {}
 
