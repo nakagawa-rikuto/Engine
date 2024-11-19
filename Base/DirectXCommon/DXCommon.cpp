@@ -662,7 +662,7 @@ void DXCommon::BeginImGui() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の初期に置き換える
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 }
 
 ///-------------------------------------------/// 
