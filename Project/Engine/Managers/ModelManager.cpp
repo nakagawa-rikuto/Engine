@@ -28,7 +28,6 @@ void ModelManager::LoadModel(const std::string& directorPath, const std::string&
 	if (!modelData.material.textureFilePath.empty()) { // 空でなければ
 		// TextureManager からテクスチャを読み込み、インデックスを取得
 		System::LoadTexture(modelData.material.textureFilePath);
-		modelData.material.textureIndex = System::GetTextureIndexByFilePath(modelData.material.textureFilePath);
 	}
 
 	// モデルをMapコンテナに格納

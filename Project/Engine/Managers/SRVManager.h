@@ -20,20 +20,13 @@ public:
 	SRVManager();
 	~SRVManager();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	// 初期化
 	void Initialize(DXCommon* dxcommon);
-
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
+	// 描画前処理
 	void PreDraw();
-
-	/// <summary>
-	/// 確保関数
-	/// </summary>
+	// 確保関数
 	uint32_t Allocate();
+	bool AssertAllocate();
 
 	/// <summary>
 	/// SRV生成（テクスチャ用）
@@ -54,6 +47,7 @@ public:/// ===Setter=== ///
 
 public:/// ===Getter=== ///
 
+	ID3D12DescriptorHeap* GetDescriptorHeap() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
 
@@ -72,4 +66,5 @@ private:/// ===variable=== ///
 	// 次に使用するSRVインデックス
 	uint32_t useIndex = 0;
 };
+
 

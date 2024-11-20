@@ -7,6 +7,7 @@
 #include "Engine/Managers/TextureManager.h"
 #include "Engine/Managers/SRVManager.h"
 #include "Engine/Managers/ModelManager.h"
+#include "Engine/Managers/ImGuiManager.h"
 // Math
 #include "Math/sMath.h"
 
@@ -19,6 +20,7 @@ std::unique_ptr<Input> System::input_ = nullptr;
 std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
 std::unique_ptr<SRVManager> System::srvManager_ = nullptr;
 std::unique_ptr<ModelManager> System::modelManager_ = nullptr;
+std::unique_ptr<ImGuiManager> System::imGuiManager_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -57,17 +59,21 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	input_ = std::make_unique<Input>();
 	input_->Initialize(winApp_.get());
 
-	// TextrueManagerの生成
-	textureManager_ = std::make_unique<TextureManager>();
-	textureManager_->Initialize(dXCommon_.get());
-
 	// SRVManagerの生成
 	srvManager_ = std::make_unique<SRVManager>();
 	srvManager_->Initialize(dXCommon_.get());
 
+	// TextureManagerの生成
+	textureManager_ = std::make_unique<TextureManager>();
+	textureManager_->Initialize(dXCommon_.get(), srvManager_.get());
+
 	// ModelManagerの生成	
 	modelManager_ = std::make_unique<ModelManager>();
 	modelManager_->Initialize(dXCommon_.get());
+
+	// ImGuiManagerの生成
+	imGuiManager_ = std::make_unique<ImGuiManager>();
+	imGuiManager_->Initialize(winApp_.get(), dXCommon_.get(), srvManager_.get());
 }
 
 ///=====================================================/// 
@@ -76,12 +82,15 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 void System::Update() {
 
 	input_->Update();
+	imGuiManager_->Begin();
 }
 
 ///=====================================================/// 
 /// システム全体の終了
 ///=====================================================///
 void System::Finalize() {
+
+	imGuiManager_->Finalize();
 
 	// ゲームウィンドウの破棄
 	winApp_->TerminateGameWindow();
@@ -102,12 +111,14 @@ void System::Finalize() {
 ///=====================================================///
 void System::BeginFrame() {
 	dXCommon_->PreDraw();
+	imGuiManager_->Draw();
 }
 
 ///=====================================================/// 
 /// フレーム終了処理
 ///=====================================================///
 void System::EndFrame() {
+	imGuiManager_->End();
 	dXCommon_->PostDraw();
 }
 
@@ -116,25 +127,15 @@ void System::EndFrame() {
 ///=====================================================///
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-///=====================================================/// 
-/// ImGuiの開始処理
-///=====================================================///
-void System::BeginImGui() { return dXCommon_->BeginImGui(); }
-
-///=====================================================/// 
-/// ImGuiの終了処理
-///=====================================================///
-void System::EndImGui() { return dXCommon_->EndImGui(); }
-
 #pragma region Sprite関連
 // テクスチャ読み込み
 void System::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
 // SRVインデックス開始番号の取得
-uint32_t System::GetTextureIndexByFilePath(const std::string& filePath) {return textureManager_->GetTextureIndexByFilePath(filePath);}
+void System::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, filePath); }
 // GPUハンドルの取得
-D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(uint32_t textureIndex) {return textureManager_->GetSRVHandleGPU(textureIndex);}
+D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(const std::string& filePath) {return textureManager_->GetSRVHandleGPU(filePath);}
 // メタデータの取得
-const DirectX::TexMetadata& System::GetMetaData(uint32_t textureIndex) {return textureManager_->GetMetaData(textureIndex);}
+const DirectX::TexMetadata& System::GetMetaData(const std::string& filePath) {return textureManager_->GetMetaData(filePath);}
 #pragma endregion
 
 #pragma region Model関連

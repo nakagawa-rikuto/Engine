@@ -98,7 +98,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ウィンドウのxボタンが押されるまでループ
 	while (System::ProcessMessage() == 0) {
-		System::BeginImGui();
 		/* ////////////////////////////
 				　　更新の処理
 		*/ ////////////////////////////
@@ -136,7 +135,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		model->SetRotate(rotate);
 		model->SetCamera(cameraManager_->GetActiveCamera().get());
 
-		sprite->SetSize(size);
+		//sprite->SetSize(size);
 
 		camera->SetRotate(cameraRotate);
 		camera->SetTranslate(cameraPos);
@@ -159,7 +158,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		System::EndFrame();
 	}
 
-	System::EndImGui();
 	System::Finalize();
 
 	return 0;

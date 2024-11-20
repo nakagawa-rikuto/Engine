@@ -7,9 +7,11 @@
 #include "DirectXTex.h"
 // C++
 #include <string>
+#include <unordered_map>
 
 /// ===前方宣言=== ///
 class DXCommon;
+class SRVManager;
 
 ///=====================================================/// 
 /// テクスチャマネージャ
@@ -18,22 +20,22 @@ class TextureManager {
 
 public:/// ===基本的な関数=== ///
 	
-	// コンストラクタ
 	TextureManager() = default;
-	// デストラクタ
 	~TextureManager() = default;
 
 	// 初期化
-	void Initialize(DXCommon* dxCommon);
+	void Initialize(DXCommon* dxCommon, SRVManager* srvManager);
 
 public:/// ===Getter=== ///
 
 	// テクスチャ番号からGPUハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(uint32_t textureIndex);
-	// SRVインデックス開始番号
-	uint32_t GetTextureIndexByFilePath(const std::string& filePath);
-	// メタデータの取得
-	const DirectX::TexMetadata& GetMetaData(uint32_t textureIndex);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(const std::string& filePath);
+	// メタデータ
+	const DirectX::TexMetadata& GetMetaData(const std::string& filePath);
+
+public:/// ==Setter==== ///
+
+	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParameterIndex, std::string filePath);
 
 public:/// ===Variables(変数)=== ///
 
@@ -50,11 +52,9 @@ public:/// ===Functions(関数)=== ///
 	void LoadTexture(const std::string& filePath);
 
 private:/// ===Variables(変数)=== ///
-	
-	TextureManager(TextureManager&) = default;
-	TextureManager& operator=(TextureManager&) = default;
 
 	DXCommon* dxCommon_ = nullptr;
+	SRVManager* srvManager_ = nullptr;
 
 	/// ===テクスチャデータの構造体=== ///
 	// テクスチャ1枚分のデータ
@@ -62,13 +62,14 @@ private:/// ===Variables(変数)=== ///
 		std::string filePath;
 		DirectX::TexMetadata metadata;
 		ComPtr<ID3D12Resource> resource;
+		uint32_t srvIndex;
 		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
 		D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
 	};
 
 	/// ===テクスチャデータコンテナ=== ///
 	// テクスチャデータ
-	std::vector<TextureData> textureDatas_;
+	std::unordered_map<std::string, TextureData> textureDatas_;
 
 private:/// ===Functions(関数)=== ///
 	// ミップマップの生成
@@ -76,8 +77,6 @@ private:/// ===Functions(関数)=== ///
 	// TextureResourceの作成
 	ComPtr<ID3D12Resource> CreateTextureResource( const DirectX::TexMetadata& metadata);
 	// データを転送する
-	void UploadTextureData(
-		
-		ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
+	void UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 };
 
