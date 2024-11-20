@@ -102,6 +102,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Manager\CameraManager.cpp" />
+    <ClCompile Include="Game\3d\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
     <ClCompile Include="Engine\Input\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
@@ -147,6 +149,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Managers\ModelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Manager\CameraManager.h" />
+    <ClInclude Include="Game\3d\Camera.h" />
     <ClInclude Include="Engine\Core\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\Input\Input.h" />

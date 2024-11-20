@@ -10,6 +10,7 @@
 #include "Engine/Graphics/Light.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
 // Game
+#include "Game/3d/Camera.h"
 #include "Game/Data/PipelineStateObjectType.h"
 // c++
 #include <memory>
@@ -57,6 +58,8 @@ public: /// ===Setter=== ///
 	void SetScale(const Vector3& scale);
 	// カラー
 	void SetColor(const Vector4& color);
+	// カメラ
+	void SetCamera(Camera* camera);
 
 private: /// ===Variables(変数)=== ///
 
@@ -85,6 +88,9 @@ private: /// ===Variables(変数)=== ///
 	WorldTransform worldTransform_; // Transform(scale, rotate, transform)
 	WorldTransform cameraTransform_;
 	WorldTransform uvTransform_;
+
+	/// ===カメラ=== ///
+	Camera* camera_ = nullptr;
 
 	/// ===モデル情報=== ///
 	Vector3 position_ = { 0.0f, 0.0f, 0.0f };

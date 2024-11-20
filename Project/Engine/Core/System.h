@@ -98,8 +98,7 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<DXCommon> dXCommon_;       // DirectXCommon
 	static std::unique_ptr<Input> input_;             // Input
 
-	static std::unique_ptr<TextureManager> textureManager_;   // TextureManager
-	static std::unique_ptr<SRVManager> srvManager_;          // SRVManager
-
-	static std::unique_ptr<ModelManager> modelManager_;    // ModelManager
+	static std::unique_ptr<TextureManager> textureManager_; // TextureManager
+	static std::unique_ptr<SRVManager> srvManager_;         // SRVManager
+	static std::unique_ptr<ModelManager> modelManager_;     // ModelManager
 };

@@ -4,7 +4,9 @@
 // Game
 #include "Game/2d/Sprite.h"
 #include "Game/3d/Model.h"
+#include "Game/3d/Camera.h"
 #include "Game/Data/PipelineStateObjectType.h"
+#include "Game/Manager/CameraManager.h"
 // Math
 #include"Math/sMath.h"
 // c++
@@ -23,6 +25,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma region 初期化
 	// Systemの初期化
 	System::Initialize(kWindowTitle, 1280, 720);
+	
+	// CameraManagerのせいせい
+	//NOTE:後々しーんManager等に移動
+	std::unique_ptr<CameraManager> cameraManager_;
+	cameraManager_ = std::make_unique<CameraManager>();
+	cameraManager_->Initialize();
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
@@ -50,19 +58,42 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	const std::string& axisModel = "axis";
 	System::LoadModel(axisModel);
 
+	//Camera
+	std::shared_ptr<Camera> camera;
+	camera = std::make_shared<Camera>();
+	camera->Initialize();
+	camera->SetTranslate({ 0.0f, 0.0f, -10.0f });
+	camera->SetRotate({ 0.0f, 0.0f, 0.0f });
+
+	std::shared_ptr<Camera> camera2;
+	camera2 = std::make_shared<Camera>();
+	camera2->Initialize();
+	camera2->SetTranslate({ 0.0f, 0.0f, -50.0f });
+	camera2->SetRotate({ 0.0f, 0.0f, 0.0f });
+
+	cameraManager_->Add("Main", camera);
+	cameraManager_->Add("Main2", camera2);
+
 	// モデル
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	model->Initialize(axisModel);
+	model->SetCamera(cameraManager_->GetActiveCamera().get());
 	/* // モデルの使い方
 	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));
 	model->SetScale(Vector3(0.0f, 0.0f, 0.0f));
 	model->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+	model->SetCamera(cameraManager_->GetActiveCamera().get());
 	*/
 
-	Vector3 rotate = { 0.0f, 0.0f, 0.0f };
-	Vector2 size = { 100.0f, 100.0f };
+
+	Vector3 rotate = { 0.0f, 0.0f, 0.0f };       // model
+	bool isRotate = false;                       // model
+	Vector2 size = { 100.0f, 100.0f };           // sprite
+	Vector3 cameraPos = { 0.0f, 0.0f, -10.0f };  // Camera
+	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f }; // Canera
+	bool SetCamera = false;
 
 #pragma endregion
 
@@ -76,20 +107,42 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #ifdef _DEBUG
 		ImGui::Begin("model");
+		ImGui::Checkbox("RotateFlag", &isRotate);
 		ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
 		ImGui::End();
 
 		ImGui::Begin("sprite");
 		ImGui::DragFloat2("size", &size.x, 0.1f);
 		ImGui::End();
+
+		ImGui::Begin("Camera");
+		ImGui::Checkbox("Flag", &SetCamera);
+		ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
+		ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.1f);
+		ImGui::End();
 #endif // _DEBUG
-		
-		rotate.y += 0.1f;
-		rotate.x += 0.1f;
-		rotate.z -= 0.1f;
+
+		if (SetCamera) {
+			cameraManager_->SetActiveCamera("Main");
+		} else {
+			cameraManager_->SetActiveCamera("Main2");
+		}
+
+		if (isRotate) {
+			rotate.y += 0.1f;
+			rotate.x += 0.1f;
+			rotate.z -= 0.1f;
+		}
 
 		model->SetRotate(rotate);
+		model->SetCamera(cameraManager_->GetActiveCamera().get());
+
 		sprite->SetSize(size);
+
+		camera->SetRotate(cameraRotate);
+		camera->SetTranslate(cameraPos);
+
+		cameraManager_->UpdateAllCameras();
 
 		/* ////////////////////////////
 				　　描画の処理
