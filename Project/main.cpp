@@ -78,7 +78,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	model->Initialize(axisModel);
-	model->SetCamera(cameraManager_->GetActiveCamera().get());
+
 	/* // モデルの使い方
 	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));
@@ -86,7 +86,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	model->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	model->SetCamera(cameraManager_->GetActiveCamera().get());
 	*/
-
 
 	Vector3 rotate = { 0.0f, 0.0f, 0.0f };       // model
 	bool isRotate = false;                       // model

@@ -21,7 +21,7 @@ GameScene::~GameScene() {}
 */ ////////////////////////////////////////////////////////////
 void GameScene::Initialize() {
 	/// ===デフォルトカメラの初期化=== ///
-	//NOTE:後々Isceneに移行
+	//NOTE:後々ISceneに移行
 	defaultCamera_ = std::make_unique<Camera>();
 	defaultCamera_->Initialize();
 	defaultCamera_->SetTranslate({ 0.0f, 0.0f, -10.0f });
