@@ -24,6 +24,7 @@ class Input;
 class TextureManager;
 class SRVManager;
 class ModelManager;
+class ImGuiManager;
 
 ///=====================================================///
 /// システム
@@ -48,10 +49,6 @@ public:/// ===開発者用関数(システム)=== ///
 	static void EndFrame();
 	// Windowsのメッセージを処理
 	static int ProcessMessage();
-	// ImGuiの開始処理
-	static void BeginImGui();
-	// ImGuiの終了処理
-	static void EndImGui();
 
 public:/// ===開発者用関数(その他)=== ///
 
@@ -59,11 +56,11 @@ public:/// ===開発者用関数(その他)=== ///
 	/// テクスチャ関連
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
-	static uint32_t GetTextureIndexByFilePath(const std::string& filePath);
+	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath);
 	// GPUハンドルの取得
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(uint32_t textureIndex);
+	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(const std::string& filePath);
 	// メタデータの取得
-	static const DirectX::TexMetadata& GetMetaData(uint32_t textureIndex);
+	static const DirectX::TexMetadata& GetMetaData(const std::string& filePath);
 
 	///-------------------------------------------/// 
 	/// モデル関連
@@ -101,4 +98,5 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<TextureManager> textureManager_; // TextureManager
 	static std::unique_ptr<SRVManager> srvManager_;         // SRVManager
 	static std::unique_ptr<ModelManager> modelManager_;     // ModelManager
+	static std::unique_ptr<ImGuiManager> imGuiManager_;     // ImGuiManager
 };

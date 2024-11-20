@@ -51,9 +51,9 @@ void Sprite::SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorP
 void Sprite::SetFlipX(const bool& flip) { isFlipX_ = flip; }
 void Sprite::SetFlipY(const bool& flip) { isFlipY_ = flip; }
 // テクスチャ
-void Sprite::SetTexture(std::string textureFilePath) {
-	textureIndex = System::GetTextureIndexByFilePath(textureFilePath);
-	AdjustTextureSize();
+void Sprite::SetTexture(const std::string textureFilePath) {
+	filePath_ = textureFilePath;
+	AdjustTextureSize(textureFilePath);
 	isLoadTexture_ = true;
 }
 // テクスチャ左上座標
@@ -119,9 +119,6 @@ void Sprite::Initialize(BlendMode mode) {
 
 	/// ===WorldTransformの設定=== ///
 	worldTransform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
-
-	/// ===読み込んだテクスチャのサイズ道理にする=== ///
-	AdjustTextureSize();
 }
 
 
@@ -157,8 +154,6 @@ void Sprite::Draw() {
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
 	pipelineCommon_->SetPSO(commandList);
-	// プリミティブトポロジーをセット
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// IndexBufferViewの設定
@@ -169,7 +164,7 @@ void Sprite::Draw() {
 	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 	// テクスチャの設定
 	if (isLoadTexture_) {
-		commandList->SetGraphicsRootDescriptorTable(2, System::GetSRVHandleGPU(textureIndex));
+		System::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
 	}
 	// 描画(ドローコール)
 	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -305,7 +300,7 @@ void Sprite::TransformDataWrite() {
 /// テクスチャ範囲指定
 ///-------------------------------------------///
 void Sprite::SpecifyRange() {
-	const DirectX::TexMetadata& metadata =System::GetMetaData(textureIndex);
+	const DirectX::TexMetadata& metadata =System::GetMetaData(filePath_);
 	float tex_left = textureLeftTop_.x / metadata.width;
 	float tex_right = (textureLeftTop_.x + textureSize_.x) / metadata.width;
 	float tex_top = textureLeftTop_.y / metadata.height;
@@ -322,9 +317,9 @@ void Sprite::SpecifyRange() {
 ///-------------------------------------------/// 
 /// テクスチャサイズをイメージに合わせる
 ///-------------------------------------------///
-void Sprite::AdjustTextureSize() {
+void Sprite::AdjustTextureSize(const std::string& filePath) {
 	// テクスチャメタデータを取得
-	const DirectX::TexMetadata& metadata = System::GetMetaData(textureIndex);
+	const DirectX::TexMetadata& metadata = System::GetMetaData(filePath);
 
 	textureSize_.x = static_cast<float>(metadata.width);
 	textureSize_.y = static_cast<float>(metadata.height);

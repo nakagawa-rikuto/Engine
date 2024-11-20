@@ -64,7 +64,7 @@ public:/// ===Setter=== ///
 	void SetFlipX(const bool& flip);
 	void SetFlipY(const bool& flip);
 	// テクスチャ
-	void SetTexture(std::string textureFilePath);
+	void SetTexture(const std::string textureFilePath);
 	// テクスチャ左上座標
 	void SetTextureLeftTop(const Vector2& textureLeftTop);
 	// テクスチャ切り出しサイズ
@@ -95,7 +95,7 @@ private:/// ===Variables(変数)=== ///
 	WorldTransform worldTransform_; // Transform(scale, rotate, transform)
 
 	/// ===スプライト情報=== ///
-	uint32_t textureIndex = 0;                   // テクスチャ番号
+	std::string filePath_;                       // テクスチャファイルパス
 	Vector2 position_ = { 0.0f, 0.0f };          // 座標
 	float rotation_ = 0.0f;                      // 回転
 	Vector2 size_ = { 640.0f, 360.0f };          // サイズ
@@ -142,6 +142,6 @@ private:/// ===Functions(関数)=== ///
 	/// <summary>
 	/// テクスチャサイズをイメージに合わせる
 	/// </summary>
-	void AdjustTextureSize();
+	void AdjustTextureSize(const std::string& filePath);
 };
 

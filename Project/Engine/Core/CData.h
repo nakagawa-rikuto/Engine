@@ -81,7 +81,6 @@ struct WorldTransform {
 /// </summary>
 struct  MaterialData {
 	std::string textureFilePath;
-	uint32_t textureIndex;
 };
 
 /// <summary>

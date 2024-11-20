@@ -143,8 +143,6 @@ void Model::Draw() {
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
 	pipelineCommon_->SetPSO(commandList);
-	// プリミティブトポロジーをセット
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// Materialの設定
@@ -154,7 +152,7 @@ void Model::Draw() {
 	// Lightの設定
 	commandList->SetGraphicsRootConstantBufferView(3, light_->GetBuffer()->GetGPUVirtualAddress());
 	// テクスチャの設定
-	commandList->SetGraphicsRootDescriptorTable(2, System::GetSRVHandleGPU(modelData_.material.textureIndex));
+	System::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 }

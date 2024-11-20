@@ -4,6 +4,7 @@ C:\Users\k023g\Lessons\MyEngine\Engine\Project\Engine\Core\DXCommon.cpp;C:\Users
 C:\Users\k023g\Lessons\MyEngine\Engine\Project\Engine\Input\Input.cpp;C:\Users\k023g\Lessons\MyEngine\Engine\generated\obj\Engine\Input.obj
 C:\Users\k023g\Lessons\MyEngine\Engine\Project\Engine\Core\Logger.cpp;C:\Users\k023g\Lessons\MyEngine\Engine\generated\obj\Engine\Logger.obj
 C:\Users\k023g\Lessons\MyEngine\Engine\Project\Engine\3d\Material3D.cpp;C:\Users\k023g\Lessons\MyEngine\Engine\generated\obj\Engine\Material3D.obj
+C:\Users\k023g\Lessons\MyEngine\Engine\Project\Engine\Managers\ImGuiManager.cpp;C:\Users\k023g\Lessons\MyEngine\Engine\generated\obj\Engine\ImGuiManager.obj
 C:\Users\k023g\Lessons\MyEngine\Engine\Project\Math\Matrix3x3.cpp;C:\Users\k023g\Lessons\MyEngine\Engine\generated\obj\Engine\Matrix3x3.obj
 C:\Users\k023g\Lessons\MyEngine\Engine\Project\Math\Matrix4x4.cpp;C:\Users\k023g\Lessons\MyEngine\Engine\generated\obj\Engine\Matrix4x4.obj
 C:\Users\k023g\Lessons\MyEngine\Engine\Project\Math\MatrixMath.cpp;C:\Users\k023g\Lessons\MyEngine\Engine\generated\obj\Engine\MatrixMath.obj

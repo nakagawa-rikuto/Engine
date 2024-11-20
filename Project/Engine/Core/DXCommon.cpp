@@ -63,9 +63,6 @@ void DXCommon::Initialize(
 	// 深度バッファの生成
 	CreateDepthBuffer();
 
-	// シェーダリソースの生成
-	CreateShaderResource();
-
 	// フェンスの生成
 	CreateFence();
 
@@ -77,9 +74,6 @@ void DXCommon::Initialize(
 
 	// DXCの初期化
 	InitializeCompiler();
-
-	// ImGuiの初期化
-	InitializeImGui();
 }
 
 ///-------------------------------------------/// 
@@ -115,19 +109,16 @@ void DXCommon::PreDraw() {
 	// 描画先のRTVを設定する
 	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, &dsvHandle_);
 
-	// 描画先のRTVとDSVを設定する
-
 	// 全画面クリア
 	ClearRenderTarget();
 	ClearDepthBuffer();
 
-	// 描画用のDescriptorHeapの設定
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srvHeap_.Get() };
-	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
-
 	// コマンドを積む
 	commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
 	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorを設定
+
+	// プリミティブトポロジーをセット
+	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 ///-------------------------------------------/// 
@@ -135,12 +126,6 @@ void DXCommon::PreDraw() {
 ///-------------------------------------------///
 void DXCommon::PostDraw() {
 	HRESULT hr;
-
-	// ImGuiの内部コマンドを生成する
-	ImGui::Render();
-
-	// 実際のCommandListのImGuiの描画コマンドを積む
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_.Get());
 
 	// RenderTargetからPresentにする
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -195,9 +180,9 @@ void DXCommon::PostDraw() {
 ///-------------------------------------------/// 
 /// DescriptorHeapの生成
 ///-------------------------------------------///
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap() {return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kNumRTVDescriptor, false);}
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap() {return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, kNumDSVDescriptor, false);}
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap() {return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);}
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kNumRTVDescriptor, false); }
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, kNumDSVDescriptor, false); }
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true); }
 
 ///-------------------------------------------/// 
 /// DescriptorSizeの取得
@@ -222,30 +207,26 @@ void DXCommon::ClearRenderTarget() {
 /// 深度バッファのクリア
 ///-------------------------------------------///
 void DXCommon::ClearDepthBuffer() {
-
 	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 ///-------------------------------------------/// 
 /// 各でスクリプタハンドルの取得用関数
 ///-------------------------------------------///
-// SRVの指定番号のCPUでスクリプタハンドルを取得する
-D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetSRVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(srvHeap_, descriptorSizeSRV_, index); }
-
-// SRVの指定番号のGPUでスクリプタハンドルを取得する
-D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetSRVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(srvHeap_, descriptorSizeSRV_, index); }
-
 // RTVの指定番号のCPUでスクリプタハンドルを取得する
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetRTVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV_, index); }
-
 // RTVの指定番号のGPUでスクリプタハンドルを取得する
 D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetRTVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(rtvHeap_, descriptorSizeRTV_, index); }
-
 // DSVの指定番号のCPUでスクリプタハンドルを取得する
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetDSVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
-
 // DSVの指定番号のGPUでスクリプタハンドルを取得する
 D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetDSVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
+// バックバッファの横幅の取得
+int32_t DXCommon::GetBackBufferWidth() const { return backBufferWidth_; }
+// バックバッファの縦幅の取得
+int32_t DXCommon::GetBackBufferHeight() const { return backBufferHeight_; }
+// バックバッファの数を取得
+size_t DXCommon::GetBackBufferCount() const { return swapChainDesc_.BufferCount; }
 
 ///-------------------------------------------/// 
 /// デバッグレイヤー
@@ -490,7 +471,7 @@ void DXCommon::CreateFinalRenderTargets() {
 	// DescriptorSizeを取得,Heapの生成
 	rtvHeap_ = CreateRTVHeap();
 	descriptorSizeRTV_ = GetRTVDescriptorSize();
-	
+
 	// RTVの生成(レンダーターゲットビュー)
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー用
@@ -571,15 +552,6 @@ void DXCommon::CreateDepthBuffer() {
 }
 
 ///-------------------------------------------/// 
-/// シェーダーリソースの生成(SRV)
-///-------------------------------------------///
-void DXCommon::CreateShaderResource() {
-
-	srvHeap_ = CreateSRVHeap();
-	descriptorSizeSRV_ = GetSRVDescriptorSize();
-}
-
-///-------------------------------------------/// 
 /// フェンスの生成
 ///-------------------------------------------///
 void DXCommon::CreateFence() {
@@ -636,46 +608,6 @@ void DXCommon::CreateScissor(const int32_t kClientWindth, const int32_t kClientH
 }
 
 ///-------------------------------------------/// 
-/// ImGuiの初期化
-///-------------------------------------------///
-void DXCommon::InitializeImGui() {
-
-	IMGUI_CHECKVERSION(); //　バージョンチェック
-	ImGui::CreateContext(); // コンテキストの生成
-	ImGui::StyleColorsDark(); // スタイルの設定
-	ImGui_ImplWin32_Init(winApp_->GetHwnd()); // Win32用の初期化 
-	ImGui_ImplDX12_Init( // DirectX12用の初期化
-		device_.Get(),
-		swapChainDesc_.BufferCount,
-		rtvDesc_.Format,
-		srvHeap_.Get(),
-		srvHeap_->GetCPUDescriptorHandleForHeapStart(),
-		srvHeap_->GetGPUDescriptorHandleForHeapStart());
-}
-
-///-------------------------------------------/// 
-/// ImGuiの開始処理
-///-------------------------------------------///
-void DXCommon::BeginImGui() {
-	// フレームの先頭でImGuiに、ここからフレームが始まる旨を告げる
-	ImGui_ImplDX12_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の初期に置き換える
-	//ImGui::ShowDemoWindow();
-}
-
-///-------------------------------------------/// 
-/// ImGuiの終了処理
-///-------------------------------------------///
-void DXCommon::EndImGui() {
-	// ImGuiの終了処理.。
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-}
-
-///-------------------------------------------/// 
 /// FPS固定の初期化
 ///-------------------------------------------///
 void DXCommon::InitializeFixFPS() {
@@ -720,22 +652,16 @@ void DXCommon::UpdateFixFPS() {
 ///-------------------------------------------///
 // DXGFactoryの取得
 IDXGIFactory7* DXCommon::GetDXGFactory() const { return dxgiFactory_.Get(); }
-
 // デバイスの取得
 ID3D12Device* DXCommon::GetDevice() const { return device_.Get(); }
-
 // dxcUtilsの取得
 IDxcUtils* DXCommon::GetDxcUtils() const { return dxcUtils_.Get(); }
-
 //  dxcCompilerの取得
 IDxcCompiler3* DXCommon::GetDxcCompiler() const { return dxcCompiler_.Get(); }
-
 // IncludeHandlerの取得
 IDxcIncludeHandler* DXCommon::GetIncludeHandler() const { return includeHandler_.Get(); }
-
 // 描画コマンドリストの取得
 ID3D12GraphicsCommandList* DXCommon::GetCommandList() const { return commandList_.Get(); }
-
 // CPUのディスクリプターハンドルの取得 
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
 	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
@@ -746,7 +672,6 @@ D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
 
 	return handleCPU;
 }
-
 // GPUのディスクリプターハンドルの取得
 D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetGPUDescriptorHandle(
 	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
