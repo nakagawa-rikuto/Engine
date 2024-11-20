@@ -17,17 +17,11 @@ uint32_t TextureManager::kSRVIndexTop_ = 1;
 ///-------------------------------------------///
 // メタデータの取得
 const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& filePath) {
-	// 範囲外指定違反チェック
-	assert(textureIndex < textureDatas_.size());
-
 	TextureData& textureData = textureDatas_[filePath];
 	return textureData.metadata;
 }
 // GPUハンドルの取得
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSRVHandleGPU(const std::string& filePath) {
-	// 範囲外指定違反チェック
-	assert(textureIndex < textureDatas_.size());
-
 	TextureData& textureData = textureDatas_[filePath];
 	return textureData.srvHandleGPU;
 }
