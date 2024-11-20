@@ -1,4 +1,7 @@
 #pragma once
+/// ===Includ=== ///
+#include "Game/3d/Camera.h"
+#include <memory>
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -36,5 +39,9 @@ private: /* メンバ変数 */
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	
+	//NOTE:後々作るISceneにデフォルトカメラを入れる
+	std::unique_ptr<Camera> defaultCamera_;
+
 };
 

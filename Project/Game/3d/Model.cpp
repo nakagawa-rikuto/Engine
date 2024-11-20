@@ -45,6 +45,8 @@ void Model::SetRotate(const Vector3& rotate) { rotate_ = rotate; }
 void Model::SetScale(const Vector3& scale) { scale_ = scale; }
 // カラー
 void Model::SetColor(const Vector4& color) { color_ = color; }
+// カメラ
+void Model::SetCamera(Camera* camera) { camera_ = camera; }
 
 
 ///-------------------------------------------/// 
@@ -242,12 +244,19 @@ void Model::LightDataWrite() {
 ///-------------------------------------------///
 void Model::TransformDataWrite() {
 
+	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldViewProjectionMatrix;
+
 	/// ===Matrixの作成=== ///
 	// wvp
-	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	Matrix4x4 viewMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
-	Matrix4x4 wvpMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	if (camera_) {
+		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+	} else {
+		Matrix4x4 viewMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
+		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
+		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	}
 	// UV
 	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform_.scale);
 	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -255,8 +264,8 @@ void Model::TransformDataWrite() {
 
 	/// ===値の代入=== ///
 	// wvp
-	wvpMatrixData_->WVP = wvpMatrix;
-	wvpMatrixData_->World = MakeIdentity4x4();
+	wvpMatrixData_->WVP = worldViewProjectionMatrix;;
+	wvpMatrixData_->World = worldMatrix;
 	// uv
 	materialData_->uvTransform = uvTransformMatrixMultiply;
 }
