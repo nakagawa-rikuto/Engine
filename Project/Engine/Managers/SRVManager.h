@@ -17,6 +17,9 @@ class DXCommon;
 class SRVManager {
 public:
 
+	SRVManager();
+	~SRVManager();
+
 	/// <summary>
 	/// 初期化
 	/// </summary>

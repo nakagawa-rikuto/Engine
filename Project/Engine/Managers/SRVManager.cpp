@@ -6,6 +6,36 @@
 const uint32_t SRVManager::kMaxSRVCount_ = 512;
 
 ///-------------------------------------------/// 
+/// コンストラクタ、デストラクタ
+///-------------------------------------------///
+SRVManager::SRVManager() = default;
+SRVManager::~SRVManager(){}
+
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void SRVManager::SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex) {
+	dXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(RootParameterIndex, GetGPUDescriptorHandle(srvIndex));
+}
+
+
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+D3D12_CPU_DESCRIPTOR_HANDLE SRVManager::GetCPUDescriptorHandle(uint32_t index) {
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	handleCPU.ptr += (descriptorSize_ * index);
+	return handleCPU;
+}
+D3D12_GPU_DESCRIPTOR_HANDLE SRVManager::GetGPUDescriptorHandle(uint32_t index) {
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
+	handleGPU.ptr += (descriptorSize_ * index);
+	return handleGPU;
+}
+
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void SRVManager::Initialize(DXCommon* dxcommon) {
@@ -21,6 +51,7 @@ void SRVManager::Initialize(DXCommon* dxcommon) {
 
 }
 
+
 ///-------------------------------------------/// 
 /// 描画前処理
 ///-------------------------------------------///
@@ -31,11 +62,13 @@ void SRVManager::PreDraw() {
 	dXCommon_->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
+
 ///-------------------------------------------/// 
 /// 確保関数
 ///-------------------------------------------///
 uint32_t SRVManager::Allocate() {
 	/// ===上限に達していないかチェックしてassert=== ///
+	assert(useIndex > kMaxSRVCount_);
 	// return する番号をいったん記録しておく
 	int index = useIndex;
 	// 次回のために番号を1進める
@@ -44,9 +77,11 @@ uint32_t SRVManager::Allocate() {
 	return index;
 }
 
+
 ///-------------------------------------------/// 
-/// SRV生成（テクスチャ用）
+/// SRV生成（）
 ///-------------------------------------------///
+// テクスチャ用
 void SRVManager::CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT Format, UINT MipLevels) {
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -57,29 +92,7 @@ void SRVManager::CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
 
 	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
 }
+// Struct Buffer用
+void SRVManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride) {
 
-///-------------------------------------------/// 
-/// SRV生成（Struct Buffer用）
-///-------------------------------------------///
-void SRVManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride) {}
-
-///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-void SRVManager::SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex) {
-	dXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(RootParameterIndex, GetGPUDescriptorHandle(srvIndex));
-}
-
-///-------------------------------------------/// 
-/// Getter
-///-------------------------------------------///
-D3D12_CPU_DESCRIPTOR_HANDLE SRVManager::GetCPUDescriptorHandle(uint32_t index) {
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize_ * index);
-	return handleCPU;
-}
-D3D12_GPU_DESCRIPTOR_HANDLE SRVManager::GetGPUDescriptorHandle(uint32_t index) {
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize_ * index);
-	return handleGPU;
 }
