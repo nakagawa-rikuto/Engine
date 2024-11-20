@@ -42,7 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<Sprite> sprite;
 	sprite = std::make_unique<Sprite>();
 	sprite->Initialize();                              // BlendMode変更可　sprite->Initialize(BlendMode::kBlendModeAdd);  
-	sprite->SetTexture(uvTexture);                     // テクスチャの設定(これがないと描画できない)
+	sprite->SetTexture(monsterBall);                     // テクスチャの設定(これがないと描画できない)
 	/* // テクスチャの使い方
 	sprite->SetPosition(Vector2(0.0f, 0.0f));          // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                         // 回転の設定(初期値は0.0);

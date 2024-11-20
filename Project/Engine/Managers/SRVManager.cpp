@@ -77,8 +77,8 @@ uint32_t SRVManager::Allocate() {
 	int index = useIndex;
 	// 次回のために番号を1進める
 	useIndex++;
-	// 上で記録した番号をreturn
-	return index;
+	// 上で記録した番号をreturn(0番はImGuiだから+1)
+	return index + 1;
 }
 // 上限チャック
 bool SRVManager::AssertAllocate() { return useIndex < kMaxSRVCount_; }
