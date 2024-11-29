@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// InputLayoutを設定
 	/// </summary>
-	void Create(PipelinType Type);
+	void Create(PipelineType Type);
 
 	/// <summary>
 	/// インプットレイアウトの取得

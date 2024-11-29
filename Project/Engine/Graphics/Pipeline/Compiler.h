@@ -30,7 +30,7 @@ public:
 	/// <summary>
 	/// shaderをコンパイルする
 	/// </summary>
-	void Initialize(DXCommon* dxCommon, PipelinType Type);
+	void Initialize(DXCommon* dxCommon, PipelineType Type);
 
 	/// <summary>
 	/// ObjectVertexShaderBlobの取得

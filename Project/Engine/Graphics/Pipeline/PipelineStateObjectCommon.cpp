@@ -25,7 +25,7 @@ PipelineStateObjectCommon::~PipelineStateObjectCommon() {
 ///-------------------------------------------/// 
 /// PSOの作成
 ///-------------------------------------------///
-void PipelineStateObjectCommon::Create(PipelinType Type, BlendMode Mode) {
+void PipelineStateObjectCommon::Create(PipelineType Type, BlendMode Mode) {
 
 	DXCommon* dxCommon = System::GetDXCommon();
 
@@ -61,6 +61,10 @@ void PipelineStateObjectCommon::Create(PipelinType Type, BlendMode Mode) {
 /// パイプラインの設定
 ///-------------------------------------------///
 void PipelineStateObjectCommon::SetPSO(ID3D12GraphicsCommandList* commandList) {
+
+	// assertチェック
+	assert(rootSignature_);
+	assert(graphicsPipelineState_);
 
 	// RootSignatureの設定
 	commandList->SetGraphicsRootSignature(rootSignature_->GetRootSignature());

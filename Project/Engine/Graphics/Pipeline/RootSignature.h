@@ -24,7 +24,7 @@ public:
 	/// <summary> 
 	/// ルートシグネイチャの生成
 	/// </summary>
-	void Create(DXCommon* dxCommon, PipelinType Type);
+	void Create(DXCommon* dxCommon, PipelineType Type);
 
 	/// <summary>
 	/// ルートシグネイチャの取得

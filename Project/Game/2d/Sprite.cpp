@@ -115,7 +115,7 @@ void Sprite::Initialize(BlendMode mode) {
 
 	/// ===Pipeline=== ///
 	pipelineCommon_ = std::make_unique<PipelineStateObjectCommon>(); 
-	pipelineCommon_->Create(PipelinType::Obj2D, mode);
+	pipelineCommon_->Create(PipelineType::Obj2D, mode);
 
 	/// ===WorldTransformの設定=== ///
 	worldTransform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };

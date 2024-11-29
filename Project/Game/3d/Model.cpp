@@ -102,7 +102,7 @@ void Model::Initialize(const std::string& filename, BlendMode mode) {
 
 	/// ===Pipeline=== ///
 	pipelineCommon_ = std::make_unique<PipelineStateObjectCommon>();
-	pipelineCommon_->Create(PipelinType::Obj3D, mode);
+	pipelineCommon_->Create(PipelineType::Obj3D, mode);
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };

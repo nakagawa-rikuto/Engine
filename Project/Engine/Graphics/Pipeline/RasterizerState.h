@@ -19,7 +19,7 @@ public:
 	/// ラスタライザステートの設定
 	/// </summary>
 	/// <returns></returns>
-	void Create(PipelinType Type);
+	void Create(PipelineType Type);
 
 	/// <summary>
 	/// ラスタライザステートの取得

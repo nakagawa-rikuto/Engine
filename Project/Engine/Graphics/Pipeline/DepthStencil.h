@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// デプスステンシルの生成
 	/// </summary>
-	void Create(PipelinType Type);
+	void Create(PipelineType Type);
 
 	/// <summary>
 	/// デプスステンシルの取得

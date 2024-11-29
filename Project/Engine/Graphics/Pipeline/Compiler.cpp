@@ -8,9 +8,9 @@
 ///-------------------------------------------/// 
 /// shaderをコンパイルする
 ///-------------------------------------------///
-void Compiler::Initialize(DXCommon* dxCommon, PipelinType Type) {
+void Compiler::Initialize(DXCommon* dxCommon, PipelineType Type) {
 
-	if (Type == PipelinType::Obj2D) {
+	if (Type == PipelineType::Obj2D) {
 
 		// ObjVS
 		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj2D.VS.hlsl", L"vs_6_0",
@@ -22,7 +22,7 @@ void Compiler::Initialize(DXCommon* dxCommon, PipelinType Type) {
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objPSBlob_ != nullptr);
 
-	} else if(Type == PipelinType::Obj3D){
+	} else if(Type == PipelineType::Obj3D){
 
 		// ObjVS
 		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj3D.VS.hlsl", L"vs_6_0",

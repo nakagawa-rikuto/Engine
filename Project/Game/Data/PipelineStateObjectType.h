@@ -5,12 +5,16 @@
 #include <array>
 
 ///-------------------------------------------/// 
-/// PipelinType
+/// PipelineType
 ///-------------------------------------------///
-enum PipelinType {
+enum PipelineType {
 	// 随時追加していく
+	// 2D
 	Obj2D,
+	// 3D
 	Obj3D,
+	// 総数(これは最後にしなければいけない)
+	CountOfPipelineType,
 };
 
 ///-------------------------------------------/// 
@@ -35,6 +39,16 @@ enum BlendMode {
 	//!< スクリーン
 	kBlendModeScreen,
 
-	// 利用しない
+	// 総数(これは最後にしなければいけない)
 	kCountOfBlendMode,
 };
+
+
+// 列挙型の全値を取得する関数
+constexpr std::array<PipelineType, static_cast<size_t>(PipelineType::CountOfPipelineType)> AllPipelineTypes() {
+	return { PipelineType::Obj2D, PipelineType::Obj3D};
+}        
+constexpr std::array<BlendMode, static_cast<size_t>(BlendMode::kCountOfBlendMode)> AllBlendModes() {
+	return { BlendMode::kBlendModeNone, BlendMode::KBlendModeNormal, BlendMode::kBlendModeAdd,
+			 BlendMode::kBlendModeSubtract, BlendMode::kBlendModeMultily, BlendMode::kBlendModeScreen };
+}

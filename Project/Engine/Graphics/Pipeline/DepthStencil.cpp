@@ -3,9 +3,9 @@
 ///-------------------------------------------/// 
 /// デプスステンシルの生成
 ///-------------------------------------------///
-void DepthStencil::Create(PipelinType Type) {
+void DepthStencil::Create(PipelineType Type) {
 	// DepthStencil
-	if (Type == PipelinType::Obj2D) {
+	if (Type == PipelineType::Obj2D) {
 
 		// Depthの機能を有効化
 		depthStencilDesc_.DepthEnable = true;
@@ -15,7 +15,7 @@ void DepthStencil::Create(PipelinType Type) {
 
 		// 比較関数はLessEqual。
 		depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	} else if (Type == PipelinType::Obj3D) {
+	} else if (Type == PipelineType::Obj3D) {
 
 		// Depthの機能を有効化
 		depthStencilDesc_.DepthEnable = true;

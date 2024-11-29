@@ -13,10 +13,10 @@
 /// <summary>
 /// ルートシグネイチャの生成
 /// </summary>
-void RootSignature::Create(DXCommon* dxCommon, PipelinType Type) {
+void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 	HRESULT hr;
 
-	if (Type == PipelinType::Obj2D) {
+	if (Type == PipelineType::Obj2D) {
 		// RootSignatureの生成
 		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 		descriptionRootSignature.Flags =
@@ -75,7 +75,7 @@ void RootSignature::Create(DXCommon* dxCommon, PipelinType Type) {
 		if (FAILED(hr)) {
 			assert(SUCCEEDED(hr));
 		}
-	} else if (Type == PipelinType::Obj3D) {
+	} else if (Type == PipelineType::Obj3D) {
 		// RootSignatureの生成
 		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 		descriptionRootSignature.Flags =
