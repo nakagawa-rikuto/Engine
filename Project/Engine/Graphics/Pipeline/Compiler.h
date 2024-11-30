@@ -4,7 +4,7 @@
 #include "Engine/Core/ComPtr.h"
 
 // PipelineType
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 // directX
 #include <d3d12.h>

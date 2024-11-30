@@ -96,17 +96,23 @@ void System::Update() {
 ///=====================================================///
 void System::Finalize() {
 
+	// ImGuiの終了処理
 	imGuiManager_->Finalize();
 
 	// ゲームウィンドウの破棄
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
+	// Engien
 	winApp_.reset();
 	dXCommon_.reset();
 	input_.reset();
-	textureManager_.reset();
+	// Manager
 	srvManager_.reset();
+	pipelineManager_.reset();
+	textureManager_.reset();
+	modelManager_.reset();
+	imGuiManager_.reset();
 
 	// COMの終了
 	CoUninitialize();

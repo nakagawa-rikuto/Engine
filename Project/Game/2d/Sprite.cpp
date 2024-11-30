@@ -17,7 +17,6 @@ Sprite::~Sprite() {
 	index_.reset();
 	material_.reset();
 	wvp_.reset();
-	pipelineCommon_.reset();
 }
 
 
@@ -65,7 +64,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Sprite::Initialize(BlendMode mode) {
+void Sprite::Initialize() {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = System::GetDXDevice();
@@ -113,10 +112,6 @@ void Sprite::Initialize(BlendMode mode) {
 	// Data書き込み(初期)
 	wvpMatrixData_->WVP = MakeIdentity4x4();
 
-	/// ===Pipeline=== ///
-	pipelineCommon_ = std::make_unique<PipelineStateObjectCommon>(); 
-	pipelineCommon_->Create(PipelineType::Obj2D, mode);
-
 	/// ===WorldTransformの設定=== ///
 	worldTransform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
 }
@@ -138,7 +133,7 @@ void Sprite::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void Sprite::Draw() {
+void Sprite::Draw(BlendMode mode) {
 
 	// Data書き込み(更新)
 	UpdateVertexDataWrite();
@@ -153,7 +148,7 @@ void Sprite::Draw() {
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	pipelineCommon_->SetPSO(commandList);
+	System::SetPSO(commandList, PipelineType::Obj2D, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// IndexBufferViewの設定

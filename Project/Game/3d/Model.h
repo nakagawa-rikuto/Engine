@@ -11,7 +11,7 @@
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
 // Game
 #include "Game/3d/Camera.h"
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // c++
 #include <memory>
 
@@ -27,7 +27,7 @@ public: /// ===基本的な関数=== ///
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const std::string& filename, BlendMode mode = BlendMode::KBlendModeNormal); // オブジェクトを読み込まない場合の初期化
+	void Initialize(const std::string& filename); // オブジェクトを読み込まない場合の初期化
 
 	/// <summary>
 	/// 更新
@@ -37,7 +37,7 @@ public: /// ===基本的な関数=== ///
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
 
 public: /// ===Getter=== ///
 	// 座標
@@ -68,9 +68,6 @@ private: /// ===Variables(変数)=== ///
 	std::unique_ptr<Material3D> material_;
 	std::unique_ptr<Transform3D> wvp_;
 	std::unique_ptr<Light> light_;
-
-	// パイプライン
-	std::unique_ptr<PipelineStateObjectCommon> pipelineCommon_;
 
 	// バッファリソース内のデータを指すポインタ
 	VertexData3D* vertexData_ = nullptr;

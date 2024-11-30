@@ -9,7 +9,7 @@
 #include "Engine/2d/Transform2D.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
 // Game
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 //c++
 #include <memory>
 
@@ -25,7 +25,7 @@ public: /// ===基本的な関数=== ///
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(BlendMode mode = BlendMode::KBlendModeNormal);
+	void Initialize();
 
 	/// <summary>
 	/// 更新
@@ -35,7 +35,7 @@ public: /// ===基本的な関数=== ///
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
 
 public:/// ===Getter=== ///
 
@@ -78,9 +78,6 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<Material2D> material_;
 	std::unique_ptr<Transform2D> wvp_;
 
-	// パイプライン
-	std::unique_ptr<PipelineStateObjectCommon> pipelineCommon_;
-
 	// バッファリソース内のデータを指すポインタ
 	VertexData2D* vertexData_ = nullptr;
 	uint32_t* indexData_ = nullptr;
@@ -109,39 +106,19 @@ private:/// ===Variables(変数)=== ///
 
 private:/// ===Functions(関数)=== ///
 
-	/// <summary>
-	/// Resourceの作成関数
-	/// </summary>
+	// Resourceの作成関数
 	ComPtr<ID3D12Resource> CreateResource(ID3D12Device* device, size_t sizeInBytes);
-
-	/// <summary>
-	/// VertexResourceへの書き込み
-	/// </summary>
+	// VertexResourceへの書き込み
 	void VertexDataWrite();
-
-	/// <summary>
-	/// UpdateVertexDataWrite
-	/// </summary>
+	// UpdateVertexDataWrite
 	void UpdateVertexDataWrite();
-
-	/// <summary>
-	/// IndexResourceへの書き込み
-	/// </summary>
+	// IndexResourceへの書き込み
 	void IndexDataWrite();
-
-	/// <summary>
-	/// Transform情報の書き込み
-	/// </summary>
+	// Transform情報の書き込み
 	void TransformDataWrite();
-
-	/// <summary>
-	/// テクスチャ範囲指定
-	/// </summary>
+	// テクスチャ範囲指定
 	void SpecifyRange();
-
-	/// <summary>
-	/// テクスチャサイズをイメージに合わせる
-	/// </summary>
+	// テクスチャサイズをイメージに合わせる
 	void AdjustTextureSize(const std::string& filePath);
 };
 

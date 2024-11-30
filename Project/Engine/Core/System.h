@@ -3,7 +3,7 @@
 // Engine
 #include "Engine/Core/CData.h"
 // Game 
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // DirectXTex
 #include "DirectXTex.h"
 // C++
