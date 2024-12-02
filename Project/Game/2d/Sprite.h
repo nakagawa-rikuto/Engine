@@ -78,6 +78,11 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<Material2D> material_;
 	std::unique_ptr<Transform2D> wvp_;
 
+	// サイズ
+	uint32_t vertexSize_ = 6;
+	uint32_t indexSize_ = 6;
+	uint32_t materialSize_ = 3;
+
 	// バッファリソース内のデータを指すポインタ
 	VertexData2D* vertexData_ = nullptr;
 	uint32_t* indexData_ = nullptr;
