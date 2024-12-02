@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // PipelineType
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 // directX
 #include <d3d12.h>
@@ -19,7 +19,7 @@ public:
 	/// ラスタライザステートの設定
 	/// </summary>
 	/// <returns></returns>
-	void Create(PipelinType Type);
+	void Create(PipelineType Type);
 
 	/// <summary>
 	/// ラスタライザステートの取得

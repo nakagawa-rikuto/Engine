@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // PipelineType
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 // directX
 #include <d3d12.h>
@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// デプスステンシルの生成
 	/// </summary>
-	void Create(PipelinType Type);
+	void Create(PipelineType Type);
 
 	/// <summary>
 	/// デプスステンシルの取得

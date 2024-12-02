@@ -3,9 +3,9 @@
 ///-------------------------------------------/// 
 /// InputLayoutの生成
 ///-------------------------------------------///
-void InputLayout::Create(PipelinType Type) {
+void InputLayout::Create(PipelineType Type) {
 
-	if (Type == PipelinType::Obj2D) {
+	if (Type == PipelineType::Obj2D) {
 
 		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
 		inputElementDescs[0].SemanticName = "POSITION";
@@ -21,7 +21,7 @@ void InputLayout::Create(PipelinType Type) {
 		inputLayoutDesc_.pInputElementDescs = inputElementDescs;
 		inputLayoutDesc_.NumElements = _countof(inputElementDescs);
 
-	} else if (Type == PipelinType::Obj3D) {
+	} else if (Type == PipelineType::Obj3D) {
 
 		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 		inputElementDescs[0].SemanticName = "POSITION";

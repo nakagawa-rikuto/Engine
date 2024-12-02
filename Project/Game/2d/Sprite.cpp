@@ -17,7 +17,6 @@ Sprite::~Sprite() {
 	index_.reset();
 	material_.reset();
 	wvp_.reset();
-	pipelineCommon_.reset();
 }
 
 
@@ -65,7 +64,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Sprite::Initialize(BlendMode mode) {
+void Sprite::Initialize() {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = System::GetDXDevice();
@@ -78,29 +77,29 @@ void Sprite::Initialize(BlendMode mode) {
 
 	/// ===vertex=== ///
 	// buffer
-	vertex_->Create(device, sizeof(VertexData2D) * 6);
+	vertex_->Create(device, sizeof(VertexData2D) * vertexSize_);
 	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	// view
 	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress(); // 先頭アドレスから使用
-	vertexBufferView_.SizeInBytes = sizeof(VertexData2D) * 6; // 使用するサイズ（頂点6つ分）
+	vertexBufferView_.SizeInBytes = sizeof(VertexData2D) * vertexSize_; // 使用するサイズ（頂点6つ分）
 	vertexBufferView_.StrideInBytes = sizeof(VertexData2D); // １頂点当たりのサイズ
 	// Data書き込み(初期)
 	VertexDataWrite();
 
 	/// ===index=== ///
 	// buffer
-	index_->Create(device, sizeof(uint32_t) * 6);
+	index_->Create(device, sizeof(uint32_t) * indexSize_);
 	index_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
 	// view
 	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress(); // 先頭のアドレスから使用
-	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6; // 使用するサイズ（６つ分）
+	indexBufferView_.SizeInBytes = sizeof(uint32_t) * indexSize_; // 使用するサイズ（６つ分）
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT; // uint32_tとする
 	// Data書き込み(初期)
 	IndexDataWrite();
 
 	/// ===マテリアル=== ///
 	// buffer
-	material_->Create(device, sizeof(MaterialData2D) * 3);
+	material_->Create(device, sizeof(MaterialData2D) * materialSize_);
 	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	// Data書き込み(初期)
 	materialData_->color = color_;
@@ -112,10 +111,6 @@ void Sprite::Initialize(BlendMode mode) {
 	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
 	// Data書き込み(初期)
 	wvpMatrixData_->WVP = MakeIdentity4x4();
-
-	/// ===Pipeline=== ///
-	pipelineCommon_ = std::make_unique<PipelineStateObjectCommon>(); 
-	pipelineCommon_->Create(PipelinType::Obj2D, mode);
 
 	/// ===WorldTransformの設定=== ///
 	worldTransform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
@@ -138,7 +133,7 @@ void Sprite::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void Sprite::Draw() {
+void Sprite::Draw(BlendMode mode) {
 
 	// Data書き込み(更新)
 	UpdateVertexDataWrite();
@@ -153,7 +148,7 @@ void Sprite::Draw() {
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	pipelineCommon_->SetPSO(commandList);
+	System::SetPSO(commandList, PipelineType::Obj2D, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// IndexBufferViewの設定

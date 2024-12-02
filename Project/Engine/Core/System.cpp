@@ -4,8 +4,9 @@
 #include "Engine/Core/DXCommon.h"
 #include "Engine/Input/Input.h"
 // Manager
-#include "Engine/Managers/TextureManager.h"
 #include "Engine/Managers/SRVManager.h"
+#include "Engine/Managers/PiplineManager.h"
+#include "Engine/Managers/TextureManager.h"
 #include "Engine/Managers/ModelManager.h"
 #include "Engine/Managers/ImGuiManager.h"
 // Math
@@ -17,8 +18,9 @@ std::unique_ptr<WinApp> System::winApp_ = nullptr;
 std::unique_ptr<DXCommon> System::dXCommon_ = nullptr;
 std::unique_ptr<Input> System::input_ = nullptr;
 // Manager
-std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
 std::unique_ptr<SRVManager> System::srvManager_ = nullptr;
+std::unique_ptr<PipelineManager> System::pipelineManager_ = nullptr;
+std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
 std::unique_ptr<ModelManager> System::modelManager_ = nullptr;
 std::unique_ptr<ImGuiManager> System::imGuiManager_ = nullptr;
 
@@ -63,6 +65,10 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	srvManager_ = std::make_unique<SRVManager>();
 	srvManager_->Initialize(dXCommon_.get());
 
+	// PipelineManagerの生成
+	pipelineManager_ = std::make_unique<PipelineManager>();
+	pipelineManager_->Initialize();
+
 	// TextureManagerの生成
 	textureManager_ = std::make_unique<TextureManager>();
 	textureManager_->Initialize(dXCommon_.get(), srvManager_.get());
@@ -90,17 +96,23 @@ void System::Update() {
 ///=====================================================///
 void System::Finalize() {
 
+	// ImGuiの終了処理
 	imGuiManager_->Finalize();
 
 	// ゲームウィンドウの破棄
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
+	// Engien
 	winApp_.reset();
 	dXCommon_.reset();
 	input_.reset();
-	textureManager_.reset();
+	// Manager
 	srvManager_.reset();
+	pipelineManager_.reset();
+	textureManager_.reset();
+	modelManager_.reset();
+	imGuiManager_.reset();
 
 	// COMの終了
 	CoUninitialize();
@@ -127,7 +139,12 @@ void System::EndFrame() {
 ///=====================================================///
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-#pragma region Sprite関連
+#pragma region PipelineManager関連
+// PSOの取得
+void System::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
+#pragma endregion
+
+#pragma region TextureManager関連
 // テクスチャ読み込み
 void System::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
 // SRVインデックス開始番号の取得
@@ -138,7 +155,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(const std::string& filePath)
 const DirectX::TexMetadata& System::GetMetaData(const std::string& filePath) {return textureManager_->GetMetaData(filePath);}
 #pragma endregion
 
-#pragma region Model関連
+#pragma region ModelManager関連
 // モデルの読み込み
 void System::LoadModel(const std::string& filename) { modelManager_->LoadModel("Resource", filename); }
 // モデルデータの取得

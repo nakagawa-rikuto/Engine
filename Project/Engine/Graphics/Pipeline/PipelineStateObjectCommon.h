@@ -9,7 +9,7 @@
 #include "Engine/Graphics/Pipeline/Compiler.h"
 
 // PipelineType
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 // directX
 #include <d3d12.h>
@@ -31,18 +31,14 @@ public:
 	PipelineStateObjectCommon();
 	~PipelineStateObjectCommon();
 
-	/// <summary>
-	/// PSOの生成
-	/// </summary>
-	void Create(PipelinType Type, BlendMode Mode);
-
-	/// <summary>
-	/// PSOのSetter
-	/// </summary>
+	// PSOの生成
+	void Create(PipelineType Type, BlendMode Mode);
+	// PSOのセット
 	void SetPSO(ID3D12GraphicsCommandList* commandList);
 
-private:
+private:/// ===変数=== ///
 
+	/// ===PSOに必要な情報=== ///
 	std::unique_ptr<RootSignature> rootSignature_;     // RootSignature
 	std::unique_ptr<InputLayout> inputLayout_;         // InputLayout
 	std::unique_ptr<BlendState> blendState_;           // BlendState
@@ -53,10 +49,8 @@ private:
 	ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_{};
 
-private:/// ====== ///
+private:/// ===関数=== ///
 
-	/// <summary>
-	/// PipelineStateの生成
-	/// </summary>
+	// PipelineStateの生成
 	void CreatePipelineState(DXCommon* dxCommon);
 };

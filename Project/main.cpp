@@ -5,7 +5,7 @@
 #include "Game/2d/Sprite.h"
 #include "Game/3d/Model.h"
 #include "Game/3d/Camera.h"
-#include "Game/Data/PipelineStateObjectType.h"
+//#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 #include "Game/Manager/CameraManager.h"
 // Math
 #include"Math/sMath.h"

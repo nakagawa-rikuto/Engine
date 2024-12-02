@@ -4,7 +4,7 @@
 // Engine
 #include "Engine/Core/ComPtr.h"
 // PipelineType
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 // c++
 #include <d3d12.h>
@@ -24,7 +24,7 @@ public:
 	/// <summary> 
 	/// ルートシグネイチャの生成
 	/// </summary>
-	void Create(DXCommon* dxCommon, PipelinType Type);
+	void Create(DXCommon* dxCommon, PipelineType Type);
 
 	/// <summary>
 	/// ルートシグネイチャの取得

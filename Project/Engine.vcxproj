@@ -150,6 +150,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Managers\SRVManager.cpp" />
     <ClCompile Include="Game\3d\Model.cpp" />
     <ClCompile Include="Engine\Managers\ModelManager.cpp" />
+    <ClCompile Include="Engine\Managers\PiplineManager.cpp" />
+    <ClCompile Include="Engine\3d\ModelCommon.cpp" />
+    <ClCompile Include="Engine\2d\SpriteCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Manager\CameraManager.h" />
@@ -171,7 +174,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Pipeline\Compiler.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\InputLayout.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectCommon.h" />
-    <ClInclude Include="Game\Data\PipelineStateObjectType.h" />
+    <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectType.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RasterizerState.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RootSignature.h" />
     <ClInclude Include="Engine\Core\System.h" />
@@ -201,6 +204,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\3d\Model.h" />
     <ClInclude Include="Engine\Managers\ModelManager.h" />
     <ClInclude Include="Engine\Graphics\Light.h" />
+    <ClInclude Include="Engine\Managers\PiplineManager.h" />
+    <ClInclude Include="Engine\3d\ModelCommon.h" />
+    <ClInclude Include="Engine\2d\SpriteCommon.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\imgui\imgui.vcxproj">

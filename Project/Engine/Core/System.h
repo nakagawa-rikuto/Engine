@@ -2,6 +2,8 @@
 /// ===include=== ///
 // Engine
 #include "Engine/Core/CData.h"
+// Game 
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // DirectXTex
 #include "DirectXTex.h"
 // C++
@@ -21,8 +23,9 @@ class WinApp;
 class DXCommon;
 class Input;
 // Manager
-class TextureManager;
 class SRVManager;
+class PipelineManager;
+class TextureManager;
 class ModelManager;
 class ImGuiManager;
 
@@ -51,6 +54,12 @@ public:/// ===開発者用関数(システム)=== ///
 	static int ProcessMessage();
 
 public:/// ===開発者用関数(その他)=== ///
+
+	///-------------------------------------------/// 
+	/// Pipeline
+	///-------------------------------------------///
+	// PSOをセット
+	static void SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode);
 
 	///-------------------------------------------/// 
 	/// テクスチャ関連
@@ -95,8 +104,9 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<DXCommon> dXCommon_;       // DirectXCommon
 	static std::unique_ptr<Input> input_;             // Input
 
-	static std::unique_ptr<TextureManager> textureManager_; // TextureManager
-	static std::unique_ptr<SRVManager> srvManager_;         // SRVManager
-	static std::unique_ptr<ModelManager> modelManager_;     // ModelManager
-	static std::unique_ptr<ImGuiManager> imGuiManager_;     // ImGuiManager
+	static std::unique_ptr<SRVManager> srvManager_;           // SRVManager
+	static std::unique_ptr<PipelineManager> pipelineManager_; // PipelineManager
+	static std::unique_ptr<TextureManager> textureManager_;   // TextureManager
+	static std::unique_ptr<ModelManager> modelManager_;       // ModelManager
+	static std::unique_ptr<ImGuiManager> imGuiManager_;       // ImGuiManager
 };

@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // PipelineType
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 // c++
 #include <d3d12.h>
@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// InputLayoutを設定
 	/// </summary>
-	void Create(PipelinType Type);
+	void Create(PipelineType Type);
 
 	/// <summary>
 	/// インプットレイアウトの取得

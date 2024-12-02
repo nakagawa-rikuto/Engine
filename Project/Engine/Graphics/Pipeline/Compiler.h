@@ -4,7 +4,7 @@
 #include "Engine/Core/ComPtr.h"
 
 // PipelineType
-#include "Game/Data/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 // directX
 #include <d3d12.h>
@@ -30,7 +30,7 @@ public:
 	/// <summary>
 	/// shaderをコンパイルする
 	/// </summary>
-	void Initialize(DXCommon* dxCommon, PipelinType Type);
+	void Initialize(DXCommon* dxCommon, PipelineType Type);
 
 	/// <summary>
 	/// ObjectVertexShaderBlobの取得

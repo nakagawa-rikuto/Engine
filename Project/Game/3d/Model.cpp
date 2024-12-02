@@ -18,7 +18,6 @@ Model::~Model() {
 	material_.reset();
 	wvp_.reset();
 	light_.reset();
-	pipelineCommon_.reset();
 }
 
 
@@ -53,7 +52,7 @@ void Model::SetCamera(Camera* camera) { camera_ = camera; }
 /// 初期化
 ///-------------------------------------------///
 // オブジェクトを読み込む場合
-void Model::Initialize(const std::string& filename, BlendMode mode) {
+void Model::Initialize(const std::string& filename) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = System::GetDXDevice();
@@ -100,19 +99,10 @@ void Model::Initialize(const std::string& filename, BlendMode mode) {
 	light_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
 	LightDataWrite();
 
-	/// ===Pipeline=== ///
-	pipelineCommon_ = std::make_unique<PipelineStateObjectCommon>();
-	pipelineCommon_->Create(PipelinType::Obj3D, mode);
-
 	/// ===worldTransform=== ///
 	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-
-	//// .objの参照しているテクスチャファイル読み込み
-	//System::LoadTexture(modelData_.material.textureFilePath); // いったんここでエラー
-	//// 読み込んだテクスチャの番号を取得
-	//modelData_.material.textureIndex = System::GetTextureIndexByFilePath(modelData_.material.textureFilePath);
 }
 
 
@@ -127,7 +117,7 @@ void Model::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void Model::Draw() {
+void Model::Draw(BlendMode mode) {
 
 	/// ===データの書き込み=== ///
 	worldTransform_.scale = scale_;
@@ -142,7 +132,7 @@ void Model::Draw() {
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	pipelineCommon_->SetPSO(commandList);
+	System::SetPSO(commandList, PipelineType::Obj3D, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// Materialの設定
