@@ -55,7 +55,6 @@ public:/// ===開発者用関数(システム)=== ///
 	static int ProcessMessage();
 
 public:/// ===開発者用関数(その他)=== ///
-
 	///-------------------------------------------/// 
 	/// Pipeline
 	///-------------------------------------------///
@@ -78,7 +77,6 @@ public:/// ===開発者用関数(その他)=== ///
 	static ModelData GetModelData(const std::string& filename);
 
 public:/// ===プログラマー用関数=== ///
-
 	///-------------------------------------------/// 
 	/// テクスチャ関連
 	///-------------------------------------------///
@@ -116,7 +114,6 @@ public:/// ===開発者用関数(Getter)=== ///
 	static ID3D12GraphicsCommandList* GetDXCommandList();
 
 private:/// ===Variables(変数)=== ///
-
 	static std::unique_ptr<WinApp> winApp_;           // WinApp
 	static std::unique_ptr<DXCommon> dXCommon_;       // DirectXCommon
 	static std::unique_ptr<Input> input_;             // Input
