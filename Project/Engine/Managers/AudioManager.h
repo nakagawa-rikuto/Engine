@@ -11,6 +11,7 @@
 #include <mfreadwrite.h>
 // c++
 #include <string>
+#include <unordered_map>
 // リンク
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "mfplat.lib")
@@ -30,10 +31,10 @@ struct SoundData {
 ///=====================================================/// 
 /// オーディオ
 ///=====================================================///
-class Audio {
+class AudioManager {
 public:
-	Audio() = default;
-	~Audio();
+	AudioManager() = default;
+	~AudioManager();
 
 	// 初期化
 	void Initialze();
@@ -41,18 +42,19 @@ public:
 public:/// ===関数=== ///
 
 	// 音声データの読み込み
-	SoundData LoadWave(const std::string& filename);
-	SoundData LoadMP3(const std::string& filename);
+	void Load(const std::string& key, const std::string& filename, bool isMP3);
 	// 音声データの解放
-	void SoundUnload(SoundData* soundData);
+	void Unload(const std::string& key);
+	// 音声データの一括解放
+	void UnloadAll();
 	// サウンドの再生
-	void SoundPlayWave(const SoundData& soundData, bool loop = false);
+	void Play(const std::string& key, bool loop = false);
 	// サウンドの停止
-	void SoundStopWave();
+	void Stop(const std::string& key);
 	// 音量の設定
-	void SetVolume(float volume);
+	void SetVolume(const std::string& key, float volume);
 	// 再生速度の設定
-	void setPitch(float pitch);
+	void setPitch(const std::string& key, float pitch);
 	// 音の反響効果
 	void InitializeReverbEffect();
 	// 
@@ -60,7 +62,17 @@ public:/// ===関数=== ///
 private: /// ===変数=== ///
 	ComPtr<IXAudio2> xAudio2_;
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
-	IXAudio2SourceVoice* sourceVoice_ = nullptr;
+	std::unordered_map<std::string, IXAudio2SourceVoice*> sourceVoices_;
+
+	// 音声データ
+	std::unordered_map<std::string, SoundData> soundDatas_;
+
+private: /// ===関数=== ///
+
+	// 音声データの読み込み
+	SoundData LoadWave(const std::string& filename);
+	SoundData LoadMP3(const std::string& filename);
+	void UnloadSoundData(SoundData& data);
 };
 
 

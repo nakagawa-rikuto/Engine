@@ -28,6 +28,7 @@ class PipelineManager;
 class TextureManager;
 class ModelManager;
 class ImGuiManager;
+class AudioManager;
 
 ///=====================================================///
 /// システム
@@ -90,6 +91,22 @@ public:/// ===プログラマー用関数=== ///
 	// モデルの読み込み
 	static void LoadModel(const std::string& filename);
 
+	///-------------------------------------------/// 
+	/// 音関連
+	///-------------------------------------------///
+	// 音声データの読み込み
+	static void LoadSound(const std::string& key, const std::string& filename, bool loadMP3);
+	// 音声データの解放
+	static void UnloadSound(const std::string& key);
+	// サウンドの再生
+	static void PlayeSound(const std::string& key, bool loop);
+	// サウンドの停止
+	static void StopSound(const std::string& key);
+	// 音量の設定
+	static void VolumeSound(const std::string& key, float volume);
+	// 再生速度の設定
+	static void PitchSound(const std::string& key, float pitch);
+
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
 	static DXCommon* GetDXCommon();
@@ -109,4 +126,5 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<TextureManager> textureManager_;   // TextureManager
 	static std::unique_ptr<ModelManager> modelManager_;       // ModelManager
 	static std::unique_ptr<ImGuiManager> imGuiManager_;       // ImGuiManager
+	static std::unique_ptr<AudioManager> audioManager_;       // AudioMangaer
 };

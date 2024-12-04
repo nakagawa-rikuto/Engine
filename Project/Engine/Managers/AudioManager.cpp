@@ -1,4 +1,4 @@
-#include "Audio.h"
+#include "AudioManager.h"
 
 #include <cassert>
 #include <fstream>
@@ -26,15 +26,14 @@ struct FormatChunk {
 ///-------------------------------------------/// 
 ///
 ///-------------------------------------------///
-Audio::~Audio() {
-	SoundStopWave();
+AudioManager::~AudioManager() {
 	xAudio2_.Reset();
 }
 
 ///-------------------------------------------/// 
 ///
 ///-------------------------------------------///
-void Audio::Initialze() {
+void AudioManager::Initialze() {
 	HRESULT result;
 
 	// XAudioエンジンのインスタンスを生成
@@ -49,7 +48,121 @@ void Audio::Initialze() {
 ///-------------------------------------------/// 
 /// 音声データの読み込み
 ///-------------------------------------------///
-SoundData Audio::LoadWave(const std::string& filename) {
+void AudioManager::Load(const std::string& key, const std::string& filename, bool isMP3) {
+	assert(soundDatas_.find(key) == soundDatas_.end());
+	if (isMP3) {
+		soundDatas_[key] = LoadMP3(filename);
+	} else {
+		soundDatas_[key] = LoadWave(filename);
+	}
+}
+
+
+
+///-------------------------------------------/// 
+/// 音声データの解放
+///-------------------------------------------///
+void AudioManager::Unload(const std::string& key) {
+	auto it = soundDatas_.find(key);
+	if (it != soundDatas_.end()) {
+		UnloadSoundData(it->second);
+		soundDatas_.erase(it);
+	}
+}
+
+///-------------------------------------------/// 
+/// 音声データの一括開放
+///-------------------------------------------///
+void AudioManager::UnloadAll() {
+	for (auto& pair : soundDatas_) {
+		UnloadSoundData(pair.second);
+	}
+	soundDatas_.clear(); // コンテナをクリア
+}
+
+///-------------------------------------------/// 
+/// サウンドの再生
+///-------------------------------------------///
+void AudioManager::Play(const std::string& key, bool loop) {
+	auto it = soundDatas_.find(key); // 探したkeyを代入
+	
+	assert(it != soundDatas_.end());
+	HRESULT result;
+
+	// 再生中の音声がある場合は処理をスキップ
+	if (sourceVoices_[key]) {
+		XAUDIO2_VOICE_STATE state;
+		sourceVoices_[key]->GetState(&state);
+		if (state.BuffersQueued > 0) {
+			return; // 既存の音声が再生中なので新しい音声を再生しない
+		}
+		// 既存のSourceVoiceを停止・破棄
+		sourceVoices_[key]->Stop(0);                // 再生を停止
+		sourceVoices_[key]->FlushSourceBuffers();  // バッファをクリア
+		sourceVoices_[key]->DestroyVoice();        // ボイスを解放
+		sourceVoices_[key] = nullptr;              // ポインタを無効化
+	}
+
+	// 波形フォーマットを基にSourceVoiceの生成
+	result = xAudio2_->CreateSourceVoice(&sourceVoices_[key], &it->second.wfex);
+	assert(SUCCEEDED(result));
+
+	// 再生する波形データの設定
+	XAUDIO2_BUFFER buf{};
+	buf.pAudioData = it->second.pBuffer;
+	buf.AudioBytes = it->second.bufferSize;
+	buf.Flags = XAUDIO2_END_OF_STREAM;
+
+	// ループ再生の設定
+	if (loop) {
+		buf.LoopCount = XAUDIO2_LOOP_INFINITE; // 無限ループ
+	} else {
+		buf.LoopCount = 0; // ループなし
+	}
+
+	// 波形データの再生
+	result = sourceVoices_[key]->SubmitSourceBuffer(&buf);
+	assert(SUCCEEDED(result));
+	result = sourceVoices_[key]->Start();
+	assert(SUCCEEDED(result));
+}
+
+///-------------------------------------------/// 
+/// サウンドの停止
+///-------------------------------------------///
+void AudioManager::Stop(const std::string& key) {
+
+	if (sourceVoices_[key]) {
+		sourceVoices_[key]->Stop();
+		sourceVoices_[key]->FlushSourceBuffers();
+		sourceVoices_[key]->DestroyVoice();        // ボイスを解放
+		sourceVoices_[key] = nullptr;              // ポインタを無効化
+	}
+}
+
+///-------------------------------------------/// 
+/// 音量の設定
+///-------------------------------------------///
+void AudioManager::SetVolume(const std::string& key, float volume) {
+	if (sourceVoices_[key]) {
+		sourceVoices_[key]->SetVolume(volume);
+	}
+}
+
+///-------------------------------------------/// 
+/// 再生速度の設定
+///-------------------------------------------///
+void AudioManager::setPitch(const std::string& key, float pitch) {
+	if (sourceVoices_[key]) {
+		sourceVoices_[key]->SetFrequencyRatio(pitch);
+	}
+}
+
+
+///-------------------------------------------/// 
+/// 音声データの読み込み(Wave)
+///-------------------------------------------///
+SoundData AudioManager::LoadWave(const std::string& filename) {
 
 	/// ===ファイルオープン=== ///
 	// ファイル入力ストリームのインスタンス
@@ -58,7 +171,7 @@ SoundData Audio::LoadWave(const std::string& filename) {
 	file.open(filename, std::ios_base::binary);
 	// ファイルオープン失敗を検出する
 	assert(file.is_open());
-	
+
 	/// ===.wavデータ読み込み=== ///
 	// RIFFヘッダーの読み込み
 	RiffHeader riff;
@@ -111,10 +224,10 @@ SoundData Audio::LoadWave(const std::string& filename) {
 }
 
 ///-------------------------------------------/// 
-/// MP3用のロード関数
+/// 音声データの読み込み(MP3)
 ///-------------------------------------------///
-SoundData Audio::LoadMP3(const std::string& filename) {
-	
+SoundData AudioManager::LoadMP3(const std::string& filename) {
+
 	HRESULT result;
 
 	// filename を wide文字列に変換
@@ -209,86 +322,10 @@ SoundData Audio::LoadMP3(const std::string& filename) {
 ///-------------------------------------------/// 
 /// 音声データの解放
 ///-------------------------------------------///
-void Audio::SoundUnload(SoundData* soundData) {
+void AudioManager::UnloadSoundData(SoundData& soundData) {
 	// バッファのメモリを解放
-	delete[] soundData->pBuffer;
-	soundData->pBuffer = 0;
-	soundData->bufferSize = 0;
-	soundData->wfex = {};
-}
-
-///-------------------------------------------/// 
-/// サウンドの再生
-///-------------------------------------------///
-void Audio::SoundPlayWave(const SoundData& soundData, bool loop) {
-	HRESULT result;
-
-	// 再生中の音声がある場合は処理をスキップ
-	if (sourceVoice_ != nullptr) {
-		XAUDIO2_VOICE_STATE state;
-		sourceVoice_->GetState(&state);
-		if (state.BuffersQueued > 0) {
-			return; // 既存の音声が再生中なので新しい音声を再生しない
-		}
-		// 既存のSourceVoiceを停止・破棄
-		sourceVoice_->Stop(0);                // 再生を停止
-		sourceVoice_->FlushSourceBuffers();  // バッファをクリア
-		sourceVoice_->DestroyVoice();        // ボイスを解放
-		sourceVoice_ = nullptr;              // ポインタを無効化
-	}
-
-	// 波形フォーマットを基にSourceVoiceの生成
-	result = xAudio2_->CreateSourceVoice(&sourceVoice_, &soundData.wfex);
-	assert(SUCCEEDED(result));
-
-	// 再生する波形データの設定
-	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundData.pBuffer;
-	buf.AudioBytes = soundData.bufferSize;
-	buf.Flags = XAUDIO2_END_OF_STREAM;
-
-	// ループ再生の設定
-	if (loop) {
-		//buf.LoopCount = XAUDIO2_LOOP_INFINITE; // 無限ループ
-		buf.LoopCount = 0; // ループなし
-	} else {
-		buf.LoopCount = 0; // ループなし
-	}
-
-	// 波形データの再生
-	result = sourceVoice_->SubmitSourceBuffer(&buf);
-	assert(SUCCEEDED(result));
-	result = sourceVoice_->Start();
-	assert(SUCCEEDED(result));
-}
-
-///-------------------------------------------/// 
-/// サウンドの停止
-///-------------------------------------------///
-void Audio::SoundStopWave() {
-
-	if (sourceVoice_) {
-		sourceVoice_->Stop();
-		sourceVoice_->FlushSourceBuffers();
-		sourceVoice_->DestroyVoice();        // ボイスを解放
-		sourceVoice_ = nullptr;              // ポインタを無効化
-	}
-}
-
-///-------------------------------------------/// 
-/// 音量の設定
-///-------------------------------------------///
-void Audio::SetVolume(float volume) {
-	if (sourceVoice_) {
-		sourceVoice_->SetVolume(volume);
-	}
-}
-
-///-------------------------------------------/// 
-/// 再生速度の設定
-///-------------------------------------------///
-void Audio::setPitch(float pitch) {
-	if (sourceVoice_) {
-		sourceVoice_->SetFrequencyRatio(pitch);
-	}
+	delete[] soundData.pBuffer;
+	soundData.pBuffer = 0;
+	soundData.bufferSize = 0;
+	soundData.wfex = {};
 }

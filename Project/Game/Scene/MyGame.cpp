@@ -29,10 +29,8 @@ void MyGame::Initialize(const wchar_t* title) {
 	cameraManager_ = std::make_unique<CameraManager>();
 	cameraManager_->Initialize();
 
-	audio_ = std::make_unique<Audio>();
-	audio_->Initialze();
-	soundData = audio_->LoadWave("./Resource/BGM/fanfare.wav");
-	soundData2 = audio_->LoadMP3("./Resource/BGM/clear.mp3");
+	System::LoadSound("fanfare", "./Resource/BGM/fanfare.wav", false);
+	System::LoadSound("clear", "./Resource/BGM/clear.mp3", true);
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
@@ -86,14 +84,13 @@ void MyGame::Initialize(const wchar_t* title) {
 	model->SetCamera(cameraManager_->GetActiveCamera().get());
 	*/
 
-	audio_->SoundPlayWave(soundData);
+	//System::PlayeSound("clear", false);
 }
  
 ///-------------------------------------------/// 
 /// 終了処理
 ///-------------------------------------------///
 void MyGame::Finalize() {
-	audio_->SoundUnload(&soundData);
 	// Systemの終了処理
 	System::Finalize();
 	// 基底クラスの終了処理
@@ -124,13 +121,26 @@ void MyGame::Update() {
 	ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
 	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.1f);
 	ImGui::End();
+
+	ImGui::Begin("Audio");
+	ImGui::Checkbox("play", &playAudio);
+	ImGui::DragFloat("Volume", &volume);
+	ImGui::DragFloat("Ptich", &pitch);
+	ImGui::End();
 #endif // _DEBUG
 
 	if (SetCamera) {
 		cameraManager_->SetActiveCamera("Main");
-		audio_->SoundStopWave();
 	} else {
 		cameraManager_->SetActiveCamera("Main2");
+	}
+
+	if (playAudio) {
+		System::PlayeSound("clear", false);
+		System::VolumeSound("clear", volume);
+		System::PitchSound("clear", pitch);
+	} else {
+		System::StopSound("clear");
 	}
 
 	if (isRotate) {
