@@ -154,6 +154,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Managers\PiplineManager.cpp" />
     <ClCompile Include="Engine\3d\ModelCommon.cpp" />
     <ClCompile Include="Engine\2d\SpriteCommon.cpp" />
+    <ClCompile Include="MyGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Audio\Audio.h" />
@@ -209,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Managers\PiplineManager.h" />
     <ClInclude Include="Engine\3d\ModelCommon.h" />
     <ClInclude Include="Engine\2d\SpriteCommon.h" />
+    <ClInclude Include="MyGame.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\imgui\imgui.vcxproj">
