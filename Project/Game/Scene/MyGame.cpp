@@ -124,8 +124,8 @@ void MyGame::Update() {
 
 	ImGui::Begin("Audio");
 	ImGui::Checkbox("play", &playAudio);
-	ImGui::DragFloat("Volume", &volume);
-	ImGui::DragFloat("Ptich", &pitch);
+	ImGui::DragFloat("Volume", &volume, 0.01f);
+	ImGui::DragFloat("Ptich", &pitch, 0.01f);
 	ImGui::End();
 #endif // _DEBUG
 
