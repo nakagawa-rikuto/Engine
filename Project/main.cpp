@@ -5,7 +5,7 @@
 #include "Game/2d/Sprite.h"
 #include "Game/3d/Model.h"
 #include "Game/3d/Camera.h"
-//#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
+#include "Game/Audio/Audio.h"
 #include "Game/Manager/CameraManager.h"
 // Math
 #include"Math/sMath.h"
@@ -31,6 +31,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<CameraManager> cameraManager_;
 	cameraManager_ = std::make_unique<CameraManager>();
 	cameraManager_->Initialize();
+
+	std::unique_ptr<Audio> audio_;
+	audio_ = std::make_unique<Audio>();
+	audio_->Initialze();
+	SoundData soundData = audio_->LoadWave("./Resource/BGM/fanfare.wav");
+	SoundData soundData2 = audio_->LoadMP3("./Resource/BGM/clear.mp3");
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
@@ -94,6 +100,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f }; // Canera
 	bool SetCamera = false;
 
+	audio_->SoundPlayWave(soundData);
+
 #pragma endregion
 
 	// ウィンドウのxボタンが押されるまでループ
@@ -122,6 +130,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		if (SetCamera) {
 			cameraManager_->SetActiveCamera("Main");
+			audio_->SoundStopWave();
 		} else {
 			cameraManager_->SetActiveCamera("Main2");
 		}
@@ -158,6 +167,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		System::EndFrame();
 	}
 
+	audio_->SoundUnload(&soundData);
 	System::Finalize();
 
 	return 0;
