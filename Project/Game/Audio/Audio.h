@@ -9,6 +9,8 @@
 #include <mfobjects.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
+// c++
+#include <string>
 // リンク
 #pragma comment(lib, "xaudio2.lib")
 #pragma comment(lib, "mfplat.lib")
@@ -39,8 +41,8 @@ public:
 public:/// ===関数=== ///
 
 	// 音声データの読み込み
-	SoundData LoadWave(const char* filename);
-	SoundData LoadMP3(const char* filename);
+	SoundData LoadWave(const std::string& filename);
+	SoundData LoadMP3(const std::string& filename);
 	// 音声データの解放
 	void SoundUnload(SoundData* soundData);
 	// サウンドの再生

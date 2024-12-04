@@ -49,7 +49,7 @@ void Audio::Initialze() {
 ///-------------------------------------------/// 
 /// 音声データの読み込み
 ///-------------------------------------------///
-SoundData Audio::LoadWave(const char* filename) {
+SoundData Audio::LoadWave(const std::string& filename) {
 
 	/// ===ファイルオープン=== ///
 	// ファイル入力ストリームのインスタンス
@@ -113,14 +113,14 @@ SoundData Audio::LoadWave(const char* filename) {
 ///-------------------------------------------/// 
 /// MP3用のロード関数
 ///-------------------------------------------///
-SoundData Audio::LoadMP3(const char* filename) {
+SoundData Audio::LoadMP3(const std::string& filename) {
 	
 	HRESULT result;
 
 	// filename を wide文字列に変換
-	int wideSize = MultiByteToWideChar(CP_ACP, 0, filename, -1, nullptr, 0);
+	int wideSize = MultiByteToWideChar(CP_ACP, 0, filename.c_str(), -1, nullptr, 0);
 	std::wstring wideFilename(wideSize, 0);
-	MultiByteToWideChar(CP_ACP, 0, filename, -1, &wideFilename[0], wideSize);
+	MultiByteToWideChar(CP_ACP, 0, filename.c_str(), -1, &wideFilename[0], wideSize);
 
 	// Media Foundationの初期化
 	result = MFStartup(MF_VERSION);
