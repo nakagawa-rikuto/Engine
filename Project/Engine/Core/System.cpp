@@ -9,6 +9,7 @@
 #include "Engine/Managers/TextureManager.h"
 #include "Engine/Managers/ModelManager.h"
 #include "Engine/Managers/ImGuiManager.h"
+#include "Engine/Managers/AudioManager.h"
 // Math
 #include "Math/sMath.h"
 
@@ -23,6 +24,7 @@ std::unique_ptr<PipelineManager> System::pipelineManager_ = nullptr;
 std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
 std::unique_ptr<ModelManager> System::modelManager_ = nullptr;
 std::unique_ptr<ImGuiManager> System::imGuiManager_ = nullptr;
+std::unique_ptr<AudioManager> System::audioManager_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -80,6 +82,10 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 	// ImGuiManagerの生成
 	imGuiManager_ = std::make_unique<ImGuiManager>();
 	imGuiManager_->Initialize(winApp_.get(), dXCommon_.get(), srvManager_.get());
+
+	// Audiomanagerの生成
+	audioManager_ = std::make_unique<AudioManager>();
+	audioManager_->Initialze();
 }
 
 ///=====================================================/// 
@@ -95,28 +101,28 @@ void System::Update() {
 /// システム全体の終了
 ///=====================================================///
 void System::Finalize() {
-
+	// 読み込んだ音声データの一括解放
+	audioManager_->UnloadAll();
 	// ImGuiの終了処理
 	imGuiManager_->Finalize();
-
 	// ゲームウィンドウの破棄
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
-	// Engien
 	winApp_.reset();
 	dXCommon_.reset();
 	input_.reset();
-	// Manager
 	srvManager_.reset();
 	pipelineManager_.reset();
 	textureManager_.reset();
 	modelManager_.reset();
 	imGuiManager_.reset();
+	audioManager_.reset();
 
 	// COMの終了
 	CoUninitialize();
 }
+
 
 ///=====================================================/// 
 /// フレーム開始処理
@@ -126,6 +132,7 @@ void System::BeginFrame() {
 	imGuiManager_->Draw();
 }
 
+
 ///=====================================================/// 
 /// フレーム終了処理
 ///=====================================================///
@@ -134,40 +141,67 @@ void System::EndFrame() {
 	dXCommon_->PostDraw();
 }
 
+
 ///=====================================================/// 
 /// Windowsのメッセージを処理する
 ///=====================================================///
 int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-#pragma region PipelineManager関連
+
+///-------------------------------------------/// 
+/// 開発者用関数
+///-------------------------------------------///
+#pragma region Pipeline関連
 // PSOの取得
 void System::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
 #pragma endregion
-
-#pragma region TextureManager関連
-// テクスチャ読み込み
-void System::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
+#pragma region Texture関連
 // SRVインデックス開始番号の取得
 void System::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, filePath); }
 // GPUハンドルの取得
-D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(const std::string& filePath) {return textureManager_->GetSRVHandleGPU(filePath);}
+D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(const std::string& filePath) { return textureManager_->GetSRVHandleGPU(filePath); }
 // メタデータの取得
-const DirectX::TexMetadata& System::GetMetaData(const std::string& filePath) {return textureManager_->GetMetaData(filePath);}
+const DirectX::TexMetadata& System::GetMetaData(const std::string& filePath) { return textureManager_->GetMetaData(filePath); }
 #pragma endregion
 
-#pragma region ModelManager関連
+
+///-------------------------------------------/// 
+/// プログラマー用関数
+///-------------------------------------------///
+#pragma region Texture関連
+// テクスチャ読み込み
+void System::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
+#pragma endregion
+#pragma region Model関連
 // モデルの読み込み
 void System::LoadModel(const std::string& filename) { modelManager_->LoadModel("Resource", filename); }
 // モデルデータの取得
 ModelData System::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
 #pragma endregion
+#pragma region Audio関連
+// 音声データの読み込み
+void System::LoadSound(const std::string& key, const std::string& filename, bool loadMP3) { return audioManager_->Load(key, filename, loadMP3); }
+// 音声データの解放
+void System::UnloadSound(const std::string& key) { return audioManager_->Unload(key); }
+// 音声データの再生
+void System::PlayeSound(const std::string& key, bool loop) { return audioManager_->Play(key, loop); }
+// 音声データの停止
+void System::StopSound(const std::string& key) { return audioManager_->Stop(key); }
+// 音声データの音量設定
+void System::VolumeSound(const std::string& key, float volume) { return audioManager_->SetVolume(key, volume); }
+// 音声データの再生速度設定
+void System::PitchSound(const std::string& key, float pitch) { return audioManager_->setPitch(key, pitch); }
+#pragma endregion
+
 
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
+#pragma region 開発者用
 // DXCommon
 DXCommon* System::GetDXCommon() { return dXCommon_.get(); }
 // device
 ID3D12Device* System::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList
 ID3D12GraphicsCommandList* System::GetDXCommandList() { return dXCommon_->GetCommandList(); }
+#pragma endregion

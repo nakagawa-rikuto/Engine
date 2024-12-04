@@ -105,7 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Scene\Framework.cpp" />
-    <ClCompile Include="Game\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Managers\AudioManager.cpp" />
     <ClCompile Include="Game\Manager\CameraManager.cpp" />
     <ClCompile Include="Game\3d\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
@@ -159,7 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Scene\Framework.h" />
-    <ClInclude Include="Game\Audio\Audio.h" />
+    <ClInclude Include="Engine\Managers\AudioManager.h" />
     <ClInclude Include="Game\Manager\CameraManager.h" />
     <ClInclude Include="Game\3d\Camera.h" />
     <ClInclude Include="Engine\Core\CData.h" />
