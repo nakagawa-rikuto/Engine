@@ -132,6 +132,7 @@ void SceneManager::SceneObservation() {
 		}
 		ImGui::EndCombo();
 	}
+	ImGui::End();
 #endif // DEBUGv
 }
 

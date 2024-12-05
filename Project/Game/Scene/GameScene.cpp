@@ -10,6 +10,8 @@ GameScene::~GameScene() {
 	camera_.reset();
 	camera2_.reset();
 	model_.reset();
+	System::UnloadSound("fanfare");
+	System::UnloadSound("clear");
 }
 
 ///-------------------------------------------/// 
