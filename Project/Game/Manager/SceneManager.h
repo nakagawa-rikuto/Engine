@@ -27,9 +27,7 @@ public:/// ===基本的な関数=== ///
 
 public:/// ===シーン処理=== ///
 
-	/// <summary>
-	/// シーンの種類
-	/// </summary>
+	// シーンの種類
 	enum SceneType {
 		kDebug,
 		kTitle,
@@ -41,8 +39,6 @@ public:/// ===シーン処理=== ///
 
 	// シーンの変更
 	void ChangeScene(SceneType sceneType);
-	// シーンの生成
-	std::unique_ptr<IScene> CreateScene(SceneType sceneType);
 	// シーン監視
 	void SceneObservation();
 	// レベル番号の設定
@@ -53,9 +49,14 @@ public:/// ===シーン処理=== ///
 private:
 
 	// 現在のシーン
-	std::unique_ptr<IScene> currentScene_;
+	SceneType currentSceneType_ = kTitle;  // 初期のシーン
+	std::unique_ptr<IScene> currentScene_; // 現在のシーン
 
 	// 選択されたレベル番号を保持する
 	int selectLevel_ = 1;
+
+private:
+	// シーンの生成
+	std::unique_ptr<IScene> CreateScene(SceneType sceneType);
 };
 

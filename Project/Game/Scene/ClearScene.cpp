@@ -21,7 +21,7 @@ void ClearScene::Initialize() {
 void ClearScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef _DEBUG
-	ImGui::Begin("TitleScene");
+	ImGui::Begin("ClearScene");
 	ImGui::End();
 #endif // DEBUG
 }

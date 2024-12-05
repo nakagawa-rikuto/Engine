@@ -1,8 +1,8 @@
 #include "SceneManager.h"
-
+// c++
 #include <string>
 #include <cassert>
-
+// 各シーン
 #include "Game/Scene/TitleScene.h"
 #include "Game/Scene/SelectScene.h"
 #include "Game/Scene/GameScene.h"
@@ -57,41 +57,15 @@ void SceneManager::Draw() {
 /// シーン変更
 ///-------------------------------------------///
 void SceneManager::ChangeScene(SceneType sceneType) {
+	// 現在のシーンを更新
+	currentSceneType_ = sceneType;
 	// 新しいシーンを生成
-	currentScene_ = CreateScene(sceneType);
+	currentScene_ = CreateScene(currentSceneType_);
 	// 新しいシーンにSceneManagerをセット
 	if (currentScene_) {
 		currentScene_->SetSceneManager(this);
 	}
 	Initialize();
-}
-
-///-------------------------------------------/// 
-/// シーン生成
-///-------------------------------------------///
-std::unique_ptr<IScene> SceneManager::CreateScene(SceneType sceneType) {
-	if (currentScene_) {currentScene_.reset();}
-	/// ===シーンの判断=== ///
-	switch (sceneType) {
-		// タイトルシーン
-	case SceneManager::kTitle:
-		return std::make_unique<TitleScene>();
-		// セレクトシーン
-	case SceneManager::kSelect:
-		return std::make_unique<SelectScene>();
-		// ゲームシーン
-	case SceneManager::kGame:
-		return std::make_unique<GameScene>();
-		// クリアシーン
-	case SceneManager::kClear:
-		return std::make_unique<ClearScene>();
-		// ゲームオーバー
-	case SceneManager::kGameOver:
-		return std::make_unique<GameOverScene>();
-		// 他の新タイプ
-	default:
-		return nullptr;
-	}
 }
 
 ///-------------------------------------------/// 
@@ -145,3 +119,32 @@ void SceneManager::SetSelectedLevel(int level) { selectLevel_ = level; }
 /// Getter
 ///-------------------------------------------///
 int SceneManager::GetSelectedLevel() const { return selectLevel_; }
+
+///-------------------------------------------/// 
+/// シーン生成
+///-------------------------------------------///
+std::unique_ptr<IScene> SceneManager::CreateScene(SceneType sceneType) {
+	if (currentScene_) { currentScene_.reset(); }
+	/// ===シーンの判断=== ///
+	switch (sceneType) {
+		// タイトルシーン
+	case SceneManager::kTitle:
+		return std::make_unique<TitleScene>();
+		// セレクトシーン
+	case SceneManager::kSelect:
+		return std::make_unique<SelectScene>();
+		// ゲームシーン
+	case SceneManager::kGame:
+		return std::make_unique<GameScene>();
+		// クリアシーン
+	case SceneManager::kClear:
+		return std::make_unique<ClearScene>();
+		// ゲームオーバー
+	case SceneManager::kGameOver:
+		return std::make_unique<GameOverScene>();
+		// 他の新タイプ
+	default:
+		return nullptr;
+	}
+}
+
