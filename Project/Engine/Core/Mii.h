@@ -33,11 +33,11 @@ class AudioManager;
 ///=====================================================///
 /// システム
 ///=====================================================///
-class System {
+class Mii {
 public:
 
-	System() = default;
-	~System() = default;
+	Mii() = default;
+	~Mii() = default;
 
 public:/// ===開発者用関数(システム)=== ///
 	

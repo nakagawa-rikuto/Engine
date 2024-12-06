@@ -1,6 +1,6 @@
 #include "Sprite.h"
 // Engine
-#include "Engine/Core/System.h"
+#include "Engine/Core/Mii.h"
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
 // Math
@@ -67,7 +67,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 void Sprite::Initialize() {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = System::GetDXDevice();
+	ID3D12Device* device = Mii::GetDXDevice();
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer2D>();
@@ -144,11 +144,11 @@ void Sprite::Draw(BlendMode mode) {
 	materialData_->color = color_;
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = System::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	System::SetPSO(commandList, PipelineType::Obj2D, mode);
+	Mii::SetPSO(commandList, PipelineType::Obj2D, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// IndexBufferViewの設定
@@ -159,7 +159,7 @@ void Sprite::Draw(BlendMode mode) {
 	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 	// テクスチャの設定
 	if (isLoadTexture_) {
-		System::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
+		Mii::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
 	}
 	// 描画(ドローコール)
 	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -295,7 +295,7 @@ void Sprite::TransformDataWrite() {
 /// テクスチャ範囲指定
 ///-------------------------------------------///
 void Sprite::SpecifyRange() {
-	const DirectX::TexMetadata& metadata =System::GetMetaData(filePath_);
+	const DirectX::TexMetadata& metadata =Mii::GetMetaData(filePath_);
 	float tex_left = textureLeftTop_.x / metadata.width;
 	float tex_right = (textureLeftTop_.x + textureSize_.x) / metadata.width;
 	float tex_top = textureLeftTop_.y / metadata.height;
@@ -314,7 +314,7 @@ void Sprite::SpecifyRange() {
 ///-------------------------------------------///
 void Sprite::AdjustTextureSize(const std::string& filePath) {
 	// テクスチャメタデータを取得
-	const DirectX::TexMetadata& metadata = System::GetMetaData(filePath);
+	const DirectX::TexMetadata& metadata = Mii::GetMetaData(filePath);
 
 	textureSize_.x = static_cast<float>(metadata.width);
 	textureSize_.y = static_cast<float>(metadata.height);

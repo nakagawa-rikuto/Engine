@@ -150,7 +150,7 @@
     <ClCompile Include="Engine\Managers\TextureManager.cpp">
       <Filter>ソース ファイル\engine\base\manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\System.cpp">
+    <ClCompile Include="Engine\Core\Mii.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Pipeline\BlendState.cpp">
@@ -261,6 +261,12 @@
     <ClCompile Include="Game\Scene\GameOverScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Scene\SceneFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -368,7 +374,7 @@
     <ClInclude Include="Engine\Core\StringUtility.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\System.h">
+    <ClInclude Include="Engine\Core\Mii.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Managers\TextureManager.h">
@@ -444,6 +450,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Game\Scene\GameOverScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Scene\AbstractSceneFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Scene\SceneFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

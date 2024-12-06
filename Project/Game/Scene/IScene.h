@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 #include "Game/Manager/CameraManager.h"
-#include "Engine/Core/System.h"
+#include "Engine/Core/Mii.h"
 
 /// ===前方宣言=== ///
 class SceneManager;

@@ -2,8 +2,7 @@
 /// ===Include=== ///
 // Engine
 #include "Engine/Scene/Framework.h"
-// Scene
-#include "Game/Scene/GameScene.h"
+// SceneManager
 #include "Game/Manager/SceneManager.h"
 
 ///=====================================================/// 
@@ -29,8 +28,6 @@ private:/// ====== ///
 	bool endRequst_ = false;
 
 	/// ===シーン=== ///
-	// ゲームシーン
-	std::unique_ptr<GameScene> scene_;
 	// シーンマネージャ
 	std::unique_ptr<SceneManager> sceneManager_;
 

@@ -1,6 +1,5 @@
 #include "SceneManager.h"
 // c++
-#include <string>
 #include <cassert>
 // 各シーン
 #include "Game/Scene/TitleScene.h"
@@ -56,11 +55,12 @@ void SceneManager::Draw() {
 ///-------------------------------------------/// 
 /// シーン変更
 ///-------------------------------------------///
-void SceneManager::ChangeScene(SceneType sceneType) {
+void SceneManager::ChangeScene(const std::string& sceneName) {
 	// 現在のシーンを更新
-	currentSceneType_ = sceneType;
+	currentSceneName_ = sceneName;
 	// 新しいシーンを生成
-	currentScene_ = CreateScene(currentSceneType_);
+	if (currentScene_) { currentScene_.reset(); }
+	currentScene_ = sceneFactory_->CreateScene(currentSceneName_);
 	// 新しいシーンにSceneManagerをセット
 	if (currentScene_) {
 		currentScene_->SetSceneManager(this);
@@ -85,24 +85,24 @@ void SceneManager::SceneObservation() {
 	/// ===シーン変更用のドロップダウンメニュー=== ///
 	if (ImGui::BeginCombo("Select Scene", "Change Scene")) {
 		///タイトルシーン
-		if (ImGui::Selectable("Title Scene", currentScene_ && dynamic_cast<TitleScene*>(currentScene_.get()))) {
-			ChangeScene(SceneType::kTitle);
+		if (ImGui::Selectable("Title Scene", currentSceneName_ == "Title")) {
+			ChangeScene("Title");
 		}
 		///セレクトシーン
-		if (ImGui::Selectable("Select Scene", currentScene_ && dynamic_cast<SelectScene*>(currentScene_.get()))) {
-			ChangeScene(SceneType::kSelect);
+		if (ImGui::Selectable("Select Scene", currentSceneName_ == "Select")) {
+			ChangeScene("Select");
 		}
 		///ゲームシーン
-		if (ImGui::Selectable("Game Scene", currentScene_ && dynamic_cast<GameScene*>(currentScene_.get()))) {
-			ChangeScene(SceneType::kGame);
+		if (ImGui::Selectable("Game Scene", currentSceneName_ == "Game")) {
+			ChangeScene("Game");
 		}
 		///クリアシーン
-		if (ImGui::Selectable("Clear Scene", currentScene_ && dynamic_cast<ClearScene*>(currentScene_.get()))) {
-			ChangeScene(SceneType::kClear);
+		if (ImGui::Selectable("Clear Scene", currentSceneName_ == "Clear")) {
+			ChangeScene("Clear");
 		}
 		///ゲームオーバー
-		if (ImGui::Selectable("GameOver Scene", currentScene_ && dynamic_cast<GameOverScene*>(currentScene_.get()))) {
-			ChangeScene(SceneType::kGameOver);
+		if (ImGui::Selectable("GameOver Scene", currentSceneName_ == "GameOver")) {
+			ChangeScene("GameOver");
 		}
 		ImGui::EndCombo();
 	}
@@ -114,37 +114,9 @@ void SceneManager::SceneObservation() {
 /// Setter
 ///-------------------------------------------///
 void SceneManager::SetSelectedLevel(int level) { selectLevel_ = level; }
+void SceneManager::SetSceneFactory(AbstractSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }
 
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
 int SceneManager::GetSelectedLevel() const { return selectLevel_; }
-
-///-------------------------------------------/// 
-/// シーン生成
-///-------------------------------------------///
-std::unique_ptr<IScene> SceneManager::CreateScene(SceneType sceneType) {
-	if (currentScene_) { currentScene_.reset(); }
-	/// ===シーンの判断=== ///
-	switch (sceneType) {
-		// タイトルシーン
-	case SceneManager::kTitle:
-		return std::make_unique<TitleScene>();
-		// セレクトシーン
-	case SceneManager::kSelect:
-		return std::make_unique<SelectScene>();
-		// ゲームシーン
-	case SceneManager::kGame:
-		return std::make_unique<GameScene>();
-		// クリアシーン
-	case SceneManager::kClear:
-		return std::make_unique<ClearScene>();
-		// ゲームオーバー
-	case SceneManager::kGameOver:
-		return std::make_unique<GameOverScene>();
-		// 他の新タイプ
-	default:
-		return nullptr;
-	}
-}
-

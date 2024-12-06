@@ -1,6 +1,6 @@
 #include "ModelManager.h"
 // Engine
-#include "Engine/Core/System.h"
+#include "Engine/Core/Mii.h"
 // c++
 #include <fstream>
 
@@ -27,7 +27,7 @@ void ModelManager::LoadModel(const std::string& directorPath, const std::string&
 	// テクスチャの読み込みとインデックス設定
 	if (!modelData.material.textureFilePath.empty()) { // 空でなければ
 		// TextureManager からテクスチャを読み込み、インデックスを取得
-		System::LoadTexture(modelData.material.textureFilePath);
+		Mii::LoadTexture(modelData.material.textureFilePath);
 	}
 
 	// モデルをMapコンテナに格納

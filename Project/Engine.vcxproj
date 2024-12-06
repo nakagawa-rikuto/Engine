@@ -104,6 +104,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="Game\Scene\ClearScene.cpp" />
     <ClCompile Include="Engine\Scene\Framework.cpp" />
     <ClCompile Include="Engine\Managers\AudioManager.cpp" />
@@ -129,7 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Pipeline\PipelineStateObjectCommon.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\RasterizerState.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\RootSignature.cpp" />
-    <ClCompile Include="Engine\Core\System.cpp" />
+    <ClCompile Include="Engine\Core\Mii.cpp" />
     <ClCompile Include="Engine\3d\Transform3D.cpp" />
     <ClCompile Include="Engine\Core\WinApp.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\DepthStencil.cpp" />
@@ -162,8 +163,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Manager\SceneManager.cpp" />
     <ClCompile Include="Game\Scene\SelectScene.cpp" />
     <ClCompile Include="Game\Scene\TitleScene.cpp" />
+    <ClCompile Include="Engine\Scene\SceneFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Game\Scene\ClearScene.h" />
     <ClInclude Include="Engine\Scene\Framework.h" />
     <ClInclude Include="Engine\Managers\AudioManager.h" />
@@ -191,7 +194,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectType.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RasterizerState.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RootSignature.h" />
-    <ClInclude Include="Engine\Core\System.h" />
+    <ClInclude Include="Engine\Core\Mii.h" />
     <ClInclude Include="Engine\3d\Transform3D.h" />
     <ClInclude Include="Engine\Core\WinApp.h" />
     <ClInclude Include="Engine\Core\ComPtr.h" />
@@ -225,6 +228,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Manager\SceneManager.h" />
     <ClInclude Include="Game\Scene\SelectScene.h" />
     <ClInclude Include="Game\Scene\TitleScene.h" />
+    <ClInclude Include="Engine\Scene\SceneFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\imgui\imgui.vcxproj">

@@ -10,8 +10,8 @@ GameScene::~GameScene() {
 	camera_.reset();
 	camera2_.reset();
 	model_.reset();
-	System::UnloadSound("fanfare");
-	System::UnloadSound("clear");
+	Mii::UnloadSound("fanfare");
+	Mii::UnloadSound("clear");
 }
 
 ///-------------------------------------------/// 
@@ -22,20 +22,20 @@ void GameScene::Initialize() {
 	IScene::Initialize();
 
 	// 音声データの読み込み
-	System::LoadSound("fanfare", "./Resource/BGM/fanfare.wav", false);
-	System::LoadSound("clear", "./Resource/BGM/clear.mp3", true);
+	Mii::LoadSound("fanfare", "./Resource/BGM/fanfare.wav", false);
+	Mii::LoadSound("clear", "./Resource/BGM/clear.mp3", true);
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
-	System::LoadTexture(uvTexture);
+	Mii::LoadTexture(uvTexture);
 	const std::string& monsterBall = "./Resource/monsterBall.png";
-	System::LoadTexture(monsterBall);
+	Mii::LoadTexture(monsterBall);
 
 	// モデルの読み込み
 	const std::string& planeModel = "plane";
-	System::LoadModel(planeModel);
+	Mii::LoadModel(planeModel);
 	const std::string& axisModel = "axis";
-	System::LoadModel(axisModel);
+	Mii::LoadModel(axisModel);
 
 	// スプライト
 	sprite_ = std::make_unique<Sprite>();
@@ -76,7 +76,7 @@ void GameScene::Initialize() {
 	cameraManager_->Add("Main", camera_);
 	cameraManager_->Add("Main2", camera2_);
 
-	//System::PlayeSound("clear", false);
+	//Mii::PlayeSound("clear", false);
 }
 
 ///-------------------------------------------/// 
@@ -119,11 +119,11 @@ void GameScene::Update() {
 	}
 
 	if (playAudio) {
-		System::PlayeSound("clear", false);
-		System::VolumeSound("clear", volume);
-		System::PitchSound("clear", pitch);
+		Mii::PlayeSound("clear", false);
+		Mii::VolumeSound("clear", volume);
+		Mii::PitchSound("clear", pitch);
 	} else {
-		System::StopSound("clear");
+		Mii::StopSound("clear");
 	}
 
 	if (isRotate) {

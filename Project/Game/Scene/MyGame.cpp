@@ -1,15 +1,6 @@
 #include "MyGame.h"
-// System
-#include "Engine/Core/System.h"
-// Math
-#include"Math/sMath.h"
-// c++
-#include <memory>
-#include <string>
-// ImGui
-#ifdef _DEBUG
-#include <imGui.h>
-#endif // _DEBUG
+// シーンファクトリー
+#include "Engine/Scene/SceneFactory.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -23,16 +14,13 @@ MyGame::~MyGame() {}
 void MyGame::Initialize(const wchar_t* title) {
 	// 基底クラスの初期化
 	Framework::Initialize(title);
-	// Systemの初期化
-	System::Initialize(title, 1280, 720);
 
-	// シーンの初期化
-	/*scene_ = std::make_unique<GameScene>();
-	scene_->Initialize();*/
-
+	// シーンファクトリーの生成
+	sceneFactory_ = std::make_unique<SceneFactory>();
 	// シーンマネージャの初期化
 	sceneManager_ = std::make_unique<SceneManager>();
-	sceneManager_->ChangeScene(SceneManager::kGame);
+	sceneManager_->SetSceneFactory(sceneFactory_.get());
+	sceneManager_->ChangeScene("Game");
 }
  
 ///-------------------------------------------/// 
@@ -40,10 +28,8 @@ void MyGame::Initialize(const wchar_t* title) {
 ///-------------------------------------------///
 void MyGame::Finalize() {
 	// シーンの解放処理
-	scene_.reset();
 	sceneManager_.reset();
-	// Systemの終了処理
-	System::Finalize();
+	sceneFactory_.reset();
 	// 基底クラスの終了処理
 	Framework::Finalize();
 }
@@ -54,10 +40,7 @@ void MyGame::Finalize() {
 void MyGame::Update() {
 	// 基底クラスの更新処理
 	Framework::Update();
-	// システムの更新処理
-	System::Update();
 	// シーンの更新
-	//scene_->Update();
 	sceneManager_->Update();
 }
 
@@ -65,11 +48,10 @@ void MyGame::Update() {
 /// 描画
 ///-------------------------------------------///
 void MyGame::Draw() {
-	// フレームの開始
-	System::BeginFrame();
+	// 描画前処理
+	Framework::PreDraw();
 	// シーンの描画
-	//scene_->Draw();
 	sceneManager_->Draw();
-	// フレームの終了
-	System::EndFrame();
+	// 描画後処理
+	Framework::PostDraw();
 }

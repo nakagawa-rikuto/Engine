@@ -2,8 +2,9 @@
 /// ===Include=== ///
 // c++
 #include <memory>
+#include <string>
 // Game
-#include "Game/Scene/IScene.h"
+#include "Engine/Scene/AbstractSceneFactory.h"
 // Imgui
 #ifdef _DEBUG
 #include <imgui.h>
@@ -27,36 +28,26 @@ public:/// ===基本的な関数=== ///
 
 public:/// ===シーン処理=== ///
 
-	// シーンの種類
-	enum SceneType {
-		kDebug,
-		kTitle,
-		kSelect,
-		kGame,
-		kClear,
-		kGameOver,
-	};
-
 	// シーンの変更
-	void ChangeScene(SceneType sceneType);
+	void ChangeScene(const std::string& sceneName);
 	// シーン監視
 	void SceneObservation();
 	// レベル番号の設定
 	void SetSelectedLevel(int level);
 	// 選択されたレベル番号の取得
 	int GetSelectedLevel() const;
+	// シーンファクトリーのSetter
+	void SetSceneFactory(AbstractSceneFactory* sceneFactory);
 
 private:
+	// シーンファクトリー
+	AbstractSceneFactory* sceneFactory_ = nullptr;
 
 	// 現在のシーン
-	SceneType currentSceneType_ = kTitle;  // 初期のシーン
+	std::string currentSceneName_ = "Title";  // 初期のシーン
 	std::unique_ptr<IScene> currentScene_; // 現在のシーン
 
 	// 選択されたレベル番号を保持する
 	int selectLevel_ = 1;
-
-private:
-	// シーンの生成
-	std::unique_ptr<IScene> CreateScene(SceneType sceneType);
 };
 
