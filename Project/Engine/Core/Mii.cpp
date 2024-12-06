@@ -1,4 +1,4 @@
-#include "System.h"
+#include "Mii.h"
 // Engine
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
@@ -15,16 +15,16 @@
 
 /// ===宣言=== ///
 // Engine
-std::unique_ptr<WinApp> System::winApp_ = nullptr;
-std::unique_ptr<DXCommon> System::dXCommon_ = nullptr;
-std::unique_ptr<Input> System::input_ = nullptr;
+std::unique_ptr<WinApp> Mii::winApp_ = nullptr;
+std::unique_ptr<DXCommon> Mii::dXCommon_ = nullptr;
+std::unique_ptr<Input> Mii::input_ = nullptr;
 // Manager
-std::unique_ptr<SRVManager> System::srvManager_ = nullptr;
-std::unique_ptr<PipelineManager> System::pipelineManager_ = nullptr;
-std::unique_ptr<TextureManager> System::textureManager_ = nullptr;
-std::unique_ptr<ModelManager> System::modelManager_ = nullptr;
-std::unique_ptr<ImGuiManager> System::imGuiManager_ = nullptr;
-std::unique_ptr<AudioManager> System::audioManager_ = nullptr;
+std::unique_ptr<SRVManager> Mii::srvManager_ = nullptr;
+std::unique_ptr<PipelineManager> Mii::pipelineManager_ = nullptr;
+std::unique_ptr<TextureManager> Mii::textureManager_ = nullptr;
+std::unique_ptr<ModelManager> Mii::modelManager_ = nullptr;
+std::unique_ptr<ImGuiManager> Mii::imGuiManager_ = nullptr;
+std::unique_ptr<AudioManager> Mii::audioManager_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -46,7 +46,7 @@ struct D3DResourceLeakChecker {
 ///=====================================================/// 
 /// システム全体の初期化
 ///=====================================================///
-void System::Initialize(const wchar_t* title, int width, int height) {
+void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// ReportLiveObjects
 	static D3DResourceLeakChecker leakCheck;
@@ -91,7 +91,7 @@ void System::Initialize(const wchar_t* title, int width, int height) {
 ///=====================================================/// 
 /// 更新
 ///=====================================================///
-void System::Update() {
+void Mii::Update() {
 
 	input_->Update();
 	imGuiManager_->Begin();
@@ -100,7 +100,7 @@ void System::Update() {
 ///=====================================================/// 
 /// システム全体の終了
 ///=====================================================///
-void System::Finalize() {
+void Mii::Finalize() {
 	// 読み込んだ音声データの一括解放
 	audioManager_->UnloadAll();
 	// ImGuiの終了処理
@@ -127,7 +127,7 @@ void System::Finalize() {
 ///=====================================================/// 
 /// フレーム開始処理
 ///=====================================================///
-void System::BeginFrame() {
+void Mii::BeginFrame() {
 	dXCommon_->PreDraw();
 	imGuiManager_->Draw();
 }
@@ -136,7 +136,7 @@ void System::BeginFrame() {
 ///=====================================================/// 
 /// フレーム終了処理
 ///=====================================================///
-void System::EndFrame() {
+void Mii::EndFrame() {
 	imGuiManager_->End();
 	dXCommon_->PostDraw();
 }
@@ -145,7 +145,7 @@ void System::EndFrame() {
 ///=====================================================/// 
 /// Windowsのメッセージを処理する
 ///=====================================================///
-int System::ProcessMessage() { return winApp_->ProcessMessage(); }
+int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 
 
 ///-------------------------------------------/// 
@@ -153,15 +153,15 @@ int System::ProcessMessage() { return winApp_->ProcessMessage(); }
 ///-------------------------------------------///
 #pragma region Pipeline関連
 // PSOの取得
-void System::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
+void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
 #pragma endregion
 #pragma region Texture関連
 // SRVインデックス開始番号の取得
-void System::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, filePath); }
+void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, filePath); }
 // GPUハンドルの取得
-D3D12_GPU_DESCRIPTOR_HANDLE System::GetSRVHandleGPU(const std::string& filePath) { return textureManager_->GetSRVHandleGPU(filePath); }
+D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetSRVHandleGPU(const std::string& filePath) { return textureManager_->GetSRVHandleGPU(filePath); }
 // メタデータの取得
-const DirectX::TexMetadata& System::GetMetaData(const std::string& filePath) { return textureManager_->GetMetaData(filePath); }
+const DirectX::TexMetadata& Mii::GetMetaData(const std::string& filePath) { return textureManager_->GetMetaData(filePath); }
 #pragma endregion
 
 
@@ -170,27 +170,27 @@ const DirectX::TexMetadata& System::GetMetaData(const std::string& filePath) { r
 ///-------------------------------------------///
 #pragma region Texture関連
 // テクスチャ読み込み
-void System::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
+void Mii::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
 #pragma endregion
 #pragma region Model関連
 // モデルの読み込み
-void System::LoadModel(const std::string& filename) { modelManager_->LoadModel("Resource", filename); }
+void Mii::LoadModel(const std::string& filename) { modelManager_->LoadModel("Resource", filename); }
 // モデルデータの取得
-ModelData System::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
+ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
 #pragma endregion
 #pragma region Audio関連
 // 音声データの読み込み
-void System::LoadSound(const std::string& key, const std::string& filename, bool loadMP3) { return audioManager_->Load(key, filename, loadMP3); }
+void Mii::LoadSound(const std::string& key, const std::string& filename, bool loadMP3) { return audioManager_->Load(key, filename, loadMP3); }
 // 音声データの解放
-void System::UnloadSound(const std::string& key) { return audioManager_->Unload(key); }
+void Mii::UnloadSound(const std::string& key) { return audioManager_->Unload(key); }
 // 音声データの再生
-void System::PlayeSound(const std::string& key, bool loop) { return audioManager_->Play(key, loop); }
+void Mii::PlayeSound(const std::string& key, bool loop) { return audioManager_->Play(key, loop); }
 // 音声データの停止
-void System::StopSound(const std::string& key) { return audioManager_->Stop(key); }
+void Mii::StopSound(const std::string& key) { return audioManager_->Stop(key); }
 // 音声データの音量設定
-void System::VolumeSound(const std::string& key, float volume) { return audioManager_->SetVolume(key, volume); }
+void Mii::VolumeSound(const std::string& key, float volume) { return audioManager_->SetVolume(key, volume); }
 // 音声データの再生速度設定
-void System::PitchSound(const std::string& key, float pitch) { return audioManager_->setPitch(key, pitch); }
+void Mii::PitchSound(const std::string& key, float pitch) { return audioManager_->setPitch(key, pitch); }
 #pragma endregion
 
 
@@ -199,9 +199,9 @@ void System::PitchSound(const std::string& key, float pitch) { return audioManag
 ///-------------------------------------------///
 #pragma region 開発者用
 // DXCommon
-DXCommon* System::GetDXCommon() { return dXCommon_.get(); }
+DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
 // device
-ID3D12Device* System::GetDXDevice() { return dXCommon_->GetDevice(); }
+ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList
-ID3D12GraphicsCommandList* System::GetDXCommandList() { return dXCommon_->GetCommandList(); }
+ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
 #pragma endregion

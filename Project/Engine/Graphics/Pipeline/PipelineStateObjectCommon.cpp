@@ -1,6 +1,6 @@
 #include "PipelineStateObjectCommon.h"
 // Engine
-#include "Engine/Core/System.h"
+#include "Engine/Core/Mii.h"
 #include "Engine/Core/DXCommon.h"
 // c++
 #include <cassert>
@@ -27,7 +27,7 @@ PipelineStateObjectCommon::~PipelineStateObjectCommon() {
 ///-------------------------------------------///
 void PipelineStateObjectCommon::Create(PipelineType Type, BlendMode Mode) {
 
-	DXCommon* dxCommon = System::GetDXCommon();
+	DXCommon* dxCommon = Mii::GetDXCommon();
 
 	// RootSignatureの生成
 	rootSignature_ = std::make_unique<RootSignature>();

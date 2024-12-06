@@ -1,6 +1,9 @@
 #pragma once
 /// ===Include=== ///
-
+// SceneFactory
+#include "Engine/Scene/AbstractSceneFactory.h"
+// ｃ++
+#include <memory>
 
 ///=====================================================/// 
 /// フレームワーク
@@ -25,10 +28,15 @@ public:/// ====== ///
 public:/// ===メンバ関数=== ///
 	// 実行
 	void Run(const wchar_t* title);
+	// 描画前処理
+	void PreDraw();
+	// 描画後処理
+	void PostDraw();
 
 protected:
-
+	// ゲーム終了フラグ
 	bool endRequst_ = false;
-
+	// シーンファクトリー
+	std::unique_ptr<AbstractSceneFactory> sceneFactory_;
 };
 

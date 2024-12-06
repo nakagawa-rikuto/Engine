@@ -1,6 +1,5 @@
 #include "SRVManager.h"
 // Engine
-//#include "Engine/Core/System.h"
 #include "Engine/Core/DXCommon.h"
 
 const uint32_t SRVManager::kMaxSRVCount_ = 512;

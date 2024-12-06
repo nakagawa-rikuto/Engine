@@ -1,6 +1,6 @@
 #include "SpriteCommon.h"
 
-#include "Engine/Core/System.h"
+#include "Engine/Core/Mii.h"
 #include "Math/sMath.h"
 
 ///-------------------------------------------/// 
@@ -72,7 +72,7 @@ void SpriteCommon::WVPMatrixInitialize(ID3D12Device * device, TransformationMatr
 void SpriteCommon::Bind(ID3D12GraphicsCommandList * commandList, BlendMode mode) {
 
 	// PSOの設定
-	System::SetPSO(commandList, PipelineType::Obj2D, mode);
+	Mii::SetPSO(commandList, PipelineType::Obj2D, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// IndexBufferViewの設定

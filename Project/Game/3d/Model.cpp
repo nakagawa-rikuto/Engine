@@ -1,6 +1,6 @@
 #include "Model.h"
 // Engine
-#include "Engine/Core/System.h"
+#include "Engine/Core/Mii.h"
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
 // Math
@@ -55,10 +55,10 @@ void Model::SetCamera(Camera* camera) { camera_ = camera; }
 void Model::Initialize(const std::string& filename) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = System::GetDXDevice();
+	ID3D12Device* device = Mii::GetDXDevice();
 
 	/// ===モデル読み込み=== ///
-	modelData_ = System::GetModelData(filename); // ファイルパス
+	modelData_ = Mii::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
@@ -128,11 +128,11 @@ void Model::Draw(BlendMode mode) {
 
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = System::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	System::SetPSO(commandList, PipelineType::Obj3D, mode);
+	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// Materialの設定
@@ -142,7 +142,7 @@ void Model::Draw(BlendMode mode) {
 	// Lightの設定
 	commandList->SetGraphicsRootConstantBufferView(3, light_->GetBuffer()->GetGPUVirtualAddress());
 	// テクスチャの設定
-	System::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 }
