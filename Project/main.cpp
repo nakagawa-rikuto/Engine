@@ -3,7 +3,7 @@
 #include "Game/Scene/MyGame.h"
 
 /// ===ゲームタイトル=== ///
-const wchar_t kWindowTitle[] = L"Engine";
+const wchar_t kWindowTitle[] = L"AL4_Winter_3D_Game";
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
