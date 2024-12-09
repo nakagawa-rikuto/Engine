@@ -111,8 +111,6 @@ private:/// ===Variables(変数)=== ///
 
 private:/// ===Functions(関数)=== ///
 
-	// Resourceの作成関数
-	ComPtr<ID3D12Resource> CreateResource(ID3D12Device* device, size_t sizeInBytes);
 	// VertexResourceへの書き込み
 	void VertexDataWrite();
 	// UpdateVertexDataWrite

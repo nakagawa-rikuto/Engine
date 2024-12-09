@@ -15,7 +15,7 @@ SpriteCommon::~SpriteCommon() {
 }
 
 ///-------------------------------------------/// 
-///
+/// VertexBufferの初期化
 ///-------------------------------------------///
 void SpriteCommon::VertexInitialize(ID3D12Device* device, uint32_t size, VertexData2D* data) {
 	// 生成
@@ -30,9 +30,9 @@ void SpriteCommon::VertexInitialize(ID3D12Device* device, uint32_t size, VertexD
 }
 
 ///-------------------------------------------/// 
-///
+/// IndexBufferの初期化
 ///-------------------------------------------///
-void SpriteCommon::IndexInitialize(ID3D12Device * device, uint32_t size, uint32_t * data) {
+void SpriteCommon::IndexInitialize(ID3D12Device* device, uint32_t size, uint32_t* data) {
 	// 生成
 	index_ = std::make_unique<IndexBuffer2D>();
 	// buffer
@@ -45,9 +45,9 @@ void SpriteCommon::IndexInitialize(ID3D12Device * device, uint32_t size, uint32_
 }
 
 ///-------------------------------------------/// 
-///
+/// MaterialBufferの初期化
 ///-------------------------------------------///
-void SpriteCommon::MaterialInitialize(ID3D12Device * device, uint32_t size, MaterialData2D * data) {
+void SpriteCommon::MaterialInitialize(ID3D12Device* device, uint32_t size, MaterialData2D* data) {
 	// 生成
 	material_ = std::make_unique<Material2D>();
 	// buffer
@@ -56,9 +56,9 @@ void SpriteCommon::MaterialInitialize(ID3D12Device * device, uint32_t size, Mate
 }
 
 ///-------------------------------------------/// 
-///
+/// WVPBufferの初期化
 ///-------------------------------------------///
-void SpriteCommon::WVPMatrixInitialize(ID3D12Device * device, TransformationMatrix2D * data) {
+void SpriteCommon::WVPMatrixInitialize(ID3D12Device* device, TransformationMatrix2D* data) {
 	// 生成
 	wvp_ = std::make_unique<Transform2D>();
 	// buffer
@@ -67,7 +67,7 @@ void SpriteCommon::WVPMatrixInitialize(ID3D12Device * device, TransformationMatr
 }
 
 ///-------------------------------------------/// 
-/// 描画
+/// CommandListの設定
 ///-------------------------------------------///
 void SpriteCommon::Bind(ID3D12GraphicsCommandList * commandList, BlendMode mode) {
 
