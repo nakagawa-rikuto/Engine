@@ -85,7 +85,7 @@ private:/// ===Variables(変数)=== ///
 
 	// バッファリソース内のデータを指すポインタ
 	VertexData2D* vertexData_ = nullptr;
-	uint32_t* indexData_ = nullptr;
+	IndexData* indexData_ = nullptr;
 	MaterialData2D* materialData_ = nullptr;
 	TransformationMatrix2D* wvpMatrixData_ = nullptr;
 

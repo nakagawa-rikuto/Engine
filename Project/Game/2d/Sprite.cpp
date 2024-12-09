@@ -221,12 +221,12 @@ void Sprite::UpdateVertexDataWrite() {
 /// IndexResourceの書き込み
 ///-------------------------------------------///
 void Sprite::IndexDataWrite() {
-	indexData_[0] = 0;
-	indexData_[1] = 1;
-	indexData_[2] = 2;
-	indexData_[3] = 1;
-	indexData_[4] = 3;
-	indexData_[5] = 2;
+	indexData_[0].data = 0;
+	indexData_[1].data = 1;
+	indexData_[2].data = 2;
+	indexData_[3].data = 1;
+	indexData_[4].data = 3;
+	indexData_[5].data = 2;
 }
 
 

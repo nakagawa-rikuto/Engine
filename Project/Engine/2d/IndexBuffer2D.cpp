@@ -38,16 +38,6 @@ void IndexBuffer2D::Create(ID3D12Device* device, size_t sizeInBytes) {
 }
 
 ///-------------------------------------------/// 
-/// データの書き込み
-///-------------------------------------------///
-void IndexBuffer2D::WriteData(uint32_t* data) {
-	// 書き込むためのアドレスを取得
-	buffer_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
-
-	data_ = data;
-}
-
-///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
 ID3D12Resource* IndexBuffer2D::GetBuffer() { return buffer_.Get(); }
