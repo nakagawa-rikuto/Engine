@@ -163,7 +163,6 @@ void AudioManager::setPitch(const std::string& key, float pitch) {
 /// 音声データの読み込み(Wave)
 ///-------------------------------------------///
 SoundData AudioManager::LoadWave(const std::string& filename) {
-
 	/// ===ファイルオープン=== ///
 	// ファイル入力ストリームのインスタンス
 	std::ifstream file;
@@ -228,62 +227,65 @@ SoundData AudioManager::LoadWave(const std::string& filename) {
 ///-------------------------------------------///
 SoundData AudioManager::LoadMP3(const std::string& filename) {
 
-	HRESULT result;
+	//// 通ってない
+	//// === キャッシュの確認と返却 ===
+	//if (auto it = soundDatas_.find(filename); it != soundDatas_.end()) {
+	//	return it->second; // 既にロード済みならキャッシュを返す
+	//}
 
-	// filename を wide文字列に変換
+	/// ===ファイルオープン=== ///
+   // ファイル名を wide 文字列に変換
 	int wideSize = MultiByteToWideChar(CP_ACP, 0, filename.c_str(), -1, nullptr, 0);
 	std::wstring wideFilename(wideSize, 0);
 	MultiByteToWideChar(CP_ACP, 0, filename.c_str(), -1, &wideFilename[0], wideSize);
 
-	// Media Foundationの初期化
-	result = MFStartup(MF_VERSION);
+	// Media Foundation の初期化
+	HRESULT result = MFStartup(MF_VERSION);
 	assert(SUCCEEDED(result));
 
-	// 音声データの出力先
-	SoundData soundData = {};
-
-	// SourceReaderを作成
+	// SourceReader を作成
 	IMFSourceReader* sourceReader = nullptr;
 	result = MFCreateSourceReaderFromURL(wideFilename.c_str(), nullptr, &sourceReader);
 	assert(SUCCEEDED(result));
 
-	// 出力形式をPCM形式に設定
+	/// ===音声データ読み込み=== ///
+	// 出力形式を PCM 形式に設定
 	IMFMediaType* audioType = nullptr;
 	result = MFCreateMediaType(&audioType);
 	assert(SUCCEEDED(result));
-
 	result = audioType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
 	assert(SUCCEEDED(result));
-
 	result = audioType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
 	assert(SUCCEEDED(result));
-
 	result = sourceReader->SetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, audioType);
 	assert(SUCCEEDED(result));
 
-	// フォーマットを取得
+	// PCM 形式のフォーマットを取得
 	IMFMediaType* outputType = nullptr;
 	result = sourceReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &outputType);
 	assert(SUCCEEDED(result));
 
-	UINT32 cbFormat = 0;
 	WAVEFORMATEX* pWaveFormat = nullptr;
+	UINT32 cbFormat = 0;
 	result = MFCreateWaveFormatExFromMFMediaType(outputType, &pWaveFormat, &cbFormat);
 	assert(SUCCEEDED(result));
 
-	soundData.wfex = *pWaveFormat;
+	// フォーマットを保存
+	FormatChunk format = {};
+	memcpy(&format.fmt, pWaveFormat, sizeof(WAVEFORMATEX));
 	CoTaskMemFree(pWaveFormat);
 	outputType->Release();
 
-	// 音声データを読み込む
+	/// ===音声データをバッファに読み込み=== ///
+	ChunkHeader data = {};
 	std::vector<BYTE> buffer;
+
 	while (true) {
 		IMFSample* sample = nullptr;
 		DWORD flags = 0;
-
 		result = sourceReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &flags, nullptr, &sample);
 		if (flags & MF_SOURCE_READERF_ENDOFSTREAM) {
-			break;
+			break; // データの終端に到達
 		}
 		assert(SUCCEEDED(result));
 
@@ -297,6 +299,7 @@ SoundData AudioManager::LoadMP3(const std::string& filename) {
 			result = mediaBuffer->Lock(&audioData, nullptr, &audioDataLength);
 			assert(SUCCEEDED(result));
 
+			// データをバッファに追加
 			buffer.insert(buffer.end(), audioData, audioData + audioDataLength);
 
 			result = mediaBuffer->Unlock();
@@ -306,15 +309,21 @@ SoundData AudioManager::LoadMP3(const std::string& filename) {
 		}
 	}
 
-	// バッファをSoundDataに設定
-	soundData.pBuffer = new BYTE[buffer.size()];
-	memcpy(soundData.pBuffer, buffer.data(), buffer.size());
-	soundData.bufferSize = static_cast<unsigned int>(buffer.size());
+	// Data チャンクのデータ部をセット
+	data.size = static_cast<uint32_t>(buffer.size());
+	char* pBuffer = new char[data.size];
+	memcpy(pBuffer, buffer.data(), data.size);
 
-	// 後始末
+	// リソース解放
 	sourceReader->Release();
 	audioType->Release();
 	MFShutdown();
+
+	/// ====読み込んだ音声データを return ==== ///
+	SoundData soundData = {};
+	soundData.wfex = format.fmt; // フォーマットを設定
+	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+	soundData.bufferSize = data.size;
 
 	return soundData;
 }

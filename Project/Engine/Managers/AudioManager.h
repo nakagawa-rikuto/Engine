@@ -56,8 +56,7 @@ public:/// ===関数=== ///
 	// 再生速度の設定
 	void setPitch(const std::string& key, float pitch);
 	// 音の反響効果
-	void InitializeReverbEffect();
-	// 
+	//void InitializeReverbEffect();
 
 private: /// ===変数=== ///
 	ComPtr<IXAudio2> xAudio2_;

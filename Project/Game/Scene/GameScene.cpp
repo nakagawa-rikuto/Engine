@@ -23,7 +23,8 @@ void GameScene::Initialize() {
 
 	// 音声データの読み込み
 	Mii::LoadSound("fanfare", "./Resource/BGM/fanfare.wav", false);
-	Mii::LoadSound("clear", "./Resource/BGM/clear.mp3", true);
+	// MP3を読み込むとものすごく重い
+	//Mii::LoadSound("clear", "./Resource/BGM/clear.mp3", true);
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
