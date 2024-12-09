@@ -60,6 +60,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	// 読み込み済みのテクスチャを検索
 	if (textureDatas_.contains(filePath)) {
 		assert(srvManager_->AssertAllocate());
+		return;
 	}
 
 	// テクスチャの上限チェック
