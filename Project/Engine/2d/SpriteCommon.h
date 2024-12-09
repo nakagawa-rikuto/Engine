@@ -22,15 +22,19 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void VertexInitialize(ID3D12Device* device, uint32_t Size, VertexData2D* data);
-	void IndexInitialize(ID3D12Device* device, uint32_t Size, uint32_t* data);
-	void MaterialInitialize(ID3D12Device* device, uint32_t Size, MaterialData2D* data);
-	void WVPMatrixInitialize(ID3D12Device* device, TransformationMatrix2D* data);
+	void VertexInitialize(ID3D12Device* device, uint32_t Size);
+	void IndexInitialize(ID3D12Device* device, uint32_t Size);
+	void MaterialInitialize(ID3D12Device* device, uint32_t Size);
+	void WVPMatrixInitialize(ID3D12Device* device);
 
 	/// <summary>
 	/// 描画準備
 	/// </summary>
 	void Bind(ID3D12GraphicsCommandList* commandList, BlendMode mode);
+public:
+
+	// Dataの設定
+	void SetData(VertexData2D* vertex, uint32_t* index, MaterialData2D* materal, TransformationMatrix2D* wvp);
 
 private:
 
@@ -39,6 +43,12 @@ private:
 	std::unique_ptr<IndexBuffer2D> index_;
 	std::unique_ptr<Material2D> material_;
 	std::unique_ptr<Transform2D> wvp_;
+
+	// バッファリソース内のデータを指すポインタ
+	VertexData2D* vertexData_ = nullptr;
+	uint32_t* indexData_ = nullptr;
+	MaterialData2D* materialData_ = nullptr;
+	TransformationMatrix2D* wvpMatrixData_ = nullptr;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
