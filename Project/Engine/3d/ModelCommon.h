@@ -30,7 +30,7 @@ public:
 	// 描画準備
 	void Bind(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode);
 
-public:
+public:/// ===Setter=== ///
 	// Dataの設定
 	void SetVertexData(std::vector<VertexData3D>& data);
 	void SetMaterialData(const MaterialData3D& data);
