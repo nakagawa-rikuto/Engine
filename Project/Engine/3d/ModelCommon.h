@@ -2,9 +2,9 @@
 /// ===Include=== ///
 // Engine
 #include "Engine/Core/CData.h"
-#include "Engine/3d/VertexBuffer3D.h"
-#include "Engine/3d/Material3D.h"
-#include "Engine/3d/Transform3D.h"
+#include "Engine/3d/Buffer/VertexBuffer3D.h"
+#include "Engine/3d/Buffer/Material3D.h"
+#include "Engine/3d/Buffer/Transform3D.h"
 #include "Engine/Graphics/Light.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
 // Game

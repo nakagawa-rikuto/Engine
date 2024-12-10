@@ -2,14 +2,11 @@
 /// ===include=== ///
 // Engine
 #include "Engine/Core/CData.h"
-#include "Engine/Core/ComPtr.h"
-#include "Engine/2d/VertexBuffer2D.h"
-#include "Engine/2d/IndexBuffer2D.h"
-#include "Engine/2d/Material2D.h"
-#include "Engine/2d/Transform2D.h"
+#include "Engine/2d/Buffer/VertexBuffer2D.h"
+#include "Engine/2d/Buffer/IndexBuffer2D.h"
+#include "Engine/2d/Buffer/Material2D.h"
+#include "Engine/2d/Buffer/Transform2D.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
-// Game
-#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 //c++
 #include <memory>
 

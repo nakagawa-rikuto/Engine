@@ -165,19 +165,19 @@
     <ClCompile Include="Engine\Core\DXCommon.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\Material2D.cpp">
+    <ClCompile Include="Engine\2d\Buffer\Material2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\Material3D.cpp">
+    <ClCompile Include="Engine\3d\Buffer\Material3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Pipeline\InputLayout.cpp">
       <Filter>ソース ファイル\engine\base\pso</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\IndexBuffer2D.cpp">
+    <ClCompile Include="Engine\2d\Buffer\IndexBuffer2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\IndexBuffer3D.cpp">
+    <ClCompile Include="Engine\3d\Buffer\IndexBuffer3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Light.cpp">
@@ -195,16 +195,16 @@
     <ClCompile Include="Engine\Managers\SRVManager.cpp">
       <Filter>ソース ファイル\engine\base\manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\Transform2D.cpp">
+    <ClCompile Include="Engine\2d\Buffer\Transform2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\Transform3D.cpp">
+    <ClCompile Include="Engine\3d\Buffer\Transform3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\2d\VertexBuffer2D.cpp">
+    <ClCompile Include="Engine\2d\Buffer\VertexBuffer2D.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\3d\VertexBuffer3D.cpp">
+    <ClCompile Include="Engine\3d\Buffer\VertexBuffer3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\WinApp.cpp">
@@ -317,10 +317,10 @@
     <ClInclude Include="Engine\Core\DXCommon.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2d\IndexBuffer2D.h">
+    <ClInclude Include="Engine\2d\Buffer\IndexBuffer2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3d\IndexBuffer3D.h">
+    <ClInclude Include="Engine\3d\Buffer\IndexBuffer3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Input\Input.h">
@@ -335,10 +335,10 @@
     <ClInclude Include="Engine\Core\Logger.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2d\Material2D.h">
+    <ClInclude Include="Engine\2d\Buffer\Material2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3d\Material3D.h">
+    <ClInclude Include="Engine\3d\Buffer\Material3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Math\Matrix3x3.h">
@@ -386,10 +386,10 @@
     <ClInclude Include="Engine\Managers\TextureManager.h">
       <Filter>ヘッダー ファイル\engine\base\manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2d\Transform2D.h">
+    <ClInclude Include="Engine\2d\Buffer\Transform2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3d\Transform3D.h">
+    <ClInclude Include="Engine\3d\Buffer\Transform3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector2.h">
@@ -404,10 +404,10 @@
     <ClInclude Include="Engine\Core\WinApp.h">
       <Filter>ヘッダー ファイル\engine\base</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\2d\VertexBuffer2D.h">
+    <ClInclude Include="Engine\2d\Buffer\VertexBuffer2D.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3d\VertexBuffer3D.h">
+    <ClInclude Include="Engine\3d\Buffer\VertexBuffer3D.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\CData.h">
