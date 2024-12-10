@@ -11,6 +11,7 @@
 #include "Game/3d/Camera.h"
 // c++
 #include <memory>
+#include <vector>
 
 ///-------------------------------------------/// 
 /// モデル共通部
@@ -31,7 +32,10 @@ public:
 
 public:
 	// Dataの設定
-	void SetData(VertexData3D* vertex, MaterialData3D* material, TransformationMatrix3D* wvp, DirectionalLight* light);
+	void SetVertexData(std::vector<VertexData3D>& data);
+	void SetMaterialData(const MaterialData3D& data);
+	void SetWVPData(Matrix4x4 wvp, Matrix4x4 world);
+	void SetLightData(const DirectionalLight& data);
 private:
 
 	// バッファリソース

@@ -16,19 +16,11 @@ public: /// ===基本的な関数=== ///
 	Model();
 	~Model();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	// 初期化
 	void Initialize(const std::string& filename); // オブジェクトを読み込まない場合の初期化
-
-	/// <summary>
-	/// 更新
-	/// </summary>
+	// 更新
 	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
+	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
 
 public: /// ===Getter=== ///
@@ -55,12 +47,6 @@ public: /// ===Setter=== ///
 
 private: /// ===Variables(変数)=== ///
 
-	// バッファリソース内のデータを指すポインタ
-	VertexData3D* vertexData_ = nullptr;
-	MaterialData3D* materialData_ = nullptr;
-	TransformationMatrix3D* wvpMatrixData_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
-
 	// Commonクラス
 	std::unique_ptr<ModelCommon> common_;
 
@@ -80,6 +66,11 @@ private: /// ===Variables(変数)=== ///
 	Vector3 rotate_ = { 0.0f, 0.0f, 0.0f };
 	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	/// ===ライト情報=== ///
+	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	Vector3 direction_ = { 0.0f, 0.0f, 0.0f };
+	float intensity_ = 1.0f;
 
 private: /// ===Functions(関数)=== ///
 

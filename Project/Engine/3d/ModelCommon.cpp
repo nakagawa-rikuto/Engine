@@ -88,16 +88,21 @@ void ModelCommon::Bind(ID3D12GraphicsCommandList* commandList, PipelineType type
 }
 
 ///-------------------------------------------/// 
-/// セットデータ
+/// Setter
 ///-------------------------------------------///
-void ModelCommon::SetData(
-	VertexData3D* vertex, MaterialData3D* material, TransformationMatrix3D* wvp, DirectionalLight* light) {
-	// VertexDataのセット
-	vertexData_ = vertex;
-	// MaterialDataのセット
-	materialData_ = material;
-	// wvpDataのセット
-	wvpData_ = wvp;
-	// LightDataのセット
-	lightData_ = light;
+// VertexData
+void ModelCommon::SetVertexData(std::vector<VertexData3D>& data) {
+	size_t dataSize = data.size() * sizeof(VertexData3D);
+	std::memcpy(vertexData_, data.data(), dataSize);
 }
+// MatarialData
+void ModelCommon::SetMaterialData(const MaterialData3D& data) { *materialData_ = data; }
+// WVPData
+void ModelCommon::SetWVPData(Matrix4x4 wvp, Matrix4x4 world) {
+	wvpData_->WVP = wvp;
+	wvpData_->World = world;
+}
+// LightData
+void ModelCommon::SetLightData(const DirectionalLight& data) { *lightData_ = data; }
+
+
