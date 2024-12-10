@@ -133,14 +133,20 @@ void GameScene::Update() {
 		rotate.z -= 0.1f;
 	}
 
+	// スプライト
+	//sprite->SetSize(size);
+	sprite_->Update();
+
+	// モデル
 	model_->SetRotate(rotate);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
+	model_->Update();
 
-	//sprite->SetSize(size);
-
+	// カメラ
 	camera_->SetRotate(cameraRotate);
 	camera_->SetTranslate(cameraPos);
 
+	// カメラマネージャ
 	cameraManager_->UpdateAllCameras();
 }
 
@@ -158,6 +164,6 @@ void GameScene::Draw() {
 
 #pragma region 前景スプライト描画
 	// Spriteの描画
-	sprite_->Draw();
+	//sprite_->Draw();
 #pragma endregion
 }

@@ -1,17 +1,9 @@
 #pragma once
 /// ===include=== ///
 // Engine
-#include "Engine/Core/CData.h"
-#include "Engine/Core/ComPtr.h"
-#include "Engine/3d/VertexBuffer3D.h"
-#include "Engine/3d/IndexBuffer3D.h"
-#include "Engine/3d/Material3D.h"
-#include "Engine/3d/Transform3D.h"
-#include "Engine/Graphics/Light.h"
-#include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
+#include "Engine/3d/ModelCommon.h"
 // Game
 #include "Game/3d/Camera.h"
-#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // c++
 #include <memory>
 
@@ -24,19 +16,11 @@ public: /// ===基本的な関数=== ///
 	Model();
 	~Model();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	// 初期化
 	void Initialize(const std::string& filename); // オブジェクトを読み込まない場合の初期化
-
-	/// <summary>
-	/// 更新
-	/// </summary>
+	// 更新
 	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
+	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
 
 public: /// ===Getter=== ///
@@ -63,20 +47,8 @@ public: /// ===Setter=== ///
 
 private: /// ===Variables(変数)=== ///
 
-	// バッファリソース
-	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<Material3D> material_;
-	std::unique_ptr<Transform3D> wvp_;
-	std::unique_ptr<Light> light_;
-
-	// バッファリソース内のデータを指すポインタ
-	VertexData3D* vertexData_ = nullptr;
-	MaterialData3D* materialData_ = nullptr;
-	TransformationMatrix3D* wvpMatrixData_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
-
-	// バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	// Commonクラス
+	std::unique_ptr<ModelCommon> common_;
 
 	// モデルデータ
 	ModelData modelData_;
@@ -94,6 +66,11 @@ private: /// ===Variables(変数)=== ///
 	Vector3 rotate_ = { 0.0f, 0.0f, 0.0f };
 	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	/// ===ライト情報=== ///
+	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	Vector3 direction_ = { 0.0f, 0.0f, 0.0f };
+	float intensity_ = 1.0f;
 
 private: /// ===Functions(関数)=== ///
 

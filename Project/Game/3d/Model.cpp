@@ -14,10 +14,7 @@
 ///-------------------------------------------///
 Model::Model() = default;
 Model::~Model() {
-	vertex_.reset();
-	material_.reset();
-	wvp_.reset();
-	light_.reset();
+	common_.reset();
 }
 
 
@@ -61,43 +58,16 @@ void Model::Initialize(const std::string& filename) {
 	modelData_ = Mii::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
-	vertex_ = std::make_unique<VertexBuffer3D>();
-	material_ = std::make_unique<Material3D>();
-	wvp_ = std::make_unique<Transform3D>();
-	light_ = std::make_unique<Light>();
+	common_ = std::make_unique<ModelCommon>();
 
 	/// ===vertex=== ///
-	// Buffer
-	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
-	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	// メモリコピー
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData3D) * modelData_.vertices.size());
-	// view
-	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
-	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
-	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
-
+	common_->VertexInitialize(device, modelData_);
 	/// ===Material=== ///
-	// buffer
-	material_->Create(device, sizeof(MaterialData3D));
-	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	// Data書き込み
-	materialData_->color = color_;
-	materialData_->enableLighting = 0;
-	materialData_->uvTransform = MakeIdentity4x4();
-
+	common_->MaterialInitialize(device);
 	/// ===wvp=== ///
-	// buffer
-	wvp_->Create(device, sizeof(TransformationMatrix3D));
-	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
-	// Dataの書き込み
-	wvpMatrixData_->WVP = MakeIdentity4x4();
-	wvpMatrixData_->World = MakeIdentity4x4();
-
+	common_->WVPMatrixInitialize(device);
 	/// ===Light=== ///
-	light_->Create(device, sizeof(DirectionalLight));
-	light_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
-	LightDataWrite();
+	common_->LightInitialize(device);
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
@@ -110,7 +80,8 @@ void Model::Initialize(const std::string& filename) {
 /// 更新
 ///-------------------------------------------///
 void Model::Update() {
-
+	LightDataWrite();
+	TransformDataWrite();
 }
 
 
@@ -118,29 +89,11 @@ void Model::Update() {
 /// 描画
 ///-------------------------------------------///
 void Model::Draw(BlendMode mode) {
-
-	/// ===データの書き込み=== ///
-	worldTransform_.scale = scale_;
-	worldTransform_.rotate = rotate_;
-	worldTransform_.translate = position_;
-	LightDataWrite();
-	TransformDataWrite();
-
-
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
-	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
-	// VertexBufferViewの設定
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-	// Materialの設定
-	commandList->SetGraphicsRootConstantBufferView(0, material_->GetBuffer()->GetGPUVirtualAddress());
-	// wvpMatrixBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
-	// Lightの設定
-	commandList->SetGraphicsRootConstantBufferView(3, light_->GetBuffer()->GetGPUVirtualAddress());
+	common_->Bind(commandList, PipelineType::Obj3D, mode);
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
@@ -151,86 +104,93 @@ void Model::Draw(BlendMode mode) {
 ///　ライトの書き込み
 ///-------------------------------------------///
 void Model::LightDataWrite() {
-	directionalLightData_->color = color_;
-	directionalLightData_->direction = { 0.0f, -1.0f, 0.0f };
-	directionalLightData_->intensity = 1.0f;
+	DirectionalLight lightData{};
+	lightData.color = lightColor_;
+	lightData.direction = direction_;
+	lightData.intensity = intensity_;
+	common_->SetLightData(lightData);
 }
 
-/////-------------------------------------------/// 
-///// スフィアのデータ書き込み
-/////-------------------------------------------///
-//void Model::SphereDataWrite() {
-//
-//	// 経度,緯度
-//	const float kLatEvery = Pi() / float(kSubdivision_); // 経度
-//	const float kLonEvery = Pi() * 2.0f / float(kSubdivision_); // 緯度
-//
-//	// 緯度の方向に分割
-//	for (uint32_t latIndex = 0; latIndex < kSubdivision_; ++latIndex) {
-//		float lat = -Pi() / 2.0f + kLatEvery * latIndex; // θ
-//		// 経度の方向に分割しながら線を描く
-//		for (uint32_t lonIndex = 0; lonIndex < kSubdivision_; ++lonIndex) {
-//			uint32_t start = (latIndex * kSubdivision_ + lonIndex) * 6;
-//			float lon = lonIndex * kLonEvery; //
-//
-//
-//			// 頂点データを入力
-//			// a
-//			vertexData_[start].position.x = std::cos(lat) * std::cos(lon);
-//			vertexData_[start].position.y = std::sin(lat);
-//			vertexData_[start].position.z = std::cos(lat) * std::sin(lon);
-//			vertexData_[start].position.w = 1.0f;
-//			vertexData_[start].texcoord = { float(lonIndex) / float(kSubdivision_), 1.0f - float(latIndex) / float(kSubdivision_) };
-//			vertexData_[start].normal.x = vertexData_[start].position.x;
-//			vertexData_[start].normal.y = vertexData_[start].position.y;
-//			vertexData_[start].normal.z = vertexData_[start].position.z;
-//
-//			// b
-//			vertexData_[start + 1].position.x = std::cos(lat + kLatEvery) * std::cos(lon);
-//			vertexData_[start + 1].position.y = std::sin(lat + kLatEvery);
-//			vertexData_[start + 1].position.z = std::cos(lat + kLatEvery) * std::sin(lon);
-//			vertexData_[start + 1].position.w = 1.0f;
-//			vertexData_[start + 1].texcoord = { float(lonIndex) / float(kSubdivision_), 1.0f - float(latIndex + 1) / float(kSubdivision_) };
-//			vertexData_[start + 1].normal.x = vertexData_[start + 1].position.x;
-//			vertexData_[start + 1].normal.y = vertexData_[start + 1].position.y;
-//			vertexData_[start + 1].normal.z = vertexData_[start + 1].position.z;
-//
-//			// c
-//			vertexData_[start + 2].position.x = std::cos(lat) * std::cos(lon + kLonEvery);
-//			vertexData_[start + 2].position.y = std::sin(lat);
-//			vertexData_[start + 2].position.z = std::cos(lat) * std::sin(lon + kLonEvery);
-//			vertexData_[start + 2].position.w = 1.0f;
-//			vertexData_[start + 2].texcoord = { float(lonIndex + 1) / float(kSubdivision_), 1.0f - float(latIndex) / float(kSubdivision_) };
-//			vertexData_[start + 2].normal.x = vertexData_[start + 2].position.x;
-//			vertexData_[start + 2].normal.y = vertexData_[start + 2].position.y;
-//			vertexData_[start + 2].normal.z = vertexData_[start + 2].position.z;
-//
-//			// d
-//			vertexData_[start + 3].position.x = std::cos(lat + kLatEvery) * std::cos(lon + kLonEvery);
-//			vertexData_[start + 3].position.y = std::sin(lat + kLatEvery);
-//			vertexData_[start + 3].position.z = std::cos(lat + kLatEvery) * std::sin(lon + kLonEvery);
-//			vertexData_[start + 3].position.w = 1.0f;
-//			vertexData_[start + 3].texcoord = { float(lonIndex + 1) / float(kSubdivision_), 1.0f - float(latIndex + 1) / float(kSubdivision_) };
-//			vertexData_[start + 3].normal.x = vertexData_[start + 3].position.x;
-//			vertexData_[start + 3].normal.y = vertexData_[start + 3].position.y;
-//			vertexData_[start + 3].normal.z = vertexData_[start + 3].position.z;
-//
-//			// Create two triangles (6 indices) for the current quad
-//			uint32_t baseIndex = (latIndex * kSubdivision_ + lonIndex) * 6;
-//			indexData_[baseIndex] = start;
-//			indexData_[baseIndex + 1] = start + 1;
-//			indexData_[baseIndex + 2] = start + 2;
-//			indexData_[baseIndex + 3] = start + 2;
-//			indexData_[baseIndex + 4] = start + 1;
-//			indexData_[baseIndex + 5] = start + 3;
-//		}
-//	}
-//}
+///-------------------------------------------/// 
+/// スフィアのデータ書き込み
+///-------------------------------------------///
+/*void Model::SphereDataWrite() {
+
+	// 経度,緯度
+	const float kLatEvery = Pi() / float(kSubdivision_); // 経度
+	const float kLonEvery = Pi() * 2.0f / float(kSubdivision_); // 緯度
+
+	// 緯度の方向に分割
+	for (uint32_t latIndex = 0; latIndex < kSubdivision_; ++latIndex) {
+		float lat = -Pi() / 2.0f + kLatEvery * latIndex; // θ
+		// 経度の方向に分割しながら線を描く
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision_; ++lonIndex) {
+			uint32_t start = (latIndex * kSubdivision_ + lonIndex) * 6;
+			float lon = lonIndex * kLonEvery; //
+
+
+			// 頂点データを入力
+			// a
+			vertexData_[start].position.x = std::cos(lat) * std::cos(lon);
+			vertexData_[start].position.y = std::sin(lat);
+			vertexData_[start].position.z = std::cos(lat) * std::sin(lon);
+			vertexData_[start].position.w = 1.0f;
+			vertexData_[start].texcoord = { float(lonIndex) / float(kSubdivision_), 1.0f - float(latIndex) / float(kSubdivision_) };
+			vertexData_[start].normal.x = vertexData_[start].position.x;
+			vertexData_[start].normal.y = vertexData_[start].position.y;
+			vertexData_[start].normal.z = vertexData_[start].position.z;
+
+			// b
+			vertexData_[start + 1].position.x = std::cos(lat + kLatEvery) * std::cos(lon);
+			vertexData_[start + 1].position.y = std::sin(lat + kLatEvery);
+			vertexData_[start + 1].position.z = std::cos(lat + kLatEvery) * std::sin(lon);
+			vertexData_[start + 1].position.w = 1.0f;
+			vertexData_[start + 1].texcoord = { float(lonIndex) / float(kSubdivision_), 1.0f - float(latIndex + 1) / float(kSubdivision_) };
+			vertexData_[start + 1].normal.x = vertexData_[start + 1].position.x;
+			vertexData_[start + 1].normal.y = vertexData_[start + 1].position.y;
+			vertexData_[start + 1].normal.z = vertexData_[start + 1].position.z;
+
+			// c
+			vertexData_[start + 2].position.x = std::cos(lat) * std::cos(lon + kLonEvery);
+			vertexData_[start + 2].position.y = std::sin(lat);
+			vertexData_[start + 2].position.z = std::cos(lat) * std::sin(lon + kLonEvery);
+			vertexData_[start + 2].position.w = 1.0f;
+			vertexData_[start + 2].texcoord = { float(lonIndex + 1) / float(kSubdivision_), 1.0f - float(latIndex) / float(kSubdivision_) };
+			vertexData_[start + 2].normal.x = vertexData_[start + 2].position.x;
+			vertexData_[start + 2].normal.y = vertexData_[start + 2].position.y;
+			vertexData_[start + 2].normal.z = vertexData_[start + 2].position.z;
+
+			// d
+			vertexData_[start + 3].position.x = std::cos(lat + kLatEvery) * std::cos(lon + kLonEvery);
+			vertexData_[start + 3].position.y = std::sin(lat + kLatEvery);
+			vertexData_[start + 3].position.z = std::cos(lat + kLatEvery) * std::sin(lon + kLonEvery);
+			vertexData_[start + 3].position.w = 1.0f;
+			vertexData_[start + 3].texcoord = { float(lonIndex + 1) / float(kSubdivision_), 1.0f - float(latIndex + 1) / float(kSubdivision_) };
+			vertexData_[start + 3].normal.x = vertexData_[start + 3].position.x;
+			vertexData_[start + 3].normal.y = vertexData_[start + 3].position.y;
+			vertexData_[start + 3].normal.z = vertexData_[start + 3].position.z;
+
+			// Create two triangles (6 indices) for the current quad
+			uint32_t baseIndex = (latIndex * kSubdivision_ + lonIndex) * 6;
+			indexData_[baseIndex] = start;
+			indexData_[baseIndex + 1] = start + 1;
+			indexData_[baseIndex + 2] = start + 2;
+			indexData_[baseIndex + 3] = start + 2;
+			indexData_[baseIndex + 4] = start + 1;
+			indexData_[baseIndex + 5] = start + 3;
+		}
+	}
+}*/
 
 ///-------------------------------------------/// 
 /// Transform情報の書き込み
 ///-------------------------------------------///
 void Model::TransformDataWrite() {
+
+	/// ===データの書き込み=== ///
+	worldTransform_.scale = scale_;
+	worldTransform_.rotate = rotate_;
+	worldTransform_.translate = position_;
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
@@ -252,8 +212,11 @@ void Model::TransformDataWrite() {
 
 	/// ===値の代入=== ///
 	// wvp
-	wvpMatrixData_->WVP = worldViewProjectionMatrix;;
-	wvpMatrixData_->World = worldMatrix;
+	common_->SetWVPData(worldViewProjectionMatrix, worldMatrix);
 	// uv
-	materialData_->uvTransform = uvTransformMatrixMultiply;
+	MaterialData3D material = {};
+	material.color = color_;
+	//material.enableLighting = 0;
+	material.uvTransform = uvTransformMatrixMultiply;
+	common_->SetMaterialData(material);
 }
