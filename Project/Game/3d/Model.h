@@ -1,17 +1,9 @@
 #pragma once
 /// ===include=== ///
 // Engine
-#include "Engine/Core/CData.h"
-#include "Engine/Core/ComPtr.h"
-#include "Engine/3d/VertexBuffer3D.h"
-#include "Engine/3d/IndexBuffer3D.h"
-#include "Engine/3d/Material3D.h"
-#include "Engine/3d/Transform3D.h"
-#include "Engine/Graphics/Light.h"
-#include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
+#include "Engine/3d/ModelCommon.h"
 // Game
 #include "Game/3d/Camera.h"
-#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // c++
 #include <memory>
 
@@ -63,20 +55,14 @@ public: /// ===Setter=== ///
 
 private: /// ===Variables(変数)=== ///
 
-	// バッファリソース
-	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<Material3D> material_;
-	std::unique_ptr<Transform3D> wvp_;
-	std::unique_ptr<Light> light_;
-
 	// バッファリソース内のデータを指すポインタ
 	VertexData3D* vertexData_ = nullptr;
 	MaterialData3D* materialData_ = nullptr;
 	TransformationMatrix3D* wvpMatrixData_ = nullptr;
 	DirectionalLight* directionalLightData_ = nullptr;
 
-	// バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	// Commonクラス
+	std::unique_ptr<ModelCommon> common_;
 
 	// モデルデータ
 	ModelData modelData_;

@@ -14,10 +14,11 @@
 ///-------------------------------------------///
 Model::Model() = default;
 Model::~Model() {
-	vertex_.reset();
-	material_.reset();
-	wvp_.reset();
-	light_.reset();
+	common_.reset();
+	delete vertexData_;
+	delete materialData_;
+	delete wvpMatrixData_;
+	delete directionalLightData_;
 }
 
 
@@ -61,43 +62,20 @@ void Model::Initialize(const std::string& filename) {
 	modelData_ = Mii::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
-	vertex_ = std::make_unique<VertexBuffer3D>();
-	material_ = std::make_unique<Material3D>();
-	wvp_ = std::make_unique<Transform3D>();
-	light_ = std::make_unique<Light>();
+	common_ = std::make_unique<ModelCommon>();
 
 	/// ===vertex=== ///
-	// Buffer
-	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
-	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	// メモリコピー
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData3D) * modelData_.vertices.size());
-	// view
-	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
-	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
-	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
-
+	common_->VertexInitialize(device, modelData_);
+	vertexData_ = new VertexData3D();
 	/// ===Material=== ///
-	// buffer
-	material_->Create(device, sizeof(MaterialData3D));
-	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	// Data書き込み
-	materialData_->color = color_;
-	materialData_->enableLighting = 0;
-	materialData_->uvTransform = MakeIdentity4x4();
-
+	common_->MaterialInitialize(device);
+	materialData_ = new MaterialData3D();
 	/// ===wvp=== ///
-	// buffer
-	wvp_->Create(device, sizeof(TransformationMatrix3D));
-	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
-	// Dataの書き込み
-	wvpMatrixData_->WVP = MakeIdentity4x4();
-	wvpMatrixData_->World = MakeIdentity4x4();
-
+	common_->WVPMatrixInitialize(device);
+	wvpMatrixData_ = new TransformationMatrix3D();
 	/// ===Light=== ///
-	light_->Create(device, sizeof(DirectionalLight));
-	light_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
-	LightDataWrite();
+	common_->LightInitialize(device);
+	directionalLightData_ = new DirectionalLight();
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
@@ -111,6 +89,14 @@ void Model::Initialize(const std::string& filename) {
 ///-------------------------------------------///
 void Model::Update() {
 
+	/// ===データの書き込み=== ///
+	worldTransform_.scale = scale_;
+	worldTransform_.rotate = rotate_;
+	worldTransform_.translate = position_;
+	LightDataWrite();
+	TransformDataWrite();
+	// commonにDataの情報を送る
+	common_->SetData(vertexData_, materialData_, wvpMatrixData_, directionalLightData_);
 }
 
 
@@ -125,22 +111,14 @@ void Model::Draw(BlendMode mode) {
 	worldTransform_.translate = position_;
 	LightDataWrite();
 	TransformDataWrite();
-
+	// commonにDataの情報を送る
+	common_->SetData(vertexData_, materialData_, wvpMatrixData_, directionalLightData_);
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
-	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
-	// VertexBufferViewの設定
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-	// Materialの設定
-	commandList->SetGraphicsRootConstantBufferView(0, material_->GetBuffer()->GetGPUVirtualAddress());
-	// wvpMatrixBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
-	// Lightの設定
-	commandList->SetGraphicsRootConstantBufferView(3, light_->GetBuffer()->GetGPUVirtualAddress());
+	common_->Bind(commandList, PipelineType::Obj3D, mode);
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
