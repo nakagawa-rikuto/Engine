@@ -120,11 +120,11 @@ void GameScene::Update() {
 	}
 
 	if (playAudio) {
-		Mii::PlayeSound("clear", false);
-		Mii::VolumeSound("clear", volume);
-		Mii::PitchSound("clear", pitch);
+		Mii::PlayeSound("fanfare", false);
+		Mii::VolumeSound("fanfare", volume);
+		Mii::PitchSound("fanfare", pitch);
 	} else {
-		Mii::StopSound("clear");
+		Mii::StopSound("fanfare");
 	}
 
 	if (isRotate) {
