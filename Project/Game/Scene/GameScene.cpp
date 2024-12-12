@@ -10,6 +10,8 @@ GameScene::~GameScene() {
 	camera_.reset();
 	camera2_.reset();
 	model_.reset();
+	Mii::StopSound("fanfare");
+	Mii::StopSound("clear");
 	Mii::UnloadSound("fanfare");
 	Mii::UnloadSound("clear");
 }
