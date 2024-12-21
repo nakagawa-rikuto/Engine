@@ -1,6 +1,7 @@
 #include "SceneFactory.h"
 
 // 各シーン
+#include "Game/Scene/DebugScene.h"
 #include "Game/Scene/TitleScene.h"
 #include "Game/Scene/SelectScene.h"
 #include "Game/Scene/GameScene.h"
@@ -27,6 +28,9 @@ std::unique_ptr<IScene> SceneFactory::CreateScene(const std::string& sceneName) 
 	} else if (sceneName == "GameOver") {
 		//　ゲームオーバー
 		return std::make_unique<GameOverScene>();
+	} else if (sceneName == "Debug") {
+		// デバッグ
+		return std::make_unique<DebugScene>();
 	}
 	return nullptr;
 }
