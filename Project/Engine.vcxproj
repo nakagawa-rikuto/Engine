@@ -104,6 +104,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Entity\Enemy.cpp" />
+    <ClCompile Include="Game\Entity\Player.cpp" />
+    <ClCompile Include="Game\Entity\PlayerBullet.cpp" />
     <ClCompile Include="Game\Scene\DebugScene.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="Game\Scene\ClearScene.cpp" />
@@ -167,6 +170,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Scene\SceneFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Entity\Enemy.h" />
+    <ClInclude Include="Game\Entity\Player.h" />
+    <ClInclude Include="Game\Entity\PlayerBullet.h" />
     <ClInclude Include="Game\Scene\DebugScene.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Game\Scene\ClearScene.h" />

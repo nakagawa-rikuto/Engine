@@ -13,6 +13,9 @@ GameScene::~GameScene() {}
 void GameScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
+
+	Mii::LoadTexture("./ Resource/monsterBall.png");
+	Mii::LoadTexture("./Resource/uvChecker.png")
 }
 
 ///-------------------------------------------/// 
