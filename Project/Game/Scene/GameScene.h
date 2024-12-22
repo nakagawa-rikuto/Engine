@@ -1,9 +1,6 @@
 #pragma once
 /// ===Includ=== ///
 #include "Game/Scene/IScene.h"
-#include "Command.h"
-#include "Game/2d/Sprite.h"
-#include <memory>
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -25,11 +22,5 @@ private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
 	/// </summary>
-	
-	Object object_;
-	std::unique_ptr<LeftCommand> leftCommand_;
-	std::unique_ptr<RightCommand> rightCommand_;
-
-	std::shared_ptr<Sprite> box_;
 };
 
