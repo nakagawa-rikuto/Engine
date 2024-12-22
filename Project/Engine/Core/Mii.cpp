@@ -204,4 +204,6 @@ DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
 ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList
 ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
+// Input
+Input* Mii::GetInput() { return input_.get(); }
 #pragma endregion
