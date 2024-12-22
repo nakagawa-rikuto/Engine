@@ -112,6 +112,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	static ID3D12Device* GetDXDevice();
 	// CommandListの取得
 	static ID3D12GraphicsCommandList* GetDXCommandList();
+	// Inputの取得
+	static Input* GetInput();
 
 private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<WinApp> winApp_;           // WinApp

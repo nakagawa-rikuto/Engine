@@ -4,7 +4,6 @@
 #include "Engine/Core/ComPtr.h"
 // c++
 #define DIRECTINPUT_VERSION   0x0800   // DirectInputのバージョン指定
-#include <cassert>
 #include <dinput.h>
 #include <Windows.h>
 #include <array>
@@ -26,7 +25,7 @@ public: // メンバ関数
 
 
 	Input() = default;
-	~Input() = default;
+	~Input();
 
 	/// <summary>
 	/// 初期化
