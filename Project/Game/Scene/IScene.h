@@ -24,8 +24,6 @@ public:/// ===Setter=== ///
 	void SetSceneManager(SceneManager* sceneManager);
 
 protected:
-	// input
-	Input* input_ = nullptr;
 	// シーンマネージャ
 	SceneManager* sceneManager_ = nullptr;
 	// Camera

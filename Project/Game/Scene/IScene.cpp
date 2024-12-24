@@ -2,8 +2,6 @@
 
 
 void IScene::Initialize() {
-	/// ===Input=== ///
-	input_ = Mii::GetInput();
 
 	/// ===デフォルトカメラの生成=== ///
 	defaultCamera_ = std::make_unique<Camera>();

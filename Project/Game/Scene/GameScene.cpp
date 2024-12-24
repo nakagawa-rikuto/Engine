@@ -13,6 +13,16 @@ GameScene::~GameScene() {}
 void GameScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
+
+	Mii::LoadTexture("./Resource/monsterBall.png");
+	Mii::LoadTexture("./Resource/uvChecker.png");
+	Mii::LoadTexture("./Resource/checkerBoard.png");
+
+	player_ = std::make_unique<Player>();
+	player_->Initialzie();
+
+	enemy_ = std::make_unique<Enemy>();
+	enemy_->Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -24,6 +34,12 @@ void GameScene::Update() {
 	ImGui::Begin("GameScene");
 	ImGui::End();
 #endif // DEBUG
+
+	/// ===当たり判定=== ///
+	
+
+	player_->Update();
+	enemy_->Update();
 }
 
 ///-------------------------------------------/// 
@@ -37,5 +53,7 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
+	enemy_->Draw();
+	player_->Draw();
 #pragma endregion
 }

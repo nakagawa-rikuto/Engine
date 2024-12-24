@@ -2,7 +2,6 @@
 // Engine
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
-#include "Engine/Input/Input.h"
 // Manager
 #include "Engine/Managers/SRVManager.h"
 #include "Engine/Managers/PiplineManager.h"
@@ -168,6 +167,12 @@ const DirectX::TexMetadata& Mii::GetMetaData(const std::string& filePath) { retu
 ///-------------------------------------------/// 
 /// プログラマー用関数
 ///-------------------------------------------///
+#pragma region Key入力関連
+// 押してる間
+bool Mii::PushKey(BYTE keyNum) { return input_->PushKey(keyNum); }
+// 押した瞬間
+bool Mii::TriggerKey(BYTE keyNum) { return input_->TriggerKey(keyNum); }
+#pragma endregion
 #pragma region Texture関連
 // テクスチャ読み込み
 void Mii::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
