@@ -2,6 +2,7 @@
 /// ===include=== ///
 // Engine
 #include "Engine/Core/CData.h"
+#include "Engine/Input/Input.h"
 // Game 
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // DirectXTex
@@ -77,6 +78,13 @@ public:/// ===開発者用関数(その他)=== ///
 	static ModelData GetModelData(const std::string& filename);
 
 public:/// ===プログラマー用関数=== ///
+
+	///-------------------------------------------/// 
+	/// キー入力
+	///-------------------------------------------///
+	static bool PushKey(BYTE keyNum);
+	static bool TriggerKey(BYTE keyNum);
+
 	///-------------------------------------------/// 
 	/// テクスチャ関連
 	///-------------------------------------------///

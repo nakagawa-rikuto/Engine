@@ -1,3 +1,4 @@
+#pragma once
 #include "Game/2d/Sprite.h"
 #include <memory>
 #include <list>
@@ -18,13 +19,20 @@ public:
 	void Draw();
 
 public: /// ===Setter, Getter=== ///
-	Vector2 GetPosition();
+	Vector2 GetPosition()const;
+	Vector2 GetSize()const;
+	Vector2 GetBulletPos() const;
+	Vector2 GetBulletSize() const;
 	void SetPosition(const Vector2& pos);
 
 private:
 
-	Vector2 postiton_;
+	// sprite
+	Vector2 postiton_ = Vector2(640.0f, 500.0f);
+	Vector2 size_ = Vector2(50.0f, 50.0f);
+	bool isShot_;
 	std::unique_ptr<Sprite> sprite_;
 
-	std::list<std::shared_ptr<PlayerBullet>> bullet_;
+	// bullet
+	std::shared_ptr<PlayerBullet> bullet_;
 };
