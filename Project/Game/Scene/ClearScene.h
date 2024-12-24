@@ -1,6 +1,5 @@
 #pragma once
 /// ===Include=== ///
-// IScene
 #include "Game/Scene/IScene.h"
 
 ///=====================================================/// 

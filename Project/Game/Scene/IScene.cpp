@@ -2,6 +2,7 @@
 
 
 void IScene::Initialize() {
+
 	/// ===デフォルトカメラの生成=== ///
 	defaultCamera_ = std::make_unique<Camera>();
 	defaultCamera_->Initialize();

@@ -1,8 +1,19 @@
 #include "Input.h"
 // Engine
 #include "Engine/Core/WinApp.h"
+// c++
+#include <cassert>
 // Math
 #include "Math/sMath.h"
+
+///-------------------------------------------///  
+/// デストラクタ
+///-------------------------------------------///
+Input::~Input() {
+	if (keyboard_) {
+		keyboard_->Unacquire();
+	}
+}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -17,12 +28,15 @@ void Input::Initialize(WinApp* winApp) {
 
 	// キーボードデバイスの生成
 	hr = directInput_->CreateDevice(GUID_SysKeyboard, &keyboard_, NULL);
+	assert(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = keyboard_->SetDataFormat(&c_dfDIKeyboard);
+	assert(SUCCEEDED(hr));
 
 	// 排他的正業レベルのセット
 	hr = keyboard_->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	assert(SUCCEEDED(hr));
 }
 
 ///-------------------------------------------/// 
@@ -30,14 +44,18 @@ void Input::Initialize(WinApp* winApp) {
 ///-------------------------------------------///
 void Input::Update() {
 
+	HRESULT hr;
+
 	// 前回のキー入力を保持
 	memcpy(preKye_, key_, sizeof(key_));
 
 	// キーボード情報の取得開始
-	keyboard_->Acquire();
+	hr = keyboard_->Acquire();
+	assert(SUCCEEDED(hr));
 
 	// 全キーの入力情報を取得
-	keyboard_->GetDeviceState(sizeof(key_), key_);
+	hr = keyboard_->GetDeviceState(sizeof(key_), key_);
+	assert(SUCCEEDED(hr));
 }
 
 ///-------------------------------------------/// 
