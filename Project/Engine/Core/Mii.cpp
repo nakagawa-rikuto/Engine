@@ -183,20 +183,6 @@ void Mii::LoadModel(const std::string& filename) { modelManager_->LoadModel("Res
 // モデルデータの取得
 ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
 #pragma endregion
-#pragma region Audio関連
-// 音声データの読み込み
-void Mii::LoadSound(const std::string& key, const std::string& filename, bool loadMP3) { return audioManager_->Load(key, filename, loadMP3); }
-// 音声データの解放
-void Mii::UnloadSound(const std::string& key) { return audioManager_->Unload(key); }
-// 音声データの再生
-void Mii::PlayeSound(const std::string& key, bool loop) { return audioManager_->Play(key, loop); }
-// 音声データの停止
-void Mii::StopSound(const std::string& key) { return audioManager_->Stop(key); }
-// 音声データの音量設定
-void Mii::VolumeSound(const std::string& key, float volume) { return audioManager_->SetVolume(key, volume); }
-// 音声データの再生速度設定
-void Mii::PitchSound(const std::string& key, float pitch) { return audioManager_->setPitch(key, pitch); }
-#pragma endregion
 
 
 ///-------------------------------------------/// 
@@ -211,4 +197,12 @@ ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
 ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
 // Input
 Input* Mii::GetInput() { return input_.get(); }
+// SRVManager
+SRVManager* Mii::GetSRVManager() {return srvManager_.get();}
+// TextureManager
+TextureManager* Mii::GetTextureManager() { return textureManager_.get(); }
+// ModelManager
+ModelManager* Mii::GetModelManager() { return modelManager_.get(); }
+// AudioManager
+AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 #pragma endregion

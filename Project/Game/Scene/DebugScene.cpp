@@ -10,10 +10,10 @@ DebugScene::~DebugScene() {
 	camera_.reset();
 	camera2_.reset();
 	model_.reset();
-	Mii::StopSound("fanfare");
-	Mii::StopSound("clear");
-	Mii::UnloadSound("fanfare");
-	Mii::UnloadSound("clear");
+	audio_->StopSound("fanfare");
+	audio_->StopSound("clear");
+	Loader_->UnloadSound("fanfare");
+	Loader_->UnloadSound("clear");
 }
 
 ///-------------------------------------------/// 
@@ -24,21 +24,21 @@ void DebugScene::Initialize() {
 	IScene::Initialize();
 
 	// 音声データの読み込み
-	Mii::LoadSound("fanfare", "./Resource/BGM/fanfare.wav", false);
+	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
 	// MP3を読み込むとものすごく重い
-	//Mii::LoadSound("clear", "./Resource/BGM/clear.mp3", true);
+	//load_->LoadSound("clear", "./Resource/BGM/clear.mp3");
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
-	Mii::LoadTexture(uvTexture);
+	Loader_->LoadTexture(uvTexture);
 	const std::string& monsterBall = "./Resource/monsterBall.png";
-	Mii::LoadTexture(monsterBall);
+	Loader_->LoadTexture(monsterBall);
 
 	// モデルの読み込み
 	const std::string& planeModel = "plane";
-	Mii::LoadModel(planeModel);
+	Loader_->LoadModel(planeModel);
 	const std::string& axisModel = "axis";
-	Mii::LoadModel(axisModel);
+	Loader_->LoadModel(axisModel);
 
 	// スプライト
 	sprite_ = std::make_unique<Sprite>();
@@ -79,7 +79,7 @@ void DebugScene::Initialize() {
 	cameraManager_->Add("Main", camera_);
 	cameraManager_->Add("Main2", camera2_);
 
-	//Mii::PlayeSound("clear", false);
+	//audio_->PlayeSound("clear", false);
 }
 
 ///-------------------------------------------/// 
@@ -122,11 +122,12 @@ void DebugScene::Update() {
 	}
 
 	if (playAudio) {
-		Mii::PlayeSound("fanfare", false);
-		Mii::VolumeSound("fanfare", volume);
-		Mii::PitchSound("fanfare", pitch);
+		audio_->PlayeSound("fanfare", false);
+		audio_->VolumeSound("fanfare", volume);
+		audio_->PitchSound("fanfare", pitch);
 	} else {
-		Mii::StopSound("fanfare");
+		audio_->StopSound("fanfare");
+		audio_->StopSound("fanfare");
 	}
 
 	if (isRotate) {
