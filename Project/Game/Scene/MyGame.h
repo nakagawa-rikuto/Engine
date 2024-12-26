@@ -30,7 +30,5 @@ private:/// ====== ///
 	/// ===シーン=== ///
 	// シーンマネージャ
 	std::unique_ptr<SceneManager> sceneManager_;
-
-	
 };
 
