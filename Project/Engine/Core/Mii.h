@@ -2,6 +2,7 @@
 /// ===include=== ///
 // Engine
 #include "Engine/Core/CData.h"
+#include "Engine/Input/Input.h"
 // Game 
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // DirectXTex
@@ -25,9 +26,9 @@ class Input;
 // Manager
 class SRVManager;
 class PipelineManager;
+class ImGuiManager;
 class TextureManager;
 class ModelManager;
-class ImGuiManager;
 class AudioManager;
 
 ///=====================================================///
@@ -77,6 +78,13 @@ public:/// ===開発者用関数(その他)=== ///
 	static ModelData GetModelData(const std::string& filename);
 
 public:/// ===プログラマー用関数=== ///
+
+	///-------------------------------------------/// 
+	/// キー入力
+	///-------------------------------------------///
+	static bool PushKey(BYTE keyNum);
+	static bool TriggerKey(BYTE keyNum);
+
 	///-------------------------------------------/// 
 	/// テクスチャ関連
 	///-------------------------------------------///
@@ -89,22 +97,6 @@ public:/// ===プログラマー用関数=== ///
 	// モデルの読み込み
 	static void LoadModel(const std::string& filename);
 
-	///-------------------------------------------/// 
-	/// 音関連
-	///-------------------------------------------///
-	// 音声データの読み込み
-	static void LoadSound(const std::string& key, const std::string& filename, bool loadMP3);
-	// 音声データの解放
-	static void UnloadSound(const std::string& key);
-	// サウンドの再生
-	static void PlayeSound(const std::string& key, bool loop);
-	// サウンドの停止
-	static void StopSound(const std::string& key);
-	// 音量の設定
-	static void VolumeSound(const std::string& key, float volume);
-	// 再生速度の設定
-	static void PitchSound(const std::string& key, float pitch);
-
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
 	static DXCommon* GetDXCommon();
@@ -112,6 +104,16 @@ public:/// ===開発者用関数(Getter)=== ///
 	static ID3D12Device* GetDXDevice();
 	// CommandListの取得
 	static ID3D12GraphicsCommandList* GetDXCommandList();
+	// Inputの取得
+	static Input* GetInput();
+	// SRVManagerの取得
+	static SRVManager* GetSRVManager();
+	// TextureManager
+	static TextureManager* GetTextureManager();
+	// ModelManager
+	static ModelManager* GetModelManager();
+	// AudioManager
+	static AudioManager* GetAudioManager();
 
 private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<WinApp> winApp_;           // WinApp

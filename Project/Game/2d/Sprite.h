@@ -19,7 +19,7 @@
 class Sprite {
 public: /// ===基本的な関数=== ///
 
-	Sprite();
+	Sprite() = default;
 	~Sprite();
 
 	/// <summary>
