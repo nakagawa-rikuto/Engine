@@ -1,5 +1,6 @@
 #include "IScene.h"
 
+#include "Engine/Core/Mii.h"
 
 void IScene::Initialize() {
 

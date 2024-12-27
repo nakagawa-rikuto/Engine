@@ -26,9 +26,9 @@ class Input;
 // Manager
 class SRVManager;
 class PipelineManager;
+class ImGuiManager;
 class TextureManager;
 class ModelManager;
-class ImGuiManager;
 class AudioManager;
 
 ///=====================================================///

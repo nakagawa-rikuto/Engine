@@ -26,7 +26,7 @@ void DebugScene::Initialize() {
 	// 音声データの読み込み
 	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
 	// MP3を読み込むとものすごく重い
-	//load_->LoadSound("clear", "./Resource/BGM/clear.mp3");
+	//load_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
@@ -56,7 +56,6 @@ void DebugScene::Initialize() {
 	// モデル
 	model_ = std::make_unique<Model>();
 	model_->Initialize(axisModel);
-
 	/* // モデルの使い方
 	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));
