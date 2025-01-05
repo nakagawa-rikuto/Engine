@@ -1,6 +1,7 @@
 #include "Game/Scene/DebugScene.h"
 // SceneManager
 #include "Game/Manager/SceneManager.h"
+#include "Engine/Core/Mii.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -114,12 +115,31 @@ void DebugScene::Update() {
 	ImGui::End();
 #endif // _DEBUG
 
+	/// ===カメラの変更=== ///
 	if (SetCamera) {
 		cameraManager_->SetActiveCamera("Main");
 	} else {
 		cameraManager_->SetActiveCamera("Main2");
 	}
 
+	/// ===入力処理=== ///
+	if (Mii::PushKey(DIK_D)) {
+		cameraPos.y += 0.01f;
+	} else if (Mii::PushKey(DIK_A)) {
+		cameraPos.y -= 0.01f;
+	}
+	if (Mii::PushKey(DIK_W)) {
+		cameraPos.x += 0.01f;
+	} else if (Mii::PushKey(DIK_S)) {
+		cameraPos.x -= 0.01f;
+	}
+	if (Mii::PushKey(DIK_UP)) {
+		cameraPos.z += 0.01f;
+	} else if (Mii::PushKey(DIK_DOWN)) {
+		cameraPos.z -= 0.01f;
+	}
+
+	/// ===Audioのセット=== ///
 	if (playAudio) {
 		audio_->PlayeSound("fanfare", false);
 		audio_->VolumeSound("fanfare", volume);
@@ -160,6 +180,6 @@ void DebugScene::Draw() {
 
 #pragma region 前景スプライト描画
 	// Spriteの描画
-	sprite_->Draw();
+	//sprite_->Draw();
 #pragma endregion
 }
