@@ -51,11 +51,11 @@ void Input::Update() {
 
 	// キーボード情報の取得開始
 	hr = keyboard_->Acquire();
-	assert(SUCCEEDED(hr));
+	//assert(SUCCEEDED(hr));
 
 	// 全キーの入力情報を取得
 	hr = keyboard_->GetDeviceState(sizeof(key_), key_);
-	assert(SUCCEEDED(hr));
+	//assert(SUCCEEDED(hr));
 }
 
 ///-------------------------------------------/// 
