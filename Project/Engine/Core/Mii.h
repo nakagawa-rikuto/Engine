@@ -22,7 +22,6 @@
 // Engine
 class WinApp;
 class DXCommon;
-class Input;
 // Manager
 class SRVManager;
 class PipelineManager;
