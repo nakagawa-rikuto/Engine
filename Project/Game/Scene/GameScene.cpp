@@ -14,8 +14,9 @@ void GameScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 
+    // Blockモデルの読み込み
     const std::string& BlockModel = "Block";
-    Mii::LoadModel(BlockModel);
+    Loader_->LoadModel(BlockModel);
 
     // 配置基準点と間隔
     Vector3 basePoint(0.0f, 0.0f, 0.0f);

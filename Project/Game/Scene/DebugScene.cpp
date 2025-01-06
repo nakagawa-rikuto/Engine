@@ -1,6 +1,7 @@
 #include "Game/Scene/DebugScene.h"
 // SceneManager
 #include "Game/Manager/SceneManager.h"
+#include "Engine/Core/Mii.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -10,10 +11,10 @@ DebugScene::~DebugScene() {
 	camera_.reset();
 	camera2_.reset();
 	model_.reset();
-	Mii::StopSound("fanfare");
-	Mii::StopSound("clear");
-	Mii::UnloadSound("fanfare");
-	Mii::UnloadSound("clear");
+	audio_->StopSound("fanfare");
+	audio_->StopSound("clear");
+	Loader_->UnloadSound("fanfare");
+	Loader_->UnloadSound("clear");
 }
 
 ///-------------------------------------------/// 
@@ -24,21 +25,21 @@ void DebugScene::Initialize() {
 	IScene::Initialize();
 
 	// 音声データの読み込み
-	Mii::LoadSound("fanfare", "./Resource/BGM/fanfare.wav", false);
+	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
 	// MP3を読み込むとものすごく重い
-	//Mii::LoadSound("clear", "./Resource/BGM/clear.mp3", true);
+	//load_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
 
 	//// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
-	Mii::LoadTexture(uvTexture);
+	Loader_->LoadTexture(uvTexture);
 	const std::string& monsterBall = "./Resource/monsterBall.png";
-	Mii::LoadTexture(monsterBall);
+	Loader_->LoadTexture(monsterBall);
 
 	// モデルの読み込み
 	const std::string& planeModel = "plane";
-	Mii::LoadModel(planeModel);
+	Loader_->LoadModel(planeModel);
 	const std::string& axisModel = "axis";
-	Mii::LoadModel(axisModel);
+	Loader_->LoadModel(axisModel);
 
 	// スプライト
 	sprite_ = std::make_unique<Sprite>();
@@ -56,7 +57,6 @@ void DebugScene::Initialize() {
 	// モデル
 	model_ = std::make_unique<Model>();
 	model_->Initialize(axisModel);
-
 	/* // モデルの使い方
 	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));
@@ -79,7 +79,7 @@ void DebugScene::Initialize() {
 	cameraManager_->Add("Main", camera_);
 	cameraManager_->Add("Main2", camera2_);
 
-	//Mii::PlayeSound("clear", false);
+	//audio_->PlayeSound("clear", false);
 }
 
 ///-------------------------------------------/// 
@@ -115,18 +115,38 @@ void DebugScene::Update() {
 	ImGui::End();
 #endif // _DEBUG
 
+	/// ===カメラの変更=== ///
 	if (SetCamera) {
 		cameraManager_->SetActiveCamera("Main");
 	} else {
 		cameraManager_->SetActiveCamera("Main2");
 	}
 
+	/// ===入力処理=== ///
+	if (Mii::PushKey(DIK_D)) {
+		cameraPos.y += 0.01f;
+	} else if (Mii::PushKey(DIK_A)) {
+		cameraPos.y -= 0.01f;
+	}
+	if (Mii::PushKey(DIK_W)) {
+		cameraPos.x += 0.01f;
+	} else if (Mii::PushKey(DIK_S)) {
+		cameraPos.x -= 0.01f;
+	}
+	if (Mii::PushKey(DIK_UP)) {
+		cameraPos.z += 0.01f;
+	} else if (Mii::PushKey(DIK_DOWN)) {
+		cameraPos.z -= 0.01f;
+	}
+
+	/// ===Audioのセット=== ///
 	if (playAudio) {
-		Mii::PlayeSound("fanfare", false);
-		Mii::VolumeSound("fanfare", volume);
-		Mii::PitchSound("fanfare", pitch);
+		audio_->PlayeSound("fanfare", false);
+		audio_->VolumeSound("fanfare", volume);
+		audio_->PitchSound("fanfare", pitch);
 	} else {
-		Mii::StopSound("fanfare");
+		audio_->StopSound("fanfare");
+		audio_->StopSound("fanfare");
 	}
 
 	if (isRotate) {
@@ -160,6 +180,6 @@ void DebugScene::Draw() {
 
 #pragma region 前景スプライト描画
 	// Spriteの描画
-	sprite_->Draw();
+	//sprite_->Draw();
 #pragma endregion
 }

@@ -100,6 +100,8 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 		} else if (identifier == "vt") { // 頂点テクスチャ座標
 			Vector2 texcoord;
 			s >> texcoord.x >> texcoord.y;
+			// y成分を反転させる
+			texcoord.y = 1.0f - texcoord.y;
 			texcoords.push_back(texcoord);
 		} else if (identifier == "vn") { // 頂点法線
 			Vector3 normal;
@@ -134,7 +136,6 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 				position.x *= -1.0f;
 				normal.x *= -1.0f;
 				VertexData3D vertex = { position, texcoord, normal };
-				texcoord.y = 1.0f - texcoord.y;
 				triangle[faceVertex] = vertex;
 			}
 
