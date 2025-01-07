@@ -1,11 +1,12 @@
 #include "GameOverScene.h"
 // SceneManager
 #include "Game/Manager/SceneManager.h"
+#include "Engine/Core/Mii.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-GameOverScene::~GameOverScene() {}
+GameOverScene::~GameOverScene() { sprite_.reset(); }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -13,6 +14,15 @@ GameOverScene::~GameOverScene() {}
 void GameOverScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
+
+	// テクスチャの読み込み
+	const std::string& uvTexture = "./Resource/uvChecker.png";
+	Loader_->LoadTexture(uvTexture);
+
+	// スプライト
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->Initialize();                              // BlendMode変更可　sprite->Initialize(BlendMode::kBlendModeAdd);  
+	sprite_->SetTexture(uvTexture);
 }
 
 ///-------------------------------------------/// 
@@ -24,6 +34,11 @@ void GameOverScene::Update() {
 	ImGui::Begin("GameOverScene");
 	ImGui::End();
 #endif // DEBUG
+
+	// シーン切り替え
+	if (Mii::TriggerKey(DIK_SPACE)) {
+		sceneManager_->ChangeScene("Title");
+	}
 }
 
 ///-------------------------------------------/// 
@@ -31,6 +46,8 @@ void GameOverScene::Update() {
 ///-------------------------------------------///
 void GameOverScene::Draw() {
 #pragma region 背景スプライト描画
+	// Spriteの描画
+	sprite_->Draw();
 #pragma endregion
 
 #pragma region モデル描画

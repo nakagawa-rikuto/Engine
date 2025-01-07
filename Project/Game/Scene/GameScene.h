@@ -3,16 +3,10 @@
 #include "Game/Scene/IScene.h"
 
 #include "Game/Stage/Block.h"
+#include "Game/Stage/Goal.h"
 #include "Game/Entity/Player.h"
 
 #include <vector>
-
-///=====================================================/// 
-/// ゲームモード
-///=====================================================///
-enum GameMode {
-	
-};
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -52,6 +46,9 @@ private:/// ===メンバ変数=== ///
 	/// ===Block=== ///
 	std::vector<std::shared_ptr<Block>> blocks_;
 
+	/// ===Goal=== ///
+	std::unique_ptr<Goal> goal_;
+
 private:
 
 	/// ===当たり判定=== ///
@@ -60,5 +57,8 @@ private:
 
 	/// ===モード変更時の座標変換=== ///
 	void SwithcTo3DMode();
+	
+	/// ===ゴールのBlockとの当たり判定=== ///
+	bool IsCollisionGoalBlock();
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 /// ===Include=== ///
 #include "Game/Scene/IScene.h"
+#include "Game/2d/Sprite.h"
 
 ///=====================================================/// 
 /// クリアシーン
@@ -23,5 +24,7 @@ private:/// ===メンバ変数=== ///
 	/// シーン用
 	/// </summary>
 
+	// スプライト
+	std::unique_ptr<Sprite> sprite_;
 };
 

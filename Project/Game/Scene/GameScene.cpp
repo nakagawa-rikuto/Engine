@@ -7,7 +7,9 @@
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+
+}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -23,6 +25,9 @@ void GameScene::Initialize() {
     // Playerモデルの読み込み
     const std::string& PlayerModel = "Player";
     Loader_->LoadModel(PlayerModel);
+    // Goalモデルの読み込み
+    const std::string& GoalModel = "Goal";
+    Loader_->LoadModel(GoalModel);
 
     /// ===Player関連=== ///
     player_ = std::make_unique<Player>();
@@ -34,7 +39,7 @@ void GameScene::Initialize() {
     float offset = 10.0f; // 各モデルの間隔
 
     // Blockの配置
-    for (size_t i = 0; i < 10; ++i) {
+    for (size_t i = 0; i < 11; ++i) {
         auto block = std::make_shared<Block>();
 
         //// 近接した位置に配置 (X 軸方向に並べる)
@@ -47,26 +52,30 @@ void GameScene::Initialize() {
         if (i == 8) {
             position.x = basePoint.x + i * block->GetSize().x * 0.5f;
             position.y = basePoint.y;
-            position.z = basePoint.z + (i - 1) * offset + block->GetSize().z * 0.5f;
+            position.z = basePoint.z + (i - 1) * offset + (block->GetSize().z * 0.5f) * 2.0f;
         }
 
         // 最後のモデルだけ Z 軸方向に +5.0f
         if (i == 9) {
             position.x = basePoint.x + (i - 1) * block->GetSize().x * 0.5f;
             position.y = basePoint.y;
-            position.z = basePoint.z + (i - 2) * offset;
+            position.z = basePoint.z + (i - 2) * offset + block->GetSize().z * 0.5f;
         }
 
-        // 簡単デバッグ用
-        /*Vector3 position(
-            basePoint.x + i * block->GetSize().x * 0.5f,
-            basePoint.y,
-            basePoint.z
-        );*/
+        if (i == 10) {
+            position.x = basePoint.x + (i - 2) * block->GetSize().x * 0.5f;
+            position.y = basePoint.y;
+            position.z = basePoint.z + (i - 3) * offset;
+        }
 
         block->Initialze(BlockModel, position); // 初期化を呼び出す
         blocks_.push_back(block);  // モデルをリストに追加
     }
+
+    /// ===Goal=== ///
+    goal_ = std::make_unique<Goal>();
+    goal_->Initialze(GoalModel, blocks_[8]->GetPos());
+
 
     /// ===カメラ関連=== ///
     // カメラのTransform情報を書き込む(最初は3D)
@@ -139,12 +148,21 @@ void GameScene::Update() {
             block->Update(cameraManager_->GetActiveCamera().get());
         }
     }
+    // Goalの更新
+    goal_->Update(cameraManager_->GetActiveCamera().get());
 
     // カメラセット
     camera_->SetTranslate(cameraPos_);
     camera_->SetRotate(cameraRotate_);
     camera_->SetScale(cameraScale_);
     cameraManager_->UpdateAllCameras();
+
+    /// ===シーンの切り替え処理=== ///
+    if (IsCollisionGoalBlock()) {
+        sceneManager_->ChangeScene("Clear");
+    } else if (player_->GetPos().y < -50.0f) {
+        sceneManager_->ChangeScene("GameOver");
+    }
 }
 
 ///-------------------------------------------/// 
@@ -163,6 +181,8 @@ void GameScene::Draw() {
     }
     // Playerの描画
     player_->Draw();
+    // Goalの描画
+    goal_->Draw();
 
 #pragma endregion
 
@@ -219,4 +239,20 @@ void GameScene::SwithcTo3DMode() {
         
     }*/
     player_->SetPosititonZ(player_->GetBlockPos().z);
+}
+
+///-------------------------------------------/// 
+/// ゴールとの当たり判定
+///-------------------------------------------///
+bool GameScene::IsCollisionGoalBlock() {
+    // Block[8]の位置とサイズを取得
+    const Vector3 blockMin = blocks_[8]->GetPos() - (blocks_[8]->GetSize() * 0.5f);
+    const Vector3 blockMax = blocks_[8]->GetPos() + (blocks_[8]->GetSize() * 0.5f);
+
+    // 衝突判定
+    if (IsSphereIntersectingAABB(player_->GetPos(), player_->GetRadius(), blockMin, blockMax)) {
+        return true; // 衝突あり
+    }
+
+    return false; // 衝突なし
 }
