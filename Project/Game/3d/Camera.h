@@ -21,6 +21,13 @@ public:
 	/// </summary>
 	void Update();
 
+public:/// ===追加=== ///
+	// 2D用の初期化
+	void InitializeFor2D();
+	// 切り替え
+	void SwitchTo2DMode();
+	void SwitchTo3DMode();
+
 public:/// ===Getter=== ///
 	// WorldMatrix
 	const Matrix4x4& GetWorldMatrix()const;
@@ -70,5 +77,7 @@ private:/// ===変数=== ///
 	/// ===合成行列=== ///
 	Matrix4x4 viewProjectionMatrix_;
 
+private:/// ===追加=== ///
+	bool is2DMode_ = false;
 };
 

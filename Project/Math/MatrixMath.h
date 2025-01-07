@@ -92,7 +92,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 /// <param name="nearClip"></param>
 /// <param name="farClip"></param>
 /// <returns></returns>
-Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
+Matrix4x4 MakeOrthographicMatrix(float left, float right, float bottom, float top, float nearClip, float farClip);
 
 /// <summary>
 /// 逆行列4x4

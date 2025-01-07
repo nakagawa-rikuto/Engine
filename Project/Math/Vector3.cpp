@@ -91,6 +91,26 @@ Vector3& Vector3::operator/=(const float& v) {
 	return *this;
 }
 
+///-------------------------------------------/// 
+/// 追加
+///-------------------------------------------///
+// const Vector3 と const Vector3 の加法
+Vector3 Vector3::operator+(const Vector3& v) const { return Vector3(x + v.x, y + v.y, z + v.z); }
+// const Vector3 と const Vector3 の減法
+Vector3 Vector3::operator-(const Vector3& v) const { return Vector3(x - v.x, y - v.y, z - v.z); }
+// const Vector3 と const Vector3 の積（要素ごとの積）
+Vector3 Vector3::operator*(const Vector3& v) const { return Vector3(x * v.x, y * v.y, z * v.z); }
+// const Vector3 と const Vector3 の除法（要素ごとの除法）
+Vector3 Vector3::operator/(const Vector3& v) const { return Vector3(x / v.x, y / v.y, z / v.z); }
+// const Vector3 と float の加法
+Vector3 Vector3::operator+(const float& v) const { return Vector3(x + v, y + v, z + v); }
+// const Vector3 と float の減法
+Vector3 Vector3::operator-(const float& v) const { return Vector3(x - v, y - v, z - v); }
+// const Vector3 と float の積
+Vector3 Vector3::operator*(const float& v) const { return Vector3(x * v, y * v, z * v); }
+// const Vector3 と float の除法
+Vector3 Vector3::operator/(const float& v) const { return Vector3(x / v, y / v, z / v); }
+
 ///=====================================================///
 /// 内積の計算
 ///=====================================================///

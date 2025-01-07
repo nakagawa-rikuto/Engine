@@ -180,7 +180,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 ///=====================================================///
 /// 正射影行列
 ///=====================================================///
-Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
+Matrix4x4 MakeOrthographicMatrix(float left, float right, float bottom, float top, float nearClip, float farClip) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 

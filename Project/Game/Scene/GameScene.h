@@ -2,8 +2,17 @@
 /// ===Includ=== ///
 #include "Game/Scene/IScene.h"
 
-#include "Game/3d/Model.h"
-#include <list>
+#include "Game/Stage/Block.h"
+#include "Game/Entity/Player.h"
+
+#include <vector>
+
+///=====================================================/// 
+/// ゲームモード
+///=====================================================///
+enum GameMode {
+	
+};
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -26,14 +35,25 @@ private:/// ===メンバ変数=== ///
 	/// シーン用
 	/// </summary>
 	
-	//Camera
-	std::shared_ptr<Camera> camera3D_;
-	std::shared_ptr<Camera> camera2D_;
+	/// ===Camera=== ///
+	// Camera
+	std::shared_ptr<Camera> camera_;
+	// Camera情報
+	Vector3 cameraPos_;
+	Vector3 cameraRotate_;
+	Vector3 cameraScale_;
+	bool SetCamera = true;
 
-	Vector3 cameraPos = { 0.0f, 0.0f, -10.0f };  // Camera
-	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f }; // Canera
-	bool SetCamera = false;
+	/// ===Plaeyr=== ///
+	std::unique_ptr<Player> player_;
 
-	std::list<std::shared_ptr<Model>> block_;
+	/// ===Block=== ///
+	std::vector<std::shared_ptr<Block>> blocks_;
+
+private:
+
+	/// ===当たり判定=== ///
+	void IsCollisison2D();
+	void IsCollisison3D();
 };
 

@@ -1,0 +1,127 @@
+#include "Player.h"
+
+#include "Engine/Core/Mii.h"
+#include "Game/Stage/Block.h"
+
+#ifdef _DEBUG
+#include "imgui.h"
+#endif // _DEBUG
+
+
+///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+Player::~Player() {}
+
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+// ポジション
+const Vector3 Player::GetPos() { return pos_; }
+// 半径
+const float Player::GetRadius() { return radius_; }
+// 
+void Player::NotCollisision() { isCollision_ = false; }
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void Player::Inititalze(const std::string & modelName) {
+
+	/// ===Transform情報=== ///
+	pos_ = { 0.0f, 3.0f, 0.0f };
+	radius_ = 0.3f;
+
+	/// ===Model=== ///
+	model_ = std::make_unique<Model>();
+	model_->Initialize(modelName);
+	model_->SetPosition(pos_);
+}
+
+///-------------------------------------------/// 
+/// 更新
+///-------------------------------------------///
+void Player::Update(Camera * camera) {
+
+#ifdef _DEBUG
+	ImGui::Begin("Player");
+	ImGui::DragFloat3("Position", &pos_.x, 0.1f);
+	ImGui::End();
+#endif // _DEBUG
+
+	if (!isCollision_) {
+		pos_.y -= 0.4f;
+	}
+
+	// 移動処理・・後々ゲームモードを分けるのでその時にそれぞれ割り当てる。	
+	//Move2D();
+	Move3D();
+
+	// モデルの更新
+	model_->SetPosition(pos_);
+	model_->SetCamera(camera);
+
+	// 毎フレーム衝突状態をリセット
+	//isCollision_ = false;
+}
+
+///-------------------------------------------/// 
+/// 描画
+///-------------------------------------------///
+void Player::Draw() {
+	model_->Draw();
+}
+
+///-------------------------------------------/// 
+/// 衝突時の処理
+///-------------------------------------------///
+void Player::OnCollision(Block* block) {
+	//衝突状態にする
+	isCollision_ = true;
+
+	// Blockの中心座標を取得
+	Vector3 blockCenter = block->GetPos();
+
+	// Y軸の押し戻し量を計算
+	float pushBackY = pos_.y - blockCenter.y;
+
+	// Y軸だけ押し戻す
+	if (pushBackY > 0.0f) { // プレイヤーがブロックの上にいる場合
+		pos_.y += 0.1f; // 0.1f は押し戻し量
+	} else if (pushBackY < 0.0f) { // プレイヤーがブロックの下にいる場合
+		pos_.y -= 0.1f; // 逆方向に押し戻し
+	}
+}
+
+///-------------------------------------------/// 
+/// 移動処理
+///-------------------------------------------///
+// 3D
+void Player::Move3D() {
+
+	/// ===入力処理=== ///
+	// ｚ軸移動
+	if (Mii::PushKey(DIK_W)) {
+		pos_.z += 0.4f;
+	} else if (Mii::PushKey(DIK_S)) {
+		pos_.z -= 0.4f;
+	}
+	// ｘ軸移動
+	if (Mii::PushKey(DIK_D)) {
+		pos_.x += 0.4f;
+	} else if (Mii::PushKey(DIK_A)) {
+		pos_.x -= 0.4f;
+	}
+
+}
+// 2D
+void Player::Move2D() {
+
+	/// ===入力処理=== ///
+	// ｘ軸移動
+	if (Mii::PushKey(DIK_D)) {
+		pos_.x += 0.4f;
+	} else if (Mii::PushKey(DIK_A)) {
+		pos_.x -= 0.4f;
+	}
+}

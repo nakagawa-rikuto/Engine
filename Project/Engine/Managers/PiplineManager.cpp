@@ -15,7 +15,7 @@ void PipelineManager::Initialize() {
 	for (PipelineType type : AllPipelineTypes()) {
 		for (BlendMode mode : AllBlendModes()) {
 			
-			// ペアのキーをｓ作成
+			// ペアのキーを作成
 			auto key = std::make_pair(type, mode);
 
 			// パイプラインの作成

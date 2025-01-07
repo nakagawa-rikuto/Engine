@@ -35,3 +35,27 @@ Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix);
 /// <param name="v2"></param>
 /// <returns></returns>
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
+/// <summary>
+/// 円と矩形の衝突判定
+/// </summary>
+/// <param name="circleCenter"></param>
+/// <param name="circleRadius"></param>
+/// <param name="rectCenter"></param>
+/// <param name="reectHalfSize"></param>
+/// <returns></returns>
+bool IsCircleIntersectingRectangle(
+	const Vector2& circleCenter, float circleRadius,
+	const Vector2& rectCenter, const Vector2& rectHalfSize);
+
+/// <summary>
+/// 球体とAABBの衝突判定
+/// </summary>
+/// <param name="sphereCenter"></param>
+/// <param name="sphereRadius"></param>
+/// <param name="aabbMin"></param>
+/// <param name="aabbMax"></param>
+/// <returns></returns>
+bool IsSphereIntersectingAABB(
+	const Vector3& sphereCenter, float sphereRadius,
+	const Vector3& aabbMin, const Vector3& aabbMax);

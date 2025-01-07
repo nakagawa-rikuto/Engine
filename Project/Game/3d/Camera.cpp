@@ -45,7 +45,7 @@ void Camera::SetFarClip(const float& farClip) { farClip_ = farClip; }
 /// 初期化
 ///-------------------------------------------///
 void Camera::Initialize() {
-	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.f} };
+	transform_ = { {1.0f, 1.0f, 1.0f},{0.05f, 0.0f, 0.0f}, {0.0f, 7.0f, -40.0f} };
 	horizontalView_ = 0.45f;
 	aspect_ = static_cast<float>(WinApp::kWindowWidth) / static_cast<float>(WinApp::kWindowHeight);
 	nearClip_ = 0.1f;
@@ -61,14 +61,44 @@ void Camera::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void Camera::Update() {
-	// 行列の計算
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	viewMatrix_ = Inverse4x4(worldMatrix_);
-
-	// プロジェクション行列の更新
-	projectionMatrix_ = MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
-
-	// 合成行列
+	if (is2DMode_) {
+		worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+		viewMatrix_ = Inverse4x4(worldMatrix_);
+	} else {
+		worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+		viewMatrix_ = Inverse4x4(worldMatrix_);
+		projectionMatrix_ = MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
+	}
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+}
+
+///-------------------------------------------/// 
+/// 追加情報
+///-------------------------------------------///
+void Camera::InitializeFor2D() {
+	WorldTransform transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+	float nearClip = -10.0f;
+	float farClip = 10.0f;
+	float left = 0.0f;
+	float right = 50.0f;
+	float bottom = 0.0f;
+	float top = 50.0f;
+
+	projectionMatrix_ = MakeOrthographicMatrix(left, right, bottom, top, nearClip, farClip);
+	worldMatrix_ = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	viewMatrix_ = Inverse4x4(worldMatrix_);
+	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+}
+// 
+void Camera::SwitchTo2DMode() {
+	is2DMode_ = true;
+
+	InitializeFor2D();
+}
+//
+void Camera::SwitchTo3DMode() {
+	is2DMode_ = false;
+
+	Initialize();
 }
 
