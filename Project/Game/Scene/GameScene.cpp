@@ -179,10 +179,11 @@ void GameScene::Draw() {
             block->Draw();
         }
     }
-    // Playerの描画
-    player_->Draw();
     // Goalの描画
     goal_->Draw();
+    // Playerの描画
+    player_->Draw();
+    
 
 #pragma endregion
 

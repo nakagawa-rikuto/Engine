@@ -16,13 +16,13 @@ void GameOverScene::Initialize() {
 	IScene::Initialize();
 
 	// テクスチャの読み込み
-	const std::string& uvTexture = "./Resource/uvChecker.png";
-	Loader_->LoadTexture(uvTexture);
+	const std::string& sprite = "./Resource/GameOverScene.png";
+	Loader_->LoadTexture(sprite);
 
 	// スプライト
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize();                              // BlendMode変更可　sprite->Initialize(BlendMode::kBlendModeAdd);  
-	sprite_->SetTexture(uvTexture);
+	sprite_->SetTexture(sprite);
 }
 
 ///-------------------------------------------/// 
