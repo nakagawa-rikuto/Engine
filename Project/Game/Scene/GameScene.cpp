@@ -57,6 +57,13 @@ void GameScene::Initialize() {
             position.z = basePoint.z + (i - 2) * offset;
         }
 
+        // 簡単デバッグ用
+        /*Vector3 position(
+            basePoint.x + i * block->GetSize().x * 0.5f,
+            basePoint.y,
+            basePoint.z
+        );*/
+
         block->Initialze(BlockModel, position); // 初期化を呼び出す
         blocks_.push_back(block);  // モデルをリストに追加
     }
@@ -99,31 +106,35 @@ void GameScene::Update() {
 
     /// ===モードの切り替え=== ///
     if (Mii::TriggerKey(DIK_Q)) {
-        if (SetCamera) {
-            SetCamera = false;
+        if (Mode3D_) {
+            Mode3D_ = false;
             cameraPos_ = { -8.5f, -9.5f, 0.0f };
             cameraRotate_ = { 0.0f, 0.0f, 0.0f };
             cameraScale_ = { 1.0f, 0.5f, 1.0f };
         } else {
-            SetCamera = true;
+            Mode3D_ = true;
             cameraPos_ = { player_->GetPos().x, player_->GetPos().y + 7.0f, player_->GetPos().z - 40.0f };
             cameraRotate_ = { 0.05f, 0.0f, 0.0f };
             cameraScale_ = { 1.0f, 1.0f, 1.0f };
         }
     }
     // カメラの切り替え
-    if (SetCamera) {
+    if (Mode3D_) {
         camera_->SwitchTo3DMode();
         cameraPos_ = { player_->GetPos().x, player_->GetPos().y + 7.0f, player_->GetPos().z - 40.0f };
+        // 衝突判定(3D)
+        IsCollisison3D();
     } else {
         camera_->SwitchTo2DMode();
+        // 衝突判定(2D)
+        IsCollisison2D();
     }
 
     // 衝突判定(3D)
     IsCollisison3D();
 
     // Playerの更新
-    player_->Update(cameraManager_->GetActiveCamera().get());
+    player_->Update(cameraManager_->GetActiveCamera().get(), Mode3D_);
     // Blockの更新
     for (const auto& block : blocks_) {
         if (block) {
@@ -166,15 +177,29 @@ void GameScene::Draw() {
 ///-------------------------------------------///
 // 2D
 void GameScene::IsCollisison2D() {
-    return;
+    for (const auto& block : blocks_) {
+        for (size_t i = 0; i < blocks_.size(); ++i) {
+            const Vector2 blockCenter = Vector2(blocks_[i]->GetPos().x, blocks_[i]->GetPos().y); // 中心座標
+            const Vector2 blockHalfSize = Vector2(block->GetSize().x * 0.5f, block->GetSize().y * 0.5f); // 矩形の半分のサイズ
+            const Vector2 playerCenter = Vector2(player_->GetPos().x, player_->GetPos().y);
+
+            // 衝突判定
+            if (IsCircleIntersectingRectangle(playerCenter, player_->GetRadius(), blockCenter, blockHalfSize)) {
+                // 衝突が発生した場合,Playerに通知
+                player_->OnCollision(block.get());
+            } else {
+                player_->NotCollisision();
+            }
+        }
+    }
 }
 // 3D
 void GameScene::IsCollisison3D() {
     for (const auto& block : blocks_) {
         for (size_t i = 0; i < blocks_.size(); ++i) {
             // 各Modelの位置とサイズを取得
-            const Vector3 blockMin = blocks_[i]->GetPos() - (block->GetSize() * 0.5f);
-            const Vector3 blockMax = blocks_[i]->GetPos() + (block->GetSize() * 0.5f);
+            const Vector3 blockMin = block->GetPos() - (block->GetSize() * 0.5f);
+            const Vector3 blockMax = block->GetPos() + (block->GetSize() * 0.5f);
 
             // 衝突判定
             if (IsSphereIntersectingAABB(player_->GetPos(), player_->GetRadius(), blockMin, blockMax)) {

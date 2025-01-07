@@ -41,7 +41,7 @@ void Player::Inititalze(const std::string & modelName) {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void Player::Update(Camera * camera) {
+void Player::Update(Camera * camera, bool Mode) {
 
 #ifdef _DEBUG
 	ImGui::Begin("Player");
@@ -53,16 +53,17 @@ void Player::Update(Camera * camera) {
 		pos_.y -= 0.4f;
 	}
 
-	// 移動処理・・後々ゲームモードを分けるのでその時にそれぞれ割り当てる。	
-	//Move2D();
-	Move3D();
+	if (Mode) {
+		// 移動処理
+		Move3D();
+	} else {
+		// 移動処理
+		Move2D();
+	}
 
 	// モデルの更新
 	model_->SetPosition(pos_);
 	model_->SetCamera(camera);
-
-	// 毎フレーム衝突状態をリセット
-	//isCollision_ = false;
 }
 
 ///-------------------------------------------/// 

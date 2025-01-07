@@ -20,7 +20,7 @@ public:
 	// 初期化
 	void Inititalze(const std::string& modelName);
 	// 更新
-	void Update(Camera* camera);
+	void Update(Camera* camera, bool Mode);
 	// 描画
 	void Draw();
 

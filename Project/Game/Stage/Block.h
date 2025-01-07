@@ -25,7 +25,7 @@ public:
 private:
 	/// ===Transform情報=== ///
 	Vector3 pos_;
-	Vector3 size_ = { 8.0f, 8.0f, 8.0f };;
+	Vector3 size_ = { 8.0f, 8.0f, 8.0f };
 
 	std::unique_ptr<Model> model_;
 };

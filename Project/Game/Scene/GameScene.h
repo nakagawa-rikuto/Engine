@@ -42,7 +42,9 @@ private:/// ===メンバ変数=== ///
 	Vector3 cameraPos_;
 	Vector3 cameraRotate_;
 	Vector3 cameraScale_;
-	bool SetCamera = true;
+
+	/// ===モード=== ///
+	bool Mode3D_ = true;
 
 	/// ===Plaeyr=== ///
 	std::unique_ptr<Player> player_;
