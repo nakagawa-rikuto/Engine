@@ -31,9 +31,12 @@ public:/// ===Getter=== ///
 	// ポジション
 	const Vector3 GetPos();
 	const float GetRadius();
+	const Vector3 GetBlockPos();
+	bool GetIsCollision();
 
 public:
-
+	void SetPosititonZ(const float& posZ);
+	void SetBlockPosition(Block* block);
 	void NotCollisision();
 
 private:
@@ -45,6 +48,9 @@ private:
 	bool isCollision_ = false;
 	float radius_;  
 	float pushbackAmount_ = 0.1f; // 衝突時の押し戻し量
+
+	/// ===当たっているBlockの情報=== ///
+	Vector3 blockPos_;
 
 	/// ===Model=== ///
 	std::unique_ptr<Model> model_;

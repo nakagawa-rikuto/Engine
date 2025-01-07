@@ -20,6 +20,20 @@ Player::~Player() {}
 const Vector3 Player::GetPos() { return pos_; }
 // 半径
 const float Player::GetRadius() { return radius_; }
+// Blockのポジション
+const Vector3 Player::GetBlockPos() { return blockPos_; }
+// isCollsiion
+bool Player::GetIsCollision() { return isCollision_; }
+
+
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+//
+void Player::SetPosititonZ(const float& posZ) { pos_.z = posZ; }
+//
+void Player::SetBlockPosition(Block* block) { blockPos_ = block->GetPos(); }
 // 
 void Player::NotCollisision() { isCollision_ = false; }
 
@@ -46,6 +60,7 @@ void Player::Update(Camera * camera, bool Mode) {
 #ifdef _DEBUG
 	ImGui::Begin("Player");
 	ImGui::DragFloat3("Position", &pos_.x, 0.1f);
+	ImGui::DragFloat3("BlockPositition", &blockPos_.x, 0.1f);
 	ImGui::End();
 #endif // _DEBUG
 

@@ -57,5 +57,8 @@ private:
 	/// ===当たり判定=== ///
 	void IsCollisison2D();
 	void IsCollisison3D();
+
+	/// ===モード変更時の座標変換=== ///
+	void SwithcTo3DMode();
 };
 

@@ -112,6 +112,7 @@ void GameScene::Update() {
             cameraRotate_ = { 0.0f, 0.0f, 0.0f };
             cameraScale_ = { 1.0f, 0.5f, 1.0f };
         } else {
+            SwithcTo3DMode();
             Mode3D_ = true;
             cameraPos_ = { player_->GetPos().x, player_->GetPos().y + 7.0f, player_->GetPos().z - 40.0f };
             cameraRotate_ = { 0.05f, 0.0f, 0.0f };
@@ -129,9 +130,6 @@ void GameScene::Update() {
         // 衝突判定(2D)
         IsCollisison2D();
     }
-
-    // 衝突判定(3D)
-    IsCollisison3D();
 
     // Playerの更新
     player_->Update(cameraManager_->GetActiveCamera().get(), Mode3D_);
@@ -186,7 +184,8 @@ void GameScene::IsCollisison2D() {
             // 衝突判定
             if (IsCircleIntersectingRectangle(playerCenter, player_->GetRadius(), blockCenter, blockHalfSize)) {
                 // 衝突が発生した場合,Playerに通知
-                player_->OnCollision(block.get());
+                player_->OnCollision(blocks_[i].get());
+                player_->SetBlockPosition(blocks_[i].get());
             } else {
                 player_->NotCollisision();
             }
@@ -204,10 +203,20 @@ void GameScene::IsCollisison3D() {
             // 衝突判定
             if (IsSphereIntersectingAABB(player_->GetPos(), player_->GetRadius(), blockMin, blockMax)) {
                 // 衝突が発生した場合,Playerに通知
-                player_->OnCollision(block.get());
+                player_->OnCollision(blocks_[i].get());
             } else {
                 player_->NotCollisision();
             }
         }
     }
+}
+
+///-------------------------------------------/// 
+/// 2Dから3Dに切り替えるときの座標変換
+///-------------------------------------------///
+void GameScene::SwithcTo3DMode() {
+   /* if (player_->GetIsCollision()) {
+        
+    }*/
+    player_->SetPosititonZ(player_->GetBlockPos().z);
 }
