@@ -1,6 +1,7 @@
 #pragma once
 /// ===Includ=== ///
 #include "Game/Scene/IScene.h"
+#include "Game/2d/Sprite.h"
 
 #include "Game/Stage/Block.h"
 #include "Game/Stage/Goal.h"
@@ -48,6 +49,9 @@ private:/// ===メンバ変数=== ///
 
 	/// ===Goal=== ///
 	std::unique_ptr<Goal> goal_;
+
+	/// ===Sprite=== ///
+	std::unique_ptr<Sprite> sprite_;
 
 private:
 

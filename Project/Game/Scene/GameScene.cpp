@@ -21,6 +21,9 @@ void GameScene::Initialize() {
 	IScene::Initialize();
 
     /// ===読み込み=== ///
+    // スプライトの読み込み
+    const std::string& sprie = "./Resource/GameScene.png";
+    Loader_->LoadTexture(sprie);
     // Blockモデルの読み込み
     const std::string& BlockModel = "Block";
     Loader_->LoadModel(BlockModel);
@@ -78,6 +81,11 @@ void GameScene::Initialize() {
     goal_ = std::make_unique<Goal>();
     goal_->Initialze(GoalModel, blocks_[8]->GetPos());
 
+    /// ===Sprite=== ///
+    sprite_ = std::make_unique<Sprite>();
+    sprite_->Initialize();
+    sprite_->SetTexture(sprie);
+    sprite_->SetPosition({ 20.0f, 50.0f });
 
     /// ===カメラ関連=== ///
     // カメラのTransform情報を書き込む(最初は3D)
@@ -179,6 +187,8 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
+    sprite_->Draw();
+
 #pragma endregion
 }
 
