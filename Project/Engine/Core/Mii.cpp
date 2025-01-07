@@ -128,7 +128,9 @@ void Mii::Finalize() {
 ///=====================================================///
 void Mii::BeginFrame() {
 	dXCommon_->PreDraw();
+#ifdef _DEBUG
 	imGuiManager_->Draw();
+#endif // _DEBUG
 }
 
 

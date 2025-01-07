@@ -103,17 +103,6 @@ void GameScene::Initialize() {
 ///-------------------------------------------///
 void GameScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
-	ImGui::Begin("GameScene");
-
-    ImGui::Begin("Camera");
-    ImGui::DragFloat3("Translate", &cameraPos_.x, 0.01f);
-    ImGui::DragFloat3("Rotate", &cameraRotate_.x, 0.01f);
-    ImGui::DragFloat3("Scale", &cameraScale_.x, 0.01f);
-    ImGui::End();
-
-	ImGui::End();
-#endif // DEBUG
 
     /// ===モードの切り替え=== ///
     if (Mii::TriggerKey(DIK_Q)) {

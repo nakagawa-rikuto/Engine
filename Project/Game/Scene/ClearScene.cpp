@@ -30,10 +30,7 @@ void ClearScene::Initialize() {
 ///-------------------------------------------///
 void ClearScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
-	ImGui::Begin("ClearScene");
-	ImGui::End();
-#endif // DEBUG
+
 
 	// シーン切り替え
 	if (Mii::TriggerKey(DIK_SPACE)) {

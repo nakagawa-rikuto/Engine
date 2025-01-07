@@ -30,10 +30,6 @@ void TitleScene::Initialize() {
 ///-------------------------------------------///
 void TitleScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
-	ImGui::Begin("TitleScene");
-	ImGui::End();
-#endif // DEBUG
 
 	// シーン切り替え
 	if (Mii::TriggerKey(DIK_SPACE)) {

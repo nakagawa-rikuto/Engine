@@ -30,10 +30,6 @@ void GameOverScene::Initialize() {
 ///-------------------------------------------///
 void GameOverScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
-	ImGui::Begin("GameOverScene");
-	ImGui::End();
-#endif // DEBUG
 
 	// シーン切り替え
 	if (Mii::TriggerKey(DIK_SPACE)) {

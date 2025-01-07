@@ -57,12 +57,6 @@ void Player::Inititalze(const std::string & modelName) {
 ///-------------------------------------------///
 void Player::Update(Camera * camera, bool Mode) {
 
-#ifdef _DEBUG
-	ImGui::Begin("Player");
-	ImGui::DragFloat3("Position", &pos_.x, 0.1f);
-	ImGui::DragFloat3("BlockPositition", &blockPos_.x, 0.1f);
-	ImGui::End();
-#endif // _DEBUG
 
 	if (!isCollision_) {
 		pos_.y -= 0.4f;
