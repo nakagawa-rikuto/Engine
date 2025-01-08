@@ -157,8 +157,6 @@ void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, Blen
 #pragma region Texture関連
 // SRVインデックス開始番号の取得
 void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, filePath); }
-// GPUハンドルの取得
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetSRVHandleGPU(const std::string& filePath) { return textureManager_->GetSRVHandleGPU(filePath); }
 // メタデータの取得
 const DirectX::TexMetadata& Mii::GetMetaData(const std::string& filePath) { return textureManager_->GetMetaData(filePath); }
 #pragma endregion
@@ -178,8 +176,6 @@ bool Mii::TriggerKey(BYTE keyNum) { return input_->TriggerKey(keyNum); }
 void Mii::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
 #pragma endregion
 #pragma region Model関連
-// モデルの読み込み
-void Mii::LoadModel(const std::string& filename) { modelManager_->LoadModel("Resource", filename); }
 // モデルデータの取得
 ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
 #pragma endregion
