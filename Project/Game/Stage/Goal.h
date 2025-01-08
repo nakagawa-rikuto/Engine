@@ -14,7 +14,7 @@ public:
 	Goal() = default;
 	~Goal();
 
-	void Initialze(const std::string& modelName, const Vector3& pos);
+	void Initialze(const std::string& modelName, const Vector3& pos, Camera* camera);
 	void Update(Camera* camera);
 	void Draw();
 

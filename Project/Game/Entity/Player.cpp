@@ -40,7 +40,7 @@ void Player::NotCollisision() { isCollision_ = false; }
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Player::Inititalze(const std::string & modelName) {
+void Player::Inititalze(const std::string & modelName, Camera* camera) {
 
 	/// ===Transform情報=== ///
 	pos_ = { 0.0f, 3.0f, 0.0f };
@@ -50,6 +50,7 @@ void Player::Inititalze(const std::string & modelName) {
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelName);
 	model_->SetPosition(pos_);
+	model_->SetCamera(camera);
 }
 
 ///-------------------------------------------/// 

@@ -18,7 +18,7 @@ public:
 	~Player();
 
 	// 初期化
-	void Inititalze(const std::string& modelName);
+	void Inititalze(const std::string& modelName, Camera* camera);
 	// 更新
 	void Update(Camera* camera, bool Mode);
 	// 描画

@@ -15,7 +15,7 @@ public:
 	Block() = default;
 	~Block();
 
-	void Initialze(const std::string& modelName, const Vector3& position);
+	void Initialze(const std::string& modelName, const Vector3& position, Camera* camera);
 	void Update(Camera* camera);
 	void Draw();
 

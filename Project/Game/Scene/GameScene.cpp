@@ -34,9 +34,27 @@ void GameScene::Initialize() {
     const std::string& GoalModel = "Goal";
     Loader_->LoadModel(GoalModel);
 
+    /// ===カメラ関連=== ///
+   // カメラのTransform情報を書き込む(最初は3D)
+    cameraPos_ = { 0.0f, 10.0f, -40.0f };
+    cameraRotate_ = { 0.05f, 0.0f, 0.0f };
+    cameraScale_ = { 1.0f, 1.0f, 1.0f };
+
+    //Camera
+    camera_ = std::make_shared<Camera>();
+    camera_->Initialize();
+    camera_->SetTranslate(cameraPos_);
+    camera_->SetRotate(cameraRotate_);
+    camera_->SetScale(cameraScale_);
+
+    // カメラの追加
+    cameraManager_->Add("3D", camera_);
+    // アクティブカメラのセット
+    cameraManager_->SetActiveCamera("3D");
+
     /// ===Player関連=== ///
     player_ = std::make_unique<Player>();
-    player_->Inititalze(PlayerModel);
+    player_->Inititalze(PlayerModel, cameraManager_->GetActiveCamera().get());
 
     /// ===Block関連=== ///
      // 配置基準点と間隔
@@ -73,13 +91,13 @@ void GameScene::Initialize() {
             position.z = basePoint.z + (i - 3) * offset;
         }
 
-        block->Initialze(BlockModel, position); // 初期化を呼び出す
+        block->Initialze(BlockModel, position, cameraManager_->GetActiveCamera().get()); // 初期化を呼び出す
         blocks_.push_back(block);  // モデルをリストに追加
     }
 
     /// ===Goal=== ///
     goal_ = std::make_unique<Goal>();
-    goal_->Initialze(GoalModel, blocks_[8]->GetPos());
+    goal_->Initialze(GoalModel, blocks_[8]->GetPos(), cameraManager_->GetActiveCamera().get());
 
     /// ===Sprite=== ///
     sprite_ = std::make_unique<Sprite>();
@@ -87,23 +105,7 @@ void GameScene::Initialize() {
     sprite_->SetTexture(sprie);
     sprite_->SetPosition({ 20.0f, 50.0f });
 
-    /// ===カメラ関連=== ///
-    // カメラのTransform情報を書き込む(最初は3D)
-    cameraPos_ = { player_->GetPos().x, player_->GetPos().y + 7.0f, player_->GetPos().z - 40.0f};
-    cameraRotate_ = { 0.05f, 0.0f, 0.0f };
-    cameraScale_ = { 1.0f, 1.0f, 1.0f };
-
-    //Camera
-    camera_ = std::make_shared<Camera>();
-    camera_->Initialize();
-    camera_->SetTranslate(cameraPos_);
-    camera_->SetRotate(cameraRotate_);
-    camera_->SetScale(cameraScale_);
-
-    // カメラの追加
-    cameraManager_->Add("3D", camera_);
-    // アクティブカメラのセット
-    cameraManager_->SetActiveCamera("3D");
+   
 }
 
 ///-------------------------------------------/// 

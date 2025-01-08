@@ -13,7 +13,7 @@ Block::~Block() { model_.reset(); }
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Block::Initialze(const std::string& modelName, const Vector3& position) {
+void Block::Initialze(const std::string& modelName, const Vector3& position, Camera* camera) {
 	//
 	pos_ = position;
 
@@ -23,6 +23,7 @@ void Block::Initialze(const std::string& modelName, const Vector3& position) {
 
 	// モデルに位置を設定
 	model_->SetPosition(pos_);
+	model_->SetCamera(camera);
 }
 
 ///-------------------------------------------/// 
