@@ -1,16 +1,16 @@
-#include "TitleScene.h"
+#include "GameOverScene.h"
 // SceneManager
-#include "Game/Manager/SceneManager.h"
+#include "application/Manager/SceneManager.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-TitleScene::~TitleScene() {}
+GameOverScene::~GameOverScene() {}
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void TitleScene::Initialize() {
+void GameOverScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 }
@@ -18,10 +18,10 @@ void TitleScene::Initialize() {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void TitleScene::Update() {
+void GameOverScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
-	ImGui::Begin("TitleScene");
+	ImGui::Begin("GameOverScene");
 	ImGui::End();
 #endif // USE_IMGUI
 }
@@ -29,7 +29,7 @@ void TitleScene::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void TitleScene::Draw() {
+void GameOverScene::Draw() {
 #pragma region 背景スプライト描画
 #pragma endregion
 

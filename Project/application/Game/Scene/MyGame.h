@@ -3,7 +3,7 @@
 // Engine
 #include "Engine/Scene/Framework.h"
 // SceneManager
-#include "Game/Manager/SceneManager.h"
+#include "application/Manager/SceneManager.h"
 
 ///=====================================================/// 
 /// ゲーム全体

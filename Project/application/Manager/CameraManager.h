@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // Engine
-#include "Game/3d/Camera.h"
+#include "application/3d/Camera.h"
 // C++
 #include <unordered_map>
 #include <string>

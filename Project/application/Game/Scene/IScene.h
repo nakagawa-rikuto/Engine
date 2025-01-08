@@ -1,8 +1,8 @@
 #pragma once
 /// ===Include=== ///
-#include "Game/Manager/CameraManager.h"
-#include "Game/Load/AssetLoader.h"
-#include "Game/Audio/Audio.h"
+#include "application/Manager/CameraManager.h"
+#include "application/Load/AssetLoader.h"
+#include "application/Audio/Audio.h"
 
 /// ===前方宣言=== ///
 class SceneManager;

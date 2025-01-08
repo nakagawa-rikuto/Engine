@@ -10,7 +10,7 @@
 #include "Engine/Graphics/Light.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
 // Game
-#include "Game/3d/Camera.h"
+#include "application/3d/Camera.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // c++
 #include <memory>
