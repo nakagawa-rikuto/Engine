@@ -90,11 +90,8 @@ void ImGuiManager::End() {
 /// 描画
 ///-------------------------------------------///
 void ImGuiManager::Draw() {
-#ifdef USE_IMGUI
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srvManager_->GetDescriptorHeap() };
 	commandList->SetDescriptorHeaps(1, descriptorHeaps);
-	
-#endif // USE_IMGUI
 }
