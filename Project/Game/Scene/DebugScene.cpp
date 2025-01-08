@@ -87,12 +87,12 @@ void DebugScene::Initialize() {
 ///-------------------------------------------///
 void DebugScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	ImGui::Begin("DebugScene");
 	ImGui::End();
-#endif // DEBUG
+#endif // USE_IMGUI
 
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	ImGui::Begin("model");
 	ImGui::Checkbox("RotateFlag", &isRotate);
 	ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
@@ -113,7 +113,7 @@ void DebugScene::Update() {
 	ImGui::DragFloat("Volume", &volume, 0.01f);
 	ImGui::DragFloat("Ptich", &pitch, 0.01f);
 	ImGui::End();
-#endif // _DEBUG
+#endif // USE_IMGUI
 
 	/// ===カメラの変更=== ///
 	if (SetCamera) {

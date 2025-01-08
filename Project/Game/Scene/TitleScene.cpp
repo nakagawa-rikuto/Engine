@@ -20,10 +20,10 @@ void TitleScene::Initialize() {
 ///-------------------------------------------///
 void TitleScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	ImGui::Begin("TitleScene");
 	ImGui::End();
-#endif // DEBUG
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 
