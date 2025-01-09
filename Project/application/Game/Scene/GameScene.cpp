@@ -20,7 +20,7 @@ void GameScene::Initialize() {
 
 	/// ===Camera=== ///
 	// Camera情報
-	cameraPos_ = { 0.0f, 0.0f, -50.0f };
+	cameraPos_ = { 0.0f, 0.0f, -70.0f };
 	cameraRotate_ = {0.0f, 0.0f, 0.0f};
 	cameraScale_ = { 0.0f, 0.0f, 0.0f };
 
@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 
 	/// ===Model=== ///
 	const int gridSize = 5;  // グリッドのサイズ
-	const float spacing = 10.0f;  // モデル間の間隔
+	const float spacing = 5.0f;  // モデル間の間隔
 	const Vector3 basePosition(0.0f, 0.0f, 0.0f); // 基準となる位置
 
 	for (size_t z = 0; z < gridSize; ++z) {
@@ -42,8 +42,8 @@ void GameScene::Initialize() {
 
 			Vector3 position(
 				basePosition.x + x * spacing,
-				basePosition.y,
-				basePosition.z + z * spacing
+				basePosition.y + z * spacing,
+				basePosition.z 
 			);
 
 			card->Initialize(CardModel);
@@ -81,7 +81,7 @@ void GameScene::Update() {
 	cameraManager_->SetActiveCamera("main1");
 	camera_->SetTranslate(cameraPos_);
 	camera_->SetRotate(cameraRotate_);
-	camera_->SetScale(cameraScale_);
+	//camera_->SetScale(cameraScale_);
 	cameraManager_->UpdateAllCameras();
 }
 
