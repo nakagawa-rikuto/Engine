@@ -166,10 +166,19 @@ const DirectX::TexMetadata& Mii::GetMetaData(const std::string& filePath) { retu
 /// プログラマー用関数
 ///-------------------------------------------///
 #pragma region Key入力関連
-// 押してる間
+/// ===キーボード=== ///
 bool Mii::PushKey(BYTE keyNum) { return input_->PushKey(keyNum); }
-// 押した瞬間
 bool Mii::TriggerKey(BYTE keyNum) { return input_->TriggerKey(keyNum); }
+/// ===マウス=== ///
+bool Mii::PushMouse(MouseButtonType button) { return input_->PushMaouseButton(button); }
+bool Mii::TriggerMouse(MouseButtonType button) { return input_->TriggerMouseButton(button); }
+POINT Mii::GetMousePosition() { return input_->GetMouseCursorPosition(); }
+LONG Mii::GetMouseDeltaX() { return input_->GetMouseDeltaX(); }
+LONG Mii::GetMouseDeltaY() { return input_->GetMouseDeltaY(); }
+LONG Mii::GetMouseDeltaScroll() { return input_->GetMouseDeltaScroll(); }
+/// ===コントローラー=== ///
+bool Mii::PushController(int deviceIndex, int buttonIndex) { return input_->PushButton(deviceIndex, buttonIndex); }
+bool Mii::TriggerController(int deviceIndex, int buttonIndex) { return input_->TriggerButton(deviceIndex, buttonIndex); }
 #pragma endregion
 #pragma region Texture関連
 // テクスチャ読み込み

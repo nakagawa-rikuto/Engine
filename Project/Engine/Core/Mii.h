@@ -77,10 +77,21 @@ public:/// ===開発者用関数(その他)=== ///
 public:/// ===プログラマー用関数=== ///
 
 	///-------------------------------------------/// 
-	/// キー入力
+	/// Input
 	///-------------------------------------------///
+	// キーボード
 	static bool PushKey(BYTE keyNum);
 	static bool TriggerKey(BYTE keyNum);
+	// マウス
+	static bool PushMouse(MouseButtonType button);
+	static bool TriggerMouse(MouseButtonType button);
+	static POINT GetMousePosition();
+	static LONG GetMouseDeltaX();
+	static LONG GetMouseDeltaY();
+	static LONG GetMouseDeltaScroll();
+	// コントーローラ
+	static bool PushController(int deviceIndex, int buttonIndex);
+	static bool TriggerController(int deviceIndex, int buttonIndex);
 
 	///-------------------------------------------/// 
 	/// テクスチャ関連

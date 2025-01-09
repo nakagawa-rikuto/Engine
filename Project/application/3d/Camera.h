@@ -34,16 +34,12 @@ public:/// ===Getter=== ///
 	const Vector3& GetTranslate()const;
 	// Rotate
 	const Vector3& GetRotate()const;
-	// Scale
-	const Vector3& GetScale()const;
 
 public:/// ===Setter=== ///
 	// Translate
 	void SetTranslate(const Vector3& translate);
 	// Rotate
 	void SetRotate(const Vector3& rotate);
-	// Scale
-	void SetScale(const Vector3& scale);
 	// ForY
 	void SetForY(const float& forY);
 	// Aspect
