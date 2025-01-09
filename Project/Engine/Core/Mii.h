@@ -22,7 +22,6 @@
 // Engine
 class WinApp;
 class DXCommon;
-class Input;
 // Manager
 class SRVManager;
 class PipelineManager;
@@ -67,8 +66,6 @@ public:/// ===開発者用関数(その他)=== ///
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
 	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath);
-	// GPUハンドルの取得
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(const std::string& filePath);
 	// メタデータの取得
 	static const DirectX::TexMetadata& GetMetaData(const std::string& filePath);
 
@@ -90,12 +87,6 @@ public:/// ===プログラマー用関数=== ///
 	///-------------------------------------------///
 	// テクスチャの読み込み
 	static void LoadTexture(const std::string& filePath);
-
-	///-------------------------------------------/// 
-	/// モデル関連
-	///-------------------------------------------///
-	// モデルの読み込み
-	static void LoadModel(const std::string& filename);
 
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得

@@ -6,9 +6,9 @@
 // Game
 #include "Engine/Scene/AbstractSceneFactory.h"
 // Imgui
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 #include <imgui.h>
-#endif // DEBUG
+#endif // USE_IMGUI
 
 ///=====================================================/// 
 /// シーンマネージャー

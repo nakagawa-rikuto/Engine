@@ -20,10 +20,10 @@ void SelectScene::Initialize() {
 ///-------------------------------------------///
 void SelectScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	ImGui::Begin("SelectScene");
 	ImGui::End();
-#endif // DEBUG
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 

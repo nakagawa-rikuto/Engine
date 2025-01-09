@@ -73,7 +73,7 @@ void SceneManager::ChangeScene(const std::string& sceneName) {
 /// シーン監視
 ///-------------------------------------------///
 void SceneManager::SceneObservation() {
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	ImGui::Begin("Scene Manager");
 	/// ===現在のシーンを表示=== /// 
 	if (currentScene_) {
@@ -112,7 +112,7 @@ void SceneManager::SceneObservation() {
 		ImGui::EndCombo();
 	}
 	ImGui::End();
-#endif // DEBUGv
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 

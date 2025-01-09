@@ -110,7 +110,12 @@ void Model::Initialize(const std::string& filename) {
 /// 更新
 ///-------------------------------------------///
 void Model::Update() {
-
+	/// ===データの書き込み=== ///
+	worldTransform_.scale = scale_;
+	worldTransform_.rotate = rotate_;
+	worldTransform_.translate = position_;
+	LightDataWrite();
+	TransformDataWrite();
 }
 
 
@@ -118,14 +123,6 @@ void Model::Update() {
 /// 描画
 ///-------------------------------------------///
 void Model::Draw(BlendMode mode) {
-
-	/// ===データの書き込み=== ///
-	worldTransform_.scale = scale_;
-	worldTransform_.rotate = rotate_;
-	worldTransform_.translate = position_;
-	LightDataWrite();
-	TransformDataWrite();
-
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();

@@ -20,10 +20,10 @@ void GameOverScene::Initialize() {
 ///-------------------------------------------///
 void GameOverScene::Update() {
 	/// ===デバック用ImGui=== ///
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	ImGui::Begin("GameOverScene");
 	ImGui::End();
-#endif // DEBUG
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 

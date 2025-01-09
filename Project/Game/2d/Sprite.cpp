@@ -134,14 +134,6 @@ void Sprite::Update() {
 ///-------------------------------------------///
 void Sprite::Draw(BlendMode mode) {
 
-	// Data書き込み(更新)
-	UpdateVertexDataWrite();
-	SpecifyRange();
-
-	TransformDataWrite();
-	// カラー書き込み(更新)
-	materialData_->color = color_;
-
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
 

@@ -9,9 +9,11 @@
 #include <vector>
 #include <format>
 
+#ifdef USE_IMGUI
 #include "imgui.h"
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
+#endif // USE_IMGUI
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")

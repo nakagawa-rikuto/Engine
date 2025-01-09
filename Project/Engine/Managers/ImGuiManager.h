@@ -2,9 +2,13 @@
 /// ===Include=== ///
 #include "Engine/Core/ComPtr.h"
 // ImGui
+#ifdef USE_IMGUI
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
+#endif // USE_IMGUI
+
+
 
 /// ===前方宣言=== ///
 class WinApp;

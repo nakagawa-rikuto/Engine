@@ -47,7 +47,7 @@ void Camera::SetFarClip(const float& farClip) { farClip_ = farClip; }
 void Camera::Initialize() {
 	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.f} };
 	horizontalView_ = 0.45f;
-	aspect_ = static_cast<float>(WinApp::kWindowWidth / WinApp::kWindowHeight);
+	aspect_ = static_cast<float>(WinApp::kWindowWidth) / static_cast<float>(WinApp::kWindowHeight);
 	nearClip_ = 0.1f;
 	farClip_ = 100.0f;
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
