@@ -1,6 +1,6 @@
-#include "Game/Scene/GameScene.h"
+#include "GameScene.h"
 // SceneManager
-#include "Game/Manager/SceneManager.h"
+#include "application/Manager/SceneManager.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ

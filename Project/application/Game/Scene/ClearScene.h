@@ -1,15 +1,15 @@
 #pragma once
-/// ===Includ=== ///
-#include "Game/Scene/IScene.h"
+/// ===Include=== ///
+#include "application/Game/Scene/IScene.h"
 
 ///=====================================================/// 
-/// ゲームシーン
+/// クリアシーン
 ///=====================================================///
-class GameScene : public IScene {
+class ClearScene : public IScene {
 public:/// ===メンバ関数=== ///
 
-	GameScene() = default;
-	~GameScene();
+	ClearScene() = default;
+	~ClearScene();
 
 	// 初期化
 	void Initialize() override;
@@ -22,5 +22,6 @@ private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
 	/// </summary>
+
 };
 

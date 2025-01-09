@@ -1,6 +1,6 @@
-#include "Game/Scene/DebugScene.h"
+#include "DebugScene.h"
 // SceneManager
-#include "Game/Manager/SceneManager.h"
+#include "application/Manager/SceneManager.h"
 #include "Engine/Core/Mii.h"
 
 ///-------------------------------------------/// 

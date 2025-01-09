@@ -111,7 +111,7 @@
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\GameScene.cpp">
+    <ClCompile Include="application\Game\Scene\GameScene.cpp">
       <Filter>ソース ファイル\application\scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Input\Input.cpp">
@@ -120,7 +120,7 @@
     <ClCompile Include="Math\Matrix4x4.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Game\3d\Model.cpp">
+    <ClCompile Include="application\3d\Model.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Math\Matrix3x3.cpp">
@@ -129,7 +129,7 @@
     <ClCompile Include="Math\sMath.cpp">
       <Filter>ソース ファイル\engine\math</Filter>
     </ClCompile>
-    <ClCompile Include="Game\2d\Sprite.cpp">
+    <ClCompile Include="application\2d\Sprite.cpp">
       <Filter>ソース ファイル\engine\2d</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
@@ -216,10 +216,10 @@
     <ClCompile Include="Engine\Core\StringUtility.cpp">
       <Filter>ソース ファイル\engine\base</Filter>
     </ClCompile>
-    <ClCompile Include="Game\3d\Camera.cpp">
+    <ClCompile Include="application\3d\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Manager\CameraManager.cpp">
+    <ClCompile Include="application\Manager\CameraManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Managers\ImGuiManager.cpp">
@@ -237,28 +237,28 @@
     <ClCompile Include="Engine\Managers\AudioManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\MyGame.cpp">
+    <ClCompile Include="application\Game\Scene\MyGame.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Scene\Framework.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Manager\SceneManager.cpp">
+    <ClCompile Include="application\Manager\SceneManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\IScene.cpp">
+    <ClCompile Include="application\Game\Scene\IScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\TitleScene.cpp">
+    <ClCompile Include="application\Game\Scene\TitleScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\SelectScene.cpp">
+    <ClCompile Include="application\Game\Scene\SelectScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\ClearScene.cpp">
+    <ClCompile Include="application\Game\Scene\ClearScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\GameOverScene.cpp">
+    <ClCompile Include="application\Game\Scene\GameOverScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp">
@@ -267,13 +267,13 @@
     <ClCompile Include="Engine\Scene\SceneFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\DebugScene.cpp">
+    <ClCompile Include="application\Game\Scene\DebugScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Load\AssetLoader.cpp">
+    <ClCompile Include="application\Load\AssetLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Audio\Audio.cpp">
+    <ClCompile Include="application\Audio\Audio.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -302,7 +302,7 @@
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\GameScene.h">
+    <ClInclude Include="application\Game\Scene\GameScene.h">
       <Filter>ヘッダー ファイル\application\scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Pipeline\BlendState.h">
@@ -353,7 +353,7 @@
     <ClInclude Include="Math\MatrixMath.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3d\Model.h">
+    <ClInclude Include="application\3d\Model.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Managers\ModelManager.h">
@@ -374,7 +374,7 @@
     <ClInclude Include="Math\sMath.h">
       <Filter>ヘッダー ファイル\engine\math</Filter>
     </ClInclude>
-    <ClInclude Include="Game\2d\Sprite.h">
+    <ClInclude Include="application\2d\Sprite.h">
       <Filter>ヘッダー ファイル\engine\2d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Managers\SRVManager.h">
@@ -416,10 +416,10 @@
     <ClInclude Include="Engine\Core\CData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\3d\Camera.h">
+    <ClInclude Include="application\3d\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Manager\CameraManager.h">
+    <ClInclude Include="application\Manager\CameraManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Managers\ImGuiManager.h">
@@ -437,28 +437,28 @@
     <ClInclude Include="Engine\Managers\AudioManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\MyGame.h">
+    <ClInclude Include="application\Game\Scene\MyGame.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Scene\Framework.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Manager\SceneManager.h">
+    <ClInclude Include="application\Manager\SceneManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\IScene.h">
+    <ClInclude Include="application\Game\Scene\IScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\TitleScene.h">
+    <ClInclude Include="application\Game\Scene\TitleScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\SelectScene.h">
+    <ClInclude Include="application\Game\Scene\SelectScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\ClearScene.h">
+    <ClInclude Include="application\Game\Scene\ClearScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\GameOverScene.h">
+    <ClInclude Include="application\Game\Scene\GameOverScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h">
@@ -467,13 +467,13 @@
     <ClInclude Include="Engine\Scene\SceneFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\DebugScene.h">
+    <ClInclude Include="application\Game\Scene\DebugScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Load\AssetLoader.h">
+    <ClInclude Include="application\Load\AssetLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Audio\Audio.h">
+    <ClInclude Include="application\Audio\Audio.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
