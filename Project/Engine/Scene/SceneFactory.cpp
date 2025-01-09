@@ -1,12 +1,12 @@
 #include "SceneFactory.h"
 
 // 各シーン
-#include "Game/Scene/DebugScene.h"
-#include "Game/Scene/TitleScene.h"
-#include "Game/Scene/SelectScene.h"
-#include "Game/Scene/GameScene.h"
-#include "Game/Scene/ClearScene.h"
-#include "Game/Scene/GameOverScene.h"
+#include "application/Game/Scene/DebugScene.h"
+#include "application/Game/Scene/TitleScene.h"
+#include "application/Game/Scene/SelectScene.h"
+#include "application/Game/Scene/GameScene.h"
+#include "application/Game/Scene/ClearScene.h"
+#include "application/Game/Scene/GameOverScene.h"
 
 ///-------------------------------------------/// 
 /// シーン生成

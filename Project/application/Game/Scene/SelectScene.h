@@ -1,16 +1,16 @@
 #pragma once
 /// ===Include=== ///
 // IScene
-#include "Game/Scene/IScene.h"
+#include "application/Game/Scene/IScene.h"
 
 ///=====================================================/// 
-/// タイトルシーン
+/// セレクトシーン
 ///=====================================================///
-class TitleScene : public IScene {
+class SelectScene : public IScene {
 public:/// ===メンバ関数=== ///
 
-	TitleScene() = default;
-	~TitleScene();
+	SelectScene() = default;
+	~SelectScene();
 
 	// 初期化
 	void Initialize() override;

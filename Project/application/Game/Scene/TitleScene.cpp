@@ -1,16 +1,16 @@
-#include "ClearScene.h"
+#include "TitleScene.h"
 // SceneManager
-#include "Game/Manager/SceneManager.h"
+#include "application/Manager/SceneManager.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-ClearScene::~ClearScene() {}
+TitleScene::~TitleScene() {}
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ClearScene::Initialize() {
+void TitleScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 }
@@ -18,10 +18,10 @@ void ClearScene::Initialize() {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void ClearScene::Update() {
+void TitleScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
-	ImGui::Begin("ClearScene");
+	ImGui::Begin("TitleScene");
 	ImGui::End();
 #endif // USE_IMGUI
 }
@@ -29,7 +29,7 @@ void ClearScene::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ClearScene::Draw() {
+void TitleScene::Draw() {
 #pragma region 背景スプライト描画
 #pragma endregion
 

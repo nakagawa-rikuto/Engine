@@ -1,10 +1,10 @@
 #pragma once
 /// ===Includ=== ///
-#include "Game/Scene/IScene.h"
+#include "application/Game/Scene/IScene.h"
 // Game
-#include "Game/2d/Sprite.h"
-#include "Game/3d/Model.h"
-#include "Game/3d/Camera.h"
+#include "application/2d/Sprite.h"
+#include "application/3d/Model.h"
+#include "application/3d/Camera.h"
 
 ///=====================================================/// 
 /// ゲームシーン
