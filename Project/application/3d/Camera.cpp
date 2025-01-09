@@ -18,9 +18,6 @@ const Matrix4x4& Camera::GetViewProjectionMatrix() const { return viewProjection
 const Vector3& Camera::GetTranslate() const { return transform_.translate; }
 // Rotate
 const Vector3& Camera::GetRotate() const { return transform_.rotate; }
-// Scale
-const Vector3& Camera::GetScale() const { return transform_.scale; }
-
 
 ///-------------------------------------------/// 
 /// Setter
@@ -29,8 +26,6 @@ const Vector3& Camera::GetScale() const { return transform_.scale; }
 void Camera::SetTranslate(const Vector3& translate) { transform_.translate = translate; }
 // Rotate
 void Camera::SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
-// Scale
-void Camera::SetScale(const Vector3& scale) { transform_.scale = scale; }
 // ForY
 void Camera::SetForY(const float& forY) { horizontalView_ = forY; }
 // AspectRatio
