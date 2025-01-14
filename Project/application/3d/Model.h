@@ -3,15 +3,18 @@
 // Engine
 #include "Engine/Core/CData.h"
 #include "Engine/Core/ComPtr.h"
+// buffer
 #include "Engine/3d/VertexBuffer3D.h"
 #include "Engine/3d/IndexBuffer3D.h"
 #include "Engine/3d/Material3D.h"
 #include "Engine/3d/Transform3D.h"
-#include "Engine/Graphics/Light.h"
+#include "Engine/3d/Light.h"
+#include "Engine/3d/Camera3D.h"
+// Pipeline
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
-// Game
-#include "application/3d/Camera.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
+// camera
+#include "application/3d/Camera.h"
 // c++
 #include <memory>
 
@@ -24,19 +27,11 @@ public: /// ===基本的な関数=== ///
 	Model();
 	~Model();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize(const std::string& filename); // オブジェクトを読み込まない場合の初期化
-
-	/// <summary>
-	/// 更新
-	/// </summary>
+	// 初期化
+	void Initialize(const std::string& filename, LightType type = LightType::None); // オブジェクトを読み込まない場合の初期化
+	// 更新
 	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
+	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
 
 public: /// ===Getter=== ///
@@ -68,12 +63,14 @@ private: /// ===Variables(変数)=== ///
 	std::unique_ptr<Material3D> material_;
 	std::unique_ptr<Transform3D> wvp_;
 	std::unique_ptr<Light> light_;
+	std::unique_ptr<Camera3D> camera3D_;
 
 	// バッファリソース内のデータを指すポインタ
 	VertexData3D* vertexData_ = nullptr;
 	MaterialData3D* materialData_ = nullptr;
 	TransformationMatrix3D* wvpMatrixData_ = nullptr;
 	DirectionalLight* directionalLightData_ = nullptr;
+	CameraForGPU* cameraForGPU_ = nullptr;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
@@ -97,19 +94,13 @@ private: /// ===Variables(変数)=== ///
 
 private: /// ===Functions(関数)=== ///
 
-	/// <summary>
-	/// LightData書き込み
-	/// </summary>
+	// LightData書き込み
 	void LightDataWrite();
-
-	/// <summary>
-	/// スフィアのデータ書き込み
-	/// </summary>
-	void SphereDataWrite();
-
-	/// <summary>
-	/// Transform情報の書き込み
-	/// </summary>
+	// CameraData書き込み
+	void CameraDataWrite();
+	// Transform情報の書き込み
 	void TransformDataWrite();
+	// スフィアのデータ書き込み
+	void SphereDataWrite();
 };
 

@@ -1,31 +1,38 @@
 #include "Obj3D.hlsli"
-
+// ãƒãƒ†ãƒªã‚¢ãƒ«
 struct Material
 {
     float4 color;
-    int enableLighting; // 0‚Íƒ‰ƒCƒg–³‚µA1‚Íƒ‰ƒ“ƒo[ƒgA2‚Íƒn[ƒtƒ‰ƒ“ƒo[ƒg
+    int enableLighting; // 0ã¯ãƒ©ã‚¤ãƒˆç„¡ã—ã€1ã¯ãƒ©ãƒ³ãƒãƒ¼ãƒˆã€2ã¯ãƒãƒ¼ãƒ•ãƒ©ãƒ³ãƒãƒ¼ãƒˆ
     float4x4 uvTransform;
+    float shininess;  // å…‰æ²¢åº¦
 };
-
+// ãƒ€ã‚¤ãƒ¬ã‚¯ã‚·ãƒ§ãƒŠãƒ«ãƒ©ã‚¤ãƒˆ
 struct DirectionalLight
 {
-    float4 color; // ƒ‰ƒCƒg‚ÌF
-    float3 direction; // ƒ‰ƒCƒg‚ÌŒü‚«
-    float intensity; // ƒ‰ƒCƒg‚Ì–¾‚é‚³(‹P“x)
+    float4 color; // ãƒ©ã‚¤ãƒˆã®è‰²
+    float3 direction; // ãƒ©ã‚¤ãƒˆã®å‘ã
+    float intensity; // ãƒ©ã‚¤ãƒˆã®æ˜ã‚‹ã•(è¼åº¦)
+};
+// ã‚«ãƒ¡ãƒ©
+struct Camera
+{
+    float3 worldPosition; // ã‚«ãƒ¡ãƒ©ã®ä½ç½®
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+ConstantBuffer<Camera> gCamera : register(b2);
 
 struct PixlShaderOutput
 {
     float4 color : SV_TARGET0;
 };
 
-//SRV‚Ìregister‚Ít
+//SRVã®registerã¯t
 Texture2D<float4> gTexture : register(t0);
 
-// Sampler‚Ìregister‚Ís
+// Samplerã®registerã¯s
 SamplerState gSampler : register(s0);
 
 
@@ -36,43 +43,50 @@ PixlShaderOutput main(VertexShaderOutput input)
     
     float4 transformdUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
     
-    //Texture‚ğSampling‚·‚é
+    //Textureã‚’Samplingã™ã‚‹
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
     
-    // texture‚Ìa’l‚ª0.5ˆÈ‰º‚Ì‚ÉPixel‚ğŠü‹p
-    if (textureColor.a <= 0.5f)
+    // textureã®aå€¤ãŒ0.5ä»¥ä¸‹ã®æ™‚ã¾ãŸã¯output.colorã®aå€¤ãŒ0ã®æ™‚ã«Pixelã‚’æ£„å´
+    if (textureColor.a <= 0.5f || output.color.a == 0.0f)
     {
         discard;
     }
+
     
-    // texture‚Ìa’l‚ª0‚Ì‚ÉPixel‚ğŠü‹p
-    if (textureColor.a == 0.0f)
-    {
-        discard;
-    }
-    
-    // output.color‚Ìa’l‚ª0‚Ì‚ÉPixel‚ğŠü‹p
-    if (output.color.a == 0.0f)
-    {
-        discard;
-    }
-    
-    // Sampling‚µ‚½texture‚ÌF‚Æmaterial‚ÌF‚ğæZ‚µ‚Ä‡¬‚Á‚µ‚Ä‚İ‚é
-    output.color = gMaterial.color * textureColor;
-    
-    if (gMaterial.enableLighting == 1) { // Lighting‚·‚éê‡
+    // ãƒ©ã‚¤ãƒˆã®æœ‰ç„¡
+    if (gMaterial.enableLighting != 0) { // ãƒ©ã‚¤ãƒˆæœ‰ã‚Š
+       // diffuseFactorã®å®£è¨€
+        float diffuseFactor = 0.0f;
+        if (gMaterial.enableLighting == 1) {
+            
+             /* Lambert */
+            diffuseFactor = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
+        }
+        else if (gMaterial.enableLighting == 2) {
+            
+             /* Half Lambert */
+            float NdotL = dot(normalize(input.normal), -gDirectionalLight.direction);
+            diffuseFactor = pow(NdotL * 0.5f + 0.5f, 2.0f);
+        }
         
-        /* Lambert */
-        float cos = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
-        output.color = gMaterial.color * textureColor * gDirectionalLight.color * cos * gDirectionalLight.intensity;
-    }
-    else if (gMaterial.enableLighting == 2) {
-        /* Half Lambert */
-        float NdotL = dot(normalize(input.normal), -gDirectionalLight.direction);
-        float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
-        output.color = gMaterial.color * textureColor * gDirectionalLight.color * cos * gDirectionalLight.intensity;
-    }
-    else { // Lighting‚µ‚È‚¢ê‡B‘O‰ñ‚Ü‚Å‚Æ“¯‚¶‰‰Z
+        // ã‚«ãƒ¡ãƒ©ã¸ã®æ–¹å‘ã‚’ç®—å‡º
+        float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+        // å…¥å°„å…‰ã®åå°„ãƒ™ã‚¯ãƒˆãƒ«
+        float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
+        // å†…ç©ã®è¨ˆç®—
+        float RdotE = dot(reflectLight, toEye);
+        float specularPow = pow(saturate(RdotE), gMaterial.shininess); // åå°„å¼·åº¦
+        // æ‹¡æ•£åå°„
+        float3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
+        // é¡é¢åå°„
+        float3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f); // ç‰©ä½“ã®é¡é¢åå°„è‰²ã¯ç™½ã€‚
+        // æ‹¡æ•£åå°„ãƒ»é¡é¢åå°„
+        output.color.rgb = diffuse + specular;
+        // ã‚¢ãƒ«ãƒ•ã‚¡ä»Šã¾ã§é€šã‚Š
+        output.color.a = gMaterial.color.a * textureColor.a;
+    } 
+    else {ã€€//ã€€ãƒ©ã‚¤ãƒˆç„¡ã—
+        
         output.color = gMaterial.color * textureColor;
     }
     
