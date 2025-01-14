@@ -1,4 +1,5 @@
 #include "Card.h"
+#include "Math/MatrixMath.h"
 
 void Card::Initialize(const std::string& cardModel,int cardType, Vector3 position, std::shared_ptr<Camera> activeCamera)
 {
@@ -66,6 +67,8 @@ void Card::Update(std::shared_ptr<Camera> activeCamera) {
 
 	// モデルの更新
 	model->Update();
+
+	CalculationScreenPosition(activeCamera);
 }
 
 void Card::Draw()
@@ -79,4 +82,20 @@ void Card::Draw()
 	}
 
 
+}
+
+void Card::CalculationScreenPosition(std::shared_ptr<Camera> activeCamera)
+{
+	Matrix4x4 wMat = MakeAffineMatrix(model->GetScale(), model->GetRotate(), model->GetPosition());
+
+	Vector3 wPos = { wMat.m[3][0],wMat.m[3][1] ,wMat.m[3][2] };
+
+
+	Matrix4x4 matViewport = MakeViewportMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 1.0f);
+
+	Matrix4x4 matViewProjectionViewPort = Multiply(activeCamera->GetViewProjectionMatrix(), matViewport);
+
+	wPos = MakeTransform(wPos, matViewProjectionViewPort);
+
+	screenPosition = { wPos.x,wPos.y };
 }

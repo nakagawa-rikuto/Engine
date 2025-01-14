@@ -30,6 +30,10 @@ private:/// ===メンバ関数=== ///
 	// 表のカードがそろっているか
 	void CheckFrontPair();
 
+	void CheckCursorCardCollision();
+
+	bool CountStateCard(Card::CardState state);
+
 private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
@@ -50,7 +54,9 @@ private:/// ===メンバ変数=== ///
 	int xIndex = 0;
 	int zIndex = 0;
 
-	
 
+	// マウス用変数
+	bool TriggerLeft_ = false;
+	Vector2 mousePosition_ = { 0.0f, 0.0f };
 };
 

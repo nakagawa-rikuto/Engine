@@ -107,7 +107,10 @@ void GameScene::Update() {
 		cards_.card[zIndex][xIndex]->RequestState(Card::CardState::front);
 	}
 
-	
+	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+
+	CheckCursorCardCollision();
 
 	for (int z = 0; z < 5; ++z)
 	{
@@ -122,7 +125,7 @@ void GameScene::Update() {
 		}
 	}
 
-	cards_.card[zIndex][xIndex]->SetScale({ 1.3f,1.3f,1.3f });
+	
 	
 	CheckFrontPair();
 
@@ -198,4 +201,62 @@ void GameScene::CheckFrontPair()
 			}
 		}
 	}
+}
+
+void GameScene::CheckCursorCardCollision()
+{
+
+	if (!CountStateCard(Card::CardState::front))
+	{
+		return;
+	}
+
+	for (int y = 0; y < 5; ++y)
+	{
+		for (int x = 0; x < 5; ++x)
+		{
+			Vector2 diffVector = cards_.card[y][x]->GetScreenPosition() - mousePosition_;
+
+			float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
+
+			if (len < 25.0f)
+			{
+				cards_.card[y][x]->SetScale({ 1.3f,1.3f,1.3f });
+
+				if (Mii::PushMouse(MouseButtonType::Left)) {
+					if (TriggerLeft_) {
+
+						cards_.card[y][x]->RequestState(Card::CardState::front);
+
+						TriggerLeft_ = false;
+					}
+					else {
+						TriggerLeft_ = true;
+					}
+				}
+			}
+		}
+	}
+}
+
+bool GameScene::CountStateCard(Card::CardState state)
+{
+	int count = 0;
+	for (int y = 0; y < 5; ++y)
+	{
+		for (int x = 0; x < 5; ++x)
+		{
+			if (cards_.card[y][x]->GetCurrentState() == state || cards_.card[y][x]->GetRequestState() == state)
+			{
+				++count;
+			}
+		}
+	}
+
+	if (count < 2)
+	{
+		return true;
+	}
+
+	return false;
 }
