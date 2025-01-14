@@ -11,7 +11,7 @@ void Card::Initialize(const std::string& cardModel,int cardType, Vector3 positio
 	// メンバ変数にカードの番号を記録
 	cardType_ = cardType;
 
-	// カードの状態を裏で初期化
+	// カードの状態を初期化
 	currentState_ = CardState::back;
 	requestState_ = CardState::none;
 }
@@ -19,61 +19,47 @@ void Card::Initialize(const std::string& cardModel,int cardType, Vector3 positio
 void Card::Update(std::shared_ptr<Camera> activeCamera) {
 
 	// 各状態の角度Y
-	float rotateyTable[] = { 0.0f,3.14f ,3.14f,3.14f };
+	float rotateyTable[] = { 0.0f,3.14f};
 
+	// 現在の状態とリクエストの状態が違う場合
+	if (currentState_ != requestState_) {
 
-	float destinationRotateY = 0.0f;
+		// リクエストの状態が裏向きの時
+		if (requestState_ == CardState::back) {
+			destinationRotateY = rotateyTable[static_cast<int>(requestState_)];
+		}
 
-	//// 状態に合わせた目標角度を設定
-	//if (currentState_ == CardState::front && requestState_ == CardState::back) {
-	//	
-	//	destinationRotateY = rotateyTable[static_cast<int>(CardState::back)];
+		// リクエストの状態が表向きの時
+		else if (requestState_ == CardState::front) {
+			destinationRotateY = rotateyTable[static_cast<int>(requestState_)];
+		}
 
-	//}
-	//else if (currentState_ == CardState::back && requestState_ == CardState::front) {
+		// 現在の角度を取得
+		Vector3 rotate = model->GetRotate();
 
-	//	destinationRotateY = rotateyTable[static_cast<int>(CardState::front)];
+		// 角度差を計算
+		float diffrotate = destinationRotateY - rotate.y;
 
-	//}
-	//else if (requestState_ == CardState::none) {
+		// 角度差が小さい場合　
+		if (diffrotate <= 0.1f && diffrotate >= 0.0f ||
+			diffrotate >= -0.1f && diffrotate <= 0.0f)
+		{
+			// 細かい数値を調整
+			if (requestState_ != CardState::none)
+			{
+				rotate.y = rotateyTable[static_cast<int>(requestState_)];
 
-	//	destinationRotateY = rotateyTable[static_cast<int>(currentState_)];
-
-	//}
-
-	//
-	if (currentState_ != requestState_)
-	{
-		if (requestState_ == CardState::none || requestState_ == CardState::obtained) {
-			
+				currentState_ = requestState_;
+				requestState_ = CardState::none;
+			}
 		}
 		else {
-			destinationRotateY = rotateyTable[static_cast<int>(currentState_)];
+			rotate.y += diffrotate * 0.1f;
 		}
+
+		// 移動後の数値を代入
+		model->SetRotate(rotate);
 	}
-
-	// 現在の角度を取得
-	Vector3 rotate = model->GetRotate();
-
-	// 差を計算
-	float diffrotate = destinationRotateY - rotate.y;
-
-	rotate.y += diffrotate * 0.1f;
-
-	if (diffrotate <= 0.1f && diffrotate >= 0.0f ||
-		diffrotate >= -0.1f && diffrotate <= 0.0f)
-	{
-		if (requestState_ != CardState::none)
-		{
-			currentState_ = requestState_;
-			requestState_ = CardState::none;
-			
-			rotate.y = rotateyTable[static_cast<int>(currentState_)];
-		}
-	}
-
-	// 移動後の数値を代入
-	model->SetRotate(rotate);
 
 	// 有効なカメラの更新
 	model->SetCamera(activeCamera.get());
@@ -86,7 +72,7 @@ void Card::Draw()
 {
 	// モデルの描画
 
-	// 未取得の場合
+	// 未取得の場合に描画
 	if (currentState_ != CardState::obtained)
 	{
 		model->Draw();

@@ -107,14 +107,23 @@ void GameScene::Update() {
 		cards_.card[zIndex][xIndex]->RequestState(Card::CardState::front);
 	}
 
+	
+
 	for (int z = 0; z < 5; ++z)
 	{
 		for (int x = 0; x < 5; ++x)
-		{
-			cards_.card[z][x]->Update(cameraManager_->GetActiveCamera());
+		{	
+			if (cards_.card[z][x]->GetCurrentState() != Card::CardState::obtained)
+			{
+				cards_.card[z][x]->Update(cameraManager_->GetActiveCamera());
+
+				cards_.card[z][x]->SetScale({ 1.0f,1.0f,1.0f });
+			}
 		}
 	}
 
+	cards_.card[zIndex][xIndex]->SetScale({ 1.3f,1.3f,1.3f });
+	
 	CheckFrontPair();
 
 	cameraManager_->SetActiveCamera("main1");
@@ -188,9 +197,5 @@ void GameScene::CheckFrontPair()
 				cards_.card[cardZ[i]][cardX[i]]->RequestState(Card::CardState::back);
 			}
 		}
-
-		
-		
 	}
-
 }

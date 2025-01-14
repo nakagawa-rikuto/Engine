@@ -41,8 +41,6 @@ public:/// ===メンバ関数=== ///
 	// 描画
 	void Draw();
 
-
-
 	// ゲッター
 	int GetCardType() { return cardType_; }
 
@@ -50,6 +48,8 @@ public:/// ===メンバ関数=== ///
 
 	// セッター
 	void RequestState(CardState state) { requestState_ = state; }
+
+	void SetScale(Vector3 scale) { model->SetScale(scale); }
 
 private:/// ===メンバ変数=== ///
 	/// <summary>
@@ -65,6 +65,8 @@ private:/// ===メンバ変数=== ///
 
 	// カード番号
 	int cardType_;
+
+	float destinationRotateY = 0.0f;
 	
 	// カードの現在の状態
 	CardState currentState_;
