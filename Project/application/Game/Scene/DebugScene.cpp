@@ -111,6 +111,19 @@ void DebugScene::Update() {
 	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("Keybord");
+	ImGui::Text("WSADデカメラのポジションを移動");
+	ImGui::End();
+
+	ImGui::Begin("Mouse");
+	ImGui::Checkbox("PushLeft", &PushLeft_);
+	ImGui::Checkbox("TriggerRight", &TriggerRight_);
+	ImGui::DragFloat2("MousePosition", &mousePosition_.x, 0.1f);
+	ImGui::End();
+
+	ImGui::Begin("Controller");
+	ImGui::End();
+
 	ImGui::Begin("Audio");
 	ImGui::Checkbox("play", &playAudio);
 	ImGui::DragFloat("Volume", &volume, 0.01f);
@@ -120,27 +133,43 @@ void DebugScene::Update() {
 
 	/// ===カメラの変更=== ///
 	if (SetCamera) {
-		cameraManager_->SetActiveCamera("Main");
-	} else {
 		cameraManager_->SetActiveCamera("Main2");
+	} else {
+		cameraManager_->SetActiveCamera("Main");
 	}
 
-	/// ===入力処理=== ///
+	/// ===キーボード関連の処理=== ///
 	if (Mii::PushKey(DIK_D)) {
-		cameraPos.y += 0.01f;
+		cameraPos.x += 0.01f;
 	} else if (Mii::PushKey(DIK_A)) {
-		cameraPos.y -= 0.01f;
+		cameraPos.x -= 0.01f;
 	}
 	if (Mii::PushKey(DIK_W)) {
-		cameraPos.x += 0.01f;
+		cameraPos.y += 0.01f;
 	} else if (Mii::PushKey(DIK_S)) {
-		cameraPos.x -= 0.01f;
+		cameraPos.y -= 0.01f;
 	}
 	if (Mii::PushKey(DIK_UP)) {
 		cameraPos.z += 0.01f;
 	} else if (Mii::PushKey(DIK_DOWN)) {
 		cameraPos.z -= 0.01f;
 	}
+
+	/// ===マウス関連の処理=== ///
+	if (Mii::PushMouse(MouseButtonType::Left)) {
+		PushLeft_ = true;
+	} else {
+		PushLeft_ = false;
+	}
+	if (Mii::TriggerMouse(MouseButtonType::Right)) {
+		if (TriggerRight_) {
+			TriggerRight_ = false;
+		} else {
+			TriggerRight_ = true;
+		}
+	}
+	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
 
 	/// ===Audioのセット=== ///
 	if (playAudio) {
