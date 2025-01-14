@@ -57,7 +57,7 @@ void DebugScene::Initialize() {
 
 	/// ===モデル=== ///
 	model_ = std::make_unique<Model>();
-	model_->Initialize(axisModel);                              // 初期化(const std::string& modelNameが必須)
+	model_->Initialize(axisModel, LightType::Lambert);                              // 初期化(const std::string& modelNameが必須)
 	/* // モデルの使い方                        
 	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )

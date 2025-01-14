@@ -83,6 +83,9 @@ private: /// ===Variables(変数)=== ///
 	WorldTransform cameraTransform_;
 	WorldTransform uvTransform_;
 
+	/// ===Light=== ///
+	bool isLighting_ = false;
+
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
 

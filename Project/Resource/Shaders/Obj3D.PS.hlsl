@@ -97,8 +97,8 @@ PixlShaderOutput main(VertexShaderOutput input)
         // アルファ今まで通り
         output.color.a = gMaterial.color.a * textureColor.a;
         
-        // 今までの処理
-        output.color = gMaterial.color * textureColor * gDirectionalLight.color * diffuseFactor * gDirectionalLight.intensity;
+        //// 今までの処理
+        //output.color = gMaterial.color * textureColor * gDirectionalLight.color * diffuseFactor * gDirectionalLight.intensity;
     }
     else // Lightingしない場合
     { 

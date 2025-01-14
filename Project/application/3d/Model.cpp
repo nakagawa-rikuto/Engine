@@ -87,8 +87,10 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	materialData_->color = color_;
 	if (type == LightType::Lambert) {
 		materialData_->enableLighting = 1;
+		isLighting_ = true;
 	} else if (type == LightType::HalfLambert) {
 		materialData_->enableLighting = 2;
+		isLighting_ = true;
 	} else {
 		materialData_->enableLighting = 0;
 	}
@@ -152,8 +154,10 @@ void Model::Draw(BlendMode mode) {
 	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 	// Lightの設定
 	commandList->SetGraphicsRootConstantBufferView(3, light_->GetBuffer()->GetGPUVirtualAddress());
-	// CameraBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
+	if (isLighting_) {
+		// CameraBufferの設定
+		commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
+	}
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
