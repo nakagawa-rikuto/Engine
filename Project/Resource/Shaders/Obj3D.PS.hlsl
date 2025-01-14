@@ -4,8 +4,8 @@ struct Material
 {
     float4 color;
     int enableLighting; // 0はライト無し、1はランバート、2はハーフランバート
+    float shininess; // 光沢度
     float4x4 uvTransform;
-    float shininess;  // 光沢度
 };
 // ダイレクショナルライト
 struct DirectionalLight
@@ -41,30 +41,42 @@ PixlShaderOutput main(VertexShaderOutput input)
     PixlShaderOutput output;
     output.color = gMaterial.color;
     
+    // UV
     float4 transformdUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
-    
-    //TextureをSamplingする
+    // TextureをSamplingする
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
     
-    // textureのa値が0.5以下の時またはoutput.colorのa値が0の時にPixelを棄却
-    if (textureColor.a <= 0.5f || output.color.a == 0.0f)
+    
+    // textureのa値が0.5以下の時にPixelを棄却
+    if (textureColor.a <= 0.5f)
     {
         discard;
     }
-
+    // textureのa値が0の時にPixelを棄却
+    if (textureColor.a == 0.0f)
+    {
+        discard;
+    }
+    // output.colorのa値が0の時にPixelを棄却
+    if (output.color.a == 0.0f)
+    {
+        discard;
+    }
     
-    // ライトの有無
-    if (gMaterial.enableLighting != 0) { // ライト有り
+    // Lighting
+    if (gMaterial.enableLighting != 0) // Lightingする場合
+    { 
        // diffuseFactorの宣言
         float diffuseFactor = 0.0f;
-        if (gMaterial.enableLighting == 1) {
-            
-             /* Lambert */
+        
+        if (gMaterial.enableLighting == 1)
+        {
+            /* Lambert */
             diffuseFactor = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
         }
-        else if (gMaterial.enableLighting == 2) {
-            
-             /* Half Lambert */
+        else if (gMaterial.enableLighting == 2)
+        {
+            /* Half Lambert */
             float NdotL = dot(normalize(input.normal), -gDirectionalLight.direction);
             diffuseFactor = pow(NdotL * 0.5f + 0.5f, 2.0f);
         }
@@ -84,9 +96,12 @@ PixlShaderOutput main(VertexShaderOutput input)
         output.color.rgb = diffuse + specular;
         // アルファ今まで通り
         output.color.a = gMaterial.color.a * textureColor.a;
-    } 
-    else {　//　ライト無し
         
+        // 今までの処理
+        output.color = gMaterial.color * textureColor * gDirectionalLight.color * diffuseFactor * gDirectionalLight.intensity;
+    }
+    else // Lightingしない場合
+    { 
         output.color = gMaterial.color * textureColor;
     }
     

@@ -109,10 +109,8 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	LightDataWrite();
 
 	/// ===Camera=== ///
-	// buffer
 	camera3D_->Create(device, sizeof(CameraForGPU));
 	camera3D_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
