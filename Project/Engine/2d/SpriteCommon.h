@@ -36,6 +36,12 @@ public:
 	// Dataの設定
 	void SetData(VertexData2D* vertex, uint32_t* index, MaterialData2D* materal, TransformationMatrix2D* wvp);
 
+	// Dataの設定
+	void SetVertexData(const Vector4& position, const Vector2& texcoord);
+	void SetIndexData(uint32_t& indexData);
+	void SetMateialData(const Vector4& color, const Matrix4x4& uvTransform);
+	void SetWVPData(const Matrix4x4& WVP);
+	
 private:
 
 	// バッファリソース

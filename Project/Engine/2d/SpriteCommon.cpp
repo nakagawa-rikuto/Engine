@@ -8,8 +8,6 @@
 ///-------------------------------------------///
 SpriteCommon::SpriteCommon() = default;
 SpriteCommon::~SpriteCommon() {
-	vertex_.reset();
-	index_.reset();
 	material_.reset();
 	wvp_.reset();
 }
@@ -42,6 +40,30 @@ void SpriteCommon::IndexInitialize(ID3D12Device* device, uint32_t size) {
 	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress(); // 先頭のアドレスから使用
 	indexBufferView_.SizeInBytes = sizeof(uint32_t) * size; // 使用するサイズ（６つ分）
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT; // uint32_tとする
+}
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void SpriteCommon::Initialize(ID3D12Device* device) {
+	/// ===生成=== ///
+	material_ = std::make_unique<Material2D>();
+	wvp_ = std::make_unique<Transform2D>();
+	 
+	/// ===マテリアル=== ///
+	// buffer
+	material_->Create(device, sizeof(MaterialData2D) * materialSize_);
+	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	// Data書き込み(初期)
+	materialData_->color = {1.0f, 1.0f, 1.0f, 1.0f};
+	materialData_->uvTransform = MakeIdentity4x4();
+
+	/// ===wvp=== ///
+	// buffer
+	wvp_->Create(device, sizeof(TransformationMatrix2D));
+	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
+	// Data書き込み(初期)
+	wvpMatrixData_->WVP = MakeIdentity4x4();
 }
 
 ///-------------------------------------------/// 
