@@ -180,7 +180,7 @@
     <ClCompile Include="Engine\3d\IndexBuffer3D.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Light.cpp">
+    <ClCompile Include="Engine\3d\Light.cpp">
       <Filter>ソース ファイル\engine\3d</Filter>
     </ClCompile>
     <ClCompile Include="Math\MatrixMath.cpp">
@@ -279,6 +279,9 @@
     <ClCompile Include="Math\Colliders.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3d\Camera3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -335,7 +338,7 @@
     <ClInclude Include="Engine\Graphics\Pipeline\InputLayout.h">
       <Filter>ヘッダー ファイル\engine\base\pso</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Light.h">
+    <ClInclude Include="Engine\3d\Light.h">
       <Filter>ヘッダー ファイル\engine\3d</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\Logger.h">
@@ -480,6 +483,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Math\Colliders.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Camera3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
