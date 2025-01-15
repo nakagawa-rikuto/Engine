@@ -20,7 +20,6 @@ Model::~Model() {
 	common_.reset();
 }
 
-
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
@@ -33,7 +32,7 @@ const Vector4& Model::GetColor() const { return color_; }
 const Vector3& Model::GetLightDirection() const { return lightDirection_; }
 const float& Model::GetLightIntensity() const { return lightIntensity_; }
 const Vector4& Model::GetLightColor() const { return lightColor_; }
-const float& Model::GetShininess() const { return lightIntensity_; }
+const float& Model::GetShininess() const { return shininess_; }
 
 ///-------------------------------------------/// 
 /// Setter
@@ -47,10 +46,9 @@ void Model::SetColor(const Vector4& color) { color_ = color; }
 void Model::SetLightDirection(const Vector3& direction) { lightDirection_ = direction; }
 void Model::SetLightIntensity(const float& intensity) { lightIntensity_ = intensity; }
 void Model::SetLightColor(const Vector4& color) { lightColor_ = color; }
-void Model::SetLightShininess(const float& shininess) { lightIntensity_ = shininess; }
+void Model::SetLightShininess(const float& shininess) { shininess_ = shininess; }
 /// ===カメラ=== ///
 void Model::SetCamera(Camera* camera) { camera_ = camera; }
-
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -87,7 +85,6 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	common_->Initialize(device, type);
 }
 
-
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
@@ -99,7 +96,6 @@ void Model::Update() {
 	CameraDataWrite();
 
 }
-
 
 ///-------------------------------------------/// 
 /// 描画
@@ -120,28 +116,6 @@ void Model::Draw(BlendMode mode) {
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
-}
-
-///-------------------------------------------///  
-///　ライトの書き込み
-///-------------------------------------------///
-void Model::LightDataWrite() {
-	common_->SetDirectionLight(
-		lightColor_,
-		lightDirection_,
-		lightIntensity_
-	);
-}
-
-///-------------------------------------------/// 
-/// カメラの書き込み
-///-------------------------------------------///
-void Model::CameraDataWrite() {
-	if (camera_) {
-		common_->SetCameraForGPU(camera_->GetTranslate());
-	} else {
-		common_->SetCameraForGPU(cameraTransform_.translate);
-	}
 }
 
 ///-------------------------------------------/// 
@@ -183,6 +157,28 @@ void Model::TransformDataWrite() {
 		worldMatrix,
 		Inverse4x4(worldMatrix)
 	);
+}
+
+///-------------------------------------------///  
+///　ライトの書き込み
+///-------------------------------------------///
+void Model::LightDataWrite() {
+	common_->SetDirectionLight(
+		lightColor_,
+		lightDirection_,
+		lightIntensity_
+	);
+}
+
+///-------------------------------------------/// 
+/// カメラの書き込み
+///-------------------------------------------///
+void Model::CameraDataWrite() {
+	if (camera_) {
+		common_->SetCameraForGPU(camera_->GetTranslate());
+	} else {
+		common_->SetCameraForGPU(cameraTransform_.translate);
+	}
 }
 
 /*///-------------------------------------------///
