@@ -218,6 +218,6 @@ void DebugScene::Draw() {
 
 #pragma region 前景スプライト描画
 	// Spriteの描画
-	sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
+	//sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
 #pragma endregion
 }
