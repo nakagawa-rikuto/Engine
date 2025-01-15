@@ -1,22 +1,15 @@
 #pragma once
 /// ===include=== ///
-// Engine
-#include "Engine/Core/CData.h"
-#include "Engine/Core/ComPtr.h"
 // buffer
 #include "Engine/3d/VertexBuffer3D.h"
-#include "Engine/3d/IndexBuffer3D.h"
-#include "Engine/3d/Material3D.h"
-#include "Engine/3d/Transform3D.h"
-#include "Engine/3d/Light.h"
-#include "Engine/3d/Camera3D.h"
+#include "Engine/3d/ModelCommon.h"
 // Pipeline
-#include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
-// camera
-#include "application/3d/Camera.h"
 // c++
 #include <memory>
+
+/// ===前方宣言=== ///
+class Camera;
 
 ///=====================================================/// 
 /// モデル
@@ -74,38 +67,26 @@ public: /// ===Setter=== ///
 
 private: /// ===Variables(変数)=== ///
 
-	// バッファリソース
+	/// ===バッファリソース=== ///
 	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<Material3D> material_;
-	std::unique_ptr<Transform3D> wvp_;
-	std::unique_ptr<Light> light_;
-	std::unique_ptr<Camera3D> camera3D_;
+	std::unique_ptr<ModelCommon> common_;
 
-	// バッファリソース内のデータを指すポインタ
+	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;
-	MaterialData3D* materialData_ = nullptr;
-	TransformationMatrix3D* wvpMatrixData_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
-	CameraForGPU* cameraForGPU_ = nullptr;
 
-	// バッファビュー
+	/// ===バッファビュー=== ///
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	// モデルデータ
+	/// ===モデルデータ=== ///
 	ModelData modelData_;
-
-	// WorldTransform
-	WorldTransform worldTransform_; // Transform(scale, rotate, transform)
-	WorldTransform cameraTransform_;
 	WorldTransform uvTransform_;
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
+	WorldTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
-	Vector3 position_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 rotate_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
+	WorldTransform worldTransform_;
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
@@ -117,13 +98,13 @@ private: /// ===Variables(変数)=== ///
 
 private: /// ===Functions(関数)=== ///
 
+	// MaterialDataの書き込み
+	void MateialDataWrite();
+	// Transform情報の書き込み
+	void TransformDataWrite();
 	// LightData書き込み
 	void LightDataWrite();
 	// CameraData書き込み
 	void CameraDataWrite();
-	// Transform情報の書き込み
-	void TransformDataWrite();
-	// スフィアのデータ書き込み
-	void SphereDataWrite();
 };
 

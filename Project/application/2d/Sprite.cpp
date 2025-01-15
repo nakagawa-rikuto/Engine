@@ -14,8 +14,7 @@
 Sprite::~Sprite() {
 	vertex_.reset();
 	index_.reset();
-	material_.reset();
-	wvp_.reset();
+	common_.reset();
 }
 
 
@@ -48,12 +47,6 @@ void Sprite::SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorP
 // フリップ
 void Sprite::SetFlipX(const bool& flip) { isFlipX_ = flip; }
 void Sprite::SetFlipY(const bool& flip) { isFlipY_ = flip; }
-// テクスチャ
-void Sprite::SetTexture(const std::string textureFilePath) {
-	filePath_ = textureFilePath;
-	AdjustTextureSize(textureFilePath);
-	isLoadTexture_ = true;
-}
 // テクスチャ左上座標
 void Sprite::SetTextureLeftTop(const Vector2& textureLeftTop) { textureLeftTop_ = textureLeftTop; }
 // テクスチャ切り出しサイズ
@@ -63,16 +56,19 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Sprite::Initialize() {
+void Sprite::Initialize(const std::string textureFilePath) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = Mii::GetDXDevice();
 
+	/// ===テクスチャ=== ///
+	filePath_ = textureFilePath;
+	AdjustTextureSize(textureFilePath);
+
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer2D>();
 	index_ = std::make_unique<IndexBuffer2D>();
-	material_ = std::make_unique<Material2D>();
-	wvp_ = std::make_unique<Transform2D>();
+	common_ = std::make_unique<SpriteCommon>();
 
 	/// ===vertex=== ///
 	// buffer
@@ -97,19 +93,10 @@ void Sprite::Initialize() {
 	IndexDataWrite();
 
 	/// ===マテリアル=== ///
-	// buffer
-	material_->Create(device, sizeof(MaterialData2D) * materialSize_);
-	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	// Data書き込み(初期)
-	materialData_->color = color_;
-	materialData_->uvTransform = MakeIdentity4x4();
+	common_->MaterialInitialize(device, materialSize_);
 
 	/// ===wvp=== ///
-	// buffer
-	wvp_->Create(device, sizeof(TransformationMatrix2D));
-	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
-	// Data書き込み(初期)
-	wvpMatrixData_->WVP = MakeIdentity4x4();
+	common_->WVPMatrixInitialize(device);
 
 	/// ===WorldTransformの設定=== ///
 	worldTransform_ = { {1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, }, { 0.0f, 0.0f, 0.0f } };
@@ -122,11 +109,10 @@ void Sprite::Initialize() {
 void Sprite::Update() {
 
 	// Data書き込み(更新)
+	MateialDataWrite();
+	TransformDataWrite();
 	UpdateVertexDataWrite();
 	SpecifyRange();
-	TransformDataWrite();
-	// カラー書き込み(更新)
-	materialData_->color = color_;
 }
 
 ///-------------------------------------------/// 
@@ -144,14 +130,10 @@ void Sprite::Draw(BlendMode mode) {
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// IndexBufferViewの設定
 	commandList->IASetIndexBuffer(&indexBufferView_);
-	// Materialの設定
-	commandList->SetGraphicsRootConstantBufferView(0, material_->GetBuffer()->GetGPUVirtualAddress());
-	// wvpMatrixBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
+	// Matrial・WVPの設定
+	common_->Bind(commandList);
 	// テクスチャの設定
-	if (isLoadTexture_) {
-		Mii::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
-	}
+	Mii::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
 	// 描画(ドローコール)
 	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
@@ -174,6 +156,53 @@ void Sprite::VertexDataWrite() {
 	vertexData_[3].position = { 1.0f, 0.0f, 0.0f, 1.0f };
 	vertexData_[3].texcoord = { 1.0f, 0.0f };
 }
+
+///-------------------------------------------/// 
+/// IndexResourceの書き込み
+///-------------------------------------------///
+void Sprite::IndexDataWrite() {
+	indexData_[0] = 0;
+	indexData_[1] = 1;
+	indexData_[2] = 2;
+	indexData_[3] = 1;
+	indexData_[4] = 3;
+	indexData_[5] = 2;
+}
+
+///-------------------------------------------/// 
+/// MateialDataへの書き込み
+///-------------------------------------------///
+void Sprite::MateialDataWrite() {
+	common_->SetMateiralData(
+		color_,
+		MakeIdentity4x4()
+	);
+}
+
+
+///-------------------------------------------/// 
+/// TransformDataの書き込み
+///-------------------------------------------///
+void Sprite::TransformDataWrite() {
+
+	// 座標の反映
+	worldTransform_.translate = { position_.x, position_.y, 0.0f };
+	// 回転の反映
+	worldTransform_.rotate = { 0.0, 0.0, rotation_ };
+	// サイズの反映
+	worldTransform_.scale = { size_.x, size_.y, 1.0f };
+
+	// WorldMatrix
+	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	// ViewMatrix
+	Matrix4x4 viewMatrix = MakeIdentity4x4();
+	// ProjectionMatrix
+	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(WinApp::GetWindowWidth()), static_cast<float>(WinApp::GetWindowHeight()), 0.0f, 100.0f);
+
+	// データの書き込み
+	common_->SetWVPData(Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix)));
+}
+
 
 ///-------------------------------------------///  
 /// UpdateVertexDataWrite
@@ -205,43 +234,6 @@ void Sprite::UpdateVertexDataWrite() {
 	vertexData_[2].position = { right, bottom, 0.0f, 1.0f };
 	// 右上
 	vertexData_[3].position = { right, top, 0.0f, 1.0f };
-}
-
-
-///-------------------------------------------/// 
-/// IndexResourceの書き込み
-///-------------------------------------------///
-void Sprite::IndexDataWrite() {
-	indexData_[0] = 0;
-	indexData_[1] = 1;
-	indexData_[2] = 2;
-	indexData_[3] = 1;
-	indexData_[4] = 3;
-	indexData_[5] = 2;
-}
-
-
-///-------------------------------------------/// 
-/// TransformDataの書き込み
-///-------------------------------------------///
-void Sprite::TransformDataWrite() {
-
-	// 座標の反映
-	worldTransform_.translate = { position_.x, position_.y, 0.0f };
-	// 回転の反映
-	worldTransform_.rotate = { 0.0, 0.0, rotation_ };
-	// サイズの反映
-	worldTransform_.scale = { size_.x, size_.y, 1.0f };
-
-	// WorldMatrix
-	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	// ViewMatrix
-	Matrix4x4 viewMatrix = MakeIdentity4x4();
-	// ProjectionMatrix
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(WinApp::GetWindowWidth()), static_cast<float>(WinApp::GetWindowHeight()), 0.0f, 100.0f);
-
-	// データの書き込み
-	wvpMatrixData_->WVP = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 }
 
 
