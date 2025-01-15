@@ -4,8 +4,8 @@ struct Material
 {
     float4 color;
     int enableLighting; // 0はライト無し、1はランバート、2はハーフランバート
-    float shininess; // 光沢度
     float4x4 uvTransform;
+    float shininess; // 光沢度
 };
 // ダイレクショナルライト
 struct DirectionalLight
@@ -45,6 +45,8 @@ PixlShaderOutput main(VertexShaderOutput input)
     float4 transformdUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
     // TextureをSamplingする
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
+    // カメラへの方向を算出
+    float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
     
     // textureのa値が0.5以下の時にPixelを棄却
     if (textureColor.a <= 0.5f)
@@ -67,26 +69,28 @@ PixlShaderOutput main(VertexShaderOutput input)
     { 
        // diffuseFactorの宣言
         float diffuseFactor = 0.0f;
+        float specularPow = 0.0f;
         
         if (gMaterial.enableLighting == 1)
         {
             /* Lambert */
             diffuseFactor = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
+            // 入射光の反射ベクトル
+            float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
+            // 内積の計算
+            float RdotE = dot(reflectLight, toEye);
+            specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
         }
         else if (gMaterial.enableLighting == 2)
         {
             /* Half Lambert */
-            float NdotL = dot(normalize(input.normal), -gDirectionalLight.direction);
-            diffuseFactor = pow(NdotL * 0.5f + 0.5f, 2.0f);
+            float3 halfVector = normalize(-gDirectionalLight.direction + toEye);
+            float NdotH = dot(normalize(input.normal), halfVector);
+            diffuseFactor = pow(NdotH * 0.5f + 0.5f, 2.0f);
+            specularPow = pow(saturate(NdotH), gMaterial.shininess);
+            
         }
         
-        // カメラへの方向を算出
-        float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
-        // 入射光の反射ベクトル
-        float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
-        // 内積の計算
-        float RdotE = dot(reflectLight, toEye);
-        float specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
         // 拡散反射
         float3 diffuse = 
         gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
@@ -94,7 +98,7 @@ PixlShaderOutput main(VertexShaderOutput input)
         float3 specular = 
         gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f); // 物体の鏡面反射色は白。
         // 拡散反射・鏡面反射
-        output.color.rgb = diffuse + specular;
+        output.color.rgb = saturate(diffuse + specular);
         // アルファ今まで通り
         output.color.a = gMaterial.color.a * textureColor.a;
         

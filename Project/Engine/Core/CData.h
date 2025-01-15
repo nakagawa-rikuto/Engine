@@ -38,9 +38,9 @@ struct MaterialData3D {
 
 	Vector4 color;
 	int32_t enableLighting;
-	float shininess;
 	float padding[3];
 	Matrix4x4 uvTransform;
+	float shininess;
 };
 /// ===TransformationMatrix(2D)=== ///
 struct TransformationMatrix2D {
@@ -50,6 +50,7 @@ struct TransformationMatrix2D {
 struct TransformationMatrix3D {
 	Matrix4x4 WVP;
 	Matrix4x4 World;
+	Matrix4x4 WorldInverseTranspose;
 };
 #pragma endregion
 #pragma region WorldTransform

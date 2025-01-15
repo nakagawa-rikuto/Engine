@@ -25,27 +25,31 @@ Model::~Model() {
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
-// 座標
+/// ===モデル=== ///
 const Vector3& Model::GetPosition() const { return position_; }
-// 回転
 const Vector3& Model::GetRotate() const { return rotate_; }
-// 拡縮
 const Vector3& Model::GetScale() const { return scale_; }
-// カラー
 const Vector4& Model::GetColor() const { return color_; }
+/// ===ライト=== ///
+const Vector3& Model::GetLightDirection() const { return lightDirection_; }
+const float& Model::GetLightIntensity() const { return lightIntensity_; }
+const Vector4& Model::GetLightColor() const { return lightColor_; }
+const float& Model::GetShininess() const { return lightIntensity_; }
 
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-// 座標
+/// ===モデル=== ///
 void Model::SetPosition(const Vector3& postion) { position_ = postion; }
-// 回転
 void Model::SetRotate(const Vector3& rotate) { rotate_ = rotate; }
-// 拡縮
 void Model::SetScale(const Vector3& scale) { scale_ = scale; }
-// カラー
 void Model::SetColor(const Vector4& color) { color_ = color; }
-// カメラ
+/// ===ライト=== ///
+void Model::SetLightDirection(const Vector3& direction) { lightDirection_ = direction; }
+void Model::SetLightIntensity(const float& intensity) { lightIntensity_ = intensity; }
+void Model::SetLightColor(const Vector4& color) { lightColor_ = color; }
+void Model::SetLightShininess(const float& shininess) { lightIntensity_ = shininess; }
+/// ===カメラ=== ///
 void Model::SetCamera(Camera* camera) { camera_ = camera; }
 
 
@@ -99,7 +103,7 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	} else {
 		materialData_->enableLighting = 0;
 	}
-	materialData_->shininess = 0.27f;
+	materialData_->shininess = lightIntensity_;
 	materialData_->uvTransform = MakeIdentity4x4();
 
 	/// ===wvp=== ///
@@ -109,6 +113,7 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	// Dataの書き込み
 	wvpMatrixData_->WVP = MakeIdentity4x4();
 	wvpMatrixData_->World = MakeIdentity4x4();
+	wvpMatrixData_->WorldInverseTranspose = Inverse4x4(wvpMatrixData_->World);
 
 	/// ===Light=== ///
 	light_->Create(device, sizeof(DirectionalLight));
@@ -130,6 +135,8 @@ void Model::Update() {
 	worldTransform_.scale = scale_;
 	worldTransform_.rotate = rotate_;
 	worldTransform_.translate = position_;
+	materialData_->color = color_;
+	materialData_->shininess = lightIntensity_;
 	TransformDataWrite();
 	LightDataWrite();
 	CameraDataWrite();
@@ -168,9 +175,9 @@ void Model::Draw(BlendMode mode) {
 ///　ライトの書き込み
 ///-------------------------------------------///
 void Model::LightDataWrite() {
-	directionalLightData_->color = color_;
-	directionalLightData_->direction = { 0.0f, -1.0f, 0.0f };
-	directionalLightData_->intensity = 1.0f;
+	directionalLightData_->color = lightColor_;
+	directionalLightData_->direction = lightDirection_;
+	directionalLightData_->intensity = lightIntensity_;
 }
 
 ///-------------------------------------------/// 
@@ -211,6 +218,7 @@ void Model::TransformDataWrite() {
 	// wvp
 	wvpMatrixData_->WVP = worldViewProjectionMatrix;;
 	wvpMatrixData_->World = worldMatrix;
+	wvpMatrixData_->WorldInverseTranspose = Inverse4x4(wvpMatrixData_->World);
 	// uv
 	materialData_->uvTransform = uvTransformMatrixMultiply;
 }
