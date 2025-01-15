@@ -23,11 +23,11 @@ public:
 	// 初期化
 	void Initialize(ID3D12Device* device, LightType type); // オブジェクトを読み込まない場合の初期化
 	// 描画
-	void Draw(ID3D12GraphicsCommandList* commandList);
+	void Bind(ID3D12GraphicsCommandList* commandList);
 
 public:/// ===Setter=== ///
 	// Material
-	void SetMatiarlDataColor(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform);;
+	void SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform);
 	// ワールドトランスフォーム
 	void SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World, const Matrix4x4& WorldInverseTranspose);
 	// Light

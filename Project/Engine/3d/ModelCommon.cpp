@@ -18,7 +18,7 @@ ModelCommon::~ModelCommon() {
 /// Setter
 ///-------------------------------------------///
 // mateial
-void ModelCommon::SetMatiarlDataColor(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform) {
+void ModelCommon::SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform) {
 	materialData_->color = color;
 	materialData_->shininess = shininess;
 	materialData_->uvTransform = uvTransform;
@@ -94,7 +94,7 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ModelCommon::Draw(ID3D12GraphicsCommandList* commandList) {
+void ModelCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 
 	/// ===コマンドリストに設定=== ///
 	// MaterialBufferの設定

@@ -67,30 +67,26 @@ public: /// ===Setter=== ///
 
 private: /// ===Variables(変数)=== ///
 
-	// バッファリソース
+	/// ===バッファリソース=== ///
 	std::unique_ptr<VertexBuffer3D> vertex_;
 	std::unique_ptr<ModelCommon> common_;
 
-	// バッファリソース内のデータを指すポインタ
+	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;
 
-	// バッファビュー
+	/// ===バッファビュー=== ///
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	// モデルデータ
+	/// ===モデルデータ=== ///
 	ModelData modelData_;
-
-	// WorldTransform
-	WorldTransform cameraTransform_;
 	WorldTransform uvTransform_;
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
+	WorldTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
-	Vector3 position_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 rotate_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
+	WorldTransform worldTransform_;
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
@@ -110,8 +106,5 @@ private: /// ===Functions(関数)=== ///
 	void LightDataWrite();
 	// CameraData書き込み
 	void CameraDataWrite();
-	
-	// スフィアのデータ書き込み
-	void SphereDataWrite();
 };
 

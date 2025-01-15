@@ -1,13 +1,10 @@
 #pragma once
 /// ===include=== ///
 // Engine
-#include "Engine/Core/CData.h"
+#include "Engine/2d/SpriteCommon.h"
 #include "Engine/2d/VertexBuffer2D.h"
 #include "Engine/2d/IndexBuffer2D.h"
-#include "Engine/2d/Material2D.h"
-#include "Engine/2d/Transform2D.h"
-#include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
-// Game
+// Pipline
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
 ///=====================================================/// 
@@ -22,7 +19,7 @@ public: /// ===基本的な関数=== ///
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(const std::string textureFilePath);
 
 	/// <summary>
 	/// 更新
@@ -60,8 +57,6 @@ public:/// ===Setter=== ///
 	// フリップ
 	void SetFlipX(const bool& flip);
 	void SetFlipY(const bool& flip);
-	// テクスチャ
-	void SetTexture(const std::string textureFilePath);
 	// テクスチャ左上座標
 	void SetTextureLeftTop(const Vector2& textureLeftTop);
 	// テクスチャ切り出しサイズ
@@ -72,8 +67,7 @@ private:/// ===Variables(変数)=== ///
 	// バッファリソース
 	std::unique_ptr<VertexBuffer2D> vertex_;
 	std::unique_ptr<IndexBuffer2D> index_;
-	std::unique_ptr<Material2D> material_;
-	std::unique_ptr<Transform2D> wvp_;
+	std::unique_ptr<SpriteCommon> common_;
 
 	// サイズ
 	uint32_t vertexSize_ = 6;
@@ -83,8 +77,6 @@ private:/// ===Variables(変数)=== ///
 	// バッファリソース内のデータを指すポインタ
 	VertexData2D* vertexData_ = nullptr;
 	uint32_t* indexData_ = nullptr;
-	MaterialData2D* materialData_ = nullptr;
-	TransformationMatrix2D* wvpMatrixData_ = nullptr;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
@@ -104,18 +96,19 @@ private:/// ===Variables(変数)=== ///
 	bool isFlipY_ = false;                       // 上下フリップ
 	Vector2 textureLeftTop_ = { 0.0f, 0.0f };    // テクスチャ左上
 	Vector2 textureSize_ = { 100.0f, 100.0f };   // テクスチャ切り出しサイズ
-	bool isLoadTexture_ = false;
 
 private:/// ===Functions(関数)=== ///
 
 	// VertexResourceへの書き込み
 	void VertexDataWrite();
-	// UpdateVertexDataWrite
-	void UpdateVertexDataWrite();
 	// IndexResourceへの書き込み
 	void IndexDataWrite();
+	// MateialDataへの書き込み
+	void MateialDataWrite();
 	// Transform情報の書き込み
 	void TransformDataWrite();
+	// UpdateVertexDataWrite
+	void UpdateVertexDataWrite();
 	// テクスチャ範囲指定
 	void SpecifyRange();
 	// テクスチャサイズをイメージに合わせる

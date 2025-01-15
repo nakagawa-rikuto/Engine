@@ -24,9 +24,9 @@ Model::~Model() {
 /// Getter
 ///-------------------------------------------///
 /// ===モデル=== ///
-const Vector3& Model::GetPosition() const { return position_; }
-const Vector3& Model::GetRotate() const { return rotate_; }
-const Vector3& Model::GetScale() const { return scale_; }
+const Vector3& Model::GetPosition() const { return worldTransform_.translate; }
+const Vector3& Model::GetRotate() const { return worldTransform_.rotate; }
+const Vector3& Model::GetScale() const { return worldTransform_.scale; }
 const Vector4& Model::GetColor() const { return color_; }
 /// ===ライト=== ///
 const Vector3& Model::GetLightDirection() const { return lightDirection_; }
@@ -38,9 +38,9 @@ const float& Model::GetShininess() const { return shininess_; }
 /// Setter
 ///-------------------------------------------///
 /// ===モデル=== ///
-void Model::SetPosition(const Vector3& postion) { position_ = postion; }
-void Model::SetRotate(const Vector3& rotate) { rotate_ = rotate; }
-void Model::SetScale(const Vector3& scale) { scale_ = scale; }
+void Model::SetPosition(const Vector3& postion) { worldTransform_.translate = postion; }
+void Model::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
+void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void Model::SetColor(const Vector4& color) { color_ = color; }
 /// ===ライト=== ///
 void Model::SetLightDirection(const Vector3& direction) { lightDirection_ = direction; }
@@ -67,6 +67,7 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	common_ = std::make_unique<ModelCommon>();
 
 	/// ===worldTransform=== ///
+	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
@@ -111,7 +112,7 @@ void Model::Draw(BlendMode mode) {
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// 共通部の設定
-	common_->Draw(commandList);
+	common_->Bind(commandList);
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
@@ -127,7 +128,7 @@ void Model::MateialDataWrite() {
 	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrixMultiply = Multiply(uvTransformMatrixMultiply, MakeTranslateMatrix(uvTransform_.translate));
 	/// ===値の代入=== ///
-	common_->SetMatiarlDataColor(
+	common_->SetMatiarlData(
 		color_,
 		shininess_,
 		uvTransformMatrixMultiply
@@ -139,7 +140,7 @@ void Model::MateialDataWrite() {
 ///-------------------------------------------///
 void Model::TransformDataWrite() {
 
-	Matrix4x4 worldMatrix = MakeAffineMatrix(scale_, rotate_, position_);
+	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
 	/// ===Matrixの作成=== ///
