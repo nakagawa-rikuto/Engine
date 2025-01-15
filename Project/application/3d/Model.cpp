@@ -3,6 +3,8 @@
 #include "Engine/Core/Mii.h"
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
+// camera
+#include "application/3d/Camera.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -15,10 +17,7 @@
 Model::Model() = default;
 Model::~Model() {
 	vertex_.reset();
-	material_.reset();
-	wvp_.reset();
-	light_.reset();
-	camera3D_.reset();
+	common_.reset();
 }
 
 
@@ -67,13 +66,9 @@ void Model::Initialize(const std::string& filename, LightType type) {
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
-	material_ = std::make_unique<Material3D>();
-	wvp_ = std::make_unique<Transform3D>();
-	light_ = std::make_unique<Light>();
-	camera3D_ = std::make_unique<Camera3D>();
+	common_ = std::make_unique<ModelCommon>();
 
 	/// ===worldTransform=== ///
-	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
@@ -88,42 +83,8 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
 	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
 
-	/// ===Material=== ///
-	// buffer
-	material_->Create(device, sizeof(MaterialData3D));
-	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	// Data書き込み
-	materialData_->color = color_;
-	if (type == LightType::Lambert) {
-		materialData_->enableLighting = 1;
-		isLighting_ = true;
-	} else if (type == LightType::HalfLambert) {
-		materialData_->enableLighting = 2;
-		isLighting_ = true;
-	} else {
-		materialData_->enableLighting = 0;
-	}
-	materialData_->shininess = lightIntensity_;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	/// ===wvp=== ///
-	// buffer
-	wvp_->Create(device, sizeof(TransformationMatrix3D));
-	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
-	// Dataの書き込み
-	wvpMatrixData_->WVP = MakeIdentity4x4();
-	wvpMatrixData_->World = MakeIdentity4x4();
-	wvpMatrixData_->WorldInverseTranspose = Inverse4x4(wvpMatrixData_->World);
-
-	/// ===Light=== ///
-	light_->Create(device, sizeof(DirectionalLight));
-	light_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
-	LightDataWrite();
-
-	/// ===Camera=== ///
-	camera3D_->Create(device, sizeof(CameraForGPU));
-	camera3D_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-	CameraDataWrite();
+	/// ===Common=== ///
+	common_->Initialize(device, type);
 }
 
 
@@ -132,11 +93,7 @@ void Model::Initialize(const std::string& filename, LightType type) {
 ///-------------------------------------------///
 void Model::Update() {
 	/// ===データの書き込み=== ///
-	worldTransform_.scale = scale_;
-	worldTransform_.rotate = rotate_;
-	worldTransform_.translate = position_;
-	materialData_->color = color_;
-	materialData_->shininess = lightIntensity_;
+	MateialDataWrite();
 	TransformDataWrite();
 	LightDataWrite();
 	CameraDataWrite();
@@ -157,14 +114,8 @@ void Model::Draw(BlendMode mode) {
 	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-	// MaterialBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(0, material_->GetBuffer()->GetGPUVirtualAddress());
-	// wvpMatrixBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
-	// Lightの設定
-	commandList->SetGraphicsRootConstantBufferView(3, light_->GetBuffer()->GetGPUVirtualAddress());
-	// CameraBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
+	// 共通部の設定
+	common_->Draw(commandList);
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
@@ -175,9 +126,11 @@ void Model::Draw(BlendMode mode) {
 ///　ライトの書き込み
 ///-------------------------------------------///
 void Model::LightDataWrite() {
-	directionalLightData_->color = lightColor_;
-	directionalLightData_->direction = lightDirection_;
-	directionalLightData_->intensity = lightIntensity_;
+	common_->SetDirectionLight(
+		lightColor_,
+		lightDirection_,
+		lightIntensity_
+	);
 }
 
 ///-------------------------------------------/// 
@@ -185,10 +138,26 @@ void Model::LightDataWrite() {
 ///-------------------------------------------///
 void Model::CameraDataWrite() {
 	if (camera_) {
-		cameraForGPU_->worldPosition = camera_->GetTranslate();
+		common_->SetCameraForGPU(camera_->GetTranslate());
 	} else {
-		cameraForGPU_->worldPosition = cameraTransform_.translate;
+		common_->SetCameraForGPU(cameraTransform_.translate);
 	}
+}
+
+///-------------------------------------------/// 
+/// MaterialDataの書き込み
+///-------------------------------------------///
+void Model::MateialDataWrite() {
+	/// ===Matrixの作成=== ///
+	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform_.scale);
+	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrixMultiply = Multiply(uvTransformMatrixMultiply, MakeTranslateMatrix(uvTransform_.translate));
+	/// ===値の代入=== ///
+	common_->SetMatiarlDataColor(
+		color_,
+		shininess_,
+		uvTransformMatrixMultiply
+	);
 }
 
 ///-------------------------------------------/// 
@@ -196,11 +165,10 @@ void Model::CameraDataWrite() {
 ///-------------------------------------------///
 void Model::TransformDataWrite() {
 
-	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldMatrix = MakeAffineMatrix(scale_, rotate_, position_);
 	Matrix4x4 worldViewProjectionMatrix;
 
 	/// ===Matrixの作成=== ///
-	// wvp
 	if (camera_) {
 		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
 		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
@@ -209,18 +177,12 @@ void Model::TransformDataWrite() {
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
 		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	}
-	// UV
-	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform_.scale);
-	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform_.rotate.z));
-	uvTransformMatrixMultiply = Multiply(uvTransformMatrixMultiply, MakeTranslateMatrix(uvTransform_.translate));
-
 	/// ===値の代入=== ///
-	// wvp
-	wvpMatrixData_->WVP = worldViewProjectionMatrix;;
-	wvpMatrixData_->World = worldMatrix;
-	wvpMatrixData_->WorldInverseTranspose = Inverse4x4(wvpMatrixData_->World);
-	// uv
-	materialData_->uvTransform = uvTransformMatrixMultiply;
+	common_->SetTransformData(
+		worldViewProjectionMatrix,
+		worldMatrix,
+		Inverse4x4(worldMatrix)
+	);
 }
 
 /*///-------------------------------------------///
