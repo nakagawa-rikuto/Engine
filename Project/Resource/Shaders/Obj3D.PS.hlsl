@@ -46,7 +46,6 @@ PixlShaderOutput main(VertexShaderOutput input)
     // TextureをSamplingする
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
     
-    
     // textureのa値が0.5以下の時にPixelを棄却
     if (textureColor.a <= 0.5f)
     {
@@ -89,9 +88,11 @@ PixlShaderOutput main(VertexShaderOutput input)
         float RdotE = dot(reflectLight, toEye);
         float specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
         // 拡散反射
-        float3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
+        float3 diffuse = 
+        gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
         // 鏡面反射
-        float3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f); // 物体の鏡面反射色は白。
+        float3 specular = 
+        gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f); // 物体の鏡面反射色は白。
         // 拡散反射・鏡面反射
         output.color.rgb = diffuse + specular;
         // アルファ今まで通り

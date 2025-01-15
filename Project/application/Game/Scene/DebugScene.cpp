@@ -37,7 +37,7 @@ void DebugScene::Initialize() {
 	Loader_->LoadTexture(monsterBall);
 
 	// モデルの読み込み
-	const std::string& planeModel = "plane";
+	const std::string& planeModel = "MonsterBall";
 	Loader_->LoadModel(planeModel);
 	const std::string& axisModel = "axis";
 	Loader_->LoadModel(axisModel);
@@ -45,7 +45,7 @@ void DebugScene::Initialize() {
 	/// ===スプライトの初期化=== ///
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize();                              // 初期化
-	sprite_->SetTexture(uvTexture);                     // テクスチャの設定(これがないと描画できない)
+	sprite_->SetTexture(monsterBall);                     // テクスチャの設定(これがないと描画できない)
 	/* // テクスチャの使い方
 	sprite->SetPosition(Vector2(0.0f, 0.0f));           // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                          // 回転の設定(初期値は0.0);
@@ -57,7 +57,7 @@ void DebugScene::Initialize() {
 
 	/// ===モデル=== ///
 	model_ = std::make_unique<Model>();
-	model_->Initialize(axisModel, LightType::Lambert);                              // 初期化(const std::string& modelNameが必須)
+	model_->Initialize(axisModel);          // 初期化(const std::string& modelNameが必須)
 	/* // モデルの使い方                        
 	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -218,6 +218,6 @@ void DebugScene::Draw() {
 
 #pragma region 前景スプライト描画
 	// Spriteの描画
-	sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
+	//sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
 #pragma endregion
 }

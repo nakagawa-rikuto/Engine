@@ -68,6 +68,11 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	light_ = std::make_unique<Light>();
 	camera3D_ = std::make_unique<Camera3D>();
 
+	/// ===worldTransform=== ///
+	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
+	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+
 	/// ===vertex=== ///
 	// Buffer
 	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
@@ -113,11 +118,7 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	/// ===Camera=== ///
 	camera3D_->Create(device, sizeof(CameraForGPU));
 	camera3D_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
-
-	/// ===worldTransform=== ///
-	worldTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
-	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+	CameraDataWrite();
 }
 
 
@@ -129,9 +130,10 @@ void Model::Update() {
 	worldTransform_.scale = scale_;
 	worldTransform_.rotate = rotate_;
 	worldTransform_.translate = position_;
+	TransformDataWrite();
 	LightDataWrite();
 	CameraDataWrite();
-	TransformDataWrite();
+
 }
 
 
@@ -154,10 +156,8 @@ void Model::Draw(BlendMode mode) {
 	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 	// Lightの設定
 	commandList->SetGraphicsRootConstantBufferView(3, light_->GetBuffer()->GetGPUVirtualAddress());
-	if (isLighting_) {
-		// CameraBufferの設定
-		commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
-	}
+	// CameraBufferの設定
+	commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
@@ -215,7 +215,7 @@ void Model::TransformDataWrite() {
 	materialData_->uvTransform = uvTransformMatrixMultiply;
 }
 
-/*///-------------------------------------------/// 
+/*///-------------------------------------------///
 /// スフィアのデータ書き込み
 ///-------------------------------------------///
 void Model::SphereDataWrite() {
