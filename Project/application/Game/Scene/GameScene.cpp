@@ -46,9 +46,6 @@ void GameScene::Initialize() {
 				basePosition.y + zIndex * spacing,
 				basePosition.z 
 			);
-			auto card = std::make_shared<Model>();
-
-			Vector3 position(basePosition.x + x * spacing, basePosition.y + z * spacing, basePosition.z);
 
 			cards_.card[zIndex][xIndex] = std::make_shared<Card>();
 			cards_.card[zIndex][xIndex]->Initialize(CardModel, xIndex, position, cameraManager_->GetActiveCamera());
@@ -100,7 +97,13 @@ void GameScene::Update() {
 	}
 
 	ImGui::End();
+
+	ImGui::Begin("Camera");
+	ImGui::DragFloat3("pos", &cameraPos_.x, 0.01f);
+	ImGui::End();
+
 #endif // USE_IMGUI
+
 
 #ifdef USE_IMGUI
 	ImGui::Begin("State");
@@ -118,10 +121,6 @@ void GameScene::Update() {
 
 	if (Mii::TriggerKey(DIK_A)) {
 		--xIndex;
-	// 他の更新処理
-	for (const auto& card : cards_) {
-		card->SetCamera(cameraManager_->GetActiveCamera().get());
-		card->Update();
 	}
 	if (Mii::TriggerKey(DIK_D)) {
 		++xIndex;
@@ -164,7 +163,7 @@ void GameScene::Update() {
 
 	cameraManager_->SetActiveCamera("main1");
 	camera_->SetTranslate(cameraPos_);
-	camera_->SetRotate(cameraRotate_);
+	//camera_->SetRotate(cameraRotate_);
 	cameraManager_->UpdateAllCameras();
 
 	globalVariables->Update();

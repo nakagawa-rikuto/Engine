@@ -60,7 +60,6 @@ private:/// ===メンバ変数=== ///
 	// マウス用変数
 	bool TriggerLeft_ = false;
 	Vector2 mousePosition_ = { 0.0f, 0.0f };
-	std::vector<std::shared_ptr<Model>> cards_;
 
 
 	GlobalVariables* globalVariables;
