@@ -3,12 +3,17 @@
 #include "Engine/Core/CData.h"
 #include "Engine/Core/ComPtr.h"
 
+enum class LightType {
+	Lambert,
+	HalfLambert,
+	None
+};
+
 ///=====================================================/// 
 /// Light
 ///=====================================================///
 class Light {
-public:/// ===基本的な関数=== ///
-
+public:
 	Light() = default;
 	~Light() = default;
 
@@ -30,4 +35,3 @@ private:/// ===Variables(変数)=== ///
 
 	DirectionalLight* Data_;
 };
-

@@ -37,15 +37,14 @@ void DebugScene::Initialize() {
 	Loader_->LoadTexture(monsterBall);
 
 	// モデルの読み込み
-	const std::string& planeModel = "plane";
+	const std::string& planeModel = "MonsterBall";
 	Loader_->LoadModel(planeModel);
 	const std::string& axisModel = "axis";
 	Loader_->LoadModel(axisModel);
 
 	/// ===スプライトの初期化=== ///
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize();                              // 初期化
-	sprite_->SetTexture(uvTexture);                     // テクスチャの設定(これがないと描画できない)
+	sprite_->Initialize(uvTexture);                   // 初期化(const std::string& spriteNameが必須)
 	/* // テクスチャの使い方
 	sprite->SetPosition(Vector2(0.0f, 0.0f));           // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                          // 回転の設定(初期値は0.0);
@@ -57,13 +56,17 @@ void DebugScene::Initialize() {
 
 	/// ===モデル=== ///
 	model_ = std::make_unique<Model>();
-	model_->Initialize(axisModel);                              // 初期化(const std::string& modelNameが必須)
+	model_->Initialize(planeModel, LightType::HalfLambert);          // 初期化(const std::string& modelNameが必須)
 	/* // モデルの使い方                        
-	model->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
-	model->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
-	model->SetScale(Vector3(0.0f, 0.0f, 0.0f));                 // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
-	model->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));           // カラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f} )
-	model->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
+	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
+	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
+	model_->SetScale(Vector3(0.0f, 0.0f, 0.0f));                 // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
+	model_->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));           // カラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f} )
+	model_->SetLightDirection(Vector3(0.0f, -1.0f, 0.0f));       // Lightの向き設定(初期値は {0.0f, -1.0f, 0.0f})
+	model_->SetLightIntensity(1.0f);                             // Lightの明るさの設定(初期値は {1.0f})
+	model_->SetLightColor(Vector4(1.0f, 1.0f, 1.0f, 1.0));       // Lightカラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f})
+	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
+	model_->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
 	/// ===Camera=== ///
@@ -81,6 +84,10 @@ void DebugScene::Initialize() {
 	cameraManager_->Add("Main", camera_);
 	cameraManager_->Add("Main2", camera2_);
 
+	/// ===Light=== ///
+	lightDirection_ = { 0.0f, -1.0f, 0.0f };
+	lightIntensity_ = 1.0f;
+	lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	/// ===Audio=== ///
 	//audio_->PlayeSound("clear", false);
 }
@@ -99,6 +106,11 @@ void DebugScene::Update() {
 	ImGui::Begin("model");
 	ImGui::Checkbox("RotateFlag", &isRotate);
 	ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
+	ImGui::DragFloat3("Scale", &scale_.x, 0.01f);
+	ImGui::ColorEdit4("LigthColor", &lightColor_.x);
+	ImGui::DragFloat3("LightDirection", &lightDirection_.x, 0.01f);
+	ImGui::DragFloat("lightIntensity", &lightIntensity_, 0.01f);
+	ImGui::DragFloat("LightShininess", &lightShininess_, 0.01f);
 	ImGui::End();
 
 	ImGui::Begin("sprite");
@@ -194,6 +206,11 @@ void DebugScene::Update() {
 
 	/// ===モデルの更新=== ///
 	model_->SetRotate(rotate);
+	model_->SetScale(scale_);
+	model_->SetLightColor(lightColor_);
+	model_->SetLightDirection(lightDirection_);
+	model_->SetLightIntensity(lightIntensity_);
+	model_->SetLightShininess(lightShininess_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
 

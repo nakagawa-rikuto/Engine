@@ -1,19 +1,15 @@
 #pragma once
 /// ===include=== ///
-// Engine
-#include "Engine/Core/CData.h"
-#include "Engine/Core/ComPtr.h"
+// buffer
 #include "Engine/3d/VertexBuffer3D.h"
-#include "Engine/3d/IndexBuffer3D.h"
-#include "Engine/3d/Material3D.h"
-#include "Engine/3d/Transform3D.h"
-#include "Engine/Graphics/Light.h"
-#include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
-// Game
-#include "application/3d/Camera.h"
+#include "Engine/3d/ModelCommon.h"
+// Pipeline
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // c++
 #include <memory>
+
+/// ===前方宣言=== ///
+class Camera;
 
 ///=====================================================/// 
 /// モデル
@@ -24,92 +20,91 @@ public: /// ===基本的な関数=== ///
 	Model();
 	~Model();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize(const std::string& filename); // オブジェクトを読み込まない場合の初期化
-
-	/// <summary>
-	/// 更新
-	/// </summary>
+	// 初期化
+	void Initialize(const std::string& filename, LightType type = LightType::None); // オブジェクトを読み込まない場合の初期化
+	// 更新
 	void Update();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
+	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
 
 public: /// ===Getter=== ///
-	// 座標
+	// モデル座標
 	const Vector3& GetPosition() const;
-	// 回転
+	// モデル回転
 	const Vector3& GetRotate() const;
-	// 拡縮
+	// モデル拡縮
 	const Vector3& GetScale() const;
-	// カラー
+	// モデルカラー
 	const Vector4& GetColor() const;
+	// Lightの向き
+	const Vector3& GetLightDirection() const;
+	// Lightの明るさ
+	const float& GetLightIntensity() const;
+	// LIghtのカラー
+	const Vector4& GetLightColor() const;
+	// Lightの光沢度
+	const float& GetShininess() const;
 
 public: /// ===Setter=== ///
-	// 座標
+	// モデル座標
 	void SetPosition(const Vector3& postion);
-	// 回転
+	// モデル回転
 	void SetRotate(const Vector3 & rotate);
-	// 拡縮
+	// モデル拡縮
 	void SetScale(const Vector3& scale);
-	// カラー
+	// モデルカラー
 	void SetColor(const Vector4& color);
+	// Lightの向き
+	void SetLightDirection(const Vector3& direction);
+	// Lightの明るさ
+	void SetLightIntensity(const float& intensity);
+	// Lightのカラー
+	void SetLightColor(const Vector4& color);
+	// Lightの光沢度
+	void SetLightShininess(const float& shininess);
 	// カメラ
 	void SetCamera(Camera* camera);
 
 private: /// ===Variables(変数)=== ///
 
-	// バッファリソース
+	/// ===バッファリソース=== ///
 	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<Material3D> material_;
-	std::unique_ptr<Transform3D> wvp_;
-	std::unique_ptr<Light> light_;
+	std::unique_ptr<ModelCommon> common_;
 
-	// バッファリソース内のデータを指すポインタ
+	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;
-	MaterialData3D* materialData_ = nullptr;
-	TransformationMatrix3D* wvpMatrixData_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
 
-	// バッファビュー
+	/// ===バッファビュー=== ///
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	// モデルデータ
+	/// ===モデルデータ=== ///
 	ModelData modelData_;
-
-	// WorldTransform
-	WorldTransform worldTransform_; // Transform(scale, rotate, transform)
-	WorldTransform cameraTransform_;
 	WorldTransform uvTransform_;
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
+	WorldTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
-	Vector3 position_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 rotate_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
+	WorldTransform worldTransform_;
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	/// ===Light=== ///
+	bool isLighting_ = false;
+	Vector3 lightDirection_ = { 0.0f, -1.0f, 0.0f };
+	float lightIntensity_ = 1.0f;
+	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float shininess_ = 0.27f;
 
 private: /// ===Functions(関数)=== ///
 
-	/// <summary>
-	/// LightData書き込み
-	/// </summary>
-	void LightDataWrite();
-
-	/// <summary>
-	/// スフィアのデータ書き込み
-	/// </summary>
-	void SphereDataWrite();
-
-	/// <summary>
-	/// Transform情報の書き込み
-	/// </summary>
+	// MaterialDataの書き込み
+	void MateialDataWrite();
+	// Transform情報の書き込み
 	void TransformDataWrite();
+	// LightData書き込み
+	void LightDataWrite();
+	// CameraData書き込み
+	void CameraDataWrite();
 };
 
