@@ -44,9 +44,13 @@ private:/// ===メンバ変数=== ///
 	Vector3 cameraPos = { 0.0f, 0.0f, -10.0f };  // Camera
 	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f }; // Canera
 	bool SetCamera = false;
-
+	// Audio
 	bool playAudio = false;
 	float volume = 1.0f;
 	float pitch = 1.0f;
+	// マウス
+	bool PushLeft_ = false;
+	bool TriggerRight_ = false;
+	Vector2 mousePosition_ = { 0.0f, 0.0f };
 };
 

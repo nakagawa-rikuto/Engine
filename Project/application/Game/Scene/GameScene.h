@@ -4,6 +4,8 @@
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
 
+#include "application/Game/Objects/Card.h"
+
 #include <memory>
 #include <vector>
 
@@ -25,6 +27,15 @@ public:/// ===メンバ関数=== ///
 	// 描画
 	void Draw() override;
 
+private:/// ===メンバ関数=== ///
+
+	// 表のカードがそろっているか
+	void CheckFrontPair();
+
+	void CheckCursorCardCollision();
+
+	bool CountStateCard(Card::CardState state);
+
 private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
@@ -38,6 +49,17 @@ private:/// ===メンバ変数=== ///
 	Vector3 cameraScale_;
 
 	/// ===Model=== ///
+	//std::vector<std::shared_ptr<Card>> cards_;
+
+	Card::Cards cards_;
+
+	int xIndex = 0;
+	int zIndex = 0;
+
+
+	// マウス用変数
+	bool TriggerLeft_ = false;
+	Vector2 mousePosition_ = { 0.0f, 0.0f };
 	std::vector<std::shared_ptr<Model>> cards_;
 
 
