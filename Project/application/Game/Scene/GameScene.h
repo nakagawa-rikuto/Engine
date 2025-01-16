@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 
+#include "GlobalVariables.h"
+
 ///=====================================================/// 
 /// ゲームシーン
 ///=====================================================///
@@ -37,5 +39,9 @@ private:/// ===メンバ変数=== ///
 
 	/// ===Model=== ///
 	std::vector<std::shared_ptr<Model>> cards_;
+
+
+	GlobalVariables* globalVariables;
+	std::vector<int32_t> cardAnswers;
 };
 
