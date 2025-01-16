@@ -282,6 +282,18 @@
     <ClCompile Include="Engine\3d\Camera3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="application\Particle\ParticleSetUp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="application\Particle\ParticleGroup.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="application\Particle\ParticleEmitter.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="application\Manager\ParticleManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -488,6 +500,18 @@
     <ClInclude Include="Engine\3d\Camera3D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="application\Particle\ParticleSetUp.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\Particle\ParticleGroup.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\Particle\ParticleEmitter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\Manager\ParticleManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -513,6 +537,8 @@
     <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl">
       <Filter>リソース ファイル\シェーダーファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resource\Shaders\Particle.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Particle.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Obj.hlsli">
@@ -521,5 +547,6 @@
     <None Include="Resource\Shaders\Obj3D.hlsli">
       <Filter>リソース ファイル\シェーダーファイル</Filter>
     </None>
+    <None Include="Resource\Shaders\Particle.hlsli" />
   </ItemGroup>
 </Project>
