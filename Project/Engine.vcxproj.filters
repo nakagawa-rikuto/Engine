@@ -513,6 +513,8 @@
     <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl">
       <Filter>リソース ファイル\シェーダーファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resource\Shaders\Particle.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Particle.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Obj.hlsli">
@@ -521,5 +523,6 @@
     <None Include="Resource\Shaders\Obj3D.hlsli">
       <Filter>リソース ファイル\シェーダーファイル</Filter>
     </None>
+    <None Include="Resource\Shaders\Particle.hlsli" />
   </ItemGroup>
 </Project>
