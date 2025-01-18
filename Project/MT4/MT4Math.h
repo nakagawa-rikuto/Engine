@@ -21,6 +21,16 @@ public:
 	void DraImgui();
 
 	/// <summary>
+	/// 任意軸回転行列の関数
+	/// </summary>
+	Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
+	/// <summary>
+	/// ある方向からある方向への回転
+	/// </summary>
+	Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
+	/// <summary>
 	/// 任意軸回転を表すQuaternionの生成
 	/// </summary>
 	Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
@@ -36,24 +46,20 @@ public:
 	Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 
 	/// <summary>
-	/// 任意軸回転行列の関数
+	/// 球面線形補間
 	/// </summary>
-	Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
-
-	/// <summary>
-	/// ある方向からある方向への回転
-	/// </summary>
-	Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+	Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
 
 private:
-	Quaternion rotate;
-	Vector3 pointY;
-	Matrix4x4 rotateMatrix;
-	Vector3 rotateByQuaternion;
-	Vector3 rotateByMatrix;
-	float diffX;
-	float diffY;
-	float diffZ;
+	Quaternion rotation0;
+	Quaternion rotation1;
+
+	Quaternion interpolate0;
+	Quaternion interpolate1;
+	Quaternion interpolate2;
+	Quaternion interpolate3;
+	Quaternion interpolate4;
+
 };
 
 
