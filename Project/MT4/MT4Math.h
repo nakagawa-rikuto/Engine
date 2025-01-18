@@ -51,6 +51,9 @@ private:
 	Matrix4x4 rotateMatrix;
 	Vector3 rotateByQuaternion;
 	Vector3 rotateByMatrix;
+	float diffX;
+	float diffY;
+	float diffZ;
 };
 
 

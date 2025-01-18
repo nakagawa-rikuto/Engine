@@ -17,11 +17,12 @@ MT4::~MT4() {}
 /// 初期化
 ///-------------------------------------------///
 void MT4::Initialze() {
-	rotate = MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 1.0f, 0.4f, -0.2f }), 0.45f);
+	rotate = MakeRotateAxisAngleQuaternion(Normalize(
+		Vector3{ 1.0f, 0.4f, -0.2f }), 0.45f);
 	pointY = { 2.1f, -0.9f, 1.3f };
 	rotateMatrix = MakeRotateMatrix(rotate);
 	rotateByQuaternion = RotateVector(pointY, rotate);
-	rotateByMatrix = TransformCoordinates(pointY, rotateMatrix);
+	rotateByMatrix = TransformNormal(pointY, rotateMatrix);
 }
 
 ///-------------------------------------------/// 
@@ -31,14 +32,14 @@ void MT4::DraImgui() {
 #ifdef USE_IMGUI
 
 	ImGui::Begin("MT4");
-	ImGui::Text("%5.3f  %5.3f  %5.3f  %5.3f  :  rotation", rotate.x, rotate.y, rotate.z, rotate.w);
+	ImGui::Text("%5.2f  %5.2f  %5.2f  %5.2f  :  rotation", rotate.x, rotate.y, rotate.z, rotate.w);
 	ImGui::Text("rotateMatrix");
 	ImGui::Text("%5.3f  %5.3f  %5.3f  %5.3f", rotateMatrix.m[0][0], rotateMatrix.m[0][1], rotateMatrix.m[0][2], rotateMatrix.m[0][3]);
 	ImGui::Text("%5.3f  %5.3f  %5.3f  %5.3f", rotateMatrix.m[1][0], rotateMatrix.m[1][1], rotateMatrix.m[1][2], rotateMatrix.m[1][3]);
 	ImGui::Text("%5.3f  %5.3f  %5.3f  %5.3f", rotateMatrix.m[2][0], rotateMatrix.m[2][1], rotateMatrix.m[2][2], rotateMatrix.m[2][3]);
 	ImGui::Text("%5.3f  %5.3f  %5.3f  %5.3f", rotateMatrix.m[3][0], rotateMatrix.m[3][1], rotateMatrix.m[3][2], rotateMatrix.m[3][3]);
-	ImGui::Text("%5.3f  %5.3f  %5.3f         :  rotateByQuaternion", rotateByQuaternion.x, rotateByQuaternion.y, rotateByQuaternion.z);
-	ImGui::Text("%5.3f  %5.3f  %5.3f         :  rotateByMatrix", rotateByMatrix.x, rotateByMatrix.y, rotateByMatrix.z);
+	ImGui::Text("%5.2f  %5.2f  %5.2f         :  rotateByQuaternion", rotateByQuaternion.x, rotateByQuaternion.y, rotateByQuaternion.z);
+	ImGui::Text("%5.2f  %5.2f  %5.2f         :  rotateByMatrix", rotateByMatrix.x, rotateByMatrix.y, rotateByMatrix.z);
 	ImGui::End();
 
 #endif // USE_IMGUI
@@ -55,12 +56,24 @@ Quaternion MT4::MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) 
 	float sinHalfAngle = sinf(angle * 0.5f);
 	float cosHalfAngle = cosf(angle * 0.5f);
 
-	return Quaternion{
+	Quaternion quaternion = {
 		normalizedAxis.x * sinHalfAngle,
 		normalizedAxis.y * sinHalfAngle,
 		normalizedAxis.z * sinHalfAngle,
 		cosHalfAngle
 	};
+
+	// 正規化
+	float length = sqrtf(quaternion.x * quaternion.x + quaternion.y * quaternion.y +
+		quaternion.z * quaternion.z + quaternion.w * quaternion.w);
+	if (length > 0.0f) {
+		quaternion.x /= length;
+		quaternion.y /= length;
+		quaternion.z /= length;
+		quaternion.w /= length;
+	}
+
+	return quaternion;
 }
 
 ///-------------------------------------------/// 
@@ -98,9 +111,13 @@ Matrix4x4 MT4::MakeRotateMatrix(const Quaternion& quaternion) {
 	float wz = quaternion.w * quaternion.z;
 
 	return Matrix4x4{
-		1.0f - 2.0f * (yy + zz), 2.0f * (xy - wz),       2.0f * (xz + wy),       0.0f,
-		2.0f * (xy + wz),       1.0f - 2.0f * (xx + zz), 2.0f * (yz - wx),       0.0f,
-		2.0f * (xz - wy),       2.0f * (yz + wx),       1.0f - 2.0f * (xx + yy), 0.0f,
+		// 列1
+		1.0f - 2.0f * (yy + zz), 2.0f * (xy + wz),       2.0f * (xz - wy),       0.0f,
+		// 列2
+		2.0f * (xy - wz),       1.0f - 2.0f * (xx + zz), 2.0f * (yz + wx),       0.0f,
+		// 列3
+		2.0f * (xz + wy),       2.0f * (yz - wx),       1.0f - 2.0f * (xx + yy), 0.0f,
+		// 列4
 		0.0f,                   0.0f,                   0.0f,                   1.0f
 	};
 }

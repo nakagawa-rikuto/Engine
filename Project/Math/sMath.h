@@ -25,6 +25,14 @@ float Pi();
 /// <param name="vector"></param>
 /// <param name="matrix"></param>
 /// <returns></returns>
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+
+/// <summary>
+/// 座標変換 回転を考えない
+/// </summary>
+/// <param name="vector"></param>
+/// <param name="matrix"></param>
+/// <returns></returns>
 Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix);
 #pragma endregion
 
