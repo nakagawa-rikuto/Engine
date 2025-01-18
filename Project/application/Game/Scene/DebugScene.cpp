@@ -16,10 +16,9 @@ void DebugScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 
-	// 変数の値を代入
-	axis_ = { 1.0f, 1.0f, 1.0f };
-	angle_ = 0.44f;
-	rotateMatrix_ = MakeRotateAxisAngle(axis_, angle_);
+	// 初期化
+	mt4_ = std::make_unique<MT4>();
+	mt4_->Initialze();
 }
 
 ///-------------------------------------------/// 
@@ -32,7 +31,8 @@ void DebugScene::Update() {
 	ImGui::End();
 #endif // USE_IMGUI
 
-
+	// 描画
+	mt4_->DraImgui();
 }
 
 ///-------------------------------------------/// 
@@ -46,6 +46,5 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
-	PrintMatrix({0.0f, 0.0f}, rotateMatrix_, "rotateMatrix");
 #pragma endregion
 }

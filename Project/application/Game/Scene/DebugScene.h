@@ -2,9 +2,9 @@
 /// ===Includ=== ///
 #include "application/Game/Scene/IScene.h"
 // Game
-#include "application/2d/Sprite.h"
-#include "application/3d/Model.h"
-#include "application/3d/Camera.h"
+#include "MT4/MT4Math.h"
+// c++
+#include <memory>
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -27,8 +27,6 @@ private:/// ===メンバ変数=== ///
 	/// シーン用
 	/// </summary>
 
-	Vector3 axis_;
-	float angle_;
-	Matrix4x4 rotateMatrix_;
+	std::unique_ptr<MT4> mt4_;
 };
 
