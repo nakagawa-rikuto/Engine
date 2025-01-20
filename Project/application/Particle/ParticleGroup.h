@@ -36,6 +36,10 @@ private:
 	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;
 
+	/// ===モデルデータ=== ///
+	ModelData modelData_;
+	WorldTransform uvTransform_;
+
 	/// ===バッファビュー=== ///
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 	
