@@ -23,9 +23,18 @@ Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
 	};
 }
 
-Quaternion Normalize(const Quaternion& quaternion)
-{
-    return Quaternion();
+Quaternion Normalize(const Quaternion& quaternion) {
+	float norm = Norm(quaternion);
+	if (norm == 0.0f) {
+		// Avoid division by zero
+		return IdentityQuaternion();
+	}
+	return {
+		quaternion.x / norm,
+		quaternion.y / norm,
+		quaternion.z / norm,
+		quaternion.w / norm
+	};
 }
 
 ///-------------------------------------------/// 
