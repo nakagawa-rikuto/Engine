@@ -76,3 +76,10 @@ Quaternion Inverse(const Quaternion& quaternion) {
 		conjugate.w / normSquared
 	};
 }
+
+///-------------------------------------------/// 
+/// オペレータ
+///-------------------------------------------///
+Quaternion operator-(const Quaternion& q0) {
+	return { - q0.x, - q0.y, - q0.z, - q0.w };
+}

@@ -18,7 +18,7 @@ MT4::~MT4() {}
 ///-------------------------------------------///
 void MT4::Initialze() {
 	rotation0 = MakeRotateAxisAngleQuaternion({ 0.71f, 0.71f, 0.0f }, 0.3f);
-	rotation1 = MakeRotateAxisAngleQuaternion({ 0.71f, 0.0f, 0.71f }, Pi());
+	rotation1 = MakeRotateAxisAngleQuaternion({ 0.71f, 0.0f, 0.71f }, 3.141592f);
 
 	interpolate0 = Slerp(rotation0, rotation1, 0.0f);
 	interpolate1 = Slerp(rotation0, rotation1, 0.3f);
@@ -36,8 +36,8 @@ void MT4::DraImgui() {
 	ImGui::Begin("MT4");
 	ImGui::Text("%5.2f  %5.2f  %5.2f  %5.2f  :  interpolate0, Slerp(q0,  q1,  0.0f)", interpolate0.x, interpolate0.y, interpolate0.z, interpolate0.w);
 	ImGui::Text("%5.2f  %5.2f  %5.2f  %5.2f  :  interpolate1, Slerp(q0,  q1,  0.3f)", interpolate1.x, interpolate1.y, interpolate1.z, interpolate1.w);
-	ImGui::Text("%5.2f  %5.2f  %5.2f  %5.2f  :  interpolate2, Slerp(q0,  q1,  0.5f)", interpolate2.x, interpolate2.y, interpolate2.z, interpolate2.w);
-	ImGui::Text("%5.2f  %5.2f  %5.2f  %5.2f  :  interpolate3, Slerp(q0,  q1,  0.7f)", interpolate3.x, interpolate3.y, interpolate3.z, interpolate3.w);
+	ImGui::Text("%5.5f  %5.2f  %5.2f  %5.2f  :  interpolate2, Slerp(q0,  q1,  0.5f)", interpolate2.x, interpolate2.y, interpolate2.z, interpolate2.w);
+	ImGui::Text("%5.2f  %5.2f  %5.5f  %5.2f  :  interpolate3, Slerp(q0,  q1,  0.7f)", interpolate3.x, interpolate3.y, interpolate3.z, interpolate3.w);
 	ImGui::Text("%5.2f  %5.2f  %5.2f  %5.2f  :  interpolate4, Slerp(q0,  q1,  1.0f)", interpolate4.x, interpolate4.y, interpolate4.z, interpolate4.w);
 	ImGui::End();
 
@@ -261,6 +261,8 @@ Quaternion MT4::Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
 	// tを[0, 1]の範囲にクランプ
 	t = fmaxf(0.0f, fminf(1.0f, t));
 
+
+
 	// Quaternion同士の内積（角度のコサイン）を計算
 	float dot = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
 
@@ -268,23 +270,20 @@ Quaternion MT4::Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
 	Quaternion q0Modified = q0;
 	Quaternion q1Modified = q1;
 	if (dot < 0.0f) {
-		q0Modified.x = -q0.x;
-		q0Modified.y = -q0.y;
-		q0Modified.z = -q0.z;
-		q0Modified.w = -q0.w;
+		q0Modified = -q0;
 		dot = -dot;
 	}
 
 	// なす角を計算
-	float theta = acosf(dot);
-	float sinTheta = sinf(theta);
+	float theta = std::acos(dot);
+	float sinTheta = std::sinf(theta);
 
 	// 補間係数を計算
-	float scale0 = sinf((1.0f - t) * theta) / sinTheta;
-	float scale1 = sinf(t * theta) / sinTheta;
+	float scale0 = std::sinf((1.0f - t) * theta) / sinTheta;
+	float scale1 = std::sinf(t * theta) / sinTheta;
 
 	// 補間後のQuaternionを計算
-	Quaternion result = Quaternion{
+	Quaternion result = {
 		scale0 * q0Modified.x + scale1 * q1Modified.x,
 		scale0 * q0Modified.y + scale1 * q1Modified.y,
 		scale0 * q0Modified.z + scale1 * q1Modified.z,
@@ -292,7 +291,7 @@ Quaternion MT4::Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
 	};
 
 	// 結果を正規化
-	result = Normalize(result);
+	//result = Normalize(result);
 	return result;
 }
 

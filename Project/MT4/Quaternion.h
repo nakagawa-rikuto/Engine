@@ -10,6 +10,8 @@ struct Quaternion final {
 	float w;
 };
 
+Quaternion operator-(const Quaternion& q0); 
+
 /// ===Quaternionのnormを返す=== ///
 float Norm(const Quaternion& quaternion);
 /// ===Quaternionの積=== ///
