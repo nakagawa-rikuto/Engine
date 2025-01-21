@@ -2,6 +2,7 @@
 /// ===Include=== ///
 // Engine
 #include "Engine/Core/CData.h"
+#include "ParticleData.h"
 #include "Engine/Core/ComPtr.h"
 #include "Engine/3d/Material3D.h"
 // c++

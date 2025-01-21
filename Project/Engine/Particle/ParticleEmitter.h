@@ -13,13 +13,13 @@ public:
 	virtual ~ParticleEmitter() = default;
 
 	// 初期化
-	virtual void Initialze(const std::string& filename);
+	virtual void Initialze(const std::string& filename) = 0;
 	// 更新
-	virtual void Update(const Vector4& );
+	virtual void Update() = 0;
 	// 描画
-	virtual void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
+	virtual void Draw(BlendMode mode) = 0;
 
-private:
+protected:
 	/// ===Emitter=== ///
 	struct Emitter {
 		WorldTransform transform;
@@ -28,7 +28,6 @@ private:
 		float frequencyTime;
 	};
 
-protected:
 	// パーティクルの最大数
 	uint32_t MaxInstance_;
 	// パーティクル
@@ -39,8 +38,8 @@ protected:
 	WorldTransform transform_;
 	WorldTransform cameraTransform_;
 	// エミッタ
-	Emitter emitter{};
+	Emitter emitter_{};
 	// 時間の進む速度
-	const float kDeltaTime = 1.0 / 60.0;
+	const float kDeltaTime_ = 1.0f / 60.0f;
 };
 

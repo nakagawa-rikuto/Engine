@@ -87,7 +87,7 @@ void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMa
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ParticleGroup::Darw(BlendMode mode) {
+void ParticleGroup::Darw(const uint32_t instance, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
@@ -104,6 +104,6 @@ void ParticleGroup::Darw(BlendMode mode) {
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
-	commandList->DrawInstanced(UINT(modelData_.vertices.size()), kNumMaxInstance_, 0, 0);
+	commandList->DrawInstanced(UINT(modelData_.vertices.size()), instance, 0, 0);
 
 }

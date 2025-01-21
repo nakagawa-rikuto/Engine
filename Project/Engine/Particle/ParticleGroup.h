@@ -24,7 +24,7 @@ public:
 	// 初期化
 	void Initialze(const std::string& filename, const uint32_t kNumMaxInstance);
 	// 描画
-	void Darw(BlendMode mode);
+	void Darw(const uint32_t instance, BlendMode mode);
 
 public: /// ===Setter=== ///
 

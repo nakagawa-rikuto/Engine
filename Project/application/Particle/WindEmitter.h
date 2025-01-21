@@ -4,6 +4,8 @@
 #include "Engine/Particle/ParticleEmitter.h"
 // Math
 #include "Math/MathData.h"
+// c++
+#include <random>
 
 ///=====================================================/// 
 /// 風エミッタ
@@ -16,7 +18,7 @@ public:
 
 	/// ===Override=== ///
 	// 初期化
-	void Initialze(const std::string& filename)override;
+	void Initialze(const std::string& filename = "plane")override;
 	// 更新
 	void Update()override;
 	// 描画
@@ -31,5 +33,20 @@ private:
 	};
 
 	AccelerationField accelerationFild_;
+
+	// 乱数生成器の初期化
+	std::mt19937 randomEngine_;
+
+	uint32_t numInstance_;
+
+private:
+
+	// ランダムに発生させるための関数
+	ParticleData MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate);
+	// エミっと
+	std::list<ParticleData> Emit(const Emitter& emitter, std::mt19937& randomEngine);
+	// AABBの当たり判定
+	bool IsCollision(const AABB& aabb, const Vector3& point);
+
 };
 
