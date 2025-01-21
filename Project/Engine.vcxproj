@@ -106,6 +106,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="application\Audio\Audio.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
+    <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="application\Game\Scene\ClearScene.cpp" />
@@ -172,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
+    <ClInclude Include="Engine\Managers\CSVManager.h" />
     <ClInclude Include="Engine\3d\Camera3D.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="application\Game\Scene\ClearScene.h" />

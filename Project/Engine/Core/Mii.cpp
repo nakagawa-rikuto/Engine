@@ -9,6 +9,7 @@
 #include "Engine/Managers/ModelManager.h"
 #include "Engine/Managers/ImGuiManager.h"
 #include "Engine/Managers/AudioManager.h"
+#include "Engine/Managers/CSVManager.h"
 // Math
 #include "Math/sMath.h"
 
@@ -24,6 +25,7 @@ std::unique_ptr<TextureManager> Mii::textureManager_ = nullptr;
 std::unique_ptr<ModelManager> Mii::modelManager_ = nullptr;
 std::unique_ptr<ImGuiManager> Mii::imGuiManager_ = nullptr;
 std::unique_ptr<AudioManager> Mii::audioManager_ = nullptr;
+std::unique_ptr<CSVManager> Mii::csvManager_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -85,6 +87,9 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// Audiomanagerの生成
 	audioManager_ = std::make_unique<AudioManager>();
 	audioManager_->Initialze();
+
+	// CSVManagerの生成
+	csvManager_ = std::make_unique<CSVManager>();
 }
 
 ///=====================================================/// 
@@ -210,4 +215,6 @@ TextureManager* Mii::GetTextureManager() { return textureManager_.get(); }
 ModelManager* Mii::GetModelManager() { return modelManager_.get(); }
 // AudioManager
 AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
+// CSVManager
+CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 #pragma endregion

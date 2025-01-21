@@ -8,6 +8,7 @@
 class TextureManager;
 class ModelManager;
 class AudioManager;
+class CSVManager;
 
 ///=====================================================/// 
 /// Load関数
@@ -24,6 +25,8 @@ public:
 	void LoadTexture(const std::string& filePath);
 	// モデルの読み込み
 	void LoadModel(const std::string& filename);
+	// CSVの読み込み
+	void LoadCSV(const std::string& filename);
 	// 音声データの読み込み
 	void LoadWave(const std::string& key, const std::string& filename);
 	void LoadMP3(const std::string& key, const std::string& filename);
@@ -35,6 +38,7 @@ private:
 	TextureManager* textureManager_;   // TextureManager
 	ModelManager* modelManager_;       // ModelManager
 	AudioManager* audioManager_;       // AudioMangaer
+	CSVManager* csvManager_;           // CSVManager
 	
 };
 

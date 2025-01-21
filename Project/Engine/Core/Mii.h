@@ -29,6 +29,7 @@ class ImGuiManager;
 class TextureManager;
 class ModelManager;
 class AudioManager;
+class CSVManager;
 
 ///=====================================================///
 /// システム
@@ -116,6 +117,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	static ModelManager* GetModelManager();
 	// AudioManager
 	static AudioManager* GetAudioManager();
+	// CSVManager* 
+	static CSVManager* GetCSVManager();
 
 private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<WinApp> winApp_;           // WinApp
@@ -128,4 +131,5 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<ModelManager> modelManager_;       // ModelManager
 	static std::unique_ptr<ImGuiManager> imGuiManager_;       // ImGuiManager
 	static std::unique_ptr<AudioManager> audioManager_;       // AudioMangaer
+	static std::unique_ptr<CSVManager> csvManager_;           // CSVManager
 };
