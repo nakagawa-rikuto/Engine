@@ -89,6 +89,7 @@ void DebugScene::Initialize() {
 	lightDirection_ = { 0.0f, -1.0f, 0.0f };
 	lightIntensity_ = 1.0f;
 	lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 	/// ===Audio=== ///
 	//audio_->PlayeSound("clear", false);
 

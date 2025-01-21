@@ -25,6 +25,7 @@ public:
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal)override;
 
 
+
 private:
 	/// ===Field=== ///
 	struct AccelerationField {

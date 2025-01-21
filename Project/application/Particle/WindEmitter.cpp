@@ -11,7 +11,7 @@
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
 WindEmitter::WindEmitter() = default;
-WindEmitter::~WindEmitter() {}
+WindEmitter::~WindEmitter() { particle_.reset(); }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -31,7 +31,8 @@ void WindEmitter::Initialze(const std::string & filename) {
 	cameraTransform_ = {
 		{1.0f,1.0f,1.0f},
 		{std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
-		{0.0f, 23.0f, 10.0f} };
+		{0.0f, 23.0f, 10.0f}
+	};
 
 	/// ===Emitter=== ///
 	emitter_.count = 3;
@@ -44,6 +45,7 @@ void WindEmitter::Initialze(const std::string & filename) {
 	accelerationFild_.area.min = { -1.0f, -1.0f, -1.0f };
 	accelerationFild_.area.max = { 1.0f, 1.0f, 1.0f };
 
+	/// ===Particlet=== ///
 	particle_ = std::make_unique<ParticleGroup>();
 	particle_->Initialze(filename, MaxInstance_);
 }
@@ -52,6 +54,7 @@ void WindEmitter::Initialze(const std::string & filename) {
 /// 更新
 ///-------------------------------------------///
 void WindEmitter::Update() {
+	// 
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
@@ -61,9 +64,13 @@ void WindEmitter::Update() {
 	billboardMatrix.m[3][1] = 0.0f;
 	billboardMatrix.m[3][2] = 0.0f;
 
+	// Martixの作成
 	Matrix4x4 worldMatrix = Multiply(MakeScaleMatrix(transform_.scale), Multiply(MakeTranslateMatrix(transform_.translate), billboardMatrix));
 	Matrix4x4 viewMatrix = Inverse4x4(cameraMatrix);
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
+
+	// インスタンス数を0にする
+	numInstance_ = 0;
 
 	// 頻度によって発生させる
 	emitter_.frequencyTime += kDeltaTime_; // 時刻を進める
