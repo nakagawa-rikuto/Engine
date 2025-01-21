@@ -3,6 +3,7 @@
 #include "Engine/Managers/TextureManager.h"
 #include "Engine/Managers/ModelManager.h"
 #include "Engine/Managers/AudioManager.h"
+#include "Engine/Managers/CSVManager.h"
 
 #include "Engine/Core/Mii.h"
 
@@ -28,6 +29,13 @@ void AssetLoader::LoadTexture(const std::string& filePath) {
 ///-------------------------------------------///
 void AssetLoader::LoadModel(const std::string& filename) {
 	modelManager_->LoadModel("Resource", filename); 
+}
+
+///-------------------------------------------/// 
+/// csv
+///-------------------------------------------///
+void AssetLoader::LoadCSV(const std::string& filename) {
+	csvManager_->Load(filename);
 }
 
 ///-------------------------------------------/// 
