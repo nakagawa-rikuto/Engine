@@ -105,7 +105,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application\Audio\Audio.cpp" />
+    <ClCompile Include="application\Game\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
+    <ClCompile Include="application\Game\Objects\Card.cpp" />
+    <ClCompile Include="application\Game\Objects\Collider.cpp" />
     <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
@@ -172,7 +175,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
+    <ClInclude Include="application\Game\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
+    <ClInclude Include="application\Game\Objects\Card.h" />
+    <ClInclude Include="application\Game\Objects\Collider.h" />
     <ClInclude Include="Engine\Managers\CSVManager.h" />
     <ClInclude Include="Engine\3d\Camera3D.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
