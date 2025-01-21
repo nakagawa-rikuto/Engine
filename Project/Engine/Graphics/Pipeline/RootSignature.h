@@ -5,7 +5,6 @@
 #include "Engine/Core/ComPtr.h"
 // PipelineType
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
-
 // c++
 #include <d3d12.h>
 
@@ -32,11 +31,8 @@ public:
 	/// <returns></returns>
 	ID3D12RootSignature* GetRootSignature()const;
 
-
-
 private:
 
-	
 	ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
 
 	ComPtr<ID3DBlob> signatureBlob_; // 
