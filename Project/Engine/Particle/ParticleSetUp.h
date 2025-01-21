@@ -3,9 +3,13 @@
 // Engine
 #include "Engine/Core/CData.h"
 #include "Engine/Core/ComPtr.h"
+#include "Engine/3d/Material3D.h"
 // c++
 #include <memory>
 #include <list>
+
+/// ===前方宣言=== ///
+class SRVManager;
 
 ///=====================================================/// 
 /// ParticleSetUp
@@ -18,18 +22,30 @@ public:
 
 	// 初期化
 	void Initlize(ID3D12Device* device, const uint32_t kNumMaxInstance);
+	// 描画準備
+	void Bind(ID3D12GraphicsCommandList* commandList);
 
-public:
-	// リソースの取得
-	ID3D12Resource* GetBuffer();
+public: /// ===Geter=== ///
+
+	// Instancingの取得
+	ID3D12Resource* GetInstancing();
+
+public: /// ===Setter=== ///
+
+	// Material
+	void SetMatiarlData(const Vector4& color, const Matrix4x4& uvTransform);
+	// Instancing
+	void SetInstancingData(size_t index, const Vector4& color, const Matrix4x4& WVP, const Matrix4x4& World);
 
 private:
 
 	/// ===バッファリソース=== ///
-	ComPtr<ID3D12Resource> buffer_;
+	std::unique_ptr<Material3D> material_;
+	ComPtr<ID3D12Resource> instancing_;
 	
 	/// ===バッファリソース内のデータを指すポインタ=== ///
-	ParticleForGPU* data_ = nullptr;
+	MaterialData3D* materialData_ = nullptr;
+	ParticleForGPU* instancingData_ = nullptr;
 
 private:
 

@@ -1,28 +1,22 @@
-#include "ParticleGroup.h"
+#include "WindEmitter.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
-ParticleGroup::ParticleGroup() {}
-ParticleGroup::~ParticleGroup() {}
+WindEmitter::WindEmitter() = default;
+WindEmitter::~WindEmitter() {}
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ParticleGroup::Initialze() {
-
-}
+void WindEmitter::Initialze(const std::string & filename) {}
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void ParticleGroup::Update() {
-
-}
+void WindEmitter::Update() {}
 
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ParticleGroup::Darw(BlendMode mode) {
-
-}
+void WindEmitter::Draw(BlendMode mode) {}
