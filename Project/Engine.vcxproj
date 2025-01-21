@@ -105,6 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application\Audio\Audio.cpp" />
+    <ClCompile Include="application\Game\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
     <ClCompile Include="application\Game\Objects\Card.cpp" />
     <ClCompile Include="application\Game\Objects\Collider.cpp" />
@@ -122,7 +123,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Managers\ImGuiManager.cpp" />
     <ClCompile Include="application\Game\Scene\IScene.cpp" />
     <ClCompile Include="application\Load\AssetLoader.cpp" />
-    <ClCompile Include="GlobalVariables.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\MatrixMath.cpp" />
@@ -173,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
+    <ClInclude Include="application\Game\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
     <ClInclude Include="application\Game\Objects\Card.h" />
     <ClInclude Include="application\Game\Objects\Collider.h" />
@@ -191,7 +192,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Game\Scene\IScene.h" />
     <ClInclude Include="application\Load\AssetLoader.h" />
-    <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\MatrixMath.h" />

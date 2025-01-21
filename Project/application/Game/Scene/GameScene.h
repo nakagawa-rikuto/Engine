@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-#include "GlobalVariables.h"
+#include "application/Game/GlobalVariables/GlobalVariables.h"
 
 ///=====================================================/// 
 /// ゲームシーン
