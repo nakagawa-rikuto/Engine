@@ -21,8 +21,7 @@ public:
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
-	void UpdateVector();
+	void Update(int gridSize);
 
 	/// <summary>
 	/// グループの作成

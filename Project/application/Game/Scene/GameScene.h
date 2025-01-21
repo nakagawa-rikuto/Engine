@@ -56,6 +56,7 @@ private:/// ===メンバ変数=== ///
 	int xIndex = 0;
 	int zIndex = 0;
 
+	const int gridSize = 5;
 
 	// マウス用変数
 	bool TriggerLeft_ = false;

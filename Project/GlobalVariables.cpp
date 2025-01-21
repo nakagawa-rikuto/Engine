@@ -8,7 +8,7 @@ GlobalVariables* GlobalVariables::GetInstance() {
 	return &instance;
 }
 
-void GlobalVariables::Update() {
+void GlobalVariables::Update(int gridSize) {
 
 	if (!ImGui::Begin("Global Variables", nullptr, ImGuiWindowFlags_MenuBar)) {
 		ImGui::End();
@@ -47,7 +47,7 @@ void GlobalVariables::Update() {
 			} else if (std::holds_alternative<std::vector<int32_t>>(item.value)) {
 				auto* vec = std::get_if<std::vector<int32_t>>(&item.value);
 				if (vec) {
-					int gridSize = 4; // グリッドのサイズ
+					gridSize = 5; // グリッドのサイズ
 					ImGui::Text("%s:", itemName.c_str());
 					for (int z = 0; z < gridSize; ++z) {
 						for (int x = 0; x < gridSize; ++x) {
