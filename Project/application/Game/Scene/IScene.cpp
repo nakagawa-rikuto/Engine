@@ -20,7 +20,7 @@ void IScene::Initialize() {
 
 	/// ===Loadの生成=== ///
 	Loader_ = std::make_unique<AssetLoader>();
-	Loader_->Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager());
+	Loader_->Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager());
 }
 
 ///-------------------------------------------/// 

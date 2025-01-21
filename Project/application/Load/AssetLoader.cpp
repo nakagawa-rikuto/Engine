@@ -10,11 +10,12 @@
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void AssetLoader::Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio) {
+void AssetLoader::Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio, CSVManager* csv) {
 	// 生成
 	textureManager_ = texture;
 	modelManager_ = model;
 	audioManager_ = audio;
+	csvManager_ = csv;
 }
 
 ///-------------------------------------------/// 

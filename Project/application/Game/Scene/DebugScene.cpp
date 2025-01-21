@@ -30,6 +30,10 @@ void DebugScene::Initialize() {
 	// MP3を読み込むとものすごく重い
 	//load_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
 
+	// CSV
+	const std::string& csv = "Resource/CSV/map.csv";
+	Loader_->LoadCSV(csv);
+
 	// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
 	Loader_->LoadTexture(uvTexture);

@@ -20,7 +20,7 @@ public:
 	~AssetLoader() = default;
 
 	// 初期化
-	void Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio);
+	void Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio, CSVManager* csv);
 	// テクスチャの読み込み
 	void LoadTexture(const std::string& filePath);
 	// モデルの読み込み
