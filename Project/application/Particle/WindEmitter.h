@@ -38,7 +38,7 @@ private:
 	// 乱数生成器の初期化
 	std::mt19937 randomEngine_;
 
-	uint32_t numInstance_;
+	
 
 private:
 

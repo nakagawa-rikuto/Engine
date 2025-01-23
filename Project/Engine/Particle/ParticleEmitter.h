@@ -38,6 +38,7 @@ protected:
 
 	// パーティクルの最大数
 	uint32_t MaxInstance_;
+	uint32_t numInstance_;
 	// パーティクル
 	std::unique_ptr<ParticleGroup> particle_;
 	// ParticleをListで管理する
