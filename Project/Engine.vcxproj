@@ -106,6 +106,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="application\Audio\Audio.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
+    <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
     <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
@@ -122,6 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Managers\ImGuiManager.cpp" />
     <ClCompile Include="application\Game\Scene\IScene.cpp" />
     <ClCompile Include="application\Load\AssetLoader.cpp" />
+    <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\MatrixMath.cpp" />
@@ -178,6 +180,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
+    <ClInclude Include="application\Particle\ConfettiEmitter.h" />
     <ClInclude Include="Engine\Managers\CSVManager.h" />
     <ClInclude Include="Engine\3d\Camera3D.h" />
     <ClInclude Include="Engine\Particle\ParticleData.h" />
@@ -196,6 +199,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Game\Scene\IScene.h" />
     <ClInclude Include="application\Load\AssetLoader.h" />
+    <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="Math\MathData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />

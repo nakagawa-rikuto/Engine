@@ -6,6 +6,8 @@
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
 #include "application/Particle/WindEmitter.h"
+#include "application/Particle/ExplosionEmitter.h"
+#include "application/Particle/ConfettiEmitter.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -27,6 +29,32 @@ private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
 	/// </summary>
+
+	/// ===ImGui用フラグ=== ///
+	struct Setting {
+		bool Sprite;
+		bool Model;
+		bool Particle1;
+		bool Particle2;
+		bool Particle3;
+	};
+	struct Display {
+		bool Sprite;
+		bool Model;
+		bool Particle1;
+		bool Particle2;
+		bool Particle3;
+	};
+	struct Imgui {
+		bool Sprite;
+		bool Model;
+		bool Particle1;
+		bool Particle2;
+		bool Particle3;
+	};
+	Setting isSetting_ = {false};
+	Display isDisplay_ = {false};
+	Imgui isImgui_ = {false};
 
 	/// ===クラス=== ///
 	// スプライト
@@ -64,5 +92,7 @@ private:/// ===メンバ変数=== ///
 
 	// Particle
 	std::shared_ptr<WindEmitter> windParticle_;
+	std::shared_ptr<ExplosionEmitter> explosionParticle_;
+	std::shared_ptr<ConfettiEmitter> confettiParticle_;
 };
 

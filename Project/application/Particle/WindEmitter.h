@@ -24,7 +24,8 @@ public:
 	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal)override;
 
-
+	// Setter
+	void SetPosition(const Vector3& posititon);
 
 private:
 	/// ===Field=== ///

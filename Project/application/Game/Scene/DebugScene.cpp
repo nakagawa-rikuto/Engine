@@ -7,14 +7,23 @@
 /// デストラクタ
 ///-------------------------------------------///
 DebugScene::~DebugScene() {
+	// sprite
 	sprite_.reset();
+	// camera
 	camera_.reset();
 	camera2_.reset();
+	// model
 	model_.reset();
+	// audio
 	audio_->StopSound("fanfare");
 	audio_->StopSound("clear");
+	// Loader
 	Loader_->UnloadSound("fanfare");
 	Loader_->UnloadSound("clear");
+	// Particle
+	windParticle_.reset();
+	explosionParticle_.reset();
+	confettiParticle_.reset();
 }
 
 ///-------------------------------------------/// 
@@ -96,6 +105,13 @@ void DebugScene::Initialize() {
 	/// ===Particle=== ///
 	windParticle_ = std::make_shared<WindEmitter>();
 	windParticle_->Initialze();
+	//windParticle_->SetPosition({ 2.0f, 2.0f, 0.0f });
+	explosionParticle_ = std::make_shared<ExplosionEmitter>();
+	explosionParticle_->Initialze();
+	//explosionParticle_->SetPosition({ 2.0f, 2.0f, 0.0f });
+	confettiParticle_ = std::make_shared<ConfettiEmitter>();
+	confettiParticle_->Initialze();
+	//confettiParticle_->SetPosition({ 2.0f, 2.0f, 0.0f });
 }
 
 ///-------------------------------------------/// 
@@ -105,10 +121,41 @@ void DebugScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
 	ImGui::Begin("DebugScene");
+	/*if (ImGui::BeginCombo("Object", "Select")) {
+		if (ImGui::Selectable("Sprite", isSetting_.Sprite)) {
+			isSetting_ = { false };
+			isSetting_.Sprite = true;
+		} else if (ImGui::Selectable("Model", isSetting_.Model)) {
+			isSetting_ = { false };
+			isSetting_.Model = true;
+		} else if (ImGui::Selectable("Particle1", isSetting_.Particle1)) {
+			isSetting_ = { false };
+			isSetting_.Particle1 = true;
+		} else if (ImGui::Selectable("Particle2", isSetting_.Particle2)) {
+			isSetting_ = { false };
+			isSetting_.Particle2 = true;
+		} else if (ImGui::Selectable("Particle3", isSetting_.Particle3)) {
+			isSetting_ = { false };
+			isSetting_.Particle3 = true;
+		}
+		ImGui::EndCombo();
+	}
+
+	if (isSetting_.Sprite) {
+		if (!isDisplay_.Sprite && ImGui::Button("Draw")) {
+			isDisplay_.Sprite = true;
+		} else if (!isDisplay_.Sprite && ImGui::Button("UnDraw")) {
+			isDisplay_.Sprite = false;
+		}
+	}*/
+
 	ImGui::End();
 #endif // USE_IMGUI
 
+	/// ===ImGui=== ///
 #ifdef USE_IMGUI
+
+
 	ImGui::Begin("model");
 	ImGui::Checkbox("RotateFlag", &isRotate);
 	ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
@@ -150,13 +197,16 @@ void DebugScene::Update() {
 #endif // USE_IMGUI
 
 	/// ===カメラの変更=== ///
+#pragma region カメラの変更
 	if (SetCamera) {
 		cameraManager_->SetActiveCamera("Main2");
 	} else {
 		cameraManager_->SetActiveCamera("Main");
 	}
+#pragma endregion
 
 	/// ===キーボード関連の処理=== ///
+#pragma region キーボード関連の処理
 	if (Mii::PushKey(DIK_D)) {
 		cameraPos.x += 0.01f;
 	} else if (Mii::PushKey(DIK_A)) {
@@ -172,8 +222,10 @@ void DebugScene::Update() {
 	} else if (Mii::PushKey(DIK_DOWN)) {
 		cameraPos.z -= 0.01f;
 	}
+#pragma endregion
 
 	/// ===マウス関連の処理=== ///
+#pragma region マウス関連の処理
 	if (Mii::PushMouse(MouseButtonType::Left)) {
 		PushLeft_ = true;
 	} else {
@@ -188,8 +240,10 @@ void DebugScene::Update() {
 	}
 	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
 	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+#pragma endregion
 
 	/// ===Audioのセット=== ///
+#pragma region Audioのセット
 	if (playAudio) {
 		audio_->PlayeSound("fanfare", false);
 		audio_->VolumeSound("fanfare", volume);
@@ -198,8 +252,9 @@ void DebugScene::Update() {
 		audio_->StopSound("fanfare");
 		audio_->StopSound("fanfare");
 	}
+#pragma endregion
 
-	// 回転処理
+	/// ===回転処理=== ///
 	if (isRotate) {
 		rotate.y += 0.1f;
 		rotate.x += 0.1f;
@@ -207,13 +262,13 @@ void DebugScene::Update() {
 	}
 
 	/// ===スプライトの更新=== ///
+#pragma region スプライトの更新
 	//sprite->SetSize(size);
 	sprite_->Update();
-
-	/// ===Particle=== ///
-	windParticle_->Update();
+#pragma endregion
 
 	/// ===モデルの更新=== ///
+#pragma region モデルの更新
 	model_->SetRotate(rotate);
 	model_->SetScale(scale_);
 	model_->SetLightColor(lightColor_);
@@ -222,12 +277,22 @@ void DebugScene::Update() {
 	model_->SetLightShininess(lightShininess_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
+#pragma endregion
+
+	/// ===Particle=== ///
+#pragma region Particle
+	windParticle_->Update();
+	explosionParticle_->Update();
+	confettiParticle_->Update();
+#pragma endregion
 
 	/// ===カメラの更新=== ///
+#pragma region カメラの更新
 	camera_->SetRotate(cameraRotate);
 	camera_->SetTranslate(cameraPos);
 	// 全てのカメラの更新
 	cameraManager_->UpdateAllCameras();
+#pragma endregion
 }
 
 ///-------------------------------------------/// 
@@ -238,13 +303,17 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	// Modelの描画
-	//model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd)
-	windParticle_->Draw();
+	/// ===Model=== ///
+	//model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+
+	/// ===Particle=== ///
+	//windParticle_->Draw();
+	//explosionParticle_->Draw();
+	confettiParticle_->Draw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
-	// Spriteの描画
+	/// ===Sprite=== ///
 	//sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
 #pragma endregion
 }

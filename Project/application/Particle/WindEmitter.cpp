@@ -122,6 +122,11 @@ void WindEmitter::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void WindEmitter::SetPosition(const Vector3& posititon) {transform_.translate = posititon;}
+
+///-------------------------------------------/// 
 /// ランダム発生処理
 ///-------------------------------------------///
 ParticleData WindEmitter::MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {
