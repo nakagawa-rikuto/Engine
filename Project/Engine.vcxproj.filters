@@ -86,6 +86,7 @@
     <ClCompile Include="application\Particle\WindEmitter.cpp" />
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
+    <ClCompile Include="application\Game\Objects\CardManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="application\Particle\WindEmitter.h" />
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
+    <ClInclude Include="application\Game\Objects\CardManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

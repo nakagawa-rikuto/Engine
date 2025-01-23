@@ -109,6 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
     <ClCompile Include="application\Game\Objects\Card.cpp" />
     <ClCompile Include="application\Game\Objects\Collider.cpp" />
+    <ClCompile Include="application\Game\Objects\CardManager.cpp" />
     <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
@@ -186,6 +187,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
     <ClInclude Include="application\Game\Objects\Card.h" />
     <ClInclude Include="application\Game\Objects\Collider.h" />
+    <ClInclude Include="application\Game\Objects\CardManager.h" />
     <ClInclude Include="Engine\Managers\CSVManager.h" />
     <ClInclude Include="Engine\3d\Camera3D.h" />
     <ClInclude Include="Engine\Particle\ParticleData.h" />
