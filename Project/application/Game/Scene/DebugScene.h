@@ -6,6 +6,8 @@
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
 #include "application/Particle/WindEmitter.h"
+#include "application/Particle/ExplosionEmitter.h"
+#include "application/Particle/ConfettiEmitter.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -64,5 +66,7 @@ private:/// ===メンバ変数=== ///
 
 	// Particle
 	std::shared_ptr<WindEmitter> windParticle_;
+	std::shared_ptr<ExplosionEmitter> explosionParticle_;
+	std::shared_ptr<ConfettiEmitter> confettiParticle_;
 };
 
