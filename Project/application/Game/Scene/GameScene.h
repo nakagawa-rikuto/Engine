@@ -4,7 +4,7 @@
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
 
-#include "application/Game/Objects/Card.h"
+#include "application/Game/Objects/CardManager.h"
 
 #include <memory>
 #include <vector>
@@ -29,15 +29,6 @@ public:/// ===メンバ関数=== ///
 
 private:/// ===メンバ関数=== ///
 
-	// 表のカードがそろっているか
-	void CheckFrontPair();
-
-	void CheckCursorCardCollision();
-
-	bool CountStateCard(Card::CardState state);
-
-	void EightDirectionCheck(int yIndex[2], int xIndex[2]);
-
 private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
@@ -53,8 +44,6 @@ private:/// ===メンバ変数=== ///
 	/// ===Model=== ///
 	//std::vector<std::shared_ptr<Card>> cards_;
 
-	Card::Cards cards_;
-
 	int xIndex = 0;
 	int zIndex = 0;
 
@@ -64,8 +53,30 @@ private:/// ===メンバ変数=== ///
 	bool TriggerLeft_ = false;
 	Vector2 mousePosition_ = { 0.0f, 0.0f };
 
-
 	GlobalVariables* globalVariables;
 	std::vector<int32_t> cardAnswers;
+
+	std::unique_ptr<CardManager> cardManager_ = nullptr;
+
+	std::vector<std::vector<int>> cardData1x3 = 
+	{
+		{1,2,1} 
+	};
+
+	std::vector<std::vector<int>> cardData3x3 =
+	{
+		{1,2,1},
+		{0,0,0},
+		{1,1,1},
+	};
+
+	std::vector<std::vector<int>> cardData5x5 =
+	{
+		{0,0,0,0,0},
+		{1,1,1,1,1},
+		{2,2,2,2,2},
+		{3,3,3,3,3},
+		{4,4,4,4,4},
+	};
 };
 

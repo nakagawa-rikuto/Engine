@@ -45,12 +45,6 @@ public:
 		none,
 	};
 
-	struct Cards
-	{
-		std::shared_ptr<Card> card[5][5];
-	};
-
-
 public:/// ===メンバ関数=== ///
 
 	// 初期化

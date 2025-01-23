@@ -46,6 +46,7 @@ void DebugScene::Initialize() {
 	const std::string& axisModel = "axis";
 	Loader_->LoadModel(axisModel);
 	Loader_->LoadModel("plane");
+	Loader_->LoadModel("Particle");
 
 	/// ===スプライトの初期化=== ///
 	sprite_ = std::make_unique<Sprite>();
@@ -62,7 +63,7 @@ void DebugScene::Initialize() {
 	/// ===モデル=== ///
 	model_ = std::make_unique<Model>();
 	model_->Initialize(planeModel, LightType::HalfLambert);          // 初期化(const std::string& modelNameが必須)
-	/* // モデルの使い方                        
+	/* // モデルの使い方
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetScale(Vector3(0.0f, 0.0f, 0.0f));                 // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
@@ -100,6 +101,11 @@ void DebugScene::Initialize() {
 	/// ===Particle=== ///
 	windParticle_ = std::make_shared<WindEmitter>();
 	windParticle_->Initialze();
+	explosionParticle_ = std::make_shared<ExplosionEmitter>();
+	explosionParticle_->Initialze();
+	//explosionParticle_->SetPosition({ 2.0f, 2.0f, 0.0f });
+	confettiParticle_ = std::make_shared<ConfettiEmitter>();
+	confettiParticle_->Initialze();
 }
 
 ///-------------------------------------------/// 
@@ -216,6 +222,8 @@ void DebugScene::Update() {
 
 	/// ===Particle=== ///
 	windParticle_->Update();
+	explosionParticle_->Update();
+	confettiParticle_->Update();
 
 	/// ===モデルの更新=== ///
 	model_->SetRotate(rotate);
@@ -244,7 +252,9 @@ void DebugScene::Draw() {
 #pragma region モデル描画
 	// Modelの描画
 	//model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd)
-	windParticle_->Draw();
+	//windParticle_->Draw();
+	//explosionParticle_->Draw();
+	confettiParticle_->Draw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
