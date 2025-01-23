@@ -15,6 +15,11 @@ public:
 	// 描画
 	void Darw();
 
+	std::vector<std::vector<std::shared_ptr<Card>>> GetCards() { return cards_; }
+
+	size_t GetRows() { return rows; }
+	size_t GetCols() { return cols; }
+
 private:
 
 	// 表のカードがそろっているか
@@ -29,7 +34,7 @@ private:
 
 private:
 
-	std::vector<std::vector<std::unique_ptr<Card>>> cards_;
+	std::vector<std::vector<std::shared_ptr<Card>>> cards_;
 
 	bool triggerLeft_ = false;
 

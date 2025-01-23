@@ -48,13 +48,13 @@ void GameScene::Initialize() {
 	globalVariables->CreateGroup(groupNameCards);
 
 	// デバッグ表示用に GlobalVariables にデータを登録
-	/*std::vector<int32_t> cardGrid;
-	for (int z = 0; z < gridSize; ++z) {
-		for (int x = 0; x < gridSize; ++x) {
-			cardGrid.push_back(cards_.card[z][x]->GetCardType());
+	std::vector<int32_t> cardGrid;
+	for (int y = 0; y < cardManager_->GetRows(); ++y) {
+		for (int x = 0; x < cardManager_->GetCols(); ++x) {
+			cardGrid.push_back(cardManager_->GetCards()[y][x]->GetCardType());
 		}
 	}
-	globalVariables->SetValue("Cards", "CardGrid", cardGrid);*/
+	globalVariables->SetValue("Cards", "CardGrid", cardGrid);
 }
 
 ///-------------------------------------------///
