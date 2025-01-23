@@ -6,9 +6,10 @@
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
 #include "application/Manager/CameraManager.h"
+#include "application/Game/Objects/Collider.h"
 
 
-class Card {
+class Card : public Collider {
 public:
 
 	static Vector3 MakeTransform(const Vector3& vector, const Matrix4x4& matrix) {
