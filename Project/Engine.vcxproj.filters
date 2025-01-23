@@ -283,12 +283,24 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="application\Game\GlobalVariables\GlobalVariables.cpp">
+    <ClCompile Include="Engine\3d\Camera3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Particle\ParticleSetUp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Particle\ParticleGroup.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Particle\ParticleEmitter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
 
     <ClCompile Include="Engine\3d\Camera3D.cpp">
+    <ClCompile Include="application\Manager\ParticleManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="application\Particle\WindEmitter.cpp">
     <ClCompile Include="Engine\Managers\CSVManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -499,13 +511,30 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="application\Game\GlobalVariables\GlobalVariables.h">
+    <ClInclude Include="Engine\3d\Camera3D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\ParticleSetUp.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\ParticleGroup.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Particle\ParticleEmitter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\Manager\ParticleManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="application\Particle\WindEmitter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     
     <ClInclude Include="Engine\3d\Camera3D.h">
+    <ClInclude Include="Math\MathData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Managers\CSVManager.h">
+    <ClInclude Include="Engine\Particle\ParticleData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -533,6 +562,8 @@
     <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl">
       <Filter>リソース ファイル\シェーダーファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resource\Shaders\Particle.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Particle.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Obj.hlsli">
@@ -541,5 +572,6 @@
     <None Include="Resource\Shaders\Obj3D.hlsli">
       <Filter>リソース ファイル\シェーダーファイル</Filter>
     </None>
+    <None Include="Resource\Shaders\Particle.hlsli" />
   </ItemGroup>
 </Project>
