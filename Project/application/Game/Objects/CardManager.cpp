@@ -26,7 +26,7 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<s
 
 			std::string cardModel = "Card";
 
-			std::unique_ptr<Card> newCard = std::make_unique<Card>();
+			std::shared_ptr<Card> newCard = std::make_unique<Card>();
 
 			newCard->Initialize(cardModel, cardData[y][x], position, cameraManager->GetActiveCamera());
 
