@@ -41,6 +41,7 @@ void DebugScene::Initialize() {
 	Loader_->LoadModel(planeModel);
 	const std::string& axisModel = "axis";
 	Loader_->LoadModel(axisModel);
+	Loader_->LoadModel("plane");
 
 	/// ===スプライトの初期化=== ///
 	sprite_ = std::make_unique<Sprite>();
@@ -88,8 +89,13 @@ void DebugScene::Initialize() {
 	lightDirection_ = { 0.0f, -1.0f, 0.0f };
 	lightIntensity_ = 1.0f;
 	lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 	/// ===Audio=== ///
 	//audio_->PlayeSound("clear", false);
+
+	/// ===Particle=== ///
+	windParticle_ = std::make_shared<WindEmitter>();
+	windParticle_->Initialze();
 }
 
 ///-------------------------------------------/// 
@@ -204,6 +210,9 @@ void DebugScene::Update() {
 	//sprite->SetSize(size);
 	sprite_->Update();
 
+	/// ===Particle=== ///
+	windParticle_->Update();
+
 	/// ===モデルの更新=== ///
 	model_->SetRotate(rotate);
 	model_->SetScale(scale_);
@@ -230,7 +239,8 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 	// Modelの描画
-	model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd)
+	//model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd)
+	windParticle_->Draw();
 #pragma endregion
 
 #pragma region 前景スプライト描画

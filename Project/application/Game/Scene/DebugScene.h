@@ -5,6 +5,7 @@
 #include "application/2d/Sprite.h"
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
+#include "application/Particle/WindEmitter.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -60,5 +61,8 @@ private:/// ===メンバ変数=== ///
 	bool PushLeft_ = false;
 	bool TriggerRight_ = false;
 	Vector2 mousePosition_ = { 0.0f, 0.0f };
+
+	// Particle
+	std::shared_ptr<WindEmitter> windParticle_;
 };
 
