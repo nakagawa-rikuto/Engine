@@ -39,6 +39,7 @@ public:
 	{
 		back,
 		front,
+		show,
 		obtained,
 
 		none,
@@ -73,6 +74,8 @@ public:/// ===メンバ関数=== ///
 	// セッター
 	void RequestState(CardState state) { requestState_ = state; }
 
+	void SetCurrentState(CardState state) { currentState_ = state; }
+
 	void SetScale(Vector3 scale) { model->SetScale(scale); }
 
 private:
@@ -103,5 +106,11 @@ private:/// ===メンバ変数=== ///
 	CardState requestState_;
 
 	Vector2 screenPosition = {};
+
+	const float kDeltaTime_ = 1.0f / 60.0f;
+
+	const float kShowTime_ = 1.0f;
+
+	float elapsedTime_ = 0.0f;
 };
 
