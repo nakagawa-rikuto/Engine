@@ -127,7 +127,7 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition)
 
 			float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
 
-			if (len < 25.0f) {
+			if (len < 25.0f && cards_[y][x]->GetCurrentState() == Card::CardState::back) {
 				cards_[y][x]->SetScale({ 1.3f, 1.3f, 1.3f });
 
 				if (Mii::PushMouse(MouseButtonType::Left)) {
