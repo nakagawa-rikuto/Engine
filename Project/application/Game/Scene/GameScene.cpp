@@ -197,11 +197,26 @@ void GameScene::CheckFrontPair() {
 	}
 
 	if (pairIndex == 2) {
-		for (int i = 0; i < 2; ++i) {
-			if (cardType[0] == cardType[1]) {
+
+		if (cardType[0] == cardType[1]) {
+
+			for (int i = 0; i < 2; ++i) {
+
+				cards_.card[cardZ[i]][cardX[i]]->SetCurrentState(Card::CardState::show);
+
 				cards_.card[cardZ[i]][cardX[i]]->RequestState(Card::CardState::obtained);
-			} else if (cardType[0] != cardType[1]) {
+			}
+
+			EightDirectionCheck(cardZ, cardX);
+		}
+		else if (cardType[0] != cardType[1]) {
+
+			for (int i = 0; i < 2; ++i) {
+
+				cards_.card[cardZ[i]][cardX[i]]->SetCurrentState(Card::CardState::show);
+
 				cards_.card[cardZ[i]][cardX[i]]->RequestState(Card::CardState::back);
+
 			}
 		}
 	}
@@ -209,7 +224,7 @@ void GameScene::CheckFrontPair() {
 
 void GameScene::CheckCursorCardCollision() {
 
-	if (!CountStateCard(Card::CardState::front)) {
+	if (!CountStateCard(Card::CardState::front) || !CountStateCard(Card::CardState::show)) {
 		return;
 	}
 
@@ -252,4 +267,72 @@ bool GameScene::CountStateCard(Card::CardState state) {
 	}
 
 	return false;
+}
+
+void GameScene::EightDirectionCheck(int yIndex[2], int xIndex[2])
+{
+	// 差
+	int diffY = yIndex[1] - yIndex[0];
+	int diffX = xIndex[1] - xIndex[0];
+
+	// 行が同じ場合
+	if (diffY == 0) {
+
+		if (std::abs(diffX) > 1) {
+			int addNum = diffX / std::abs(diffX);
+
+			int addXIndex = xIndex[0];
+
+			for (int i = 0; i < std::abs(diffX) - 1; ++i) {
+
+				addXIndex += addNum;
+
+				if (cards_.card[yIndex[0]][addXIndex]->GetCurrentState() == Card::CardState::back)
+				{
+					cards_.card[yIndex[0]][addXIndex]->SetCurrentState(Card::CardState::show);
+
+					cards_.card[yIndex[0]][addXIndex]->RequestState(Card::CardState::obtained);
+				}
+			}
+		}
+	}
+	// 列が同じ場合
+	else if (diffX == 0) {
+
+		if (std::abs(diffY) > 1) {
+			int addNum = diffY / std::abs(diffY);
+
+			int addYIndex = yIndex[0];
+
+			for (int i = 0; i < std::abs(diffY) - 1; ++i) {
+
+				addYIndex += addNum;
+
+				if (cards_.card[addYIndex][xIndex[0]]->GetCurrentState() == Card::CardState::back)
+				{
+					cards_.card[addYIndex][xIndex[0]]->SetCurrentState(Card::CardState::show);
+
+					cards_.card[addYIndex][xIndex[0]]->RequestState(Card::CardState::obtained);
+				}
+			}
+		}
+	}
+	// 斜めだった場合
+	else if (std::abs(diffY) == std::abs(diffX)) {
+
+		int yAdd = diffY / std::abs(diffY);
+		int xAdd = diffX / std::abs(diffX);
+
+		for (int i = 0; i < std::abs(diffY) - 1; ++i) {
+			yIndex[0] += yAdd;
+			xIndex[0] += xAdd;
+
+			if (cards_.card[yIndex[0]][xIndex[0]]->GetCurrentState() == Card::CardState::back)
+			{
+				cards_.card[yIndex[0]][xIndex[0]]->SetCurrentState(Card::CardState::show);
+
+				cards_.card[yIndex[0]][xIndex[0]]->RequestState(Card::CardState::obtained);
+			}
+		}
+	}
 }

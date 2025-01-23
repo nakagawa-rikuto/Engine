@@ -31,6 +31,16 @@ struct Vector3 final {
 	Vector3& operator/=(const Vector3& v);
 	Vector3 operator/(const float& v);
 	Vector3& operator/=(const float& v);
+
+	/// ===追加=== ///
+	Vector3 operator+(const Vector3& v)const;
+	Vector3 operator-(const Vector3& v)const;
+	Vector3 operator*(const Vector3& v)const;
+	Vector3 operator/(const Vector3& v)const;
+	Vector3 operator+(const float& v)const;
+	Vector3 operator-(const float& v)const;
+	Vector3 operator*(const float& v)const;
+	Vector3 operator/(const float& v)const;
 };
 
 /// ===内積の計算=== ///

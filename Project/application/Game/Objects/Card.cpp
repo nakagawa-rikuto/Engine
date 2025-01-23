@@ -19,8 +19,20 @@ void Card::Initialize(const std::string& cardModel,int cardType, Vector3 positio
 
 void Card::Update(std::shared_ptr<Camera> activeCamera) {
 
+	if (currentState_ == CardState::show && elapsedTime_ < kShowTime_) {
+
+		elapsedTime_ += kDeltaTime_;
+
+		if (elapsedTime_ > kShowTime_) {
+
+		}
+		else {
+			return;
+		}
+	}
+
 	// 各状態の角度Y
-	float rotateyTable[] = { 0.0f,3.14f};
+	float rotateyTable[] = { 0.0f,3.14f,3.14f};
 
 	// 現在の状態とリクエストの状態が違う場合
 	if (currentState_ != requestState_) {
@@ -32,6 +44,10 @@ void Card::Update(std::shared_ptr<Camera> activeCamera) {
 
 		// リクエストの状態が表向きの時
 		else if (requestState_ == CardState::front) {
+			destinationRotateY = rotateyTable[static_cast<int>(requestState_)];
+		}
+
+		else if (requestState_ == CardState::show) {
 			destinationRotateY = rotateyTable[static_cast<int>(requestState_)];
 		}
 
@@ -50,8 +66,13 @@ void Card::Update(std::shared_ptr<Camera> activeCamera) {
 			{
 				rotate.y = rotateyTable[static_cast<int>(requestState_)];
 
+				if (currentState_ == CardState::show) {
+					elapsedTime_ = 0.0f;
+				}
+
 				currentState_ = requestState_;
 				requestState_ = CardState::none;
+
 			}
 		}
 		else {
@@ -80,8 +101,6 @@ void Card::Draw()
 	{
 		model->Draw();
 	}
-
-
 }
 
 void Card::CalculationScreenPosition(std::shared_ptr<Camera> activeCamera)
@@ -89,7 +108,6 @@ void Card::CalculationScreenPosition(std::shared_ptr<Camera> activeCamera)
 	Matrix4x4 wMat = MakeAffineMatrix(model->GetScale(), model->GetRotate(), model->GetPosition());
 
 	Vector3 wPos = { wMat.m[3][0],wMat.m[3][1] ,wMat.m[3][2] };
-
 
 	Matrix4x4 matViewport = MakeViewportMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 1.0f);
 

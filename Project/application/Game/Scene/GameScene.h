@@ -36,6 +36,8 @@ private:/// ===メンバ関数=== ///
 
 	bool CountStateCard(Card::CardState state);
 
+	void EightDirectionCheck(int yIndex[2], int xIndex[2]);
+
 private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
