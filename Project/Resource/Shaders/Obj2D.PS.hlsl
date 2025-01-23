@@ -7,9 +7,9 @@ struct Material
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
-//SRV‚Ìregister‚Ít
+//SRVã®registerã¯t
 Texture2D<float4> gTexture : register(t0);
-// Sampler‚Ìregister‚Ís
+// Samplerã®registerã¯s
 SamplerState gSampler : register(s0);
 
 struct PixlShaderOutput
@@ -21,18 +21,12 @@ PixlShaderOutput main(VertexShaderOutput input)
 {
     PixlShaderOutput output;
     
-    if (gMaterial.color.x < 1.0f)
-    {
-        output.color = float4(1, 0, 0, 1);
-        return output;        
-    }
-    
     float4 transformdUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
     
-    //Texture‚ğSampling‚·‚é
+    //Textureã‚’Samplingã™ã‚‹
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
     
-    // Sampling‚µ‚½texture‚ÌF‚Æmaterial‚ÌF‚ğæZ‚µ‚Ä‡¬‚Á‚µ‚Ä‚İ‚é
+    // Samplingã—ãŸtextureã®è‰²ã¨materialã®è‰²ã‚’ä¹—ç®—ã—ã¦åˆæˆã£ã—ã¦ã¿ã‚‹
     output.color = gMaterial.color * textureColor;
     
     return output;

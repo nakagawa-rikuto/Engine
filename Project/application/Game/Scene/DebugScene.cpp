@@ -34,6 +34,7 @@ void DebugScene::Initialize() {
 	IScene::Initialize();
 
 	/// ===読み込み=== ///
+#pragma region 読み込み処理
 	// 音声データの読み込み
 	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
 	// MP3を読み込むとものすごく重い
@@ -51,8 +52,10 @@ void DebugScene::Initialize() {
 	const std::string& axisModel = "axis";
 	Loader_->LoadModel(axisModel);
 	Loader_->LoadModel("plane");
+#pragma endregion
 
 	/// ===スプライトの初期化=== ///
+#pragma region Spriteの初期化
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize(uvTexture);                   // 初期化(const std::string& spriteNameが必須)
 	/* // テクスチャの使い方
@@ -63,8 +66,10 @@ void DebugScene::Initialize() {
 	sprite->SetAnchorPoint(Vector2(0.0f, 0.0f));        // アンカーポイントの設定(初期値は0,0)
 	sprite->SetTextureSize(Vector2(64.0f, 64.0f));      // テクスチャサイズの設定(初期値は100.0f, 100.0f)
 	*/
+#pragma endregion
 
-	/// ===モデル=== ///
+	/// ===モデルの初期化=== ///
+#pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
 	model_->Initialize(planeModel, LightType::HalfLambert);          // 初期化(const std::string& modelNameが必須)
 	/* // モデルの使い方                        
@@ -78,8 +83,10 @@ void DebugScene::Initialize() {
 	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
+#pragma endregion
 
-	/// ===Camera=== ///
+	/// ===カメラの初期化=== ///
+#pragma region Cameraの初期化
 	// カメラ1
 	camera_ = std::make_shared<Camera>();
 	camera_->Initialize();
@@ -93,25 +100,26 @@ void DebugScene::Initialize() {
 	// カメラマネージャにカメラを追加
 	cameraManager_->Add("Main", camera_);
 	cameraManager_->Add("Main2", camera2_);
+#pragma endregion
 
-	/// ===Light=== ///
+	/// ===ライト=== ///
+#pragma region Lightの情報
 	lightDirection_ = { 0.0f, -1.0f, 0.0f };
 	lightIntensity_ = 1.0f;
 	lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+#pragma endregion
 
-	/// ===Audio=== ///
+	/// ===音=== ///
+#pragma region Audio
 	//audio_->PlayeSound("clear", false);
+#pragma endregion
 
 	/// ===Particle=== ///
+#pragma region Particleの生成
 	windParticle_ = std::make_shared<WindEmitter>();
-	windParticle_->Initialze();
-	//windParticle_->SetPosition({ 2.0f, 2.0f, 0.0f });
 	explosionParticle_ = std::make_shared<ExplosionEmitter>();
-	explosionParticle_->Initialze();
-	//explosionParticle_->SetPosition({ 2.0f, 2.0f, 0.0f });
 	confettiParticle_ = std::make_shared<ConfettiEmitter>();
-	confettiParticle_->Initialze();
-	//confettiParticle_->SetPosition({ 2.0f, 2.0f, 0.0f });
+#pragma endregion
 }
 
 ///-------------------------------------------/// 
@@ -121,54 +129,158 @@ void DebugScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
 	ImGui::Begin("DebugScene");
-	/*if (ImGui::BeginCombo("Object", "Select")) {
+	if (ImGui::BeginCombo("Object", "Select")) {
 		if (ImGui::Selectable("Sprite", isSetting_.Sprite)) {
-			isSetting_ = { false };
 			isSetting_.Sprite = true;
+			isSetting_.Model = false;
+			isSetting_.Particle1 = false;
+			isSetting_.Particle2 = false;
+			isSetting_.Particle3 = false;
 		} else if (ImGui::Selectable("Model", isSetting_.Model)) {
-			isSetting_ = { false };
+			isSetting_.Sprite = false;
 			isSetting_.Model = true;
+			isSetting_.Particle1 = false;
+			isSetting_.Particle2 = false;
+			isSetting_.Particle3 = false;
 		} else if (ImGui::Selectable("Particle1", isSetting_.Particle1)) {
-			isSetting_ = { false };
+			isSetting_.Sprite = false;
+			isSetting_.Model = false;
 			isSetting_.Particle1 = true;
+			isSetting_.Particle2 = false;
+			isSetting_.Particle3 = false;
 		} else if (ImGui::Selectable("Particle2", isSetting_.Particle2)) {
-			isSetting_ = { false };
+			isSetting_.Sprite = false;
+			isSetting_.Model = false;
+			isSetting_.Particle1 = false;
 			isSetting_.Particle2 = true;
+			isSetting_.Particle3 = false;
 		} else if (ImGui::Selectable("Particle3", isSetting_.Particle3)) {
-			isSetting_ = { false };
+			isSetting_.Sprite = false;
+			isSetting_.Model = false;
+			isSetting_.Particle1 = false;
+			isSetting_.Particle2 = false;
 			isSetting_.Particle3 = true;
 		}
 		ImGui::EndCombo();
 	}
 
+	/// ===Sprite=== ///
 	if (isSetting_.Sprite) {
 		if (!isDisplay_.Sprite && ImGui::Button("Draw")) {
 			isDisplay_.Sprite = true;
-		} else if (!isDisplay_.Sprite && ImGui::Button("UnDraw")) {
+		} else if (isDisplay_.Sprite && ImGui::Button("UnDraw")) {
 			isDisplay_.Sprite = false;
 		}
-	}*/
+		if (!isImgui_.Sprite && ImGui::Button("Info")) {
+			isImgui_.Sprite = true;
+		} else if (isImgui_.Sprite && ImGui::Button("UnInfo")) {
+			isImgui_.Sprite = false;
+		}
+		/// ===Info=== ///
+		if (isImgui_.Sprite) {
+			// Sprite
+			ImGui::DragFloat2("Tranlate", &spriteTranslate_.x, 0.1f);
+			ImGui::DragFloat("Rotate", &spriteRotate_, 0.1f);
+			ImGui::DragFloat2("Size", &spriteSize_.x, 0.1f);
+			ImGui::ColorEdit4("Color", &spriteColor_.x);
+		}
+	}
+
+	/// ===Model=== ///
+	if (isSetting_.Model) {
+		if (!isDisplay_.Model && ImGui::Button("Draw")) {
+			isDisplay_.Model = true;
+		} else if (isDisplay_.Model && ImGui::Button("UnDraw")) {
+			isDisplay_.Model = false;
+		}
+		if (!isImgui_.Model && ImGui::Button("Info")) {
+			isImgui_.Model = true;
+		} else if (isImgui_.Model && ImGui::Button("UnInfo")) {
+			isImgui_.Model = false;
+		}
+		/// ===Info=== ///
+		if (isImgui_.Model) {
+			// Model
+			ImGui::DragFloat3("Tranlate", &modelTranslate_.x, 0.1f);
+			ImGui::DragFloat3("Rotate", &modelRotate_.x, 0.1f);
+			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
+			ImGui::ColorEdit4("Color", &modelColor_.x);
+			// Light
+			ImGui::DragFloat3("LightDirection", &lightDirection_.x, 0.01f);
+			ImGui::DragFloat("lightIntensity", &lightIntensity_, 0.01f);
+			ImGui::DragFloat("LightShininess", &lightShininess_, 0.01f);
+			ImGui::ColorEdit4("LigthColor", &lightColor_.x);
+		}
+	}
+
+	/// ===Particle1=== ///
+	if (isSetting_.Particle1) {
+		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
+			windParticle_->Initialze();
+			windParticle_->SetPosition(particleTranslate_);
+			isDisplay_.Particle1 = true;
+		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
+			isDisplay_.Particle1 = false;
+		}
+		if (!isImgui_.Particle1 && ImGui::Button("Info")) {
+			isImgui_.Particle1 = true;
+		} else if (isImgui_.Particle1 && ImGui::Button("UnInfo")) {
+			isImgui_.Particle1 = false;
+		}
+		/// ===Info=== ///
+		if (isImgui_.Particle1) {
+			// Particle
+			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+		}
+	}
+
+	/// ===Particle2=== ///
+	if (isSetting_.Particle2) {
+		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
+			explosionParticle_->Initialze();
+			explosionParticle_->SetPosition(particleTranslate_);
+			isDisplay_.Particle2 = true;
+		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
+			isDisplay_.Particle2 = false;
+		}
+		if (!isImgui_.Particle2 && ImGui::Button("Info")) {
+			isImgui_.Particle2 = true;
+		} else if (isImgui_.Particle2 && ImGui::Button("UnInfo")) {
+			isImgui_.Particle2 = false;
+		}
+		/// ===Info=== ///
+		if (isImgui_.Particle2) {
+			// Particle
+			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+		}
+	}
+
+	/// ===Particle3=== ///
+	if (isSetting_.Particle3) {
+		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
+			confettiParticle_->Initialze();
+			confettiParticle_->SetPosition(particleTranslate_);
+			isDisplay_.Particle3 = true;
+		} else if (isDisplay_.Particle3 && ImGui::Button("UnDraw")) {
+			isDisplay_.Particle3 = false;
+		}
+		if (!isImgui_.Particle3 && ImGui::Button("Info")) {
+			isImgui_.Particle3 = true;
+		} else if (isImgui_.Particle3 && ImGui::Button("UnInfo")) {
+			isImgui_.Particle3 = false;
+		}
+		/// ===Info=== ///
+		if (isImgui_.Particle3) {
+			// Particle
+			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+		}
+	}
 
 	ImGui::End();
 #endif // USE_IMGUI
 
 	/// ===ImGui=== ///
 #ifdef USE_IMGUI
-
-
-	ImGui::Begin("model");
-	ImGui::Checkbox("RotateFlag", &isRotate);
-	ImGui::DragFloat3("Rotate", &rotate.x, 0.01f);
-	ImGui::DragFloat3("Scale", &scale_.x, 0.01f);
-	ImGui::ColorEdit4("LigthColor", &lightColor_.x);
-	ImGui::DragFloat3("LightDirection", &lightDirection_.x, 0.01f);
-	ImGui::DragFloat("lightIntensity", &lightIntensity_, 0.01f);
-	ImGui::DragFloat("LightShininess", &lightShininess_, 0.01f);
-	ImGui::End();
-
-	ImGui::Begin("sprite");
-	ImGui::DragFloat2("size", &size.x, 0.1f);
-	ImGui::End();
 
 	ImGui::Begin("Camera");
 	ImGui::Checkbox("Flag", &SetCamera);
@@ -254,23 +366,27 @@ void DebugScene::Update() {
 	}
 #pragma endregion
 
-	/// ===回転処理=== ///
-	if (isRotate) {
-		rotate.y += 0.1f;
-		rotate.x += 0.1f;
-		rotate.z -= 0.1f;
-	}
-
 	/// ===スプライトの更新=== ///
 #pragma region スプライトの更新
-	//sprite->SetSize(size);
+	sprite_->SetPosition(spriteTranslate_);
+	sprite_->SetRotation(spriteRotate_);
+	sprite_->SetSize(spriteSize_);
+	sprite_->SetColor(spriteColor_);
 	sprite_->Update();
 #pragma endregion
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	model_->SetRotate(rotate);
-	model_->SetScale(scale_);
+	/// ===回転処理=== ///
+	if (isRotate) {
+		modelRotate_.y += 0.1f;
+		modelRotate_.x += 0.1f;
+		modelRotate_.z -= 0.1f;
+	}
+	model_->SetPosition(modelTranslate_);
+	model_->SetRotate(modelRotate_);
+	model_->SetScale(modelScale_);
+	model_->SetColor(modelColor_);
 	model_->SetLightColor(lightColor_);
 	model_->SetLightDirection(lightDirection_);
 	model_->SetLightIntensity(lightIntensity_);
@@ -304,16 +420,27 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 	/// ===Model=== ///
-	//model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
-
+	if (isDisplay_.Model) {
+		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+	}
+	
 	/// ===Particle=== ///
-	//windParticle_->Draw();
-	//explosionParticle_->Draw();
-	confettiParticle_->Draw();
+	if (isDisplay_.Particle1) {
+		windParticle_->Draw();
+	} 
+	if (isDisplay_.Particle2) {
+		explosionParticle_->Draw();
+	} 
+	if (isDisplay_.Particle3) {
+		confettiParticle_->Draw();
+	}
+	
 #pragma endregion
 
 #pragma region 前景スプライト描画
 	/// ===Sprite=== ///
-	//sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
+	if (isDisplay_.Sprite) {
+		sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
+	}
 #pragma endregion
 }
