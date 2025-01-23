@@ -3,6 +3,8 @@
 
 void Card::Initialize(const std::string& cardModel,int cardType, Vector3 position, std::shared_ptr<Camera> activeCamera)
 {
+	Collider::Initialize({ 1.0f,1.0f,2.0f });
+
 	// モデルの生成と初期化
 	model = std::make_unique<Model>();
 	model->Initialize(cardModel);
@@ -18,6 +20,8 @@ void Card::Initialize(const std::string& cardModel,int cardType, Vector3 positio
 }
 
 void Card::Update(std::shared_ptr<Camera> activeCamera) {
+
+	Collider::Update(model->GetPosition());
 
 	if (currentState_ == CardState::show && elapsedTime_ < kShowTime_) {
 
