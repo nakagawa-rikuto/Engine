@@ -29,13 +29,13 @@ public:/// ===基本的な関数=== ///
 public:/// ===Getter=== ///
 
 	// テクスチャ番号からGPUハンドルを取得
-	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(const std::string& filePath);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(const std::string& Key);
 	// メタデータ
-	const DirectX::TexMetadata& GetMetaData(const std::string& filePath);
+	const DirectX::TexMetadata& GetMetaData(const std::string& Key);
 
 public:/// ==Setter==== ///
 
-	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParameterIndex, std::string filePath);
+	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParameterIndex, std::string Key);
 
 public:/// ===Variables(変数)=== ///
 
@@ -49,7 +49,7 @@ public:/// ===Functions(関数)=== ///
 	/// テクスチャファイルの読み込み
 	/// </summary>
 	/// <param name="filePath"></param>
-	void LoadTexture(const std::string& filePath);
+	void LoadTexture(const std::string& key, const std::string& filePath);
 
 private:/// ===Variables(変数)=== ///
 
@@ -73,7 +73,7 @@ private:/// ===Variables(変数)=== ///
 
 private:/// ===Functions(関数)=== ///
 	// ミップマップの生成
-	DirectX::ScratchImage Load(const std::string& filePath);
+	DirectX::ScratchImage Load(const std::string& key, const std::string& filePath);
 	// TextureResourceの作成
 	ComPtr<ID3D12Resource> CreateTextureResource( const DirectX::TexMetadata& metadata);
 	// データを転送する

@@ -41,16 +41,12 @@ void DebugScene::Initialize() {
 	//load_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
 
 	// テクスチャの読み込み
-	const std::string& uvTexture = "./Resource/uvChecker.png";
-	Loader_->LoadTexture(uvTexture);
-	const std::string& monsterBall = "./Resource/monsterBall.png";
-	Loader_->LoadTexture(monsterBall);
+	Loader_->LoadTexture("uvChecker","./Resource/uvChecker.png");
+	Loader_->LoadTexture("monsterBall", "./Resource/monsterBall.png");
 
 	// モデルの読み込み
-	const std::string& planeModel = "MonsterBall";
-	Loader_->LoadModel(planeModel);
-	const std::string& axisModel = "axis";
-	Loader_->LoadModel(axisModel);
+	Loader_->LoadModel("MonsterBall");
+	Loader_->LoadModel("axis");
 	Loader_->LoadModel("plane");
 	Loader_->LoadModel("Particle");
 #pragma endregion
@@ -58,7 +54,7 @@ void DebugScene::Initialize() {
 	/// ===スプライトの初期化=== ///
 #pragma region Spriteの初期化
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(uvTexture);                   // 初期化(const std::string& spriteNameが必須)
+	sprite_->Initialize("uvChecker");                   // 初期化(const std::string& spriteNameが必須)
 	/* // テクスチャの使い方
 	sprite->SetPosition(Vector2(0.0f, 0.0f));           // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                          // 回転の設定(初期値は0.0);
@@ -72,7 +68,7 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize(planeModel, LightType::HalfLambert);          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall", LightType::HalfLambert);          // 初期化(const std::string& modelNameが必須)
 	/* // モデルの使い方                        
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )

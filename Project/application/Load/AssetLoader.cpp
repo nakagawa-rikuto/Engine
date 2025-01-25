@@ -20,8 +20,8 @@ void AssetLoader::Inititalze(TextureManager* texture, ModelManager* model, Audio
 ///-------------------------------------------/// 
 /// テクスチャ
 ///-------------------------------------------///
-void AssetLoader::LoadTexture(const std::string& filePath) {
-	textureManager_->LoadTexture(filePath); 
+void AssetLoader::LoadTexture(const std::string& key, const std::string& filePath) {
+	textureManager_->LoadTexture(key, filePath);
 }
 
 ///-------------------------------------------/// 

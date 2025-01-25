@@ -22,7 +22,7 @@ public:
 	// 初期化
 	void Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio);
 	// テクスチャの読み込み
-	void LoadTexture(const std::string& filePath);
+	void LoadTexture(const std::string& key, const std::string& filePath);
 	// モデルの読み込み
 	void LoadModel(const std::string& filename);
 	// CSVの読み込み

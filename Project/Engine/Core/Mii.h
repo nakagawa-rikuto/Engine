@@ -66,9 +66,9 @@ public:/// ===開発者用関数(その他)=== ///
 	/// テクスチャ関連
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
-	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath);
+	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key);
 	// メタデータの取得
-	static const DirectX::TexMetadata& GetMetaData(const std::string& filePath);
+	static const DirectX::TexMetadata& GetMetaData(const std::string& key);
 
 	///-------------------------------------------/// 
 	/// モデル関連
@@ -98,7 +98,7 @@ public:/// ===プログラマー用関数=== ///
 	/// テクスチャ関連
 	///-------------------------------------------///
 	// テクスチャの読み込み
-	static void LoadTexture(const std::string& filePath);
+	static void LoadTexture(const std::string& key, const std::string& filePath);
 
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
