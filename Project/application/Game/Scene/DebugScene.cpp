@@ -2,6 +2,7 @@
 // SceneManager
 #include "application/Manager/SceneManager.h"
 #include "Engine/Core/Mii.h"
+#include "Engine/Service/Loader.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -18,8 +19,8 @@ DebugScene::~DebugScene() {
 	audio_->StopSound("fanfare");
 	audio_->StopSound("clear");
 	// Loader
-	Loader_->UnloadSound("fanfare");
-	Loader_->UnloadSound("clear");
+	Loader::UnloadSound("fanfare");
+	Loader::UnloadSound("clear");
 	// Particle
 	windParticle_.reset();
 	explosionParticle_.reset();
@@ -36,19 +37,19 @@ void DebugScene::Initialize() {
 	/// ===読み込み=== ///
 #pragma region 読み込み処理
 	// 音声データの読み込み
-	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
+	Loader::LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
 	// MP3を読み込むとものすごく重い
-	//load_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
+	//Loader::LoadMP3("clear", "./Resource/BGM/clear.mp3");
 
 	// テクスチャの読み込み
-	Loader_->LoadTexture("uvChecker","./Resource/uvChecker.png");
-	Loader_->LoadTexture("monsterBall", "./Resource/monsterBall.png");
+	Loader::LoadTexture("uvChecker","./Resource/uvChecker.png");
+	Loader::LoadTexture("monsterBall", "./Resource/monsterBall.png");
 
 	// モデルの読み込み
-	Loader_->LoadModel("MonsterBall");
-	Loader_->LoadModel("axis");
-	Loader_->LoadModel("plane");
-	Loader_->LoadModel("Particle");
+	Loader::LoadModel("MonsterBall");
+	Loader::LoadModel("axis");
+	Loader::LoadModel("plane");
+	Loader::LoadModel("Particle");
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -160,7 +161,6 @@ void DebugScene::Update() {
 		}
 		ImGui::EndCombo();
 	}
-
 	/// ===Sprite=== ///
 	if (isSetting_.Sprite) {
 		if (!isDisplay_.Sprite && ImGui::Button("Draw")) {
@@ -182,7 +182,6 @@ void DebugScene::Update() {
 			ImGui::ColorEdit4("Color", &spriteColor_.x);
 		}
 	}
-
 	/// ===Model=== ///
 	if (isSetting_.Model) {
 		if (!isDisplay_.Model && ImGui::Button("Draw")) {
@@ -209,7 +208,6 @@ void DebugScene::Update() {
 			ImGui::ColorEdit4("LigthColor", &lightColor_.x);
 		}
 	}
-
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
@@ -230,7 +228,6 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
 		}
 	}
-
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
@@ -251,7 +248,6 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
 		}
 	}
-
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
 		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
@@ -274,35 +270,33 @@ void DebugScene::Update() {
 	}
 
 	ImGui::End();
-#endif // USE_IMGUI
 
-	/// ===ImGui=== ///
-#ifdef USE_IMGUI
-
+	/// ===Camera=== ///
 	ImGui::Begin("Camera");
 	ImGui::Checkbox("Flag", &SetCamera);
 	ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
 	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.1f);
 	ImGui::End();
-
+	/// ===Keybord=== ///
 	ImGui::Begin("Keybord");
 	ImGui::Text("WSADデカメラのポジションを移動");
 	ImGui::End();
-
+	/// ===Mouse=== ///
 	ImGui::Begin("Mouse");
 	ImGui::Checkbox("PushLeft", &PushLeft_);
 	ImGui::Checkbox("TriggerRight", &TriggerRight_);
 	ImGui::DragFloat2("MousePosition", &mousePosition_.x, 0.1f);
 	ImGui::End();
-
+	/// ===Controller=== ///
 	ImGui::Begin("Controller");
 	ImGui::End();
-
+	/// ===Audio=== ///
 	ImGui::Begin("Audio");
 	ImGui::Checkbox("play", &playAudio);
 	ImGui::DragFloat("Volume", &volume, 0.01f);
 	ImGui::DragFloat("Ptich", &pitch, 0.01f);
 	ImGui::End();
+
 #endif // USE_IMGUI
 
 	/// ===カメラの変更=== ///
@@ -420,7 +414,6 @@ void DebugScene::Draw() {
 	if (isDisplay_.Model) {
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 	}
-	
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {
 		windParticle_->Draw();

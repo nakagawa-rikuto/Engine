@@ -94,12 +94,6 @@ public:/// ===プログラマー用関数=== ///
 	static bool PushController(int deviceIndex, int buttonIndex);
 	static bool TriggerController(int deviceIndex, int buttonIndex);
 
-	///-------------------------------------------/// 
-	/// テクスチャ関連
-	///-------------------------------------------///
-	// テクスチャの読み込み
-	static void LoadTexture(const std::string& key, const std::string& filePath);
-
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
 	static DXCommon* GetDXCommon();
