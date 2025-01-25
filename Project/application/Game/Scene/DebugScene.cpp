@@ -218,7 +218,7 @@ void DebugScene::Update() {
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
 			windParticle_->Initialze("Particle");
-			windParticle_->SetPosition(particleTranslate_);
+			windParticle_->SetTranslate(particleTranslate_);
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle1 = false;
@@ -239,7 +239,7 @@ void DebugScene::Update() {
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
 			explosionParticle_->Initialze("Particle");
-			explosionParticle_->SetPosition(particleTranslate_);
+			explosionParticle_->SetTranslate(particleTranslate_);
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle2 = false;
@@ -260,7 +260,7 @@ void DebugScene::Update() {
 	if (isSetting_.Particle3) {
 		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
 			confettiParticle_->Initialze();
-			confettiParticle_->SetPosition(particleTranslate_);
+			confettiParticle_->SetTranslate(particleTranslate_);
 			isDisplay_.Particle3 = true;
 		} else if (isDisplay_.Particle3 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle3 = false;

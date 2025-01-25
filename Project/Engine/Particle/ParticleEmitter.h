@@ -21,11 +21,11 @@ public:
 
 public: /// ===Setter=== ///
 	// Translate
-	void SetTranslate(const Vector3& translate);
+	virtual void SetTranslate(const Vector3& translate);
 	// Rotate
-	void SetRotate(const Vector3& rotate);
+	virtual void SetRotate(const Vector3& rotate);
 	// Scale
-	void SetScale(const Vector3& scale);
+	virtual void SetScale(const Vector3& scale);
 
 protected:
 	/// ===Emitter=== ///

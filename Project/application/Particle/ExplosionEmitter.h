@@ -23,9 +23,6 @@ public:
     // 描画
     void Draw(BlendMode mode = BlendMode::KBlendModeNormal) override;
 
-    // Setter
-    void SetPosition(const Vector3& posititon);
-
 private:
     /// ===プライベートフィールド=== ///
     std::mt19937 randomEngine_; // 乱数生成器

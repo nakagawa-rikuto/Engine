@@ -98,11 +98,6 @@ void ExplosionEmitter::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-void ExplosionEmitter::SetPosition(const Vector3& posititon) {transform_.translate = posititon;}
-
-///-------------------------------------------/// 
 /// 爆発パーティクルの生成
 ///-------------------------------------------///
 ParticleData ExplosionEmitter::MakeExplosionParticle(std::mt19937& randomEngine, const Vector3& center) {

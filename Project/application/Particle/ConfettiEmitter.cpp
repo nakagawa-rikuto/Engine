@@ -102,11 +102,6 @@ void ConfettiEmitter::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-void ConfettiEmitter::SetPosition(const Vector3& posititon) { transform_.translate = posititon; }
-
-///-------------------------------------------/// 
 /// コンフェッティパーティクルの生成
 ///-------------------------------------------///
 ParticleData ConfettiEmitter::MakeConfettiParticle(std::mt19937& randomEngine, const Vector3& center) {
