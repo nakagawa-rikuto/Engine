@@ -28,7 +28,7 @@
     <ClCompile Include="Engine\3d\Material3D.cpp" />
     <ClCompile Include="Engine\Managers\ImGuiManager.cpp" />
     <ClCompile Include="application\Game\Scene\IScene.cpp" />
-    <ClCompile Include="application\Load\AssetLoader.cpp" />
+    <ClCompile Include="Engine\Service\Loader.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\MatrixMath.cpp" />
@@ -104,7 +104,7 @@
     <ClInclude Include="Engine\3d\Material3D.h" />
     <ClInclude Include="Engine\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Game\Scene\IScene.h" />
-    <ClInclude Include="application\Load\AssetLoader.h" />
+    <ClInclude Include="Engine\Service\Loader.h" />
     <ClInclude Include="Math\MathData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />

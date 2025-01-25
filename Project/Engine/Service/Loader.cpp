@@ -1,4 +1,4 @@
-#include "AssetLoader.h"
+#include "Loader.h"
 
 #include "Engine/Managers/TextureManager.h"
 #include "Engine/Managers/ModelManager.h"
@@ -7,54 +7,78 @@
 
 #include "Engine/Core/Mii.h"
 
+#include <cassert>
+
+/// ===宣言=== ///
+TextureManager* Loader::textureManager_ = nullptr;
+ModelManager* Loader::modelManager_ = nullptr;
+AudioManager* Loader::audioManager_ = nullptr;
+CSVManager* Loader::csvManager_ = nullptr;
+
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void AssetLoader::Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio) {
+void Loader::Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio, CSVManager* csv) {
+	assert(texture);
+	assert(model);
+	assert(audio);
+	assert(csv);
+	
 	// 生成
 	textureManager_ = texture;
 	modelManager_ = model;
 	audioManager_ = audio;
+	csvManager_ = csv;
+}
+
+///-------------------------------------------/// 
+/// 終了処理
+///-------------------------------------------///
+void Loader::Finalize() {
+	textureManager_ = nullptr;
+	modelManager_ = nullptr;
+	audioManager_ = nullptr;
+	csvManager_ = nullptr;
 }
 
 ///-------------------------------------------/// 
 /// テクスチャ
 ///-------------------------------------------///
-void AssetLoader::LoadTexture(const std::string& filePath) {
-	textureManager_->LoadTexture(filePath); 
+void Loader::LoadTexture(const std::string& key, const std::string& filePath) {
+	textureManager_->LoadTexture(key, filePath);
 }
 
 ///-------------------------------------------/// 
 /// モデル
 ///-------------------------------------------///
-void AssetLoader::LoadModel(const std::string& filename) {
+void Loader::LoadModel(const std::string& filename) {
 	modelManager_->LoadModel("Resource", filename); 
 }
 
 ///-------------------------------------------/// 
 /// csv
 ///-------------------------------------------///
-void AssetLoader::LoadCSV(const std::string& filename) {
+void Loader::LoadCSV(const std::string& filename) {
 	csvManager_->Load(filename);
 }
 
 ///-------------------------------------------/// 
 /// WAVE
 ///-------------------------------------------///
-void AssetLoader::LoadWave(const std::string& key, const std::string& filename) {
+void Loader::LoadWave(const std::string& key, const std::string& filename) {
 	audioManager_->Load(key, filename, false); 
 }
 
 ///-------------------------------------------/// 
 /// MP3
 ///-------------------------------------------///
-void AssetLoader::LoadMP3(const std::string & key, const std::string & filename) {
+void Loader::LoadMP3(const std::string & key, const std::string & filename) {
 	audioManager_->Load(key, filename, true); 
 }
 
 ///-------------------------------------------/// 
 /// 音声データの解放
 ///-------------------------------------------///
-void AssetLoader::UnloadSound(const std::string& key) {
+void Loader::UnloadSound(const std::string& key) {
 	audioManager_->Unload(key);
 }

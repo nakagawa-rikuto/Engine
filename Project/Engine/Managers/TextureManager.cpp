@@ -16,13 +16,13 @@ uint32_t TextureManager::kSRVIndexTop_ = 1;
 /// Getter
 ///-------------------------------------------///
 // メタデータの取得
-const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& filePath) {
-	TextureData& textureData = textureDatas_[filePath];
+const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& Key) {
+	TextureData& textureData = textureDatas_[Key];
 	return textureData.metadata;
 }
 // GPUハンドルの取得
-D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSRVHandleGPU(const std::string& filePath) {
-	TextureData& textureData = textureDatas_[filePath];
+D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSRVHandleGPU(const std::string& Key) {
+	TextureData& textureData = textureDatas_[Key];
 	return textureData.srvHandleGPU;
 }
 
@@ -31,8 +31,8 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSRVHandleGPU(const std::string& f
 ///-------------------------------------------///
 // テクスチャの設定
 void TextureManager::SetGraphicsRootDescriptorTable(
-	ID3D12GraphicsCommandList* commandList, UINT rootParameterIndex, std::string filePath) {
-	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, textureDatas_[filePath].srvHandleGPU);
+	ID3D12GraphicsCommandList* commandList, UINT rootParameterIndex, std::string Key) {
+	commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, textureDatas_[Key].srvHandleGPU);
 }
 
 ///-------------------------------------------/// 
@@ -55,10 +55,10 @@ void TextureManager::Initialize(DXCommon* dxCommon, SRVManager* srvManager) {
 ///-------------------------------------------/// 
 /// テクスチャファイルの読み込み	
 ///-------------------------------------------///
-void TextureManager::LoadTexture(const std::string& filePath) {
+void TextureManager::LoadTexture(const std::string& key, const std::string& filePath) {
 
 	// 読み込み済みのテクスチャを検索
-	if (textureDatas_.contains(filePath)) {
+	if (textureDatas_.contains(key)) {
 		assert(srvManager_->AssertAllocate());
 		return;
 	}
@@ -67,10 +67,10 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	assert(srvManager_->Allocate());
 
 	// テクスチャデータを追加して書き込む
-	TextureData& textureData = textureDatas_[filePath];
+	TextureData& textureData = textureDatas_[key];
 	// テクスチャデータの読み込み
 	textureData.filePath = filePath;
-	DirectX::ScratchImage mipImages = Load(filePath); // ミップマップの作成
+	DirectX::ScratchImage mipImages = Load(key, filePath); // ミップマップの作成
 	textureData.metadata = mipImages.GetMetadata();
 	textureData.resource = CreateTextureResource(textureData.metadata);
 	// テクスチャを転送
@@ -90,7 +90,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 ///-------------------------------------------/// 
 /// ミップマップの作成
 ///-------------------------------------------///
-DirectX::ScratchImage TextureManager::Load(const std::string& filePath) {
+DirectX::ScratchImage TextureManager::Load(const std::string& key, const std::string& filePath) {
 	
 	// テクスチャファイルを読み込んでプログラムで扱えるよにする
 	DirectX::ScratchImage image{};
@@ -98,14 +98,14 @@ DirectX::ScratchImage TextureManager::Load(const std::string& filePath) {
 	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
 	// リリースでもエラーが出るようにする
 	if (FAILED(hr)) {
-		throw std::runtime_error("Failed to load texture from file: " + filePath);
+		throw std::runtime_error("Failed to load texture with key: " + key + ", from file: " + filePath);
 	}
 
 	// ミップマップの作成
 	DirectX::ScratchImage mipImages{};
 	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
 	if (FAILED(hr)) {
-		throw std::runtime_error("Failed to generate mipmaps for texture: " + filePath);
+		throw std::runtime_error("Failed to generate mipmaps for texture with key: " + key + ", from file: " + filePath);
 	}
 
 	// ミップマップのデータを返す

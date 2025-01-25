@@ -1,7 +1,6 @@
 #pragma once
 /// ===Include=== ///
 #include "application/Manager/CameraManager.h"
-#include "application/Load/AssetLoader.h"
 #include "application/Audio/Audio.h"
 
 /// ===前方宣言=== ///
@@ -30,8 +29,6 @@ protected:
 	// Camera
 	std::unique_ptr<Camera> defaultCamera_;
 	std::unique_ptr<CameraManager> cameraManager_;
-	// Load
-	std::unique_ptr<AssetLoader> Loader_;
 	// Audio
 	std::unique_ptr<Audio> audio_;
 };

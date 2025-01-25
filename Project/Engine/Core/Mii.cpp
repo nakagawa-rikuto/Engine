@@ -161,9 +161,13 @@ void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, Blen
 #pragma endregion
 #pragma region Texture関連
 // SRVインデックス開始番号の取得
-void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, filePath); }
+void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, key); }
 // メタデータの取得
-const DirectX::TexMetadata& Mii::GetMetaData(const std::string& filePath) { return textureManager_->GetMetaData(filePath); }
+const DirectX::TexMetadata& Mii::GetMetaData(const std::string& key) { return textureManager_->GetMetaData(key); }
+#pragma endregion
+#pragma region Model関連
+// モデルデータの取得
+ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
 #pragma endregion
 
 
@@ -184,14 +188,6 @@ LONG Mii::GetMouseDeltaScroll() { return input_->GetMouseDeltaScroll(); }
 /// ===コントローラー=== ///
 bool Mii::PushController(int deviceIndex, int buttonIndex) { return input_->PushButton(deviceIndex, buttonIndex); }
 bool Mii::TriggerController(int deviceIndex, int buttonIndex) { return input_->TriggerButton(deviceIndex, buttonIndex); }
-#pragma endregion
-#pragma region Texture関連
-// テクスチャ読み込み
-void Mii::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
-#pragma endregion
-#pragma region Model関連
-// モデルデータの取得
-ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
 #pragma endregion
 
 

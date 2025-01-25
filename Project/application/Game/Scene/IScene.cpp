@@ -17,10 +17,6 @@ void IScene::Initialize() {
 	/// ===Audio=== ///
 	audio_ = std::make_unique<Audio>();
 	audio_->Initialze(Mii::GetAudioManager());
-
-	/// ===Loadの生成=== ///
-	Loader_ = std::make_unique<AssetLoader>();
-	Loader_->Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager());
 }
 
 ///-------------------------------------------/// 
