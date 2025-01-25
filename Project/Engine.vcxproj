@@ -198,6 +198,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Material3D.h" />
     <ClInclude Include="Engine\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Game\Scene\IScene.h" />
+    <ClInclude Include="Engine\Scene\SceneType.h" />
     <ClInclude Include="Engine\Service\Loader.h" />
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="Math\MathData.h" />

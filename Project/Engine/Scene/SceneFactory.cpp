@@ -11,24 +11,24 @@
 ///-------------------------------------------/// 
 /// シーン生成
 ///-------------------------------------------///
-std::unique_ptr<IScene> SceneFactory::CreateScene(const std::string& sceneName) {
+std::unique_ptr<IScene> SceneFactory::CreateScene(SceneType type) {
 	/// ===シーンの判断=== ///
-	if (sceneName == "Title") {
+	if (type == SceneType::Title) {
 		// タイトルシーン
 		return std::make_unique<TitleScene>();
-	} else if (sceneName == "Select") {
+	} else if (type == SceneType::Select) {
 		// セレクトシーン
 		return std::make_unique<SelectScene>();
-	} else if (sceneName == "Game") {
+	} else if (type == SceneType::Game) {
 		//　ゲームシーン
 		return std::make_unique<GameScene>();
-	} else if (sceneName == "Clear") {
+	} else if (type == SceneType::Clear) {
 		//　クリアシーン
 		return std::make_unique<ClearScene>();
-	} else if (sceneName == "GameOver") {
+	} else if (type == SceneType::GameOver) {
 		//　ゲームオーバー
 		return std::make_unique<GameOverScene>();
-	} else if (sceneName == "Debug") {
+	} else if (type == SceneType::Debug) {
 		// デバッグ
 		return std::make_unique<DebugScene>();
 	}

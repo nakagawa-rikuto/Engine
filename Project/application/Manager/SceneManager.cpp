@@ -56,12 +56,12 @@ void SceneManager::Draw() {
 ///-------------------------------------------/// 
 /// シーン変更
 ///-------------------------------------------///
-void SceneManager::ChangeScene(const std::string& sceneName) {
+void SceneManager::ChangeScene(SceneType type) {
 	// 現在のシーンを更新
-	currentSceneName_ = sceneName;
+	currentSceneType_ = type;
 	// 新しいシーンを生成
 	if (currentScene_) { currentScene_.reset(); }
-	currentScene_ = sceneFactory_->CreateScene(currentSceneName_);
+	currentScene_ = sceneFactory_->CreateScene(currentSceneType_);
 	// 新しいシーンにSceneManagerをセット
 	if (currentScene_) {
 		currentScene_->SetSceneManager(this);
@@ -86,28 +86,28 @@ void SceneManager::SceneObservation() {
 	/// ===シーン変更用のドロップダウンメニュー=== ///
 	if (ImGui::BeginCombo("Select Scene", "Change Scene")) {
 		///タイトルシーン
-		if (ImGui::Selectable("Title Scene", currentSceneName_ == "Title")) {
-			ChangeScene("Title");
+		if (ImGui::Selectable("Title Scene", currentSceneType_ == SceneType::Title)) {
+			ChangeScene(SceneType::Title);
 		}
 		///セレクトシーン
-		if (ImGui::Selectable("Select Scene", currentSceneName_ == "Select")) {
-			ChangeScene("Select");
+		if (ImGui::Selectable("Select Scene", currentSceneType_ == SceneType::Select)) {
+			ChangeScene(SceneType::Select);
 		}
 		///ゲームシーン
-		if (ImGui::Selectable("Game Scene", currentSceneName_ == "Game")) {
-			ChangeScene("Game");
+		if (ImGui::Selectable("Game Scene", currentSceneType_ == SceneType::Game)) {
+			ChangeScene(SceneType::Game);
 		}
 		///クリアシーン
-		if (ImGui::Selectable("Clear Scene", currentSceneName_ == "Clear")) {
-			ChangeScene("Clear");
+		if (ImGui::Selectable("Clear Scene", currentSceneType_ == SceneType::Clear)) {
+			ChangeScene(SceneType::Clear);
 		}
 		///ゲームオーバー
-		if (ImGui::Selectable("GameOver Scene", currentSceneName_ == "GameOver")) {
-			ChangeScene("GameOver");
+		if (ImGui::Selectable("GameOver Scene", currentSceneType_ == SceneType::GameOver)) {
+			ChangeScene(SceneType::GameOver);
 		}
 		///デバッグシーン
-		if (ImGui::Selectable("Debug Scene", currentSceneName_ == "Debug")) {
-			ChangeScene("Debug");
+		if (ImGui::Selectable("Debug Scene", currentSceneType_ == SceneType::Debug)) {
+			ChangeScene(SceneType::Debug);
 		}
 		ImGui::EndCombo();
 	}

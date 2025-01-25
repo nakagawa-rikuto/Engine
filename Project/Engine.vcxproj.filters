@@ -162,6 +162,7 @@
     <ClInclude Include="application\Particle\WindEmitter.h" />
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
+    <ClInclude Include="Engine\Scene\SceneType.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

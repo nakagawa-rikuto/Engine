@@ -29,7 +29,7 @@ public:/// ===基本的な関数=== ///
 public:/// ===シーン処理=== ///
 
 	// シーンの変更
-	void ChangeScene(const std::string& sceneName);
+	void ChangeScene(SceneType type);
 	// シーン監視
 	void SceneObservation();
 	// レベル番号の設定
@@ -44,7 +44,7 @@ private:
 	AbstractSceneFactory* sceneFactory_ = nullptr;
 
 	// 現在のシーン
-	std::string currentSceneName_ = "Title";  // 初期のシーン
+	SceneType currentSceneType_ = SceneType::Debug; // 初期のシーン
 	std::unique_ptr<IScene> currentScene_; // 現在のシーン
 
 	// 選択されたレベル番号を保持する

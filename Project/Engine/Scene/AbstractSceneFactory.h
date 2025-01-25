@@ -1,6 +1,7 @@
 #pragma once
 /// ===Include=== ///
 #include "application/Game/Scene/IScene.h"
+#include "Engine/Scene/SceneType.h"
 #include <memory>
 #include <string>
 
@@ -12,6 +13,6 @@ public:
 	// 仮想デストラクタ
 	virtual ~AbstractSceneFactory() = default;
 	// シーン生成
-	virtual std::unique_ptr<IScene> CreateScene(const std::string& sceneName) = 0;
+	virtual std::unique_ptr<IScene> CreateScene(SceneType type) = 0;
 };
 
