@@ -90,12 +90,14 @@ PixlShaderOutput main(VertexShaderOutput input)
         float distance = 0.0f;
         float factor = 0.0f;
         float3 reflectLight = { 0.0f, 0.0f, 0.0f };
+        // 鏡面、拡散反射
         float3 diffuseDirectionalLight = { 0.0f, 0.0f, 0.0f };
         float3 specularDirectionalLight = { 0.0f, 0.0f, 0.0f };
         float3 diffusePointLight = { 0.0f, 0.0f, 0.0f };
         float3 specularPointLight = { 0.0f, 0.0f, 0.0f };
         float3 diffuseSpotLight = { 0.0f, 0.0f, 0.0f };
         float3 specularSpotLight = { 0.0f, 0.0f, 0.0f };
+        // normal
         float3 normal = normalize(input.normal);
         if (gMaterial.enableLighting == 1)/* Lambert */
         {
