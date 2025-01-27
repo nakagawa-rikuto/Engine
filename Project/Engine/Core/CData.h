@@ -83,4 +83,10 @@ struct DirectionalLight {
 struct CameraForGPU {
 	Vector3 worldPosition;
 };
+/// ===ポイントライト=== ///
+struct PointLight {
+	Vector4 color;
+	Vector3 position;
+	float intensity;
+};
 #pragma endregion

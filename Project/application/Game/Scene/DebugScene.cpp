@@ -47,6 +47,7 @@ void DebugScene::Initialize() {
 
 	// モデルの読み込み
 	Loader::LoadModel("MonsterBall");
+	Loader::LoadModel("terrain");
 	Loader::LoadModel("axis");
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
@@ -70,6 +71,8 @@ void DebugScene::Initialize() {
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
 	model_->Initialize("MonsterBall", LightType::HalfLambert);          // 初期化(const std::string& modelNameが必須)
+	model2_ = std::make_unique<Model>();
+	model2_->Initialize("terrain", LightType::None);
 	/* // モデルの使い方                        
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -383,7 +386,9 @@ void DebugScene::Update() {
 	model_->SetLightIntensity(lightIntensity_);
 	model_->SetLightShininess(lightShininess_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
+	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
+	model2_->Update();
 #pragma endregion
 
 	/// ===Particle=== ///
@@ -413,6 +418,7 @@ void DebugScene::Draw() {
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+		model2_->Draw();
 	}
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {

@@ -30,23 +30,27 @@ public:/// ===Setter=== ///
 	void SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform);
 	// ワールドトランスフォーム
 	void SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World, const Matrix4x4& WorldInverseTranspose);
-	// Light
+	// DirectionalLight
 	void SetDirectionLight(const Vector4& color, const Vector3& direction, const float& intensity);
 	// CameraForGPU
 	void SetCameraForGPU(const Vector3& translate);
+	// PointLight
+	void SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity);
 
 private:/// ===Variables(変数)=== ///
 
 	// バッファリソース
 	std::unique_ptr<Material3D> material_;
 	std::unique_ptr<Transform3D> wvp_;
-	std::unique_ptr<Light> light_;
+	std::unique_ptr<Light> directionallight_;
 	std::unique_ptr<Camera3D> camera3D_;
+	std::unique_ptr<Light> pointLight_;
 
 	// バッファリソース内のデータを指すポインタ
 	MaterialData3D* materialData_ = nullptr;
 	TransformationMatrix3D* wvpMatrixData_ = nullptr;
 	DirectionalLight* directionalLightData_ = nullptr;
 	CameraForGPU* cameraForGPUData_ = nullptr;
+	PointLight* pointLightData_ = nullptr;
 };
 

@@ -19,10 +19,18 @@ struct Camera
 {
     float3 worldPosition; // カメラの位置
 };
+// PointLight
+struct PointLight
+{
+    float4 color;
+    float3 position;
+    float intensity;
+};
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
+ConstantBuffer<PointLight> gPointLight : register(b3);
 
 struct PixlShaderOutput
 {
@@ -47,18 +55,11 @@ PixlShaderOutput main(VertexShaderOutput input)
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
     // カメラへの方向を算出
     float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+    // 入射光を計算
+    float3 pointLightDirection = normalize(input.worldPosition - gPointLight.position);
     
-    // textureのa値が0.5以下の時にPixelを棄却
-    if (textureColor.a <= 0.5f)
-    {
-        discard;
-    }
+    output.color = gMaterial.color * textureColor;
     // textureのa値が0の時にPixelを棄却
-    if (textureColor.a == 0.0f)
-    {
-        discard;
-    }
-    // output.colorのa値が0の時にPixelを棄却
     if (output.color.a == 0.0f)
     {
         discard;
@@ -104,10 +105,6 @@ PixlShaderOutput main(VertexShaderOutput input)
         
         //// 今までの処理
         //output.color = gMaterial.color * textureColor * gDirectionalLight.color * diffuseFactor * gDirectionalLight.intensity;
-    }
-    else // Lightingしない場合
-    { 
-        output.color = gMaterial.color * textureColor;
     }
     
     return output;

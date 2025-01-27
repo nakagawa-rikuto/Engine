@@ -64,6 +64,7 @@ private:/// ===メンバ変数=== ///
 	std::shared_ptr<Camera> camera2_;
 	// モデル
 	std::unique_ptr<Model> model_;
+	std::unique_ptr<Model> model2_;
 	// Particle
 	std::shared_ptr<WindEmitter> windParticle_;
 	std::shared_ptr<ExplosionEmitter> explosionParticle_;
@@ -87,7 +88,7 @@ private:/// ===メンバ変数=== ///
 	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float lightShininess_ = 48.5f;
 	// カメラ
-	Vector3 cameraPos = { 0.0f, 0.0f, -10.0f };  
+	Vector3 cameraPos = { 0.0f, 1.0f, -10.0f };  
 	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f };
 	bool SetCamera = false;
 	// Audio

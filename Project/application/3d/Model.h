@@ -62,6 +62,12 @@ public: /// ===Setter=== ///
 	void SetLightColor(const Vector4& color);
 	// Lightの光沢度
 	void SetLightShininess(const float& shininess);
+	// pointLightの位置
+	void SetPointLightPosition(const Vector3& position);
+	// pointLightのカラー
+	void SetPointLightColor(const Vector4& color);
+	// pointLightの明るさ
+	void SetPointLight(const float& intensity);
 	// カメラ
 	void SetCamera(Camera* camera);
 
@@ -90,11 +96,15 @@ private: /// ===Variables(変数)=== ///
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
-	bool isLighting_ = false;
+	float shininess_ = 0.27f;
+	// DirctionalLight
 	Vector3 lightDirection_ = { 0.0f, -1.0f, 0.0f };
 	float lightIntensity_ = 1.0f;
 	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float shininess_ = 0.27f;
+	// PointLight
+	Vector3 pointLightPosition_ = { 0.0f, 2.0f, 0.0f };
+	Vector4 pointLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float pointLightIntensity_ = 1.0f;
 
 private: /// ===Functions(関数)=== ///
 

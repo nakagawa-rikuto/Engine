@@ -6,6 +6,7 @@
 enum class LightType {
 	Lambert,
 	HalfLambert,
+	PointLight,
 	None
 };
 
@@ -32,6 +33,4 @@ public:/// ===Getter=== ///
 private:/// ===Variables(変数)=== ///
 
 	ComPtr<ID3D12Resource> buffer_;
-
-	DirectionalLight* Data_;
 };
