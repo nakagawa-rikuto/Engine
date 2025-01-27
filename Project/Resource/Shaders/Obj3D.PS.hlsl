@@ -87,6 +87,8 @@ PixlShaderOutput main(VertexShaderOutput input)
         float diffuseFactor = 0.0f;
         float specularPow = 0.0f;
         float RdotE = 0.0f;
+        float distance = 0.0f;
+        float factor = 0.0f;
         float3 reflectLight = { 0.0f, 0.0f, 0.0f };
         float3 diffuseDirectionalLight = { 0.0f, 0.0f, 0.0f };
         float3 specularDirectionalLight = { 0.0f, 0.0f, 0.0f };
@@ -128,8 +130,8 @@ PixlShaderOutput main(VertexShaderOutput input)
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
             // 距離による減衰 (1 / 距離の2乗)
-            float distance = length(gPointLight.position - input.worldPosition);  // ポイントライトへの距離
-            float factor = pow(saturate(-distance / gPointLight.radius + 1.0f), gPointLight.decay);  // 指数によるコントロール
+            distance = length(gPointLight.position - input.worldPosition);  // ポイントライトへの距離
+            factor = pow(saturate(-distance / gPointLight.radius + 1.0f), gPointLight.decay);  // 指数によるコントロール
             diffusePointLight = 
             gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * diffuseFactor * gPointLight.intensity * factor;
             specularPointLight = 
@@ -143,13 +145,16 @@ PixlShaderOutput main(VertexShaderOutput input)
               // 内積の計算 
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
+            // 距離による減衰
+            distance = length(gSpotLight.position - input.worldPosition); // スポットライトへの距離
+            factor = pow(saturate(-distance / gSpotLight.distance + 1.0f), gSpotLight.decay); // 減衰率による影響
             // Falloff(フォールオフ)を追加する
             float cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
             float falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0f - gSpotLight.cosAngle));
             diffuseSpotLight = 
-            gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * diffuseFactor * gSpotLight.intensity * falloffFactor;
+            gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * diffuseFactor * gSpotLight.intensity * factor * falloffFactor;
             specularSpotLight = 
-            gSpotLight.color.rgb * gSpotLight.intensity * specularPow * falloffFactor;
+            gSpotLight.color.rgb * gSpotLight.intensity * specularPow * factor * falloffFactor;
         }
         
         // 拡散反射
