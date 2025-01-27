@@ -9,6 +9,8 @@
 #include "application/Particle/ExplosionEmitter.h"
 #include "application/Particle/ConfettiEmitter.h"
 
+#include <numbers>
+
 ///=====================================================/// 
 /// ゲームシーン
 ///=====================================================///
@@ -64,6 +66,7 @@ private:/// ===メンバ変数=== ///
 	std::shared_ptr<Camera> camera2_;
 	// モデル
 	std::unique_ptr<Model> model_;
+	std::unique_ptr<Model> model2_;
 	// Particle
 	std::shared_ptr<WindEmitter> windParticle_;
 	std::shared_ptr<ExplosionEmitter> explosionParticle_;
@@ -82,13 +85,16 @@ private:/// ===メンバ変数=== ///
 	Vector2 spriteSize_ = { 100.0f, 100.0f };
 	Vector4 spriteColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// ライト
-	Vector3 lightDirection_ = { 0.0f, 1.0f, 0.0f };
-	float lightIntensity_ = 1.0f;
-	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float lightShininess_ = 48.5f;
+	LightInfo light_ = { 48.5f };
+	// Directional
+	DirectionalLightInfo directional_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 1.0f, 0.0f } , 1.0f };
+	// point
+	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 2.0f, 0.0f } , 1.0f, 10.0f, 1.0f };
+	// spotLight
+	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize({ -1.0f, -1.0f, 0.0f }) , 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f) };
 	// カメラ
-	Vector3 cameraPos = { 0.0f, 0.0f, -10.0f };  
-	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f };
+	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };  
+	Vector3 cameraRotate = { 0.1f, 0.0f, 0.0f };
 	bool SetCamera = false;
 	// Audio
 	bool playAudio = false;
@@ -102,4 +108,3 @@ private:/// ===メンバ変数=== ///
 	bool start_ = false;
 	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
 };
-

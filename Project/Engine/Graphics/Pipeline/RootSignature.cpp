@@ -92,7 +92,7 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
 		/// ===RootParameterの生成=== ///
-		D3D12_ROOT_PARAMETER rootParameters[5] = {};
+		D3D12_ROOT_PARAMETER rootParameters[7] = {};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使用
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使用
 		rootParameters[0].Descriptor.ShaderRegister = 0; // レジスタ番号0を使用
@@ -113,6 +113,14 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[4].Descriptor.ShaderRegister = 2; // レジスタ番号2を使用
+
+		rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[5].Descriptor.ShaderRegister = 3; // レジスタ番号3を使用
+
+		rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[6].Descriptor.ShaderRegister = 4; // レジスタ番号4を使用
 
 		descriptionRootSignatureObj3D.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
 		descriptionRootSignatureObj3D.NumParameters = _countof(rootParameters); // 配列の高さ

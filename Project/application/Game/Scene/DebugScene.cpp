@@ -47,6 +47,7 @@ void DebugScene::Initialize() {
 
 	// モデルの読み込み
 	Loader::LoadModel("MonsterBall");
+	Loader::LoadModel("terrain");
 	Loader::LoadModel("axis");
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
@@ -69,7 +70,9 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall", LightType::HalfLambert);          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall", LightType::SpotLight);          // 初期化(const std::string& modelNameが必須)
+	model2_ = std::make_unique<Model>();
+	model2_->Initialize("terrain", LightType::SpotLight);
 	/* // モデルの使い方                        
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -102,9 +105,6 @@ void DebugScene::Initialize() {
 
 	/// ===ライト=== ///
 #pragma region Lightの情報
-	lightDirection_ = { 0.0f, -1.0f, 0.0f };
-	lightIntensity_ = 1.0f;
-	lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 #pragma endregion
 
 	/// ===音=== ///
@@ -202,10 +202,26 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
 			// Light
-			ImGui::DragFloat3("LightDirection", &lightDirection_.x, 0.01f);
-			ImGui::DragFloat("lightIntensity", &lightIntensity_, 0.01f);
-			ImGui::DragFloat("LightShininess", &lightShininess_, 0.01f);
-			ImGui::ColorEdit4("LigthColor", &lightColor_.x);
+			ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
+
+			ImGui::ColorEdit4("LigthColor", &directional_.color.x);
+			ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
+			ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
+			
+			ImGui::ColorEdit4("pointLightColor", &point_.color.x);
+			ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
+			ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
+			ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
+			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
+			
+			ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
+			ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
+			ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
+			ImGui::DragFloat3("SpotLightDirection", &spot_.direction.x, 0.01f);
+			ImGui::DragFloat("SpotLightDistance", &spot_.distance, 0.01f);
+			ImGui::DragFloat("SpotLightDecay", &spot_.decay, 0.01f);
+			ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);
+			
 		}
 	}
 	/// ===Particle1=== ///
@@ -374,16 +390,19 @@ void DebugScene::Update() {
 		modelRotate_.x += 0.1f;
 		modelRotate_.z -= 0.1f;
 	}
-	model_->SetPosition(modelTranslate_);
-	model_->SetRotate(modelRotate_);
-	model_->SetScale(modelScale_);
+	model_->SetTransform(modelTranslate_, modelRotate_, modelScale_);
 	model_->SetColor(modelColor_);
-	model_->SetLightColor(lightColor_);
-	model_->SetLightDirection(lightDirection_);
-	model_->SetLightIntensity(lightIntensity_);
-	model_->SetLightShininess(lightShininess_);
+	model_->SetShininess(light_);
+	model_->SetDirctionalLightData(directional_);
+	model2_->SetDirctionalLightData(directional_);
+	model_->SetPointLightData(point_);
+	model2_->SetPointLightData(point_);
+	model_->SetSpotLightData(spot_);
+	model2_->SetSpotLightData(spot_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
+	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
+	model2_->Update();
 #pragma endregion
 
 	/// ===Particle=== ///
@@ -413,6 +432,7 @@ void DebugScene::Draw() {
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+		model2_->Draw();
 	}
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {

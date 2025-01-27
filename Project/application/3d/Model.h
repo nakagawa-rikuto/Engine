@@ -36,32 +36,20 @@ public: /// ===Getter=== ///
 	const Vector3& GetScale() const;
 	// モデルカラー
 	const Vector4& GetColor() const;
-	// Lightの向き
-	const Vector3& GetLightDirection() const;
-	// Lightの明るさ
-	const float& GetLightIntensity() const;
-	// LIghtのカラー
-	const Vector4& GetLightColor() const;
-	// Lightの光沢度
-	const float& GetShininess() const;
 
 public: /// ===Setter=== ///
 	// モデル座標
-	void SetPosition(const Vector3& postion);
-	// モデル回転
-	void SetRotate(const Vector3 & rotate);
-	// モデル拡縮
-	void SetScale(const Vector3& scale);
+	void SetTransform(const Vector3& postion, const Vector3& rotate, const Vector3& scale);
 	// モデルカラー
 	void SetColor(const Vector4& color);
-	// Lightの向き
-	void SetLightDirection(const Vector3& direction);
-	// Lightの明るさ
-	void SetLightIntensity(const float& intensity);
-	// Lightのカラー
-	void SetLightColor(const Vector4& color);
 	// Lightの光沢度
-	void SetLightShininess(const float& shininess);
+	void SetShininess(LightInfo info);
+	// DirectionalLight
+	void SetDirctionalLightData(DirectionalLightInfo info);
+	// pointLight
+	void SetPointLightData(PointLightInfo info);
+	// SpotLight
+	void SetSpotLightData(SpotLightInfo info);
 	// カメラ
 	void SetCamera(Camera* camera);
 
@@ -90,11 +78,13 @@ private: /// ===Variables(変数)=== ///
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
-	bool isLighting_ = false;
-	Vector3 lightDirection_ = { 0.0f, -1.0f, 0.0f };
-	float lightIntensity_ = 1.0f;
-	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float shininess_ = 0.27f;
+	LightInfo light_ = { 40.0f };
+	// DirctionalLight
+	DirectionalLightInfo directional_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f };
+	// PointLight
+	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f };
+	// SpotLight
+	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f };
 
 private: /// ===Functions(関数)=== ///
 

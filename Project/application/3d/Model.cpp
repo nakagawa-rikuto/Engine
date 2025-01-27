@@ -28,25 +28,41 @@ const Vector3& Model::GetPosition() const { return worldTransform_.translate; }
 const Vector3& Model::GetRotate() const { return worldTransform_.rotate; }
 const Vector3& Model::GetScale() const { return worldTransform_.scale; }
 const Vector4& Model::GetColor() const { return color_; }
-/// ===ライト=== ///
-const Vector3& Model::GetLightDirection() const { return lightDirection_; }
-const float& Model::GetLightIntensity() const { return lightIntensity_; }
-const Vector4& Model::GetLightColor() const { return lightColor_; }
-const float& Model::GetShininess() const { return shininess_; }
 
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
 /// ===モデル=== ///
-void Model::SetPosition(const Vector3& postion) { worldTransform_.translate = postion; }
-void Model::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
-void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
+void Model::SetTransform(const Vector3& postion, const Vector3& rotate, const Vector3& scale) { 
+	worldTransform_.translate = postion; 
+	worldTransform_.rotate = rotate;
+	worldTransform_.scale = scale;
+}
 void Model::SetColor(const Vector4& color) { color_ = color; }
 /// ===ライト=== ///
-void Model::SetLightDirection(const Vector3& direction) { lightDirection_ = direction; }
-void Model::SetLightIntensity(const float& intensity) { lightIntensity_ = intensity; }
-void Model::SetLightColor(const Vector4& color) { lightColor_ = color; }
-void Model::SetLightShininess(const float& shininess) { shininess_ = shininess; }
+void Model::SetShininess(LightInfo info) { light_.shininess = info.shininess; }
+void Model::SetDirctionalLightData(DirectionalLightInfo info) { 
+	directional_.direction = info.direction; 
+	directional_.intensity = info.intensity;
+	directional_.color = info.color;
+}
+void Model::SetPointLightData(PointLightInfo info) {
+	point_.position= info.position;
+	point_.intensity = info.intensity;
+	point_.color = info.color;
+	point_.radius = info.radius;
+	point_.decay = info.decay;
+}
+void Model::SetSpotLightData(SpotLightInfo info) {
+	spot_.color = info.color;
+	spot_.position = info.position;
+	spot_.direction = info.direction;
+	spot_.intensity = info.intensity;
+	spot_.distance = info.distance;
+	spot_.decay = info.decay;
+	spot_.cosAngle = info.cosAngle;
+
+}
 /// ===カメラ=== ///
 void Model::SetCamera(Camera* camera) { camera_ = camera; }
 
@@ -130,7 +146,7 @@ void Model::MateialDataWrite() {
 	/// ===値の代入=== ///
 	common_->SetMatiarlData(
 		color_,
-		shininess_,
+		light_.shininess,
 		uvTransformMatrixMultiply
 	);
 }
@@ -165,9 +181,25 @@ void Model::TransformDataWrite() {
 ///-------------------------------------------///
 void Model::LightDataWrite() {
 	common_->SetDirectionLight(
-		lightColor_,
-		lightDirection_,
-		lightIntensity_
+		directional_.color,
+		directional_.direction,
+		directional_.intensity
+	);
+	common_->SetPointLightData(
+		point_.color,
+		point_.position,
+		point_.intensity,
+		point_.radius,
+		point_.decay
+	);
+	common_->SetSpotLightData(
+		spot_.color,
+		spot_.position,
+		spot_.direction,
+		spot_.intensity,
+		spot_.distance,
+		spot_.decay,
+		spot_.cosAngle
 	);
 }
 
