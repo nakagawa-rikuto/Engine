@@ -87,9 +87,12 @@ private:/// ===メンバ変数=== ///
 	float lightIntensity_ = 1.0f;
 	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float lightShininess_ = 48.5f;
+	Vector3 pointLightPosition_ = { 0.0f, 2.0f, 0.0f };
+	Vector4 pointLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float pointLightIntensity_ = 1.0f;
 	// カメラ
-	Vector3 cameraPos = { 0.0f, 1.0f, -10.0f };  
-	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f };
+	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };  
+	Vector3 cameraRotate = { 0.1f, 0.0f, 0.0f };
 	bool SetCamera = false;
 	// Audio
 	bool playAudio = false;

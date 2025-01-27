@@ -67,7 +67,7 @@ public: /// ===Setter=== ///
 	// pointLightのカラー
 	void SetPointLightColor(const Vector4& color);
 	// pointLightの明るさ
-	void SetPointLight(const float& intensity);
+	void SetPointLightIntensity(const float& intensity);
 	// カメラ
 	void SetCamera(Camera* camera);
 

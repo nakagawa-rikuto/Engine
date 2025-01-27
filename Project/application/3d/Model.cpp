@@ -49,7 +49,7 @@ void Model::SetLightColor(const Vector4& color) { lightColor_ = color; }
 void Model::SetLightShininess(const float& shininess) { shininess_ = shininess; }
 void Model::SetPointLightPosition(const Vector3& position) { pointLightPosition_ = position; }
 void Model::SetPointLightColor(const Vector4& color) { pointLightColor_ = color; }
-void Model::SetPointLight(const float& intensity) { pointLightIntensity_ = intensity; }
+void Model::SetPointLightIntensity(const float& intensity) { pointLightIntensity_ = intensity; }
 /// ===カメラ=== ///
 void Model::SetCamera(Camera* camera) { camera_ = camera; }
 

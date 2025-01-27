@@ -71,40 +71,62 @@ PixlShaderOutput main(VertexShaderOutput input)
        // diffuseFactorの宣言
         float diffuseFactor = 0.0f;
         float specularPow = 0.0f;
-        
-        if (gMaterial.enableLighting == 1)
+        float RdotE = 0.0f;
+        float3 reflectLight = { 0.0f, 0.0f, 0.0f };
+        float3 diffuseDirectionalLight = { 0.0f, 0.0f, 0.0f };
+        float3 specularDirectionalLight = { 0.0f, 0.0f, 0.0f };
+        float3 diffusePointLight = { 0.0f, 0.0f, 0.0f };
+        float3 specularPointLight = { 0.0f, 0.0f, 0.0f };
+        float3 normal = normalize(input.normal);
+        if (gMaterial.enableLighting == 1)/* Lambert */
         {
-            /* Lambert */
-            diffuseFactor = saturate(dot(normalize(input.normal), -gDirectionalLight.direction));
+            diffuseFactor = saturate(dot(normal, -gDirectionalLight.direction));
             // 入射光の反射ベクトル
-            float3 reflectLight = reflect(normalize(gDirectionalLight.direction), normalize(input.normal));
+            reflectLight = reflect(normalize(gDirectionalLight.direction), normal);
             // 内積の計算
-            float RdotE = dot(reflectLight, toEye);
+            RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
+            diffuseDirectionalLight = 
+            gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
+            specularDirectionalLight = 
+            gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f); // 物体の鏡面反射色は白。
         }
-        else if (gMaterial.enableLighting == 2)
+        else if (gMaterial.enableLighting == 2)/* Half Lambert */
         {
-            /* Half Lambert */
             float3 halfVector = normalize(-gDirectionalLight.direction + toEye);
-            float NdotH = dot(normalize(input.normal), halfVector);
+            float NdotH = dot(normal, halfVector);
             diffuseFactor = pow(NdotH * 0.5f + 0.5f, 2.0f);
             specularPow = pow(saturate(NdotH), gMaterial.shininess);
-            
+            diffuseDirectionalLight = 
+            gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
+            specularDirectionalLight = 
+            gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f); // 物体の鏡面反射色は白。
+        }
+        else if (gMaterial.enableLighting == 3)/* PointLight */
+        {
+            diffuseFactor = saturate(dot(normal, -pointLightDirection));
+            // 入射光の反射ベクトル
+            reflectLight = reflect(-pointLightDirection, normal);
+            // 内積の計算 
+            RdotE = dot(reflectLight, toEye);
+            RdotE = saturate(dot(reflectLight, toEye));
+            // 距離による減衰 (1 / 距離の2乗)
+            float distance = length(gPointLight.position - input.worldPosition);
+            float attenuation = 1.0f / (distance * distance);
+            diffusePointLight = 
+            gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * diffuseFactor * gPointLight.intensity * attenuation;
+            specularPointLight = 
+            gPointLight.color.rgb * gPointLight.intensity * specularPow * attenuation;
         }
         
         // 拡散反射
-        float3 diffuse = 
-        gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
+        float3 diffuse = diffuseDirectionalLight + diffusePointLight;
         // 鏡面反射
-        float3 specular = 
-        gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float3(1.0f, 1.0f, 1.0f); // 物体の鏡面反射色は白。
+        float3 specular = specularDirectionalLight + specularPointLight;
         // 拡散反射・鏡面反射
         output.color.rgb = saturate(diffuse + specular);
         // アルファ今まで通り
         output.color.a = gMaterial.color.a * textureColor.a;
-        
-        //// 今までの処理
-        //output.color = gMaterial.color * textureColor * gDirectionalLight.color * diffuseFactor * gDirectionalLight.intensity;
     }
     
     return output;
