@@ -48,6 +48,8 @@ public: /// ===Setter=== ///
 	void SetDirctionalLightData(const Vector3& direction, const float& intensity, const Vector4& color);
 	// pointLight
 	void SetPointLightData(const Vector3& position, const float& intensity, const Vector4& color, const float& radius, const float& decay);
+	// SpotLight
+	void SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle);
 	// カメラ
 	void SetCamera(Camera* camera);
 
@@ -82,11 +84,19 @@ private: /// ===Variables(変数)=== ///
 	float lightIntensity_ = 1.0f;
 	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// PointLight
-	Vector3 pointLightPosition_ = { 0.0f, 2.0f, 0.0f };
+	Vector3 pointLightPosition_ = { 0.0f, 0.0f, 0.0f };
 	Vector4 pointLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float pointLightIntensity_ = 1.0f;
 	float pointLightRadius_ = 0.0f;
 	float pointLightdecay_ = 0.0f;
+	// SpotLight
+	Vector3 spotLightPosition_ = { 0.0f, 0.0f, 0.0f };
+	Vector3 spotLightDirection_ = { 0.0f, 0.0f, 0.0f };
+	Vector4 spotLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float spotLightDistance_ = 0.0f;
+	float spotLightintensity_ = 0.0f;
+	float spotLightDecay_ = 0.0f;
+	float spotLightCosAngle = 0.0f;
 
 private: /// ===Functions(関数)=== ///
 

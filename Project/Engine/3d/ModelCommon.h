@@ -36,6 +36,8 @@ public:/// ===Setter=== ///
 	void SetCameraForGPU(const Vector3& translate);
 	// PointLight
 	void SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay);
+	// SpotLight
+	void SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle);
 
 private:/// ===Variables(変数)=== ///
 
@@ -45,6 +47,7 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<Light> directionallight_;
 	std::unique_ptr<Camera3D> camera3D_;
 	std::unique_ptr<Light> pointLight_;
+	std::unique_ptr<Light> spotLight_;
 
 	// バッファリソース内のデータを指すポインタ
 	MaterialData3D* materialData_ = nullptr;
@@ -52,5 +55,6 @@ private:/// ===Variables(変数)=== ///
 	DirectionalLight* directionalLightData_ = nullptr;
 	CameraForGPU* cameraForGPUData_ = nullptr;
 	PointLight* pointLightData_ = nullptr;
+	SpotLight* spotLightData_ = nullptr;
 };
 

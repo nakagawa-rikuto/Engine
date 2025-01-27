@@ -7,6 +7,7 @@ enum class LightType {
 	Lambert,
 	HalfLambert,
 	PointLight,
+	SpotLight,
 	None
 };
 

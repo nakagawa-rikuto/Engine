@@ -47,6 +47,16 @@ void ModelCommon::SetPointLightData(const Vector4& color, const Vector3& positio
 	pointLightData_->radius = radius;
 	pointLightData_->decay = decay;
 }
+// SpotLight
+void ModelCommon::SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle) {
+	spotLightData_->color = color;
+	spotLightData_->position = position;
+	spotLightData_->direction = direction;
+	spotLightData_->intensity = intensity;
+	spotLightData_->distance = distance;
+	spotLightData_->decay = decay;
+	spotLightData_->cosAngle = cosAngle;
+}
 
 
 ///-------------------------------------------/// 
@@ -60,6 +70,7 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 	directionallight_ = std::make_unique<Light>();
 	camera3D_ = std::make_unique<Camera3D>();
 	pointLight_ = std::make_unique<Light>();
+	spotLight_ = std::make_unique<Light>();
 
 	/// ===Material=== ///
 	// buffer
@@ -73,6 +84,8 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 		materialData_->enableLighting = 2;
 	} else if (type == LightType::PointLight) {
 		materialData_->enableLighting = 3;
+	} else if (type == LightType::SpotLight) {
+		materialData_->enableLighting = 4;
 	} else {
 		materialData_->enableLighting = 0;
 	}
@@ -104,8 +117,19 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 	pointLight_->Create(device, sizeof(PointLight));
 	pointLight_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData_));
 	pointLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	pointLightData_->position = { 0.0f, 2.0f, 0.0f };
+	pointLightData_->position = { 0.0f, 0.0f, 0.0f };
 	pointLightData_->intensity = 1.0f;
+
+	/// ===SpotLight=== ///
+	spotLight_->Create(device, sizeof(SpotLight));
+	spotLight_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData_));
+	spotLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	spotLightData_->position = { 0.0f, 0.0f, 0.0f };
+	spotLightData_->intensity = 1.0f;
+	spotLightData_->direction = { 0.0f, 0.0f, 0.0f };
+	spotLightData_->distance = 0.0f;
+	spotLightData_->decay = 0.0f;
+	spotLightData_->cosAngle = 0.0f;
 }
 
 
@@ -125,4 +149,6 @@ void ModelCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 	commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
 	// PointLight
 	commandList->SetGraphicsRootConstantBufferView(5, pointLight_->GetBuffer()->GetGPUVirtualAddress());
+	// SpotLight
+	commandList->SetGraphicsRootConstantBufferView(6, spotLight_->GetBuffer()->GetGPUVirtualAddress());
 }

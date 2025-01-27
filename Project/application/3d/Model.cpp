@@ -53,6 +53,9 @@ void Model::SetPointLightData(const Vector3& position, const float& intensity, c
 	pointLightRadius_ = radius;
 	pointLightdecay_ = decay;
 }
+void Model::SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle) {
+
+}
 /// ===カメラ=== ///
 void Model::SetCamera(Camera* camera) { camera_ = camera; }
 

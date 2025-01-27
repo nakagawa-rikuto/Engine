@@ -70,9 +70,9 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall", LightType::SpotLight);          // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Model>();
-	model2_->Initialize("terrain", LightType::PointLight);
+	model2_->Initialize("terrain", LightType::SpotLight);
 	/* // モデルの使い方                        
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -205,15 +205,24 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
 			// Light
+			ImGui::ColorEdit4("LigthColor", &lightColor_.x);
 			ImGui::DragFloat3("LightDirection", &lightDirection_.x, 0.01f);
 			ImGui::DragFloat("lightIntensity", &lightIntensity_, 0.01f);
 			ImGui::DragFloat("LightShininess", &lightShininess_, 0.01f);
-			ImGui::ColorEdit4("LigthColor", &lightColor_.x);
+			
+			ImGui::ColorEdit4("pointLightColor", &pointLightColor_.x);
 			ImGui::DragFloat3("pointLightPosition", &pointLightPosition_.x, 0.01f);
 			ImGui::DragFloat("pointLightIntensity", &pointLightIntensity_, 0.01f);
 			ImGui::DragFloat("pointLightRadius", &pointLightRadius_, 0.01f);
 			ImGui::DragFloat("pointLightDecay", &pointLightDecay_, 0.01f);
-			ImGui::ColorEdit4("pointLightColor", &pointLightColor_.x);
+			
+			ImGui::ColorEdit4("SpotLightColor", &spotLightColor_.x);
+			ImGui::DragFloat3("spotLightPosition", &spotLightPosition_.x, 0.01f);
+			ImGui::DragFloat("SpotLightIntensity", &spotLightIntensity_, 0.01f);
+			ImGui::DragFloat3("SpotLightDirection", &spotLightDirection_.x, 0.01f);
+			ImGui::DragFloat("SpotLightDistance", &spotLightDistance_, 0.01f);
+			ImGui::DragFloat("SpotLightDecay", &spotLightDecay_, 0.01f);
+			ImGui::DragFloat("SpotLightCosAngle", &spotLightCosAngle_, 0.01f);
 			
 		}
 	}
@@ -389,6 +398,8 @@ void DebugScene::Update() {
 	model_->SetDirctionalLightData(lightDirection_, lightIntensity_, lightColor_);
 	model_->SetPointLightData(pointLightPosition_, pointLightIntensity_, pointLightColor_, pointLightRadius_, pointLightDecay_);
 	model2_->SetPointLightData(pointLightPosition_, pointLightIntensity_, pointLightColor_, pointLightRadius_, pointLightDecay_);
+	model_->SetSpotLightData(spotLightColor_, spotLightPosition_, spotLightDirection_, spotLightIntensity_, spotLightDistance_, spotLightDecay_, spotLightCosAngle_);
+	model2_->SetSpotLightData(spotLightColor_, spotLightPosition_, spotLightDirection_, spotLightIntensity_, spotLightDistance_, spotLightDecay_, spotLightCosAngle_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
