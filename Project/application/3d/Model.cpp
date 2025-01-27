@@ -28,28 +28,31 @@ const Vector3& Model::GetPosition() const { return worldTransform_.translate; }
 const Vector3& Model::GetRotate() const { return worldTransform_.rotate; }
 const Vector3& Model::GetScale() const { return worldTransform_.scale; }
 const Vector4& Model::GetColor() const { return color_; }
-/// ===ライト=== ///
-const Vector3& Model::GetLightDirection() const { return lightDirection_; }
-const float& Model::GetLightIntensity() const { return lightIntensity_; }
-const Vector4& Model::GetLightColor() const { return lightColor_; }
-const float& Model::GetShininess() const { return shininess_; }
 
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
 /// ===モデル=== ///
-void Model::SetPosition(const Vector3& postion) { worldTransform_.translate = postion; }
-void Model::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
-void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
+void Model::SetTransform(const Vector3& postion, const Vector3& rotate, const Vector3& scale) { 
+	worldTransform_.translate = postion; 
+	worldTransform_.rotate = rotate;
+	worldTransform_.scale = scale;
+}
 void Model::SetColor(const Vector4& color) { color_ = color; }
 /// ===ライト=== ///
-void Model::SetLightDirection(const Vector3& direction) { lightDirection_ = direction; }
-void Model::SetLightIntensity(const float& intensity) { lightIntensity_ = intensity; }
-void Model::SetLightColor(const Vector4& color) { lightColor_ = color; }
-void Model::SetLightShininess(const float& shininess) { shininess_ = shininess; }
-void Model::SetPointLightPosition(const Vector3& position) { pointLightPosition_ = position; }
-void Model::SetPointLightColor(const Vector4& color) { pointLightColor_ = color; }
-void Model::SetPointLightIntensity(const float& intensity) { pointLightIntensity_ = intensity; }
+void Model::SetShininess(const float& shininess) { shininess_ = shininess; }
+void Model::SetDirctionalLightData(const Vector3& direction, const float& intensity, const Vector4& color) { 
+	lightDirection_ = direction; 
+	lightIntensity_ = intensity;
+	lightColor_ = color;
+}
+void Model::SetPointLightData(const Vector3& position, const float& intensity, const Vector4& color, const float& radius, const float& decay) {
+	pointLightPosition_ = position; 
+	pointLightIntensity_ = intensity;
+	pointLightColor_ = color;
+	pointLightRadius_ = radius;
+	pointLightdecay_ = decay;
+}
 /// ===カメラ=== ///
 void Model::SetCamera(Camera* camera) { camera_ = camera; }
 
@@ -175,7 +178,9 @@ void Model::LightDataWrite() {
 	common_->SetPointLightData(
 		pointLightColor_,
 		pointLightPosition_,
-		pointLightIntensity_
+		pointLightIntensity_,
+		pointLightRadius_,
+		pointLightdecay_
 	);
 }
 

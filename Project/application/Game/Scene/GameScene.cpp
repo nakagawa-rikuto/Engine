@@ -55,14 +55,10 @@ void GameScene::Update() {
 #endif // USE_IMGUI
 
 	/// ===モデルの更新=== ///
-	model_->SetPosition(modelTranslate_);
-	model_->SetRotate(modelRotate_);
-	model_->SetScale(modelScale_);
+	model_->SetTransform(modelTranslate_, modelRotate_, modelScale_);
 	model_->SetColor(modelColor_);
-	model_->SetLightColor(lightColor_);
-	model_->SetLightDirection(lightDirection_);
-	model_->SetLightIntensity(lightIntensity_);
-	model_->SetLightShininess(lightShininess_);
+	model_->SetShininess(lightShininess_);
+	model_->SetDirctionalLightData(lightDirection_, lightIntensity_, lightColor_);
 	model_->Update();
 }
 

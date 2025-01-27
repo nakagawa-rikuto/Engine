@@ -211,7 +211,10 @@ void DebugScene::Update() {
 			ImGui::ColorEdit4("LigthColor", &lightColor_.x);
 			ImGui::DragFloat3("pointLightPosition", &pointLightPosition_.x, 0.01f);
 			ImGui::DragFloat("pointLightIntensity", &pointLightIntensity_, 0.01f);
+			ImGui::DragFloat("pointLightRadius", &pointLightRadius_, 0.01f);
+			ImGui::DragFloat("pointLightDecay", &pointLightDecay_, 0.01f);
 			ImGui::ColorEdit4("pointLightColor", &pointLightColor_.x);
+			
 		}
 	}
 	/// ===Particle1=== ///
@@ -380,20 +383,12 @@ void DebugScene::Update() {
 		modelRotate_.x += 0.1f;
 		modelRotate_.z -= 0.1f;
 	}
-	model_->SetPosition(modelTranslate_);
-	model_->SetRotate(modelRotate_);
-	model_->SetScale(modelScale_);
+	model_->SetTransform(modelTranslate_, modelRotate_, modelScale_);
 	model_->SetColor(modelColor_);
-	model_->SetLightColor(lightColor_);
-	model_->SetLightDirection(lightDirection_);
-	model_->SetLightIntensity(lightIntensity_);
-	model_->SetLightShininess(lightShininess_);
-	model_->SetPointLightPosition(pointLightPosition_);
-	model2_->SetPointLightPosition(pointLightPosition_);
-	model_->SetPointLightIntensity(pointLightIntensity_);
-	model2_->SetPointLightIntensity(pointLightIntensity_);
-	model_->SetPointLightColor(pointLightColor_);
-	model2_->SetPointLightColor(pointLightColor_);
+	model_->SetShininess(lightShininess_);
+	model_->SetDirctionalLightData(lightDirection_, lightIntensity_, lightColor_);
+	model_->SetPointLightData(pointLightPosition_, pointLightIntensity_, pointLightColor_, pointLightRadius_, pointLightDecay_);
+	model2_->SetPointLightData(pointLightPosition_, pointLightIntensity_, pointLightColor_, pointLightRadius_, pointLightDecay_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();

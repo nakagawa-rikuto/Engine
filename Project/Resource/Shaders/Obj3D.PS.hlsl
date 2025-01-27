@@ -22,9 +22,11 @@ struct Camera
 // PointLight
 struct PointLight
 {
-    float4 color;
-    float3 position;
-    float intensity;
+    float4 color;    // ライトの色
+    float3 position; // ライトの位置
+    float intensity; // 輝度
+    float radius;    // ライトの届く最大距離
+    float decay;     // 減衰率
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -109,14 +111,14 @@ PixlShaderOutput main(VertexShaderOutput input)
             reflectLight = reflect(-pointLightDirection, normal);
             // 内積の計算 
             RdotE = dot(reflectLight, toEye);
-            RdotE = saturate(dot(reflectLight, toEye));
+            specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
             // 距離による減衰 (1 / 距離の2乗)
-            float distance = length(gPointLight.position - input.worldPosition);
-            float attenuation = 1.0f / (distance * distance);
+            float distance = length(gPointLight.position - input.worldPosition);  // ポイントライトへの距離
+            float factor = pow(saturate(-distance / gPointLight.radius + 1.0f), gPointLight.decay);  // 指数によるコントロール
             diffusePointLight = 
-            gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * diffuseFactor * gPointLight.intensity * attenuation;
+            gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * diffuseFactor * gPointLight.intensity * factor;
             specularPointLight = 
-            gPointLight.color.rgb * gPointLight.intensity * specularPow * attenuation;
+            gPointLight.color.rgb * gPointLight.intensity * specularPow * factor;
         }
         
         // 拡散反射

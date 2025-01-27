@@ -40,10 +40,12 @@ void ModelCommon::SetCameraForGPU(const Vector3& translate) {
 	cameraForGPUData_->worldPosition = translate;
 }
 // PointLight
-void ModelCommon::SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity) {
+void ModelCommon::SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay) {
 	pointLightData_->color = color;
 	pointLightData_->position = position;
 	pointLightData_->intensity = intensity;
+	pointLightData_->radius = radius;
+	pointLightData_->decay = decay;
 }
 
 

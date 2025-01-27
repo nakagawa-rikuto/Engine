@@ -90,6 +90,8 @@ private:/// ===メンバ変数=== ///
 	Vector3 pointLightPosition_ = { 0.0f, 2.0f, 0.0f };
 	Vector4 pointLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float pointLightIntensity_ = 1.0f;
+	float pointLightRadius_ = 10.0f;
+	float pointLightDecay_ = 1.0f;
 	// カメラ
 	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };  
 	Vector3 cameraRotate = { 0.1f, 0.0f, 0.0f };
@@ -106,4 +108,3 @@ private:/// ===メンバ変数=== ///
 	bool start_ = false;
 	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
 };
-

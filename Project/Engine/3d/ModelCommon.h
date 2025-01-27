@@ -35,7 +35,7 @@ public:/// ===Setter=== ///
 	// CameraForGPU
 	void SetCameraForGPU(const Vector3& translate);
 	// PointLight
-	void SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity);
+	void SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay);
 
 private:/// ===Variables(変数)=== ///
 
