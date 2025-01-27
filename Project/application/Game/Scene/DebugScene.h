@@ -85,25 +85,13 @@ private:/// ===メンバ変数=== ///
 	Vector2 spriteSize_ = { 100.0f, 100.0f };
 	Vector4 spriteColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// ライト
-	float lightShininess_ = 48.5f;
+	LightInfo light_ = { 48.5f };
 	// Directional
-	Vector3 lightDirection_ = { 0.0f, 1.0f, 0.0f };
-	float lightIntensity_ = 1.0f;
-	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DirectionalLightInfo directional_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 1.0f, 0.0f } , 1.0f };
 	// point
-	Vector3 pointLightPosition_ = { 0.0f, 2.0f, 0.0f };
-	Vector4 pointLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float pointLightIntensity_ = 1.0f;
-	float pointLightRadius_ = 10.0f;
-	float pointLightDecay_ = 1.0f;
+	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 2.0f, 0.0f } , 1.0f, 10.0f, 1.0f };
 	// spotLight
-	Vector4 spotLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	Vector3 spotLightPosition_ = { 2.0f, 1.25f, 0.0f };
-	float spotLightDistance_ = 7.0f;
-	Vector3 spotLightDirection_ = Normalize({ -1.0f, -1.0f, 0.0f });
-	float spotLightIntensity_ = 4.0f;
-	float spotLightDecay_ = 2.0f;
-	float spotLightCosAngle_ = std::cos(std::numbers::pi_v<float> / 3.0f);
+	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize({ -1.0f, -1.0f, 0.0f }) , 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f) };
 	// カメラ
 	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };  
 	Vector3 cameraRotate = { 0.1f, 0.0f, 0.0f };

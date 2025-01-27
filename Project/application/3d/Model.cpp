@@ -40,20 +40,27 @@ void Model::SetTransform(const Vector3& postion, const Vector3& rotate, const Ve
 }
 void Model::SetColor(const Vector4& color) { color_ = color; }
 /// ===ライト=== ///
-void Model::SetShininess(const float& shininess) { shininess_ = shininess; }
-void Model::SetDirctionalLightData(const Vector3& direction, const float& intensity, const Vector4& color) { 
-	lightDirection_ = direction; 
-	lightIntensity_ = intensity;
-	lightColor_ = color;
+void Model::SetShininess(LightInfo info) { light_.shininess = info.shininess; }
+void Model::SetDirctionalLightData(DirectionalLightInfo info) { 
+	directional_.direction = info.direction; 
+	directional_.intensity = info.intensity;
+	directional_.color = info.color;
 }
-void Model::SetPointLightData(const Vector3& position, const float& intensity, const Vector4& color, const float& radius, const float& decay) {
-	pointLightPosition_ = position; 
-	pointLightIntensity_ = intensity;
-	pointLightColor_ = color;
-	pointLightRadius_ = radius;
-	pointLightdecay_ = decay;
+void Model::SetPointLightData(PointLightInfo info) {
+	point_.position= info.position;
+	point_.intensity = info.intensity;
+	point_.color = info.color;
+	point_.radius = info.radius;
+	point_.decay = info.decay;
 }
-void Model::SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle) {
+void Model::SetSpotLightData(SpotLightInfo info) {
+	spot_.color = info.color;
+	spot_.position = info.position;
+	spot_.direction = info.direction;
+	spot_.intensity = info.intensity;
+	spot_.distance = info.distance;
+	spot_.decay = info.decay;
+	spot_.cosAngle = info.cosAngle;
 
 }
 /// ===カメラ=== ///
@@ -139,7 +146,7 @@ void Model::MateialDataWrite() {
 	/// ===値の代入=== ///
 	common_->SetMatiarlData(
 		color_,
-		shininess_,
+		light_.shininess,
 		uvTransformMatrixMultiply
 	);
 }
@@ -174,16 +181,25 @@ void Model::TransformDataWrite() {
 ///-------------------------------------------///
 void Model::LightDataWrite() {
 	common_->SetDirectionLight(
-		lightColor_,
-		lightDirection_,
-		lightIntensity_
+		directional_.color,
+		directional_.direction,
+		directional_.intensity
 	);
 	common_->SetPointLightData(
-		pointLightColor_,
-		pointLightPosition_,
-		pointLightIntensity_,
-		pointLightRadius_,
-		pointLightdecay_
+		point_.color,
+		point_.position,
+		point_.intensity,
+		point_.radius,
+		point_.decay
+	);
+	common_->SetSpotLightData(
+		spot_.color,
+		spot_.position,
+		spot_.direction,
+		spot_.intensity,
+		spot_.distance,
+		spot_.decay,
+		spot_.cosAngle
 	);
 }
 

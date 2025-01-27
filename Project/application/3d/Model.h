@@ -43,13 +43,13 @@ public: /// ===Setter=== ///
 	// モデルカラー
 	void SetColor(const Vector4& color);
 	// Lightの光沢度
-	void SetShininess(const float& shininess);
+	void SetShininess(LightInfo info);
 	// DirectionalLight
-	void SetDirctionalLightData(const Vector3& direction, const float& intensity, const Vector4& color);
+	void SetDirctionalLightData(DirectionalLightInfo info);
 	// pointLight
-	void SetPointLightData(const Vector3& position, const float& intensity, const Vector4& color, const float& radius, const float& decay);
+	void SetPointLightData(PointLightInfo info);
 	// SpotLight
-	void SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle);
+	void SetSpotLightData(SpotLightInfo info);
 	// カメラ
 	void SetCamera(Camera* camera);
 
@@ -78,25 +78,13 @@ private: /// ===Variables(変数)=== ///
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
-	float shininess_ = 0.27f;
+	LightInfo light_ = { 40.0f };
 	// DirctionalLight
-	Vector3 lightDirection_ = { 0.0f, -1.0f, 0.0f };
-	float lightIntensity_ = 1.0f;
-	Vector4 lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DirectionalLightInfo directional_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f };
 	// PointLight
-	Vector3 pointLightPosition_ = { 0.0f, 0.0f, 0.0f };
-	Vector4 pointLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float pointLightIntensity_ = 1.0f;
-	float pointLightRadius_ = 0.0f;
-	float pointLightdecay_ = 0.0f;
+	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f };
 	// SpotLight
-	Vector3 spotLightPosition_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 spotLightDirection_ = { 0.0f, 0.0f, 0.0f };
-	Vector4 spotLightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float spotLightDistance_ = 0.0f;
-	float spotLightintensity_ = 0.0f;
-	float spotLightDecay_ = 0.0f;
-	float spotLightCosAngle = 0.0f;
+	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f };
 
 private: /// ===Functions(関数)=== ///
 

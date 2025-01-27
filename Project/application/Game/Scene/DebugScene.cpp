@@ -105,9 +105,6 @@ void DebugScene::Initialize() {
 
 	/// ===ライト=== ///
 #pragma region Lightの情報
-	lightDirection_ = { 0.0f, -1.0f, 0.0f };
-	lightIntensity_ = 1.0f;
-	lightColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 #pragma endregion
 
 	/// ===音=== ///
@@ -205,24 +202,25 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
 			// Light
-			ImGui::ColorEdit4("LigthColor", &lightColor_.x);
-			ImGui::DragFloat3("LightDirection", &lightDirection_.x, 0.01f);
-			ImGui::DragFloat("lightIntensity", &lightIntensity_, 0.01f);
-			ImGui::DragFloat("LightShininess", &lightShininess_, 0.01f);
+			ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
+
+			ImGui::ColorEdit4("LigthColor", &directional_.color.x);
+			ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
+			ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
 			
-			ImGui::ColorEdit4("pointLightColor", &pointLightColor_.x);
-			ImGui::DragFloat3("pointLightPosition", &pointLightPosition_.x, 0.01f);
-			ImGui::DragFloat("pointLightIntensity", &pointLightIntensity_, 0.01f);
-			ImGui::DragFloat("pointLightRadius", &pointLightRadius_, 0.01f);
-			ImGui::DragFloat("pointLightDecay", &pointLightDecay_, 0.01f);
+			ImGui::ColorEdit4("pointLightColor", &point_.color.x);
+			ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
+			ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
+			ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
+			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
 			
-			ImGui::ColorEdit4("SpotLightColor", &spotLightColor_.x);
-			ImGui::DragFloat3("spotLightPosition", &spotLightPosition_.x, 0.01f);
-			ImGui::DragFloat("SpotLightIntensity", &spotLightIntensity_, 0.01f);
-			ImGui::DragFloat3("SpotLightDirection", &spotLightDirection_.x, 0.01f);
-			ImGui::DragFloat("SpotLightDistance", &spotLightDistance_, 0.01f);
-			ImGui::DragFloat("SpotLightDecay", &spotLightDecay_, 0.01f);
-			ImGui::DragFloat("SpotLightCosAngle", &spotLightCosAngle_, 0.01f);
+			ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
+			ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
+			ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
+			ImGui::DragFloat3("SpotLightDirection", &spot_.direction.x, 0.01f);
+			ImGui::DragFloat("SpotLightDistance", &spot_.distance, 0.01f);
+			ImGui::DragFloat("SpotLightDecay", &spot_.decay, 0.01f);
+			ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);
 			
 		}
 	}
@@ -394,12 +392,13 @@ void DebugScene::Update() {
 	}
 	model_->SetTransform(modelTranslate_, modelRotate_, modelScale_);
 	model_->SetColor(modelColor_);
-	model_->SetShininess(lightShininess_);
-	model_->SetDirctionalLightData(lightDirection_, lightIntensity_, lightColor_);
-	model_->SetPointLightData(pointLightPosition_, pointLightIntensity_, pointLightColor_, pointLightRadius_, pointLightDecay_);
-	model2_->SetPointLightData(pointLightPosition_, pointLightIntensity_, pointLightColor_, pointLightRadius_, pointLightDecay_);
-	model_->SetSpotLightData(spotLightColor_, spotLightPosition_, spotLightDirection_, spotLightIntensity_, spotLightDistance_, spotLightDecay_, spotLightCosAngle_);
-	model2_->SetSpotLightData(spotLightColor_, spotLightPosition_, spotLightDirection_, spotLightIntensity_, spotLightDistance_, spotLightDecay_, spotLightCosAngle_);
+	model_->SetShininess(light_);
+	model_->SetDirctionalLightData(directional_);
+	model2_->SetDirctionalLightData(directional_);
+	model_->SetPointLightData(point_);
+	model2_->SetPointLightData(point_);
+	model_->SetSpotLightData(spot_);
+	model2_->SetSpotLightData(spot_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
