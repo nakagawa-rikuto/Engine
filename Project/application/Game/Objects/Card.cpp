@@ -3,6 +3,7 @@
 
 void Card::Initialize(const std::string& cardModel,int cardType, Vector3 position, std::shared_ptr<Camera> activeCamera)
 {
+
 	// AABBのサイズ調整
 	Collider::Initialize({ 1.0f,1.0f,2.0f });
 
