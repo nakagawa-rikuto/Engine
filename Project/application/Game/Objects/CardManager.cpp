@@ -19,7 +19,7 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<s
 		for (int x = 0; x < cols; ++x)
 		{
 
-			Vector3 position(basePosition.x + x * spacing, basePosition.y + y * spacing, basePosition.z);
+			Vector3 position(basePosition.x + x * spacing, basePosition.y + y * -spacing, basePosition.z);
 
 #pragma region
 #pragma endregion
