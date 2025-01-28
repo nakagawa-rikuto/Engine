@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 			cardGrid.push_back(cardManager_->GetCards()[y][x]->GetCardType());
 		}
 	}
-	globalVariables->SetValue("Cards", "CardGrid", cardGrid);
+	globalVariables->SetValue("Cards", "CardGrid", cardData3x3);
 }
 
 ///-------------------------------------------///
@@ -110,7 +110,7 @@ void GameScene::Update() {
 	// camera_->SetRotate(cameraRotate_);
 	cameraManager_->UpdateAllCameras();
 
-	globalVariables->Update(gridSize);
+	globalVariables->Update();
 }
 
 ///-------------------------------------------///
