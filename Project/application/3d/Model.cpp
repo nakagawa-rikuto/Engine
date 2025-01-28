@@ -171,7 +171,7 @@ void Model::TransformDataWrite() {
 	/// ===値の代入=== ///
 	common_->SetTransformData(
 		worldViewProjectionMatrix,
-		worldMatrix,
+		Multiply(modelData_.rootNode.localMatrix, worldMatrix),
 		Inverse4x4(worldMatrix)
 	);
 }
