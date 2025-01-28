@@ -118,7 +118,7 @@ void WindEmitter::Update() {
 /// 描画
 ///-------------------------------------------///
 void WindEmitter::Draw(BlendMode mode) {
-	particle_->Darw(numInstance_, mode);
+	particle_->Draw(numInstance_, mode);
 }
 
 ///-------------------------------------------/// 

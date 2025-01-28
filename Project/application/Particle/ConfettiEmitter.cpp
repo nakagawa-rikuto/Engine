@@ -97,7 +97,7 @@ void ConfettiEmitter::Update() {
 ///-------------------------------------------///
 void ConfettiEmitter::Draw(BlendMode mode) {
     if (numInstance_ > 0) {
-        particle_->Darw(numInstance_, mode);
+        particle_->Draw(numInstance_, mode);
     }
 }
 

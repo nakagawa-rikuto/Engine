@@ -87,7 +87,7 @@ void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMa
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ParticleGroup::Darw(const uint32_t instance, BlendMode mode) {
+void ParticleGroup::Draw(const uint32_t instance, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();

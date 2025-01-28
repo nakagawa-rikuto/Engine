@@ -128,6 +128,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Load\AssetLoader.cpp" />
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
+    <ClCompile Include="application\Particle\MagicCircleEmitter.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\MatrixMath.cpp" />
@@ -208,6 +209,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Load\AssetLoader.h" />
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
+    <ClInclude Include="application\Particle\MagicCircleEmitter.h" />
     <ClInclude Include="Math\MathData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />

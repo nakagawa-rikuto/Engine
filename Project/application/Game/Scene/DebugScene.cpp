@@ -120,6 +120,7 @@ void DebugScene::Initialize() {
 	windParticle_ = std::make_shared<WindEmitter>();
 	explosionParticle_ = std::make_shared<ExplosionEmitter>();
 	confettiParticle_ = std::make_shared<ConfettiEmitter>();
+	magicCirecleParticle_ = std::make_shared<MagicCircleEmitter>();
 #pragma endregion
 }
 
@@ -137,30 +138,42 @@ void DebugScene::Update() {
 			isSetting_.Particle1 = false;
 			isSetting_.Particle2 = false;
 			isSetting_.Particle3 = false;
+			isSetting_.Particle4 = false;
 		} else if (ImGui::Selectable("Model", isSetting_.Model)) {
 			isSetting_.Sprite = false;
 			isSetting_.Model = true;
 			isSetting_.Particle1 = false;
 			isSetting_.Particle2 = false;
 			isSetting_.Particle3 = false;
+			isSetting_.Particle4 = false;
 		} else if (ImGui::Selectable("Particle1", isSetting_.Particle1)) {
 			isSetting_.Sprite = false;
 			isSetting_.Model = false;
 			isSetting_.Particle1 = true;
 			isSetting_.Particle2 = false;
 			isSetting_.Particle3 = false;
+			isSetting_.Particle4 = false;
 		} else if (ImGui::Selectable("Particle2", isSetting_.Particle2)) {
 			isSetting_.Sprite = false;
 			isSetting_.Model = false;
 			isSetting_.Particle1 = false;
 			isSetting_.Particle2 = true;
 			isSetting_.Particle3 = false;
+			isSetting_.Particle4 = false;
 		} else if (ImGui::Selectable("Particle3", isSetting_.Particle3)) {
 			isSetting_.Sprite = false;
 			isSetting_.Model = false;
 			isSetting_.Particle1 = false;
 			isSetting_.Particle2 = false;
 			isSetting_.Particle3 = true;
+			isSetting_.Particle4 = false;
+		} else if (ImGui::Selectable("Particle4", isSetting_.Particle4)) {
+			isSetting_.Sprite = false;
+			isSetting_.Model = false;
+			isSetting_.Particle1 = false;
+			isSetting_.Particle2 = false;
+			isSetting_.Particle3 = false;
+			isSetting_.Particle4 = true;
 		}
 		ImGui::EndCombo();
 	}
@@ -274,6 +287,28 @@ void DebugScene::Update() {
 		if (isImgui_.Particle3) {
 			// Particle
 			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+		}
+	}
+
+	/// ===Particle4=== ///
+	if (isSetting_.Particle4) {
+		if (!isDisplay_.Particle4 && ImGui::Button("Draw")) {
+			magicCirecleParticle_->Initialze();
+			magicCirecleParticle_->SetPosition(particleTranslate_);
+			isDisplay_.Particle4 = true;
+		} else if (isDisplay_.Particle4 && ImGui::Button("UnDraw")) {
+			isDisplay_.Particle4 = false;
+		}
+		if (!isImgui_.Particle4 && ImGui::Button("Info")) {
+			isImgui_.Particle4 = true;
+		} else if (isImgui_.Particle4 && ImGui::Button("UnInfo")) {
+			isImgui_.Particle4 = false;
+		}
+		/// ===Info=== ///
+		if (isImgui_.Particle4) {
+			// Particle
+			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+			magicCirecleParticle_->UpdateImGui();
 		}
 	}
 
@@ -401,6 +436,8 @@ void DebugScene::Update() {
 	windParticle_->Update();
 	explosionParticle_->Update();
 	confettiParticle_->Update();
+	magicCirecleParticle_->SetPosition(particleTranslate_);
+	magicCirecleParticle_->Update();
 #pragma endregion
 
 	/// ===カメラの更新=== ///
@@ -434,6 +471,9 @@ void DebugScene::Draw() {
 	}
 	if (isDisplay_.Particle3) {
 		confettiParticle_->Draw();
+	}
+	if (isDisplay_.Particle4) {
+		magicCirecleParticle_->Draw();
 	}
 
 #pragma endregion
