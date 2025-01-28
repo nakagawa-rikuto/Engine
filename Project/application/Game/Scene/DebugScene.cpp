@@ -120,7 +120,7 @@ void DebugScene::Initialize() {
 	windParticle_ = std::make_shared<WindEmitter>();
 	explosionParticle_ = std::make_shared<ExplosionEmitter>();
 	confettiParticle_ = std::make_shared<ConfettiEmitter>();
-	magicCirecleParticle_ = std::make_shared<MagicCircleEmitter>();
+	SpiralParticle_ = std::make_shared<SpiralEmitter>();
 #pragma endregion
 }
 
@@ -293,8 +293,8 @@ void DebugScene::Update() {
 	/// ===Particle4=== ///
 	if (isSetting_.Particle4) {
 		if (!isDisplay_.Particle4 && ImGui::Button("Draw")) {
-			magicCirecleParticle_->Initialze();
-			magicCirecleParticle_->SetPosition(particleTranslate_);
+			SpiralParticle_->Initialze();
+			SpiralParticle_->SetPosition(particleTranslate_);
 			isDisplay_.Particle4 = true;
 		} else if (isDisplay_.Particle4 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle4 = false;
@@ -308,7 +308,7 @@ void DebugScene::Update() {
 		if (isImgui_.Particle4) {
 			// Particle
 			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
-			magicCirecleParticle_->UpdateImGui();
+			SpiralParticle_->UpdateImGui();
 		}
 	}
 
@@ -436,8 +436,8 @@ void DebugScene::Update() {
 	windParticle_->Update();
 	explosionParticle_->Update();
 	confettiParticle_->Update();
-	magicCirecleParticle_->SetPosition(particleTranslate_);
-	magicCirecleParticle_->Update();
+	SpiralParticle_->SetPosition(particleTranslate_);
+	SpiralParticle_->Update();
 #pragma endregion
 
 	/// ===カメラの更新=== ///
@@ -473,7 +473,7 @@ void DebugScene::Draw() {
 		confettiParticle_->Draw();
 	}
 	if (isDisplay_.Particle4) {
-		magicCirecleParticle_->Draw();
+		SpiralParticle_->Draw();
 	}
 
 #pragma endregion

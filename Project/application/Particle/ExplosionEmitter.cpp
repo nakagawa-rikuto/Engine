@@ -39,7 +39,7 @@ void ExplosionEmitter::Initialze(const std::string& filename) {
 
     /// ===パーティクルグループの初期化=== ///
     particle_ = std::make_unique<ParticleGroup>();
-    particle_->Initialze(filename, MaxInstance_);
+    particle_->Initialize(filename, MaxInstance_);
 }
 
 ///-------------------------------------------/// 

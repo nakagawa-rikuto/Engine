@@ -1,4 +1,4 @@
-#include "MagicCircleEmitter.h"
+#include "SpiralEmitter.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -11,12 +11,12 @@
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-MagicCircleEmitter::~MagicCircleEmitter() {}
+SpiralEmitter::~SpiralEmitter() { particle_.reset(); }
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void MagicCircleEmitter::Initialze(const std::string & filename) {
+void SpiralEmitter::Initialze(const std::string & filename) {
     std::random_device seedGen;
     randomEngine_.seed(seedGen());
 
@@ -40,13 +40,13 @@ void MagicCircleEmitter::Initialze(const std::string & filename) {
     transform_ = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
     particle_ = std::make_unique<ParticleGroup>();
-    particle_->Initialze(filename, MaxInstance_);
+    particle_->Initialize(filename, MaxInstance_);
 }
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void MagicCircleEmitter::Update() {
+void SpiralEmitter::Update() {
     elapsedTime_ += kDeltaTime_;
 
     // 螺旋半径の拡大・縮小処理
@@ -104,7 +104,7 @@ void MagicCircleEmitter::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void MagicCircleEmitter::Draw(BlendMode mode) {
+void SpiralEmitter::Draw(BlendMode mode) {
     if (numInstance_ > 0) {
         particle_->Draw(numInstance_, mode);
     }
@@ -113,12 +113,12 @@ void MagicCircleEmitter::Draw(BlendMode mode) {
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-void MagicCircleEmitter::SetPosition(const Vector3& posititon) { transform_.translate = posititon; }
+void SpiralEmitter::SetPosition(const Vector3& posititon) { transform_.translate = posititon; }
 
 ///-------------------------------------------/// 
 /// ImGui
 ///-------------------------------------------///
-void MagicCircleEmitter::UpdateImGui() {
+void SpiralEmitter::UpdateImGui() {
     ImGui::DragFloat("UpSpeed", &verticalSpeed_, 0.01f);
     ImGui::DragFloat("radius", &spiralRadius_, 0.01f);
     ImGui::DragFloat("maxLifeTime", &maxLifetime_, 0.01f);
@@ -132,7 +132,7 @@ void MagicCircleEmitter::UpdateImGui() {
 ///-------------------------------------------/// 
 /// 作成ロジック
 ///-------------------------------------------///
-ParticleData MagicCircleEmitter::CreateParticle(const Vector3& center, float angle) {
+ParticleData SpiralEmitter::CreateParticle(const Vector3& center, float angle) {
     std::uniform_real_distribution<float> distLifetime(1.0f, maxLifetime_);
 
     ParticleData particle;

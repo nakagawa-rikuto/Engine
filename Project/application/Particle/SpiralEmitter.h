@@ -5,10 +5,10 @@
 ///=====================================================/// 
 /// MagicCirecleParticle
 ///=====================================================///
-class MagicCircleEmitter : public ParticleEmitter {
+class SpiralEmitter : public ParticleEmitter {
 public:
-	MagicCircleEmitter() = default;
-	~MagicCircleEmitter();
+    SpiralEmitter() = default;
+	~SpiralEmitter();
 
     // 初期化
     void Initialze(const std::string& filename = "Particle") override;

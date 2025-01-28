@@ -22,7 +22,7 @@ public:
 	~ParticleGroup();
 
 	// 初期化
-	void Initialze(const std::string& filename, const uint32_t kNumMaxInstance);
+	void Initialize(const std::string& filename, const uint32_t kNumMaxInstance);
 	// 描画
 	void Draw(const uint32_t instance, BlendMode mode);
 

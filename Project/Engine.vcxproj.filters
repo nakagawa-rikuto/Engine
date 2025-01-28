@@ -87,7 +87,8 @@
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
     <ClCompile Include="application\Game\Objects\CardManager.cpp" />
-    <ClCompile Include="application\Particle\MagicCircleEmitter.cpp" />
+    <ClCompile Include="application\Particle\SpiralEmitter.cpp" />
+    <ClCompile Include="application\Particle\SelectEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
@@ -171,7 +172,8 @@
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
     <ClInclude Include="application\Game\Objects\CardManager.h" />
-    <ClInclude Include="application\Particle\MagicCircleEmitter.h" />
+    <ClInclude Include="application\Particle\SpiralEmitter.h" />
+    <ClInclude Include="application\Particle\SelectEmitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

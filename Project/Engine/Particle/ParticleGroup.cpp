@@ -33,7 +33,7 @@ void ParticleGroup::SetInstancingData(size_t index, const Vector4& color, const 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMaxInstance) {
+void ParticleGroup::Initialize(const std::string& filename, const uint32_t kNumMaxInstance) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = Mii::GetDXDevice();
