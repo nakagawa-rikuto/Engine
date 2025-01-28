@@ -23,8 +23,10 @@ void SelectEmitter::Initialze(const std::string& filename) {
     MaxInstance_ = 200;  // 粒子の最大数
     numInstance_ = 0;
 
-    // デフォルトでは有効
-    isActive_ = true;
+    // デフォルトでは無効
+    isActive_ = false;
+    aabbMin_ = { 0.0f, 0.0f, 0.0f };
+    aabbMax_ = { 0.0f, 0.0f, 0.0f };
 
     particle_ = std::make_unique<ParticleGroup>();
     particle_->Initialize(filename, MaxInstance_);
