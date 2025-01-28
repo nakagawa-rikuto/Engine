@@ -66,10 +66,17 @@ struct WorldTransform {
 struct  MaterialData {
 	std::string textureFilePath;
 };
+/// ===ノード=== ///
+struct Node {
+	Matrix4x4 localMatrix;
+	std::string name;
+	std::vector<Node> children;
+};
 /// ===モデルデータ=== ///
 struct ModelData {
 	std::vector<VertexData3D> vertices;
 	MaterialData material;
+	Node rootNode;
 };
 #pragma endregion
 #pragma region ライト

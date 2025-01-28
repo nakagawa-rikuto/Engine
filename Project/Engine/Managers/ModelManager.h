@@ -8,6 +8,10 @@
 // C++
 #include <string>
 #include <map>
+// assimp
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 /// ===前方宣言=== /// 
 class DXCommon;
@@ -45,5 +49,7 @@ private:/// ===Functions(関数)=== ///
 	// .objファイルの読み込み
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
+	// assimpのNode(ainode* node)から、構造体Nodeに変換する関数
+	Node ReadNode(aiNode* node);
 };
 

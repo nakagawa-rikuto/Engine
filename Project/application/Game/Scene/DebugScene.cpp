@@ -51,6 +51,7 @@ void DebugScene::Initialize() {
 	Loader::LoadModel("axis");
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
+	//Loader::LoadModel("GlTF");
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -70,9 +71,9 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall", LightType::SpotLight);          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall");          // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Model>();
-	model2_->Initialize("terrain", LightType::SpotLight);
+	model2_->Initialize("terrain", LightType::PointLight);
 	/* // モデルの使い方                        
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -432,7 +433,7 @@ void DebugScene::Draw() {
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
-		model2_->Draw();
+		//model2_->Draw();
 	}
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {
