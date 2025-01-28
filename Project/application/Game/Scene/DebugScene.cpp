@@ -46,12 +46,13 @@ void DebugScene::Initialize() {
 	Loader::LoadTexture("monsterBall", "./Resource/monsterBall.png");
 
 	// モデルの読み込み
+	Loader::LoadModel("GlTF", ModelFileType::GLTF);
 	Loader::LoadModel("MonsterBall");
 	Loader::LoadModel("terrain");
 	Loader::LoadModel("axis");
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
-	//Loader::LoadModel("GlTF");
+	
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -71,7 +72,7 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall");          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("GlTF");          // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Model>();
 	model2_->Initialize("terrain", LightType::PointLight);
 	/* // モデルの使い方                        

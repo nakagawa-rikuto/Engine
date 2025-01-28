@@ -51,8 +51,8 @@ void Loader::LoadTexture(const std::string& key, const std::string& filePath) {
 ///-------------------------------------------/// 
 /// モデル
 ///-------------------------------------------///
-void Loader::LoadModel(const std::string& filename) {
-	modelManager_->LoadModel("Resource", filename); 
+void Loader::LoadModel(const std::string& filename, ModelFileType type) {
+	modelManager_->LoadModel("Resource", filename, type);
 }
 
 ///-------------------------------------------/// 

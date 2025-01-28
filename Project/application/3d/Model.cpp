@@ -168,16 +168,10 @@ void Model::TransformDataWrite() {
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
 		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	}
-	/*/// ===値の代入=== ///
-	common_->SetTransformData(
-		Multiply(modelData_.rootNode.localMatrix, worldViewProjectionMatrix),
-		Multiply(modelData_.rootNode.localMatrix, worldMatrix),
-		Inverse4x4(worldMatrix)
-	);*/
 	/// ===値の代入=== ///
 	common_->SetTransformData(
 		worldViewProjectionMatrix,
-		worldMatrix,
+		Multiply(modelData_.rootNode.localMatrix, worldMatrix),
 		Inverse4x4(worldMatrix)
 	);
 }
