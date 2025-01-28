@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 // SceneManager
 #include "application/Manager/SceneManager.h"
+#include "Engine/Core/Mii.h"
 
 ///-------------------------------------------///
 /// デストラクタ
@@ -21,7 +22,7 @@ void TitleScene::Initialize() {
 
 	/// ===Camera=== ///
 	// Camera情報
-	cameraPos_ = {3.0f, 0.0f, -10.0f};
+	cameraPos_ = {3.0f, -0.5f, -10.0f};
 	cameraRotate_ = {0.0f, 0.0f, 0.0f};
 	cameraScale_ = {0.0f, 0.0f, 0.0f};
 
@@ -52,6 +53,10 @@ void TitleScene::Update() {
 
 	titleModel_->Update();
 	titleModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+
+	if (Mii::TriggerKey(DIK_SPACE)) {
+		sceneManager_->ChangeScene("Game");
+	}
 }
 
 ///-------------------------------------------///
