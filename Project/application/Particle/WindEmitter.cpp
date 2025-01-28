@@ -47,7 +47,7 @@ void WindEmitter::Initialze(const std::string & filename) {
 
 	/// ===Particlet=== ///
 	particle_ = std::make_unique<ParticleGroup>();
-	particle_->Initialze(filename, MaxInstance_);
+	particle_->Initialize(filename, MaxInstance_);
 }
 
 ///-------------------------------------------/// 
@@ -118,7 +118,7 @@ void WindEmitter::Update() {
 /// 描画
 ///-------------------------------------------///
 void WindEmitter::Draw(BlendMode mode) {
-	particle_->Darw(numInstance_, mode);
+	particle_->Draw(numInstance_, mode);
 }
 
 ///-------------------------------------------/// 

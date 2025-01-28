@@ -42,7 +42,7 @@ void ConfettiEmitter::Initialze(const std::string& filename) {
 
     /// ===パーティクルグループの初期化=== ///
     particle_ = std::make_unique<ParticleGroup>();
-    particle_->Initialze(filename, MaxInstance_);
+    particle_->Initialize(filename, MaxInstance_);
 }
 
 ///-------------------------------------------/// 
@@ -97,7 +97,7 @@ void ConfettiEmitter::Update() {
 ///-------------------------------------------///
 void ConfettiEmitter::Draw(BlendMode mode) {
     if (numInstance_ > 0) {
-        particle_->Darw(numInstance_, mode);
+        particle_->Draw(numInstance_, mode);
     }
 }
 

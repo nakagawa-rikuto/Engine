@@ -8,6 +8,7 @@
 #include "application/Particle/WindEmitter.h"
 #include "application/Particle/ExplosionEmitter.h"
 #include "application/Particle/ConfettiEmitter.h"
+#include "application/Particle/SpiralEmitter.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -37,6 +38,7 @@ private:/// ===メンバ変数=== ///
 		bool Particle1;
 		bool Particle2;
 		bool Particle3;
+		bool Particle4;
 	};
 	struct Display {
 		bool Sprite;
@@ -44,6 +46,7 @@ private:/// ===メンバ変数=== ///
 		bool Particle1;
 		bool Particle2;
 		bool Particle3;
+		bool Particle4;
 	};
 	struct Imgui {
 		bool Sprite;
@@ -51,6 +54,7 @@ private:/// ===メンバ変数=== ///
 		bool Particle1;
 		bool Particle2;
 		bool Particle3;
+		bool Particle4;
 	};
 	Setting isSetting_ = { false };
 	Display isDisplay_ = { false };
@@ -68,6 +72,7 @@ private:/// ===メンバ変数=== ///
 	std::shared_ptr<WindEmitter> windParticle_;
 	std::shared_ptr<ExplosionEmitter> explosionParticle_;
 	std::shared_ptr<ConfettiEmitter> confettiParticle_;
+	std::shared_ptr<SpiralEmitter> SpiralParticle_;
 
 	/// ===変数=== ///
 	// モデル
