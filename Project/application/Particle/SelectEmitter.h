@@ -6,6 +6,7 @@
 /// SelectParticle
 ///=====================================================///
 class SelectEmitter : public ParticleEmitter {
+public:
 	SelectEmitter() = default;
 	~SelectEmitter();
 
@@ -20,6 +21,8 @@ class SelectEmitter : public ParticleEmitter {
     void SetPosition(const Vector3& posititon);
     void SetAABB(const Vector3& min, const Vector3& max);
     void SetActive(bool flag);
+
+    void UpdateImGui();
 private:
 
     std::mt19937 randomEngine_;     // 乱数生成器

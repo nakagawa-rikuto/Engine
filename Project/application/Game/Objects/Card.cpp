@@ -3,6 +3,7 @@
 
 void Card::Initialize(const std::string& cardModel,int cardType, Vector3 position, std::shared_ptr<Camera> activeCamera)
 {
+	// AABBのサイズ調整
 	Collider::Initialize({ 1.0f,1.0f,2.0f });
 
 	// モデルの生成と初期化
@@ -16,7 +17,7 @@ void Card::Initialize(const std::string& cardModel,int cardType, Vector3 positio
 
 	// カードの状態を初期化
 	currentState_ = CardState::back;
-	requestState_ = CardState::none;
+	requestState_ = CardState::none;	
 }
 
 void Card::Update(std::shared_ptr<Camera> activeCamera) {
