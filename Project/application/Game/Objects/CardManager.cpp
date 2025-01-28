@@ -130,6 +130,8 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition)
 			if (len < 25.0f && cards_[y][x]->GetCurrentState() == Card::CardState::back) {
 				cards_[y][x]->SetScale({ 1.3f, 1.3f, 1.3f });
 
+
+
 				if (Mii::PushMouse(MouseButtonType::Left)) {
 					if (triggerLeft_) {
 

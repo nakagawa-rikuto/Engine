@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/Core/Mii.h"
 #include "application/Game/Objects/Card.h"
+#include "application/Particle/SelectEmitter.h"
 
 class CardManager
 {
