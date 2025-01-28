@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 
 	/// ===Camera=== ///
 	// Camera情報
-	cameraPos_ = {5.0f, 9.0f, -70.0f};
+	cameraPos_ = {5.0f, -2.5f, -70.0f};
 	cameraRotate_ = {0.0f, 0.0f, 0.0f};
 	cameraScale_ = {0.0f, 0.0f, 0.0f};
 
