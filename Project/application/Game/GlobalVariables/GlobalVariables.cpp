@@ -8,14 +8,9 @@ GlobalVariables* GlobalVariables::GetInstance() {
 	return &instance;
 }
 
-void GlobalVariables::Update(int gridSize) {
+void GlobalVariables::Update() {
 
 	if (!ImGui::Begin("Global Variables", nullptr, ImGuiWindowFlags_MenuBar)) {
-		ImGui::End();
-		return;
-	}
-
-	if (!ImGui::BeginMenuBar()) {
 		ImGui::End();
 		return;
 	}
@@ -25,50 +20,33 @@ void GlobalVariables::Update(int gridSize) {
 		const std::string& groupName = itGroup.first;
 		Group& group = itGroup.second;
 
-		if (!ImGui::BeginMenu(groupName.c_str()))
-			continue;
+		// 
+		if (ImGui::CollapsingHeader(groupName.c_str())) {
+			for (auto& itItem : group.items) {
+				const std::string& itemName = itItem.first;
+				Item& item = itItem.second;
 
-		for (auto& itItem : group.items) {
-			const std::string& itemName = itItem.first;
-			Item& item = itItem.second;
-
-			if (std::holds_alternative<int32_t>(item.value)) {
-				int32_t* ptr = std::get_if<int32_t>(&item.value);
-				ImGui::Text("%s: %d", itemName.c_str(), *ptr);
-
-			} else if (std::holds_alternative<float>(item.value)) {
-				float* ptr = std::get_if<float>(&item.value);
-				ImGui::SliderFloat(itemName.c_str(), ptr, 0.0f, 100.0f);
-
-			} else if (std::holds_alternative<Vector3>(item.value)) {
-				Vector3* ptr = std::get_if<Vector3>(&item.value);
-				ImGui::SliderFloat3(itemName.c_str(), reinterpret_cast<float*>(ptr), -10.0f, 10.0f);
-
-			} else if (std::holds_alternative<std::vector<int32_t>>(item.value)) {
-				auto* vec = std::get_if<std::vector<int32_t>>(&item.value);
-				if (vec) {
-					gridSize = 5; // グリッドのサイズ
-					ImGui::Text("%s:", itemName.c_str());
-					for (int z = 0; z < gridSize; ++z) {
-						for (int x = 0; x < gridSize; ++x) {
-							int index = z * gridSize + x;
-							if (index < static_cast<int>(vec->size())) {
-								ImGui::Text("%d", (*vec)[index]); // 値を表示
-							}
-							if (x < gridSize - 1) {
-								ImGui::SameLine(); // 同じ行に表示
+				// 2次元ベクトルの表示に対応
+				if (std::holds_alternative<std::vector<std::vector<int32_t>>>(item.value)) {
+					auto* vec = std::get_if<std::vector<std::vector<int32_t>>>(&item.value);
+					if (vec) {
+						ImGui::Text("%s:", itemName.c_str());
+						for (const auto& row : *vec) {
+							for (size_t col = 0; col < row.size(); ++col) {
+								ImGui::Text("%d", row[col]);
+								if (col < row.size() - 1) {
+									ImGui::SameLine();
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-		ImGui::EndMenu();
 	}
-
-	ImGui::EndMenuBar();
 	ImGui::End();
 }
+
 
 void GlobalVariables::CreateGroup(const std::string& groupName) {
 
@@ -77,6 +55,7 @@ void GlobalVariables::CreateGroup(const std::string& groupName) {
 }
 
 void GlobalVariables::DisplayGrid(const std::string& windowName, const std::vector<int32_t>& values, int gridSize) {
+
 	if (ImGui::Begin(windowName.c_str())) {
 		for (int z = 0; z < gridSize; ++z) {
 			for (int x = 0; x < gridSize; ++x) {
@@ -96,6 +75,7 @@ void GlobalVariables::DisplayGrid(const std::string& windowName, const std::vect
 }
 
 std::vector<int32_t> GlobalVariables::CheckMissingPairs(const std::string& groupName, const std::string& key) {
+
 	// グループの存在を確認
 	if (datas_.find(groupName) == datas_.end()) {
 		return {};
@@ -134,6 +114,7 @@ std::vector<int32_t> GlobalVariables::CheckMissingPairs(const std::string& group
 }
 
 void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, int32_t value) {
+
 	// グループの参照を取得
 	Group& group = datas_[groupName];
 	// 新しい項目データの設定
@@ -144,6 +125,7 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 }
 
 void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, float value) {
+
 	// グループの参照を取得
 	Group& group = datas_[groupName];
 	// 新しい項目データの設定
@@ -154,6 +136,7 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 }
 
 void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const Vector3& value) {
+
 	// グループの参照を取得
 	Group& group = datas_[groupName];
 	// 新しい項目データの設定
@@ -164,11 +147,21 @@ void GlobalVariables::SetValue(const std::string& groupName, const std::string& 
 }
 
 void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const std::vector<int32_t>& values) {
+
 	// グループの参照を取得
 	Group& group = datas_[groupName];
 	// 新しい項目データの設定
 	Item newItem{};
 	newItem.value = values; // std::vector<int32_t>を直接格納
 	// 設定した項目をstd::mapに追加
+	group.items[key] = newItem;
+}
+
+void GlobalVariables::SetValue(const std::string& groupName, const std::string& key, const std::vector<std::vector<int>>& values) {
+
+	// 2次元ベクトルをグループデータに追加
+	Group& group = datas_[groupName];
+	Item newItem{};
+	newItem.value = values; // 2次元ベクトルを直接格納
 	group.items[key] = newItem;
 }

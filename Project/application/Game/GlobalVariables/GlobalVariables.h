@@ -21,7 +21,7 @@ public:
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update(int gridSize);
+	void Update();
 
 	/// <summary>
 	/// グループの作成
@@ -47,6 +47,8 @@ public:
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3& value);
 	// 値のセット (std::vector)
 	void SetValue(const std::string& groupName, const std::string& key, const std::vector<int32_t>& values);
+	// 
+	void SetValue(const std::string& groupName, const std::string& key, const std::vector<std::vector<int>>& values);
 
 private:
 	GlobalVariables() = default;                                       // コンストラクタ
@@ -57,8 +59,9 @@ private:
 	// 項目
 	struct Item {
 		// 項目の値
-		std::variant<int32_t, float, Vector3, std::vector<int32_t>> value;
+		std::variant<int32_t, float, Vector3, std::vector<int32_t>, std::vector<std::vector<int32_t>>> value;
 	};
+
 	// グループ
 	struct Group {
 		std::map<std::string, Item> items;
