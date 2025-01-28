@@ -19,6 +19,7 @@ void GameScene::Initialize() {
 	// モデルの読み込み
 	const std::string& CardModel = "Card";
 	Loader_->LoadModel(CardModel);
+	Loader_->LoadModel("Particle");
 
 	std::list<std::string> cardModels;
 
