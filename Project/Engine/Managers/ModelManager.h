@@ -3,7 +3,7 @@
 // Engine
 #include "Engine/Core/ComPtr.h"
 #include "Engine/Core/CData.h"
-#include "Engine/Core/FileTypeData.h"
+#include "Engine/DataInfo/FileTypeData.h"
 // DirectXTex
 #include "DirectXTex.h"
 // C++
