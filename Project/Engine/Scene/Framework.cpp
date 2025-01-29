@@ -9,6 +9,7 @@
 void Framework::Initialize(const wchar_t* title) {
 	// Miiの初期化
 	Mii::Initialize(title, 1280, 720);
+	// Loaderの初期化
 	Loader::Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager());
 }
 
@@ -16,7 +17,7 @@ void Framework::Initialize(const wchar_t* title) {
 /// 終了
 ///-------------------------------------------///
 void Framework::Finalize() {
-	// Miiの終了処理
+	// 終了処理
 	Loader::Finalize();
 	Mii::Finalize();
 }

@@ -83,6 +83,10 @@
     <ClCompile Include="application\Particle\WindEmitter.cpp" />
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
+    <ClCompile Include="Engine\Input\InputCommon.cpp" />
+    <ClCompile Include="Engine\Input\Keyboard.cpp" />
+    <ClCompile Include="Engine\Input\Mouse.cpp" />
+    <ClCompile Include="Engine\Input\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
@@ -164,6 +168,10 @@
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
     <ClInclude Include="Engine\Scene\SceneType.h" />
     <ClInclude Include="Engine\Core\FileTypeData.h" />
+    <ClInclude Include="Engine\Input\InputCommon.h" />
+    <ClInclude Include="Engine\Input\Keyboard.h" />
+    <ClInclude Include="Engine\Input\Mouse.h" />
+    <ClInclude Include="Engine\Input\Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

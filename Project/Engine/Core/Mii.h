@@ -2,7 +2,7 @@
 /// ===include=== ///
 // Engine
 #include "Engine/Core/CData.h"
-#include "Engine/Input/Input.h"
+#include "Engine/Input/InputCommon.h"
 // Game 
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 // DirectXTex
@@ -22,6 +22,10 @@
 // Engine
 class WinApp;
 class DXCommon;
+// Input
+class Keyboard;
+class Mouse;
+class Controller;
 // Manager
 class SRVManager;
 class PipelineManager;
@@ -101,8 +105,12 @@ public:/// ===開発者用関数(Getter)=== ///
 	static ID3D12Device* GetDXDevice();
 	// CommandListの取得
 	static ID3D12GraphicsCommandList* GetDXCommandList();
-	// Inputの取得
-	static Input* GetInput();
+	// Keyboardの取得
+	static Keyboard* GetKeyboard();
+	// Mouseの取得
+	static Mouse* GetMouse();
+	// Controllerの取得
+	static Controller* GetController();
 	// SRVManagerの取得
 	static SRVManager* GetSRVManager();
 	// TextureManager
@@ -115,9 +123,17 @@ public:/// ===開発者用関数(Getter)=== ///
 	static CSVManager* GetCSVManager();
 
 private:/// ===Variables(変数)=== ///
-	static std::unique_ptr<WinApp> winApp_;           // WinApp
-	static std::unique_ptr<DXCommon> dXCommon_;       // DirectXCommon
-	static std::unique_ptr<Input> input_;             // Input
+	/// ===staticじゃない=== ///
+	
+
+	/// ===static=== ///
+	static std::unique_ptr<WinApp> winApp_;                   // WinApp
+	static std::unique_ptr<DXCommon> dXCommon_;               // DirectXCommon
+	
+	static std::unique_ptr<InputCommon> inputCommon_;         // inputCommon
+	static std::unique_ptr<Keyboard> keyboard_;               // Keyboard
+	static std::unique_ptr<Mouse> mouse_;                     // Mouse
+	static std::unique_ptr<Controller> controller_;           // Controller
 
 	static std::unique_ptr<SRVManager> srvManager_;           // SRVManager
 	static std::unique_ptr<PipelineManager> pipelineManager_; // PipelineManager

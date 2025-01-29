@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Audio\Audio.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
+    <ClCompile Include="Engine\Input\Controller.cpp" />
     <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
@@ -128,6 +129,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Game\Scene\IScene.cpp" />
     <ClCompile Include="Engine\Service\Loader.cpp" />
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
+    <ClCompile Include="Engine\Input\InputCommon.cpp" />
+    <ClCompile Include="Engine\Input\Keyboard.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\MatrixMath.cpp" />
@@ -180,11 +183,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Manager\ParticleManager.cpp" />
     <ClCompile Include="Engine\Particle\ParticleSetUp.cpp" />
     <ClCompile Include="application\Particle\WindEmitter.cpp" />
+    <ClCompile Include="Engine\Input\Mouse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
+    <ClInclude Include="Engine\Input\Controller.h" />
     <ClInclude Include="Engine\Managers\CSVManager.h" />
     <ClInclude Include="Engine\3d\Camera3D.h" />
     <ClInclude Include="Engine\Particle\ParticleData.h" />
@@ -206,6 +211,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Core\FileTypeData.h" />
     <ClInclude Include="Engine\Service\Loader.h" />
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
+    <ClInclude Include="Engine\Input\InputCommon.h" />
+    <ClInclude Include="Engine\Input\Keyboard.h" />
     <ClInclude Include="Math\MathData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
@@ -261,6 +268,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Manager\ParticleManager.h" />
     <ClInclude Include="Engine\Particle\ParticleSetUp.h" />
     <ClInclude Include="application\Particle\WindEmitter.h" />
+    <ClInclude Include="Engine\Input\Mouse.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\imgui\imgui.vcxproj">

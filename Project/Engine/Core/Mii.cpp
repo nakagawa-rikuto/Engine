@@ -2,6 +2,10 @@
 // Engine
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
+// Input
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
+#include "Engine/Input/Controller.h"
 // Manager
 #include "Engine/Managers/SRVManager.h"
 #include "Engine/Managers/PiplineManager.h"
@@ -17,7 +21,10 @@
 // Engine
 std::unique_ptr<WinApp> Mii::winApp_ = nullptr;
 std::unique_ptr<DXCommon> Mii::dXCommon_ = nullptr;
-std::unique_ptr<Input> Mii::input_ = nullptr;
+// Input
+std::unique_ptr<Keyboard> Mii::keyboard_ = nullptr;
+std::unique_ptr<Mouse> Mii::mouse_ = nullptr;
+std::unique_ptr<Controller> Mii::controller_ = nullptr;
 // Manager
 std::unique_ptr<SRVManager> Mii::srvManager_ = nullptr;
 std::unique_ptr<PipelineManager> Mii::pipelineManager_ = nullptr;
@@ -61,8 +68,20 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	dXCommon_->Initialize(winApp_.get(), width, height);
 
 	// Inputの生成
-	input_ = std::make_unique<Input>();
-	input_->Initialize(winApp_.get());
+	inputCommon_ = std::make_unique<InputCommon>();
+	inputCommon_->Initialize(winApp_.get());
+
+	// Keyboardの生成
+	keyboard_ = std::make_unique<Keyboard>();
+	keyboard_->Initialize(winApp_.get(), inputCommon_->GetDirectInput().Get());
+
+	// Mouseの生成
+	mouse_ = std::make_unique<Mouse>();
+	mouse_->Initialize(winApp_.get(), inputCommon_->GetDirectInput().Get());
+
+	// Controllerの生成
+	controller_ = std::make_unique<Controller>();
+	controller_->Initialize(winApp_.get(), inputCommon_->GetDirectInput().Get());
 
 	// SRVManagerの生成
 	srvManager_ = std::make_unique<SRVManager>();
@@ -96,8 +115,6 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 /// 更新
 ///=====================================================///
 void Mii::Update() {
-
-	input_->Update();
 	imGuiManager_->Begin();
 }
 
@@ -115,7 +132,10 @@ void Mii::Finalize() {
 	// 手動の解放
 	winApp_.reset();
 	dXCommon_.reset();
-	input_.reset();
+	inputCommon_.reset();
+	keyboard_.reset();
+	mouse_.reset();
+	controller_.reset();
 	srvManager_.reset();
 	pipelineManager_.reset();
 	textureManager_.reset();
@@ -172,26 +192,6 @@ ModelData Mii::GetModelData(const std::string& filename) { return modelManager_-
 
 
 ///-------------------------------------------/// 
-/// プログラマー用関数
-///-------------------------------------------///
-#pragma region Key入力関連
-/// ===キーボード=== ///
-bool Mii::PushKey(BYTE keyNum) { return input_->PushKey(keyNum); }
-bool Mii::TriggerKey(BYTE keyNum) { return input_->TriggerKey(keyNum); }
-/// ===マウス=== ///
-bool Mii::PushMouse(MouseButtonType button) { return input_->PushMaouseButton(button); }
-bool Mii::TriggerMouse(MouseButtonType button) { return input_->TriggerMouseButton(button); }
-POINT Mii::GetMousePosition() { return input_->GetMouseCursorPosition(); }
-LONG Mii::GetMouseDeltaX() { return input_->GetMouseDeltaX(); }
-LONG Mii::GetMouseDeltaY() { return input_->GetMouseDeltaY(); }
-LONG Mii::GetMouseDeltaScroll() { return input_->GetMouseDeltaScroll(); }
-/// ===コントローラー=== ///
-bool Mii::PushController(int deviceIndex, int buttonIndex) { return input_->PushButton(deviceIndex, buttonIndex); }
-bool Mii::TriggerController(int deviceIndex, int buttonIndex) { return input_->TriggerButton(deviceIndex, buttonIndex); }
-#pragma endregion
-
-
-///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
 #pragma region 開発者用
@@ -201,8 +201,12 @@ DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
 ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList
 ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
-// Input
-Input* Mii::GetInput() { return input_.get(); }
+// Keyboard
+Keyboard* Mii::GetKeyboard() {}
+// Mouse
+Mouse* Mii::GetMouse() {}
+// Controller
+Controller* Mii::GetController() {}
 // SRVManager
 SRVManager* Mii::GetSRVManager() {return srvManager_.get();}
 // TextureManager
