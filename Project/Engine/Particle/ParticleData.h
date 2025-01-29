@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Core/CData.h"
+#include "Engine/DataInfo/CData.h"
 
 /// ===Particleの構造体=== ///
 struct ParticleData {

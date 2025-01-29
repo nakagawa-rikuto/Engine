@@ -2,7 +2,7 @@
 /// ===include=== ///
 // Engine
 #include "Engine/Core/ComPtr.h"
-#include "Engine/Core/CData.h"
+#include "Engine/DataInfo/CData.h"
 #include "Engine/DataInfo/FileTypeData.h"
 // DirectXTex
 #include "DirectXTex.h"

@@ -101,7 +101,7 @@
     <ClInclude Include="application\Game\Scene\GameOverScene.h" />
     <ClInclude Include="application\Manager\CameraManager.h" />
     <ClInclude Include="application\3d\Camera.h" />
-    <ClInclude Include="Engine\Core\CData.h" />
+    <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\Service\Input.h" />
     <ClInclude Include="Engine\Core\Logger.h" />
