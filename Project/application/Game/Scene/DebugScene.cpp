@@ -72,7 +72,7 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("GlTF");          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Model>();
 	model2_->Initialize("terrain", LightType::PointLight);
 	/* // モデルの使い方                        
@@ -434,7 +434,7 @@ void DebugScene::Draw() {
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
-		//model2_->Draw();
+		model2_->Draw();
 	}
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {
