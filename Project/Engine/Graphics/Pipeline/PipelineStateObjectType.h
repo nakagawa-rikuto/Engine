@@ -13,6 +13,8 @@ enum PipelineType {
 	Obj2D,
 	// 3D
 	Obj3D,
+	// Particle
+	Particle,
 	// 総数(これは最後にしなければいけない)
 	CountOfPipelineType,
 };
@@ -46,8 +48,8 @@ enum BlendMode {
 
 // 列挙型の全値を取得する関数
 constexpr std::array<PipelineType, static_cast<size_t>(PipelineType::CountOfPipelineType)> AllPipelineTypes() {
-	return { PipelineType::Obj2D, PipelineType::Obj3D};
-}        
+	return { PipelineType::Obj2D, PipelineType::Obj3D, PipelineType::Particle };
+}
 constexpr std::array<BlendMode, static_cast<size_t>(BlendMode::kCountOfBlendMode)> AllBlendModes() {
 	return { BlendMode::kBlendModeNone, BlendMode::KBlendModeNormal, BlendMode::kBlendModeAdd,
 			 BlendMode::kBlendModeSubtract, BlendMode::kBlendModeMultily, BlendMode::kBlendModeScreen };

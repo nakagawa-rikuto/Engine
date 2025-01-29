@@ -12,36 +12,48 @@ void Compiler::Initialize(DXCommon* dxCommon, PipelineType Type) {
 
 	if (Type == PipelineType::Obj2D) {
 
-		// ObjVS
+		// VS
 		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj2D.VS.hlsl", L"vs_6_0",
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objVSBlob_ != nullptr);
 
-		// ObjPS
+		// PS
 		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj2D.PS.hlsl", L"ps_6_0",
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objPSBlob_ != nullptr);
 
-	} else if(Type == PipelineType::Obj3D){
+	} else if (Type == PipelineType::Obj3D) {
 
-		// ObjVS
+		// VS
 		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj3D.VS.hlsl", L"vs_6_0",
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objVSBlob_ != nullptr);
 
-		// ObjPS
+		// PS
 		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj3D.PS.hlsl", L"ps_6_0",
+			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+		assert(objPSBlob_ != nullptr);
+
+	} else if(Type == PipelineType::Particle){
+
+		// VS
+		objVSBlob_ = CompileShader(L"Resource/Shaders/Particle.VS.hlsl", L"vs_6_0",
+			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+		assert(objVSBlob_ != nullptr);
+
+		// PS
+		objPSBlob_ = CompileShader(L"Resource/Shaders/Particle.PS.hlsl", L"ps_6_0",
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objPSBlob_ != nullptr);
 
 	} else {
 
-		// ObjVS
+		// VS
 		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj.VS.hlsl", L"vs_6_0",
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objVSBlob_ != nullptr);
 
-		// ObjPS
+		// PS
 		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj.PS.hlsl", L"ps_6_0",
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objPSBlob_ != nullptr);

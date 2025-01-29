@@ -16,86 +16,98 @@
 #include "Math/Matrix3x3.h"
 #include "Math/Matrix4x4.h"
 
-/// <summary>
-/// VertexData(2D)
-/// </summary>
+#pragma region Buffer関連
+/// ===VertexData(2D)=== ///
 struct VertexData2D {
 	Vector4 position;
 	Vector2 texcoord;
 };
-
-/// <summary>
-/// VertexData(3D)
-/// </summary>
+/// ===VertexData(3D)=== ///
 struct VertexData3D {
 	Vector4 position;
 	Vector2 texcoord;
 	Vector3 normal;
 };
-
-/// <summary>
-/// Material(2D)
-/// </summary>
+/// ===Material(2D)=== ///
 struct MaterialData2D {
 	Vector4 color;
 	Matrix4x4 uvTransform;
 };
-
-/// <summary>
-/// Material(3D)
-/// </summary>
+/// ===Material(3D)=== ///
 struct MaterialData3D {
 
 	Vector4 color;
 	int32_t enableLighting;
 	float padding[3];
 	Matrix4x4 uvTransform;
+	float shininess;
 };
-
-/// <summary>
-/// TransformationMatrix(2D)
-/// </summary>
+/// ===TransformationMatrix(2D)=== ///
 struct TransformationMatrix2D {
 	Matrix4x4 WVP;
 };
-
-/// <summary>
-/// TransformationMatrix(3D)
-/// </summary>
+/// ===TransformationMatrix(3D)=== ///
 struct TransformationMatrix3D {
 	Matrix4x4 WVP;
 	Matrix4x4 World;
+	Matrix4x4 WorldInverseTranspose;
 };
-
-/// <summary>
-/// WorldTransform
-/// </summary>
+#pragma endregion
+#pragma region WorldTransform
+/// ===WorldTransform=== ///
 struct WorldTransform {
 	Vector3 scale;
 	Vector3 rotate;
 	Vector3 translate;
 };
-
-/// <summary>
-/// マテリアルデータ
-/// </summary>
+#pragma endregion
+#pragma region モデル
+/// ===マテリアルデータ=== ///
 struct  MaterialData {
 	std::string textureFilePath;
 };
-
-/// <summary>
-/// モデルデータ
-/// </summary>
+/// ===ノード=== ///
+struct Node {
+	Matrix4x4 localMatrix;
+	std::string name;
+	std::vector<Node> children;
+};
+/// ===モデルデータ=== ///
 struct ModelData {
 	std::vector<VertexData3D> vertices;
 	MaterialData material;
+	Node rootNode;
 };
-
-/// <summary>
-/// 平行光源の拡張
-/// </summary>
+#pragma endregion
+#pragma region ライト
+/// ===平行光源の拡張=== ///
 struct DirectionalLight {
 	Vector4 color;     // ライトの色
 	Vector3 direction; // ライトの向き
 	float intensity;   // ライトの明るさ(輝度)
 };
+/// ===カメラの位置=== ///
+struct CameraForGPU {
+	Vector3 worldPosition;
+};
+/// ===ポイントライト=== ///
+struct PointLight {
+	Vector4 color;
+	Vector3 position;
+	float intensity;
+	float radius;
+	float decay;
+	float padding[2];
+};
+/// ===スポットライト=== ///
+struct SpotLight {
+	Vector4 color;
+	Vector3 position;
+	float intensity;
+	Vector3 direction;
+	float distance;
+	float decay;
+	float cosAngle;
+	float padding[3];
+};
+#pragma endregion

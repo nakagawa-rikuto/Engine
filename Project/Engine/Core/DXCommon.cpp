@@ -9,9 +9,11 @@
 #include <vector>
 #include <format>
 
+#ifdef USE_IMGUI
 #include "imgui.h"
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
+#endif // USE_IMGUI
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -306,7 +308,7 @@ void DXCommon::InitializeDXGIDevice() {
 
 	//良い順にアダプタを頼む
 	for (UINT i = 0; dxgiFactory_->EnumAdapterByGpuPreference(
-		1, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
+		i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
 
 		//アダプターの情報を取得する
 		DXGI_ADAPTER_DESC3 adapterDesc{};

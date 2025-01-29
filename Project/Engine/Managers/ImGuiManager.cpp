@@ -26,7 +26,7 @@ void ImGuiManager::Initialize(WinApp* winApp, DXCommon* dxCommon, SRVManager* sr
 	dxCommon_ = dxCommon;
 	srvManager_ = srvManager;
 
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	IMGUI_CHECKVERSION(); //　バージョンチェック
 	ImGui::CreateContext(); // コンテキストの生成
 	ImGui::StyleColorsDark(); // スタイルの設定
@@ -38,7 +38,8 @@ void ImGuiManager::Initialize(WinApp* winApp, DXCommon* dxCommon, SRVManager* sr
 		srvManager_->GetDescriptorHeap(),
 		srvManager_->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(),
 		srvManager_->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-#endif // _DEBUG
+#endif // USE_IMGUI
+
 }
 
 
@@ -46,12 +47,12 @@ void ImGuiManager::Initialize(WinApp* winApp, DXCommon* dxCommon, SRVManager* sr
 /// 終了
 ///-------------------------------------------///
 void ImGuiManager::Finalize() {
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	// ImGuiの終了処理.。
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-#endif // _DEBUG
+#endif // USE_IMGUI
 }
 
 
@@ -59,14 +60,14 @@ void ImGuiManager::Finalize() {
 /// 開始処理
 ///-------------------------------------------///
 void ImGuiManager::Begin() {
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	// フレームの先頭でImGuiに、ここからフレームが始まる旨を告げる
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の初期に置き換える
 	//ImGui::ShowDemoWindow();
-#endif // _DEBUG
+#endif // USE_IMGUI
 }
 
 
@@ -74,14 +75,14 @@ void ImGuiManager::Begin() {
 /// 終了処理
 ///-------------------------------------------///
 void ImGuiManager::End() {
-#ifdef _DEBUG
+#ifdef USE_IMGUI
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	// ImGuiの内部コマンドを生成する
 	ImGui::Render();
 	// 実際のCommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
-#endif // _DEBUG
+#endif // USE_IMGUI
 }
 
 
@@ -89,10 +90,8 @@ void ImGuiManager::End() {
 /// 描画
 ///-------------------------------------------///
 void ImGuiManager::Draw() {
-#ifdef _DEBUG
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srvManager_->GetDescriptorHeap() };
 	commandList->SetDescriptorHeaps(1, descriptorHeaps);
-#endif // _DEBUG
 }

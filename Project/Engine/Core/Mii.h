@@ -29,6 +29,7 @@ class ImGuiManager;
 class TextureManager;
 class ModelManager;
 class AudioManager;
+class CSVManager;
 
 ///=====================================================///
 /// システム
@@ -65,11 +66,9 @@ public:/// ===開発者用関数(その他)=== ///
 	/// テクスチャ関連
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
-	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath);
-	// GPUハンドルの取得
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandleGPU(const std::string& filePath);
+	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key);
 	// メタデータの取得
-	static const DirectX::TexMetadata& GetMetaData(const std::string& filePath);
+	static const DirectX::TexMetadata& GetMetaData(const std::string& key);
 
 	///-------------------------------------------/// 
 	/// モデル関連
@@ -79,22 +78,21 @@ public:/// ===開発者用関数(その他)=== ///
 public:/// ===プログラマー用関数=== ///
 
 	///-------------------------------------------/// 
-	/// キー入力
+	/// Input
 	///-------------------------------------------///
+	// キーボード
 	static bool PushKey(BYTE keyNum);
 	static bool TriggerKey(BYTE keyNum);
-
-	///-------------------------------------------/// 
-	/// テクスチャ関連
-	///-------------------------------------------///
-	// テクスチャの読み込み
-	static void LoadTexture(const std::string& filePath);
-
-	///-------------------------------------------/// 
-	/// モデル関連
-	///-------------------------------------------///
-	// モデルの読み込み
-	static void LoadModel(const std::string& filename);
+	// マウス
+	static bool PushMouse(MouseButtonType button);
+	static bool TriggerMouse(MouseButtonType button);
+	static POINT GetMousePosition();
+	static LONG GetMouseDeltaX();
+	static LONG GetMouseDeltaY();
+	static LONG GetMouseDeltaScroll();
+	// コントーローラ
+	static bool PushController(int deviceIndex, int buttonIndex);
+	static bool TriggerController(int deviceIndex, int buttonIndex);
 
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
@@ -113,6 +111,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	static ModelManager* GetModelManager();
 	// AudioManager
 	static AudioManager* GetAudioManager();
+	// CSVManager* 
+	static CSVManager* GetCSVManager();
 
 private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<WinApp> winApp_;           // WinApp
@@ -125,4 +125,5 @@ private:/// ===Variables(変数)=== ///
 	static std::unique_ptr<ModelManager> modelManager_;       // ModelManager
 	static std::unique_ptr<ImGuiManager> imGuiManager_;       // ImGuiManager
 	static std::unique_ptr<AudioManager> audioManager_;       // AudioMangaer
+	static std::unique_ptr<CSVManager> csvManager_;           // CSVManager
 };

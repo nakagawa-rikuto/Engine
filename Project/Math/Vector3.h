@@ -9,38 +9,45 @@ struct Vector3 final {
 	float z;
 
 	/// ===加法=== ///
-	Vector3 operator+(const Vector3& v);
-	Vector3& operator+=(const Vector3& v);
+	// Vector3 | const
 	Vector3 operator+(const float& v);
 	Vector3& operator+=(const float& v);
+	Vector3 operator+(const Vector3& v);
+	Vector3& operator+=(const Vector3& v);
+	// const | const
+	Vector3 operator+(const float& v)const;
+	Vector3 operator+(const Vector3& v)const;
 
 	/// ===減法=== ///
-	Vector3 operator-(const Vector3& v);
-	Vector3& operator-=(const Vector3& v);
+	// Vector3 | const
 	Vector3 operator-(const float& v);
 	Vector3& operator-=(const float& v);
+	Vector3 operator-(const Vector3& v);
+	Vector3& operator-=(const Vector3& v);
+
+	// const | const
+	Vector3 operator-(const float& v)const;
+	Vector3 operator-(const Vector3& v)const;
 
 	/// ===積=== ///
-	Vector3 operator*(const Vector3& v);
-	Vector3& operator*=(const Vector3& v);
+	// Vector3 | const
 	Vector3 operator*(const float& v);
 	Vector3& operator*=(const float& v);
+	Vector3 operator*(const Vector3& v);
+	Vector3& operator*=(const Vector3& v);
+	// const | const
+	Vector3 operator*(const float& v)const;
+	Vector3 operator*(const Vector3& v)const;
 
 	/// ===除法=== ///
-	Vector3 operator/(const Vector3& v);
-	Vector3& operator/=(const Vector3& v);
+	// Vector3 | const
 	Vector3 operator/(const float& v);
 	Vector3& operator/=(const float& v);
-
-	/// ===追加=== ///
-	Vector3 operator+(const Vector3& v)const;
-	Vector3 operator-(const Vector3& v)const;
-	Vector3 operator*(const Vector3& v)const;
-	Vector3 operator/(const Vector3& v)const;
-	Vector3 operator+(const float& v)const;
-	Vector3 operator-(const float& v)const;
-	Vector3 operator*(const float& v)const;
+	Vector3 operator/(const Vector3& v);
+	Vector3& operator/=(const Vector3& v);
+	// const | const
 	Vector3 operator/(const float& v)const;
+	Vector3 operator/(const Vector3& v)const;
 };
 
 /// ===内積の計算=== ///

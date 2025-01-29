@@ -9,6 +9,7 @@
 #include "Engine/Managers/ModelManager.h"
 #include "Engine/Managers/ImGuiManager.h"
 #include "Engine/Managers/AudioManager.h"
+#include "Engine/Managers/CSVManager.h"
 // Math
 #include "Math/sMath.h"
 
@@ -24,6 +25,7 @@ std::unique_ptr<TextureManager> Mii::textureManager_ = nullptr;
 std::unique_ptr<ModelManager> Mii::modelManager_ = nullptr;
 std::unique_ptr<ImGuiManager> Mii::imGuiManager_ = nullptr;
 std::unique_ptr<AudioManager> Mii::audioManager_ = nullptr;
+std::unique_ptr<CSVManager> Mii::csvManager_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -85,6 +87,9 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// Audiomanagerの生成
 	audioManager_ = std::make_unique<AudioManager>();
 	audioManager_->Initialze();
+
+	// CSVManagerの生成
+	csvManager_ = std::make_unique<CSVManager>();
 }
 
 ///=====================================================/// 
@@ -158,11 +163,13 @@ void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, Blen
 #pragma endregion
 #pragma region Texture関連
 // SRVインデックス開始番号の取得
-void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string filePath) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, filePath); }
-// GPUハンドルの取得
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetSRVHandleGPU(const std::string& filePath) { return textureManager_->GetSRVHandleGPU(filePath); }
+void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, key); }
 // メタデータの取得
-const DirectX::TexMetadata& Mii::GetMetaData(const std::string& filePath) { return textureManager_->GetMetaData(filePath); }
+const DirectX::TexMetadata& Mii::GetMetaData(const std::string& key) { return textureManager_->GetMetaData(key); }
+#pragma endregion
+#pragma region Model関連
+// モデルデータの取得
+ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
 #pragma endregion
 
 
@@ -170,20 +177,19 @@ const DirectX::TexMetadata& Mii::GetMetaData(const std::string& filePath) { retu
 /// プログラマー用関数
 ///-------------------------------------------///
 #pragma region Key入力関連
-// 押してる間
+/// ===キーボード=== ///
 bool Mii::PushKey(BYTE keyNum) { return input_->PushKey(keyNum); }
-// 押した瞬間
 bool Mii::TriggerKey(BYTE keyNum) { return input_->TriggerKey(keyNum); }
-#pragma endregion
-#pragma region Texture関連
-// テクスチャ読み込み
-void Mii::LoadTexture(const std::string& filePath) {textureManager_->LoadTexture(filePath);}
-#pragma endregion
-#pragma region Model関連
-// モデルの読み込み
-void Mii::LoadModel(const std::string& filename) { modelManager_->LoadModel("Resource", filename); }
-// モデルデータの取得
-ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
+/// ===マウス=== ///
+bool Mii::PushMouse(MouseButtonType button) { return input_->PushMaouseButton(button); }
+bool Mii::TriggerMouse(MouseButtonType button) { return input_->TriggerMouseButton(button); }
+POINT Mii::GetMousePosition() { return input_->GetMouseCursorPosition(); }
+LONG Mii::GetMouseDeltaX() { return input_->GetMouseDeltaX(); }
+LONG Mii::GetMouseDeltaY() { return input_->GetMouseDeltaY(); }
+LONG Mii::GetMouseDeltaScroll() { return input_->GetMouseDeltaScroll(); }
+/// ===コントローラー=== ///
+bool Mii::PushController(int deviceIndex, int buttonIndex) { return input_->PushButton(deviceIndex, buttonIndex); }
+bool Mii::TriggerController(int deviceIndex, int buttonIndex) { return input_->TriggerButton(deviceIndex, buttonIndex); }
 #pragma endregion
 
 
@@ -207,4 +213,6 @@ TextureManager* Mii::GetTextureManager() { return textureManager_.get(); }
 ModelManager* Mii::GetModelManager() { return modelManager_.get(); }
 // AudioManager
 AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
+// CSVManager
+CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 #pragma endregion
