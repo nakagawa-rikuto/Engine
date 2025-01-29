@@ -84,7 +84,6 @@
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
     <ClCompile Include="application\Game\Stage\Block.cpp" />
-    <ClCompile Include="Game\Audio\Audio.cpp" />
     <ClCompile Include="application\Game\Stage\Goal.cpp" />
     <ClCompile Include="application\Game\Entity\Player.cpp" />
   </ItemGroup>

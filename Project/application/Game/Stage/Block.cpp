@@ -29,6 +29,7 @@ void Block::Initialze(const std::string& modelName, const Vector3& position, Cam
 ///-------------------------------------------///
 void Block::Update(Camera* camera) {
 	model_->SetCamera(camera);
+	model_->Update();
 }
 
 ///-------------------------------------------/// 

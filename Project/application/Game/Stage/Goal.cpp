@@ -21,6 +21,7 @@ void Goal::Initialze(const std::string & modelName, const Vector3 & pos, Camera*
 ///-------------------------------------------///
 void Goal::Update(Camera * camera) {
 	model_->SetCamera(camera);
+	model_->Update();
 }
 
 ///-------------------------------------------/// 

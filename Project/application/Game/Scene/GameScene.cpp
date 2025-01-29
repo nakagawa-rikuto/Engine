@@ -118,6 +118,14 @@ void GameScene::Update() {
 #ifdef USE_IMGUI
 	ImGui::Begin("GameScene");
 	ImGui::End();
+
+    ImGui::Begin("Camera");
+    ImGui::DragFloat3("Translate", &cameraPos_.x, 0.01f);
+    ImGui::DragFloat3("Rotate", &cameraRotate_.x, 0.01f);
+    ImGui::DragFloat3("Scale", &cameraScale_.x, 0.01f);
+    ImGui::Checkbox("2Dor3D", &Mode3D_);
+    ImGui::End();
+
 #endif // USE_IMGUI
 
     /// ===モードの切り替え=== ///
@@ -149,6 +157,7 @@ void GameScene::Update() {
 
     // Playerの更新
     player_->Update(cameraManager_->GetActiveCamera().get(), Mode3D_);
+
     // Blockの更新
     for (const auto& block : blocks_) {
         if (block) {
@@ -163,6 +172,9 @@ void GameScene::Update() {
     camera_->SetRotate(cameraRotate_);
     camera_->SetScale(cameraScale_);
     cameraManager_->UpdateAllCameras();
+
+    /// ===Spriteの更新=== ///
+    sprite_->Update();
 
     /// ===シーンの切り替え処理=== ///
     if (IsCollisionGoalBlock()) {
@@ -181,13 +193,13 @@ void GameScene::Draw() {
 
 #pragma region モデル描画
     // Blockの描画
-    for (const auto& block : blocks_) {
-        if (block) { // nullptr チェック
-            block->Draw();
-        }
-    }
+    //for (const auto& block : blocks_) {
+    //    if (block) { // nullptr チェック
+    //        block->Draw();
+    //    }
+    //}
     // Goalの描画
-    goal_->Draw();
+    //goal_->Draw();
     // Playerの描画
     player_->Draw();
     

@@ -114,7 +114,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
     <ClCompile Include="application\Game\Stage\Block.cpp" />
-    <ClCompile Include="Game\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="application\Game\Scene\ClearScene.cpp" />
     <ClCompile Include="Engine\Scene\Framework.cpp" />

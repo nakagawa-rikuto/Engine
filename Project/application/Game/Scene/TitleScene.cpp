@@ -35,6 +35,9 @@ void TitleScene::Update() {
 	ImGui::End();
 #endif // USE_IMGUI
 
+	/// ===Spriteの更新=== ///
+	sprite_->Update();
+
 	// シーン切り替え
 	if (Mii::TriggerKey(DIK_SPACE)) {
 		sceneManager_->ChangeScene(SceneType::Game);
