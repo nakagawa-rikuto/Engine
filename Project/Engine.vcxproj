@@ -183,6 +183,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Particle\ParticleSetUp.cpp" />
     <ClCompile Include="application\Particle\WindEmitter.cpp" />
     <ClCompile Include="application\Game\Entity\Player.cpp" />
+    <ClCompile Include="application\Game\Stage\SkyDome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
@@ -267,6 +268,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Particle\ParticleSetUp.h" />
     <ClInclude Include="application\Particle\WindEmitter.h" />
     <ClInclude Include="application\Game\Entity\Player.h" />
+    <ClInclude Include="application\Game\Stage\SkyDome.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\imgui\imgui.vcxproj">

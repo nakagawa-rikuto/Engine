@@ -86,6 +86,7 @@
     <ClCompile Include="application\Game\Stage\Block.cpp" />
     <ClCompile Include="application\Game\Stage\Goal.cpp" />
     <ClCompile Include="application\Game\Entity\Player.cpp" />
+    <ClCompile Include="application\Game\Stage\SkyDome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="application\Game\Stage\Block.h" />
     <ClInclude Include="application\Game\Stage\Goal.h" />
     <ClInclude Include="application\Game\Entity\Player.h" />
+    <ClInclude Include="application\Game\Stage\SkyDome.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />
