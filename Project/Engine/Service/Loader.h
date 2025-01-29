@@ -3,7 +3,6 @@
 #include "Engine/Core/FileTypeData.h"
 // C++
 #include <string>
-#include <memory>
 
 /// ===前方宣言=== ///
 class TextureManager;

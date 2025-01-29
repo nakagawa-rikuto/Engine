@@ -79,25 +79,6 @@ public:/// ===開発者用関数(その他)=== ///
 	///-------------------------------------------///
 	static ModelData GetModelData(const std::string& filename);
 
-public:/// ===プログラマー用関数=== ///
-
-	///-------------------------------------------/// 
-	/// Input
-	///-------------------------------------------///
-	// キーボード
-	static bool PushKey(BYTE keyNum);
-	static bool TriggerKey(BYTE keyNum);
-	// マウス
-	static bool PushMouse(MouseButtonType button);
-	static bool TriggerMouse(MouseButtonType button);
-	static POINT GetMousePosition();
-	static LONG GetMouseDeltaX();
-	static LONG GetMouseDeltaY();
-	static LONG GetMouseDeltaScroll();
-	// コントーローラ
-	static bool PushController(int deviceIndex, int buttonIndex);
-	static bool TriggerController(int deviceIndex, int buttonIndex);
-
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
 	static DXCommon* GetDXCommon();
@@ -123,10 +104,6 @@ public:/// ===開発者用関数(Getter)=== ///
 	static CSVManager* GetCSVManager();
 
 private:/// ===Variables(変数)=== ///
-	/// ===staticじゃない=== ///
-	
-
-	/// ===static=== ///
 	static std::unique_ptr<WinApp> winApp_;                   // WinApp
 	static std::unique_ptr<DXCommon> dXCommon_;               // DirectXCommon
 	

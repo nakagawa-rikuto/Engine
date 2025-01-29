@@ -23,7 +23,7 @@
     <ClCompile Include="application\Manager\CameraManager.cpp" />
     <ClCompile Include="application\3d\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
-    <ClCompile Include="Engine\Input\Input.cpp" />
+    <ClCompile Include="Engine\Service\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
     <ClCompile Include="Engine\3d\Material3D.cpp" />
     <ClCompile Include="Engine\Managers\ImGuiManager.cpp" />
@@ -103,7 +103,7 @@
     <ClInclude Include="application\3d\Camera.h" />
     <ClInclude Include="Engine\Core\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
-    <ClInclude Include="Engine\Input\Input.h" />
+    <ClInclude Include="Engine\Service\Input.h" />
     <ClInclude Include="Engine\Core\Logger.h" />
     <ClInclude Include="Engine\3d\Material3D.h" />
     <ClInclude Include="Engine\Managers\ImGuiManager.h" />
@@ -172,6 +172,7 @@
     <ClInclude Include="Engine\Input\Keyboard.h" />
     <ClInclude Include="Engine\Input\Mouse.h" />
     <ClInclude Include="Engine\Input\Controller.h" />
+    <ClInclude Include="Engine\DataInfo\InputData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

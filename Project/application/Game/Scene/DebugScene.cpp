@@ -1,8 +1,9 @@
 #include "DebugScene.h"
 // SceneManager
 #include "application/Manager/SceneManager.h"
-#include "Engine/Core/Mii.h"
+// Service
 #include "Engine/Service/Loader.h"
+#include "Engine/Service/Input.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -328,39 +329,39 @@ void DebugScene::Update() {
 
 	/// ===キーボード関連の処理=== ///
 #pragma region キーボード関連の処理
-	if (Mii::PushKey(DIK_D)) {
+	if (Input::PushKey(DIK_D)) {
 		cameraPos.x += 0.01f;
-	} else if (Mii::PushKey(DIK_A)) {
+	} else if (Input::PushKey(DIK_A)) {
 		cameraPos.x -= 0.01f;
 	}
-	if (Mii::PushKey(DIK_W)) {
+	if (Input::PushKey(DIK_W)) {
 		cameraPos.y += 0.01f;
-	} else if (Mii::PushKey(DIK_S)) {
+	} else if (Input::PushKey(DIK_S)) {
 		cameraPos.y -= 0.01f;
 	}
-	if (Mii::PushKey(DIK_UP)) {
+	if (Input::PushKey(DIK_UP)) {
 		cameraPos.z += 0.01f;
-	} else if (Mii::PushKey(DIK_DOWN)) {
+	} else if (Input::PushKey(DIK_DOWN)) {
 		cameraPos.z -= 0.01f;
 	}
 #pragma endregion
 
 	/// ===マウス関連の処理=== ///
 #pragma region マウス関連の処理
-	if (Mii::PushMouse(MouseButtonType::Left)) {
+	if (Input::PushMouse(MouseButtonType::Left)) {
 		PushLeft_ = true;
 	} else {
 		PushLeft_ = false;
 	}
-	if (Mii::TriggerMouse(MouseButtonType::Right)) {
+	if (Input::TriggerMouse(MouseButtonType::Right)) {
 		if (TriggerRight_) {
 			TriggerRight_ = false;
 		} else {
 			TriggerRight_ = true;
 		}
 	}
-	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+	mousePosition_.x = static_cast<float>(Input::GetMousePosition().x);
+	mousePosition_.y = static_cast<float>(Input::GetMousePosition().y);
 #pragma endregion
 
 	/// ===Audioのセット=== ///

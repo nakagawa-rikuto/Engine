@@ -1,7 +1,9 @@
 #include "Framework.h"
 // Mii
 #include "Engine/Core/Mii.h"
+// Service
 #include "Engine/Service/Loader.h"
+#include "Engine/Service/Input.h"
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -11,6 +13,8 @@ void Framework::Initialize(const wchar_t* title) {
 	Mii::Initialize(title, 1280, 720);
 	// Loaderの初期化
 	Loader::Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager());
+	// Inputの初期化
+	Input::Initialize(Mii::GetKeyboard(), Mii::GetMouse(), Mii::GetController());
 }
 
 ///-------------------------------------------/// 
@@ -18,6 +22,7 @@ void Framework::Initialize(const wchar_t* title) {
 ///-------------------------------------------///
 void Framework::Finalize() {
 	// 終了処理
+	Input::Finalize();
 	Loader::Finalize();
 	Mii::Finalize();
 }
@@ -27,6 +32,7 @@ void Framework::Finalize() {
 ///-------------------------------------------///
 void Framework::Update() {
 	// システムの更新処理
+	Input::Update();
 	Mii::Update();
 }
 

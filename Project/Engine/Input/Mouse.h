@@ -2,27 +2,10 @@
 /// ===Includ=== ///
 // Engine
 #include "Engine/Core/ComPtr.h"
-// c++
-#define DIRECTINPUT_VERSION   0x0800   // DirectInputのバージョン指定
-#include <dinput.h>
-#include <Windows.h>
-#include <array>
-#include <vector>
-#include <wrl.h>
-
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
+#include "Engine/DataInfo/InputData.h"
 
 /// ===前方宣言=== ///
 class WinApp;
-
-/// ===マウスのキーを指定する為の列挙型=== ///
-enum class MouseButtonType {
-	Left,       // 左クリック
-	Right,      // 右クリック
-	Scroll,     // スクロールボタン
-	Button1,    // ボタン1
-};
 
 ///=====================================================/// 
 /// マウス

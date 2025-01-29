@@ -22,6 +22,7 @@
 std::unique_ptr<WinApp> Mii::winApp_ = nullptr;
 std::unique_ptr<DXCommon> Mii::dXCommon_ = nullptr;
 // Input
+std::unique_ptr<InputCommon> Mii::inputCommon_ = nullptr;
 std::unique_ptr<Keyboard> Mii::keyboard_ = nullptr;
 std::unique_ptr<Mouse> Mii::mouse_ = nullptr;
 std::unique_ptr<Controller> Mii::controller_ = nullptr;
@@ -67,7 +68,7 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	dXCommon_ = std::make_unique<DXCommon>();
 	dXCommon_->Initialize(winApp_.get(), width, height);
 
-	// Inputの生成
+	// InputCommonの生成
 	inputCommon_ = std::make_unique<InputCommon>();
 	inputCommon_->Initialize(winApp_.get());
 
@@ -202,11 +203,11 @@ ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList
 ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
 // Keyboard
-Keyboard* Mii::GetKeyboard() {}
+Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse
-Mouse* Mii::GetMouse() {}
+Mouse* Mii::GetMouse() { return mouse_.get(); }
 // Controller
-Controller* Mii::GetController() {}
+Controller* Mii::GetController() { return controller_.get(); }
 // SRVManager
 SRVManager* Mii::GetSRVManager() {return srvManager_.get();}
 // TextureManager
