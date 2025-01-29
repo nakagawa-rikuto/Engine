@@ -34,6 +34,8 @@ public:
 	static void LoadMP3(const std::string& key, const std::string& filename);
 	// 音声データの解放
 	static void UnloadSound(const std::string& key);
+	// 音声データの一括開放
+	static void AllUnloadSound();
 
 private:
 	

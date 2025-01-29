@@ -20,8 +20,8 @@ DebugScene::~DebugScene() {
 	audio_->StopSound("fanfare");
 	audio_->StopSound("clear");
 	// Loader
-	Loader::UnloadSound("fanfare");
-	Loader::UnloadSound("clear");
+	//Loader::UnloadSound("fanfare");
+	//Loader::UnloadSound("clear");
 	// Particle
 	windParticle_.reset();
 	explosionParticle_.reset();
@@ -47,13 +47,12 @@ void DebugScene::Initialize() {
 	Loader::LoadTexture("monsterBall", "./Resource/monsterBall.png");
 
 	// モデルの読み込み
-	Loader::LoadModel("GlTF", ModelFileType::GLTF);
+	Loader::LoadModel("GlTF", ModelFileType::GLTF); // GLTFファイルを読み込むときはModelFileTypeで選択しなければいけない
 	Loader::LoadModel("MonsterBall");
 	Loader::LoadModel("terrain");
 	Loader::LoadModel("axis");
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
-	
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///

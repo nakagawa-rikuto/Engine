@@ -82,3 +82,10 @@ void Loader::LoadMP3(const std::string & key, const std::string & filename) {
 void Loader::UnloadSound(const std::string& key) {
 	audioManager_->Unload(key);
 }
+
+///-------------------------------------------/// 
+/// 音声データの一括開放
+///-------------------------------------------///
+void Loader::AllUnloadSound() { 
+	audioManager_->UnloadAll(); 
+}

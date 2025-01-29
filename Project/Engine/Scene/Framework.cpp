@@ -21,6 +21,8 @@ void Framework::Initialize(const wchar_t* title) {
 /// 終了
 ///-------------------------------------------///
 void Framework::Finalize() {
+	// 音声データの一括開放
+	Loader::AllUnloadSound();
 	// 終了処理
 	Input::Finalize();
 	Loader::Finalize();
