@@ -11,7 +11,8 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, CameraManag
 	}
 
 	const float spacing = 5.0f;                   // モデル間の間隔
-	const Vector3 basePosition(0.0f, 0.0f, 0.0f); // 基準となる位置
+
+	const Vector3 basePosition(static_cast<float>((cols - 1)) / 2 * -spacing, static_cast<float>((rows - 1)) / 2 * spacing, 0.0f); // 基準となる位置
 
 	for (int y = 0; y < rows; ++y) {
 		for (int x = 0; x < cols; ++x) {
@@ -131,6 +132,45 @@ bool CardManager::AllCardsObtained() {
 		}
 	}
 	return true;
+}
+
+void CardManager::CardDataRefresh(std::vector<std::vector<int>> cardData)
+{
+	cards_[0].clear();
+	cards_.clear();
+
+	rows = cardData.size();
+	cols = cardData[0].size();
+
+	cards_.resize(rows);
+	for (auto& row : cards_) {
+		row.resize(cols);
+	}
+
+	const float spacing = 5.0f;                   // モデル間の間隔
+
+	const Vector3 basePosition(static_cast<float>((cols - 1)) / 2 * -spacing, static_cast<float>((rows - 1)) / 2 * spacing, 0.0f); // 基準となる位置
+
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
+
+			Vector3 position(basePosition.x + x * spacing, basePosition.y + y * -spacing, basePosition.z);
+
+			std::string type = std::to_string(cardData[y][x]);
+
+#pragma region
+
+			const std::string& CardModel = "Card" + type;
+
+#pragma endregion
+
+			std::unique_ptr<Card> newCard = std::make_unique<Card>();
+
+			newCard->Initialize(CardModel, cardData[y][x], position, cameraManager_->GetActiveCamera());
+
+			cards_[y][x] = std::move(newCard);
+		}
+	}
 }
 
 void CardManager::CheckCursorCardCollision(Vector2 mousePosition) {
