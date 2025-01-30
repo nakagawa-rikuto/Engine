@@ -9,8 +9,10 @@ class CardManager
 {
 public:
 
+	~CardManager() = default;
+
 	// 初期化
-	void Initialize(std::vector<std::vector<int>> cardData,std::list<std::string> cardModels,CameraManager* cameraManager);
+	void Initialize(std::vector<std::vector<int>> cardData,CameraManager* cameraManager);
 
 	// 更新
 	void Update(Vector2 mousePosition);
