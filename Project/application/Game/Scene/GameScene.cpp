@@ -7,7 +7,9 @@
 ///-------------------------------------------///
 /// デストラクタ
 ///-------------------------------------------///
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+	cardManager_.reset();
+}
 
 ///-------------------------------------------///
 /// 初期化
@@ -17,11 +19,20 @@ void GameScene::Initialize() {
 	IScene::Initialize();
 
 	// モデルの読み込み
-	const std::string& CardModel = "Card1";
-	Loader_->LoadModel(CardModel);
+	const std::string& CardModel1 = "Card1";
+	const std::string& CardModel2 = "Card2";
+	const std::string& CardModel3 = "Card3";
+	const std::string& CardModel4 = "Card4";
+
+	Loader_->LoadModel(CardModel1);
+	Loader_->LoadModel(CardModel2);
+	Loader_->LoadModel(CardModel3);
+	Loader_->LoadModel(CardModel4);
+
 	Loader_->LoadModel("Particle");
 
-	std::list<std::string> cardModels;
+	//std::list<std::string> cardModels;
+
 
 	/// ===Camera=== ///
 	// Camera情報
@@ -38,7 +49,7 @@ void GameScene::Initialize() {
 	// const int gridSize = 5;                       // グリッドのサイズ
 	
 	cardManager_ = std::make_unique<CardManager>();
-	cardManager_->Initialize(cardData3x3, cardModels, cameraManager_.get());
+	cardManager_->Initialize(cardData3x3,cameraManager_.get());
 
 
 	// GlobalVariablesの取得
