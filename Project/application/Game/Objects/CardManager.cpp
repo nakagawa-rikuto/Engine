@@ -1,23 +1,20 @@
 #include "CardManager.h"
 
-void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<std::string> cardModels, CameraManager* cameraManager)
-{
+void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<std::string> cardModels, CameraManager* cameraManager) {
 
 	rows = cardData.size();
 	cols = cardData[0].size();
 
 	cards_.resize(rows);
-		for (auto& row : cards_) {
+	for (auto& row : cards_) {
 		row.resize(cols);
 	}
 
 	const float spacing = 5.0f;                   // モデル間の間隔
 	const Vector3 basePosition(0.0f, 0.0f, 0.0f); // 基準となる位置
 
-	for (int y = 0; y < rows; ++y)
-	{
-		for (int x = 0; x < cols; ++x)
-		{
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
 
 			Vector3 position(basePosition.x + x * spacing, basePosition.y + y * -spacing, basePosition.z);
 
@@ -41,8 +38,7 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<s
 	selectParticle_->Initialze();
 }
 
-void CardManager::Update(Vector2 mousePosition)
-{
+void CardManager::Update(Vector2 mousePosition) {
 	CheckCursorCardCollision(mousePosition);
 
 	for (int y = 0; y < rows; ++y) {
@@ -50,7 +46,7 @@ void CardManager::Update(Vector2 mousePosition)
 			if (cards_[y][x]->GetCurrentState() != Card::CardState::obtained) {
 				cards_[y][x]->Update(cameraManager_->GetActiveCamera());
 
-				cards_[y][x]->SetScale({ 1.0f, 1.0f, 1.0f });
+				cards_[y][x]->SetScale({1.0f, 1.0f, 1.0f});
 			}
 		}
 	}
@@ -59,13 +55,11 @@ void CardManager::Update(Vector2 mousePosition)
 	selectParticle_->UpdateImGui();
 #endif // USE_IMGUI
 
-
 	selectParticle_->Update();
 	CheckFrontPair();
 }
 
-void CardManager::Darw()
-{
+void CardManager::Darw() {
 	for (int y = 0; y < rows; ++y) {
 		for (int x = 0; x < cols; ++x) {
 			cards_[y][x]->Draw();
@@ -75,8 +69,7 @@ void CardManager::Darw()
 	selectParticle_->Draw();
 }
 
-void CardManager::CheckFrontPair()
-{
+void CardManager::CheckFrontPair() {
 	// 記録用変数
 	int cardType[2];
 	int cardX[2];
@@ -113,22 +106,30 @@ void CardManager::CheckFrontPair()
 			}
 
 			EightDirectionCheck(cardZ, cardX);
-		}
-		else if (cardType[0] != cardType[1]) {
+		} else if (cardType[0] != cardType[1]) {
 
 			for (int i = 0; i < 2; ++i) {
 
 				cards_[cardZ[i]][cardX[i]]->SetCurrentState(Card::CardState::show);
 
 				cards_[cardZ[i]][cardX[i]]->RequestState(Card::CardState::back);
-
 			}
 		}
 	}
 }
 
-void CardManager::CheckCursorCardCollision(Vector2 mousePosition)
-{
+bool CardManager::AllCardsObtained() {
+	for (const auto& row : cards_) {
+		for (const auto& card : row) {
+			if (card->GetCurrentState() != Card::CardState::obtained) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void CardManager::CheckCursorCardCollision(Vector2 mousePosition) {
 	if (!CountStateCard(Card::CardState::front) || !CountStateCard(Card::CardState::show)) {
 		return;
 	}
@@ -140,7 +141,7 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition)
 			float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
 
 			if (len < 25.0f && cards_[y][x]->GetCurrentState() == Card::CardState::back) {
-				cards_[y][x]->SetScale({ 1.3f, 1.3f, 1.3f });
+				cards_[y][x]->SetScale({1.3f, 1.3f, 1.3f});
 
 				// Particleの処理
 				selectParticle_->SetAABB(cards_[y][x]->GetAABB().min, cards_[y][x]->GetAABB().max);
@@ -152,8 +153,7 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition)
 						cards_[y][x]->RequestState(Card::CardState::front);
 
 						triggerLeft_ = false;
-					}
-					else {
+					} else {
 						triggerLeft_ = true;
 					}
 				}
@@ -164,8 +164,7 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition)
 	}
 }
 
-bool CardManager::CountStateCard(Card::CardState state)
-{
+bool CardManager::CountStateCard(Card::CardState state) {
 	int count = 0;
 	for (int y = 0; y < rows; ++y) {
 		for (int x = 0; x < cols; ++x) {
@@ -182,8 +181,7 @@ bool CardManager::CountStateCard(Card::CardState state)
 	return false;
 }
 
-void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2])
-{
+void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2]) {
 	// 差
 	int diffY = yIndex[1] - yIndex[0];
 	int diffX = xIndex[1] - xIndex[0];
@@ -200,8 +198,7 @@ void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2])
 
 				addXIndex += addNum;
 
-				if (cards_[yIndex[0]][addXIndex]->GetCurrentState() == Card::CardState::back)
-				{
+				if (cards_[yIndex[0]][addXIndex]->GetCurrentState() == Card::CardState::back) {
 					cards_[yIndex[0]][addXIndex]->SetCurrentState(Card::CardState::show);
 
 					cards_[yIndex[0]][addXIndex]->RequestState(Card::CardState::obtained);
@@ -221,8 +218,7 @@ void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2])
 
 				addYIndex += addNum;
 
-				if (cards_[addYIndex][xIndex[0]]->GetCurrentState() == Card::CardState::back)
-				{
+				if (cards_[addYIndex][xIndex[0]]->GetCurrentState() == Card::CardState::back) {
 					cards_[addYIndex][xIndex[0]]->SetCurrentState(Card::CardState::show);
 
 					cards_[addYIndex][xIndex[0]]->RequestState(Card::CardState::obtained);
@@ -240,8 +236,7 @@ void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2])
 			yIndex[0] += yAdd;
 			xIndex[0] += xAdd;
 
-			if (cards_[yIndex[0]][xIndex[0]]->GetCurrentState() == Card::CardState::back)
-			{
+			if (cards_[yIndex[0]][xIndex[0]]->GetCurrentState() == Card::CardState::back) {
 				cards_[yIndex[0]][xIndex[0]]->SetCurrentState(Card::CardState::show);
 
 				cards_[yIndex[0]][xIndex[0]]->RequestState(Card::CardState::obtained);

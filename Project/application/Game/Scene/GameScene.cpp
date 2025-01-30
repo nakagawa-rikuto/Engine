@@ -112,6 +112,11 @@ void GameScene::Update() {
 	cameraManager_->UpdateAllCameras();
 
 	globalVariables->Update();
+
+	 // すべてのカードが obtained ならシーンを変更
+	if (cardManager_->AllCardsObtained()) {
+		sceneManager_->ChangeScene("Title");
+	}
 }
 
 ///-------------------------------------------///
