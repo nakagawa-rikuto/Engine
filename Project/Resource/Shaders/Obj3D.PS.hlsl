@@ -64,6 +64,15 @@ PixlShaderOutput main(VertexShaderOutput input)
         discard;
     }
     
+    // 背面判定
+    float dotProduct = dot(normalize(input.normal), toEye);
+    if (dotProduct < 0.0f)
+    {
+        // 背面なら白色にする
+        output.color = float4(1.0f, 1.0f, 1.0f, 1.0f); // 背面は白色
+        return output;
+    }
+    
     // Lighting
     if (gMaterial.enableLighting != 0) // Lightingする場合
     { 
