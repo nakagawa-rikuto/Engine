@@ -1,6 +1,6 @@
 #include "CardManager.h"
 
-void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<std::string> cardModels, CameraManager* cameraManager) {
+void CardManager::Initialize(std::vector<std::vector<int>> cardData, CameraManager* cameraManager) {
 
 	rows = cardData.size();
 	cols = cardData[0].size();
@@ -18,14 +18,17 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<s
 
 			Vector3 position(basePosition.x + x * spacing, basePosition.y + y * -spacing, basePosition.z);
 
+			std::string type = std::to_string(cardData[y][x]);
+
 #pragma region
+			
+			const std::string& CardModel = "Card" + type;
+			
 #pragma endregion
 
-			std::string cardModel = "Card";
+			std::unique_ptr<Card> newCard = std::make_unique<Card>();
 
-			std::shared_ptr<Card> newCard = std::make_unique<Card>();
-
-			newCard->Initialize(cardModel, cardData[y][x], position, cameraManager->GetActiveCamera());
+			newCard->Initialize(CardModel, cardData[y][x], position, cameraManager->GetActiveCamera());
 
 			cards_[y][x] = std::move(newCard);
 		}
@@ -60,6 +63,7 @@ void CardManager::Update(Vector2 mousePosition) {
 }
 
 void CardManager::Darw() {
+
 	for (int y = 0; y < rows; ++y) {
 		for (int x = 0; x < cols; ++x) {
 			cards_[y][x]->Draw();

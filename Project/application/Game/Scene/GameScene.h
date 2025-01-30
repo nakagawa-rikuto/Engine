@@ -66,7 +66,7 @@ private:/// ===メンバ変数=== ///
 	std::vector<std::vector<int>> cardData3x3 =
 	{
 		{1,2,1},
-		{0,0,0},
+		{3,3,3},
 		{1,1,1},
 	};
 
