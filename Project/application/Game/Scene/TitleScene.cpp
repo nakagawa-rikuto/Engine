@@ -40,8 +40,13 @@ void TitleScene::Update() {
 #ifdef USE_IMGUI
 	ImGui::Begin("TitleScene");
 
+	ImGui::Text("Space To GameScene");
+
+	ImGui::Separator();
+
 	ImGui::Begin("Camera");
 	ImGui::DragFloat3("pos", &cameraPos_.x, 0.01f);
+
 	ImGui::End();
 
 	ImGui::End();
