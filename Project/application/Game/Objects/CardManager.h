@@ -23,6 +23,9 @@ public:
 	size_t GetRows() { return rows; }
 	size_t GetCols() { return cols; }
 
+	// 全てのカードが消えたか
+	bool AllCardsObtained();
+
 private:
 
 	// 表のカードがそろっているか
@@ -48,4 +51,3 @@ private:
 
 	CameraManager* cameraManager_ = nullptr;
 };
-
