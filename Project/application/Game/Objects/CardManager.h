@@ -1,6 +1,9 @@
 #pragma once
 #include "Engine/Core/Mii.h"
 #include "application/Game/Objects/Card.h"
+#include "application/Particle/SelectEmitter.h"
+
+#include <memory>
 
 class CardManager
 {
@@ -35,6 +38,8 @@ private:
 private:
 
 	std::vector<std::vector<std::shared_ptr<Card>>> cards_;
+
+	std::shared_ptr<SelectEmitter> selectParticle_;
 
 	bool triggerLeft_ = false;
 

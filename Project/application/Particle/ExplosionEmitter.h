@@ -1,8 +1,6 @@
 #pragma once
 /// ===Include=== ///
 #include "Engine/Particle/ParticleEmitter.h"
-// Math
-#include "Math/MathData.h"
 // c++
 #include <random>
 

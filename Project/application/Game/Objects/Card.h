@@ -66,6 +66,8 @@ public:/// ===メンバ関数=== ///
 
 	Vector2 GetScreenPosition() { return screenPosition; }
 
+	AABB GetAABB() { return Collider::GetAABB(); }
+
 	// セッター
 	void RequestState(CardState state) { requestState_ = state; }
 

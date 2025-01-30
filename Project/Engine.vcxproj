@@ -128,6 +128,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Load\AssetLoader.cpp" />
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
+    <ClCompile Include="application\Particle\SpiralEmitter.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\MatrixMath.cpp" />
@@ -180,6 +181,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Manager\ParticleManager.cpp" />
     <ClCompile Include="Engine\Particle\ParticleSetUp.cpp" />
     <ClCompile Include="application\Particle\WindEmitter.cpp" />
+    <ClCompile Include="application\Particle\SelectEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
@@ -208,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Load\AssetLoader.h" />
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
+    <ClInclude Include="application\Particle\SpiralEmitter.h" />
     <ClInclude Include="Math\MathData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
@@ -263,6 +266,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Manager\ParticleManager.h" />
     <ClInclude Include="Engine\Particle\ParticleSetUp.h" />
     <ClInclude Include="application\Particle\WindEmitter.h" />
+    <ClInclude Include="application\Particle\SelectEmitter.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\imgui\imgui.vcxproj">

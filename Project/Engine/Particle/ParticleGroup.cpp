@@ -33,7 +33,7 @@ void ParticleGroup::SetInstancingData(size_t index, const Vector4& color, const 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMaxInstance) {
+void ParticleGroup::Initialize(const std::string& filename, const uint32_t kNumMaxInstance) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = Mii::GetDXDevice();
@@ -87,7 +87,7 @@ void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMa
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ParticleGroup::Darw(const uint32_t instance, BlendMode mode) {
+void ParticleGroup::Draw(const uint32_t instance, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
