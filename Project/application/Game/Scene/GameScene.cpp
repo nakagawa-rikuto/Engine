@@ -45,16 +45,13 @@ void GameScene::Initialize() {
 	camera_->SetTranslate(cameraPos_);
 	cameraManager_->Add("main1", camera_);
 
-	std::vector<std::vector<int>> cardData;
+	auto it = cardDatas_.begin();
 
-	if (stage == StageNum::tutorial)
-	{
-		cardData = tutorial;
-	}
+	std::advance(it, static_cast<int>(stage));
 
 	/// ===Model=== ///
 	cardManager_ = std::make_unique<CardManager>();
-	cardManager_->Initialize(cardData,cameraManager_.get());
+	cardManager_->Initialize(*it, cameraManager_.get());
 
 
 	// GlobalVariablesの取得
@@ -71,7 +68,7 @@ void GameScene::Initialize() {
 			cardGrid.push_back(cardManager_->GetCards()[y][x]->GetCardType());
 		}
 	}
-	globalVariables->SetValue("Cards", "CardGrid", cardData);
+	globalVariables->SetValue("Cards", "CardGrid", *it);
 }
 
 ///-------------------------------------------///
@@ -119,92 +116,7 @@ void GameScene::Update() {
 
 #ifdef USE_IMGUI
 
-	const char* stageNames[] =
-	{
-		"tutorial",
-		"card3x3_1",
-		"card3x3_2",
-		"card3x3_3",
-		"card3x3_4",
-		"card4x4_1",
-		"card4x4_2",
-		"card4x4_3",
-		"card5x5_1",
-		"card5x5_2",
-		"card5x5_3",
-		"card5x5_4",
-	};
-
-	if (ImGui::BeginCombo("Select Stage",stageNames[static_cast<int>(stage)])) {
-		///
-		if (ImGui::Selectable("tutorial")) {
-			cardManager_->CardDataRefresh(tutorial);
-			globalVariables->SetValue("Cards", "CardGrid", tutorial);
-			stage = StageNum::tutorial;
-		}
-		///
-		if (ImGui::Selectable("card3x3_1")) {
-			cardManager_->CardDataRefresh(card3x3_1);
-			globalVariables->SetValue("Cards", "CardGrid", card3x3_1);
-			stage = StageNum::card3x3_1;
-		}
-		///
-		if (ImGui::Selectable("card3x3_2")) {
-			cardManager_->CardDataRefresh(card3x3_2);
-			globalVariables->SetValue("Cards", "CardGrid", card3x3_2);
-			stage = StageNum::card3x3_2;
-		}
-		///
-		if (ImGui::Selectable("card3x3_3")) {
-			cardManager_->CardDataRefresh(card3x3_3);
-			globalVariables->SetValue("Cards", "CardGrid", card3x3_3);
-			stage = StageNum::card3x3_3;
-		}
-		///
-		if (ImGui::Selectable("card3x3_4")) {
-			cardManager_->CardDataRefresh(card3x3_4);
-			globalVariables->SetValue("Cards", "CardGrid", card3x3_4);
-			stage = StageNum::card3x3_4;
-		}
-		///
-		if (ImGui::Selectable("card4x4_1")) {
-			cardManager_->CardDataRefresh(card4x4_1);
-			globalVariables->SetValue("Cards", "CardGrid", card4x4_1);
-			stage = StageNum::card4x4_1;
-		}
-		if (ImGui::Selectable("card4x4_2")) {
-			cardManager_->CardDataRefresh(card4x4_2);
-			globalVariables->SetValue("Cards", "CardGrid", card4x4_2);
-			stage = StageNum::card4x4_2;
-		}
-		if (ImGui::Selectable("card4x4_3")) {
-			cardManager_->CardDataRefresh(card4x4_3);
-			globalVariables->SetValue("Cards", "CardGrid", card4x4_3);
-			stage = StageNum::card4x4_3;
-		}
-		if (ImGui::Selectable("card5x5_1")) {
-			cardManager_->CardDataRefresh(card5x5_1);
-			globalVariables->SetValue("Cards", "CardGrid", card5x5_1);
-			stage = StageNum::card5x5_1;
-		}
-		if (ImGui::Selectable("card5x5_2")) {
-			cardManager_->CardDataRefresh(card5x5_2);
-			globalVariables->SetValue("Cards", "CardGrid", card5x5_2);
-			stage = StageNum::card5x5_2;
-		}
-		if (ImGui::Selectable("card5x5_3")) {
-			cardManager_->CardDataRefresh(card5x5_3);
-			globalVariables->SetValue("Cards", "CardGrid", card5x5_3);
-			stage = StageNum::card5x5_3;
-		}
-		if (ImGui::Selectable("card5x5_4")) {
-			cardManager_->CardDataRefresh(card5x5_4);
-			globalVariables->SetValue("Cards", "CardGrid", card5x5_4);
-			stage = StageNum::card5x5_4;
-		}
-
-		ImGui::EndCombo();
-	}
+	RefreshCardData();
 
 #endif // USE_IMGUI
 
@@ -222,7 +134,13 @@ void GameScene::Update() {
 
 	 // すべてのカードが obtained ならシーンを変更
 	if (cardManager_->AllCardsObtained()) {
-		sceneManager_->ChangeScene("Clear");
+
+		CheckStarFlag();
+
+		if (star2Flag)
+		{
+			sceneManager_->ChangeScene("Clear");
+		}
 	}
 }
 
@@ -241,5 +159,241 @@ void GameScene::Draw() {
 
 #pragma region 前景スプライト描画
 #pragma endregion
+}
+
+void GameScene::RefreshCardData()
+{
+	const char* stageNames[] =
+	{
+		"tutorial",
+		"card3x3_1",
+		"card3x3_2",
+		"card3x3_3",
+		"card3x3_4",
+		"card4x4_1",
+		"card4x4_2",
+		"card4x4_3",
+		"card5x5_1",
+		"card5x5_2",
+		"card5x5_3",
+		"card5x5_4",
+	};
+
+	if (ImGui::BeginCombo("Select Stage", stageNames[static_cast<int>(stage)])) {
+
+		if (ImGui::Selectable("tutorial")) {
+			stage = StageNum::tutorial;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card3x3_1")) {
+			stage = StageNum::card3x3_1;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card3x3_2")) {
+			stage = StageNum::card3x3_2;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card3x3_3")) {
+			stage = StageNum::card3x3_3;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card3x3_4")) {
+			stage = StageNum::card3x3_4;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card4x4_1")) {
+			stage = StageNum::card4x4_1;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card4x4_2")) {
+			stage = StageNum::card4x4_2;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card4x4_3")) {
+			stage = StageNum::card4x4_3;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card5x5_1")) {
+			stage = StageNum::card5x5_1;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card5x5_2")) {
+			stage = StageNum::card5x5_2;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card5x5_3")) {
+			stage = StageNum::card5x5_3;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		if (ImGui::Selectable("card5x5_4")) {
+			stage = StageNum::card5x5_4;
+			auto it = cardDatas_.begin();
+			std::advance(it, static_cast<int>(stage));
+			cardManager_->CardDataRefresh(*it);
+			globalVariables->SetValue("Cards", "CardGrid", *it);
+		}
+		ImGui::EndCombo();
+	}
+}
+
+void GameScene::CheckStarFlag()
+{
+	Mission mission = stageMissions[static_cast<int>(stage)];
+
+
+	if (mission.kStepCount > 0)
+	{
+		if (mission.kStepCount >= cardManager_->GetStepCount())
+		{
+			if (mission.kEraseAllCount1 > 0 && mission.kEraseAllCount1 <= cardManager_->GetAllObtainedCardCount())
+			{
+				star1Flag = true;
+			}
+		}
+		else 
+		{
+			if (mission.kStepCount == 10 && cardManager_.get()->step10obtainedCount >= mission.kEraseAllCount1)
+			{
+				star1Flag = true;
+			}
+
+			if (mission.kStepCount == 15 && cardManager_.get()->step15obtainedCount >= mission.kEraseAllCount1)
+			{
+				star1Flag = true;
+			}
+		}
+	}
+	else
+	{
+		if (mission.kEraseAllCount1 > 0 && mission.kEraseAllCount1 <= cardManager_->GetAllObtainedCardCount())
+		{
+			star1Flag = true;
+		}
+	}
+
+	if (mission.kEraseCardCount1 > 0)
+	{
+		if (mission.kEraseCardCount1 <= cardManager_->GetEraseCardCount())
+		{
+			if (!star1Flag)
+			{
+				star1Flag = true;
+			}
+			else
+			{
+				star2Flag = true;
+			}
+		}
+	}
+
+	if (mission.kEraseCardCount2 > 0)
+	{
+		if (mission.kEraseCardCount2 <= cardManager_->GetEraseCardCount())
+		{
+			if (!star1Flag)
+			{
+				star1Flag = true;
+			}
+			else
+			{
+				star2Flag = true;
+			}
+		}
+	}
+	
+
+	if (mission.kMaxEraseCardCount1 > 0)
+	{
+		if (mission.kMaxEraseCardCount1 <= cardManager_->GetEraseCardMaxCount())
+		{
+			if (!star1Flag)
+			{
+				star1Flag = true;
+			}
+			else
+			{
+				star2Flag = true;
+			}
+		}
+	}
+
+	if (mission.kEraseCount1 > 0)
+	{
+		if (mission.kEraseCount1 <= cardManager_->GetEraseCount())
+		{
+			if (!star1Flag)
+			{
+				star1Flag = true;
+			}
+			else
+			{
+				star2Flag = true;
+			}
+		}
+	}
+
+	if (mission.kEraseCount2 > 0)
+	{
+		if (mission.kEraseCount2 <= cardManager_->GetEraseCount())
+		{
+			if (!star1Flag)
+			{
+				star1Flag = true;
+			}
+			else
+			{
+				star2Flag = true;
+			}
+		}
+	}
+
+	if (mission.kEraseAllCount2 > 0)
+	{
+		if (mission.kEraseAllCount2 <= cardManager_->GetAllObtainedCardCount())
+		{
+			if (!star1Flag)
+			{
+				star1Flag = true;
+			}
+			else
+			{
+				star2Flag = true;
+			}
+		}
+	}
+
 }
 

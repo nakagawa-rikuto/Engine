@@ -55,6 +55,8 @@ void CardManager::Update(Vector2 mousePosition) {
 		}
 	}
 
+	allObtainedCardCount = CountState(Card::CardState::obtained);
+
 #ifdef USE_IMGUI
 	selectParticle_->UpdateImGui();
 #endif // USE_IMGUI
@@ -75,6 +77,7 @@ void CardManager::Darw() {
 }
 
 void CardManager::CheckFrontPair() {
+
 	// 記録用変数
 	int cardType[2];
 	int cardX[2];
@@ -120,6 +123,19 @@ void CardManager::CheckFrontPair() {
 				cards_[cardZ[i]][cardX[i]]->RequestState(Card::CardState::back);
 			}
 		}
+
+
+		++stepCount;
+
+		if (stepCount == 10)
+		{
+			step10obtainedCount = CountState(Card::CardState::obtained);
+		}
+
+		if (stepCount == 15)
+		{
+			step15obtainedCount = CountState(Card::CardState::obtained);
+		}
 	}
 }
 
@@ -136,6 +152,23 @@ bool CardManager::AllCardsObtained() {
 
 void CardManager::CardDataRefresh(std::vector<std::vector<int>> cardData)
 {
+	stepCount = 0;
+
+	// 同時に挟んで消した数
+	eraseCardMaxCount = 0;
+
+	// 挟んで消したカード
+	eraseCardCount = 0;
+
+	eraseCount = 0;
+
+	// 
+	allObtainedCardCount = 0;
+	
+	step10obtainedCount = 0;
+
+	step15obtainedCount = 0;
+
 	cards_[0].clear();
 	cards_.clear();
 
@@ -225,10 +258,12 @@ bool CardManager::CountStateCard(Card::CardState state) {
 	return false;
 }
 
-void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2]) {
+int CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2]) {
 	// 差
 	int diffY = yIndex[1] - yIndex[0];
 	int diffX = xIndex[1] - xIndex[0];
+
+	int obtainedCount = 0;
 
 	// 行が同じ場合
 	if (diffY == 0) {
@@ -246,6 +281,8 @@ void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2]) {
 					cards_[yIndex[0]][addXIndex]->SetCurrentState(Card::CardState::show);
 
 					cards_[yIndex[0]][addXIndex]->RequestState(Card::CardState::obtained);
+
+					++obtainedCount;
 				}
 			}
 		}
@@ -266,6 +303,7 @@ void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2]) {
 					cards_[addYIndex][xIndex[0]]->SetCurrentState(Card::CardState::show);
 
 					cards_[addYIndex][xIndex[0]]->RequestState(Card::CardState::obtained);
+					++obtainedCount;
 				}
 			}
 		}
@@ -284,7 +322,38 @@ void CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2]) {
 				cards_[yIndex[0]][xIndex[0]]->SetCurrentState(Card::CardState::show);
 
 				cards_[yIndex[0]][xIndex[0]]->RequestState(Card::CardState::obtained);
+				++obtainedCount;
 			}
 		}
 	}
+
+	if (eraseCardMaxCount < obtainedCount)
+	{
+		eraseCardMaxCount = obtainedCount;
+	}
+
+	if (obtainedCount > 0)
+	{
+		++eraseCount;
+	}
+
+	eraseCardCount += obtainedCount;
+
+
+
+	return obtainedCount;
+}
+
+int CardManager::CountState(Card::CardState state)
+{
+	int count = 0;
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
+			if (cards_[y][x]->GetCurrentState() == state || cards_[y][x]->GetRequestState() == state) {
+				++count;
+			}
+		}
+	}
+
+	return count;
 }

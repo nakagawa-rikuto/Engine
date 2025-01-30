@@ -11,6 +11,27 @@
 
 #include "application/Game/GlobalVariables/GlobalVariables.h"
 
+struct Mission
+{
+	// 手数のクリア定数
+	int kStepCount;
+
+	// 挟んで消したカードのクリア定数
+	int kEraseCardCount1;
+	int kEraseCardCount2;
+	// 一度に挟んで消したカードのクリア定数
+	int kMaxEraseCardCount1;
+	int kMaxEraseCardCount2;
+
+	// 挟んで消した回数のクリア定数
+	int kEraseCount1;
+	int kEraseCount2;
+
+	// 消した全てのカードのクリア定数
+	int kEraseAllCount1;
+	int kEraseAllCount2;
+};
+
 ///=====================================================/// 
 /// ゲームシーン
 ///=====================================================///
@@ -28,6 +49,10 @@ public:/// ===メンバ関数=== ///
 	void Draw() override;
 
 private:/// ===メンバ関数=== ///
+
+	void RefreshCardData();
+
+	void CheckStarFlag();
 
 private:/// ===メンバ変数=== ///
 	/// <summary>
@@ -58,6 +83,10 @@ private:/// ===メンバ変数=== ///
 
 	std::unique_ptr<CardManager> cardManager_ = nullptr;
 
+	bool star1Flag = false;
+
+	bool star2Flag = false;
+
 	enum class StageNum
 	{
 		tutorial,
@@ -72,100 +101,97 @@ private:/// ===メンバ変数=== ///
 		card5x5_2,
 		card5x5_3,
 		card5x5_4,
+
+		COUNT,
 	};
 
 	StageNum stage = StageNum::tutorial;
 
-	const std::vector<std::vector<int>> tutorial =
+	const std::list<std::vector<std::vector<int>>> cardDatas_ =
 	{
-		{1,2,1}
+		{
+			{1,2,1}
+		},
+		{
+			{1,3,2},
+			{2,1,2},
+			{2,1,3}
+		},
+		{
+			{1,2,2},
+			{2,1,2},
+			{3,2,3}
+		},
+		{
+			{1,2,1},
+			{1,1,2},
+			{2,2,2}
+		},
+		{
+			{1,3,1},
+			{2,3,2},
+			{1,3,1}
+		},
+		{
+			{1,2,1,3},
+			{2,2,3,2},
+			{1,3,1,3},
+			{2,1,2,3}
+		},
+		{
+			{1,2,2,4},
+			{4,3,4,1},
+			{1,1,2,1},
+			{4,2,3,2}
+		},
+		{
+			{1,3,2,1},
+		    {2,3,4,1},
+		    {4,4,2,3},
+		    {2,3,4,1}
+		},
+		{
+			{1,3,2,4,1},
+		    {3,1,3,3,2},
+		    {4,3,4,2,2},
+		    {2,2,2,4,1},
+		    {1,4,3,4,2}
+        },
+		{
+			{1,4,2,1,2},
+		    {3,1,4,3,3},
+		    {1,3,3,4,1},
+		    {4,2,1,3,1},
+		    {2,4,4,2,2}
+        },
+		{
+			{1,3,2,4,1},
+		    {3,1,3,3,2},
+		    {4,3,4,2,2},
+		    {2,2,2,4,1},
+		    {1,4,3,4,2}
+        },
+		{
+			{2,4,1,3,2},
+		    {3,1,4,2,1},
+		    {4,2,3,1,4},
+		    {1,3,2,4,3},
+		    {2,4,1,3,2}
+        }
 	};
 
-	const std::vector<std::vector<int>> card3x3_1 =
+	std::unordered_map<int, Mission> stageMissions
 	{
-		{1,3,2},
-		{2,1,2},
-		{2,1,3},
-	};
-
-	const std::vector<std::vector<int>> card3x3_2 =
-	{
-		{1,2,2},
-		{2,1,2},
-		{3,2,3}
-	};
-
-	const std::vector<std::vector<int>> card3x3_3 =
-	{
-		{1,2,1},
-		{1,1,2},
-		{2,2,2}
-	};
-
-	const std::vector<std::vector<int>> card3x3_4 =
-	{
-		{1,3,1},
-		{2,3,2},
-		{1,3,1}
-	};
-
-	const std::vector<std::vector<int>> card4x4_1 =
-	{
-		{1,2,1,3},
-		{2,2,3,2},
-		{1,3,1,3},
-		{2,1,2,3}
-	};
-
-	const std::vector<std::vector<int>> card4x4_2 =
-	{
-		{1,2,2,4},
-		{4,3,4,1},
-		{1,1,2,1},
-		{4,2,3,2}
-	};
-
-	const std::vector<std::vector<int>> card4x4_3 =
-	{
-		{1,3,2,1},
-		{2,3,4,1},
-		{4,4,2,3},
-		{2,3,4,1}
-	};
-
-	const std::vector<std::vector<int>> card5x5_1 =
-	{
-		{1,3,2,4,1},
-		{3,1,3,3,2},
-		{4,3,4,2,2},
-		{2,2,2,4,1},
-		{1,4,3,4,2}
-	};
-
-	const std::vector<std::vector<int>> card5x5_2 =
-	{
-		{1,4,2,1,2},
-		{3,1,4,3,3},
-		{1,3,3,4,1},
-		{4,2,1,3,1},
-		{2,4,4,2,2}
-	};
-
-	const std::vector<std::vector<int>> card5x5_3
-	{
-		{1,3,2,4,1},
-		{3,1,3,3,2},
-		{4,3,4,2,2},
-		{2,2,2,4,1},
-		{1,4,3,4,2}
-	};
-
-	const std::vector<std::vector<int>> card5x5_4 =
-	{
-		{2,4,1,3,2},
-		{3,1,4,2,1},
-		{4,2,3,1,4},
-		{1,3,2,4,3},
-		{2,4,1,3,2}
+		{1,{7,0,0,0,0,1,0,9,0}},
+		{2,{7,0,0,0,0,1,0,9,0}},
+		{3,{0,0,0,0,0,1,2,0,0}},
+		{4,{0,0,0,0,0,2,3,0,0}},
+		{5,{0,0,0,2,0,2,0,0,0}},
+		{6,{10,0,0,0,0,2,0,12,0}},
+		{7,{0,3,0,0,0,3,0,0,16}},
+		{8,{0,0,0,3,0,5,0,0,0}},
+		{9,{0,0,0,3,0,0,0,0,25}},
+		{10,{15,0,0,0,0,0,0,15,25}},
+		{11,{15,0,0,0,0,5,0,15,0}},
 	};
 };
