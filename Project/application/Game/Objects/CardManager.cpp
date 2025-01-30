@@ -21,7 +21,7 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, std::list<s
 #pragma region
 #pragma endregion
 
-			std::string cardModel = "Card1";
+			std::string cardModel = "Card";
 
 			std::shared_ptr<Card> newCard = std::make_unique<Card>();
 
