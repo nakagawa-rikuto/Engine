@@ -1,6 +1,7 @@
 #include "ClearScene.h"
 // SceneManager
 #include "application/Manager/SceneManager.h"
+#include "Engine/Core/Mii.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -22,8 +23,19 @@ void ClearScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
 	ImGui::Begin("ClearScene");
+
+	ImGui::Text("Clear!!!!!");
+
+	ImGui::Separator();
+
+	ImGui::Text("Space To TitleScene");
+
 	ImGui::End();
 #endif // USE_IMGUI
+
+	if (Mii::TriggerKey(DIK_SPACE)) {
+		sceneManager_->ChangeScene("Title");
+	}
 }
 
 ///-------------------------------------------/// 

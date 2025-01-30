@@ -222,7 +222,7 @@ void GameScene::Update() {
 
 	 // すべてのカードが obtained ならシーンを変更
 	if (cardManager_->AllCardsObtained()) {
-		sceneManager_->ChangeScene("Title");
+		sceneManager_->ChangeScene("Clear");
 	}
 }
 
