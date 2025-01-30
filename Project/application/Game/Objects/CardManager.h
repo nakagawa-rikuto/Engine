@@ -28,6 +28,8 @@ public:
 	// 全てのカードが消えたか
 	bool AllCardsObtained();
 
+	void CardDataRefresh(std::vector<std::vector<int>> cardData);
+
 private:
 
 	// 表のカードがそろっているか

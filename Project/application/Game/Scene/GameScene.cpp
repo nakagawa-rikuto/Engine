@@ -36,7 +36,7 @@ void GameScene::Initialize() {
 
 	/// ===Camera=== ///
 	// Camera情報
-	cameraPos_ = {5.0f, -2.5f, -70.0f};
+	cameraPos_ = {0.0f, 0.0f, -70.0f};
 	cameraRotate_ = {0.0f, 0.0f, 0.0f};
 	cameraScale_ = {0.0f, 0.0f, 0.0f};
 
@@ -45,11 +45,16 @@ void GameScene::Initialize() {
 	camera_->SetTranslate(cameraPos_);
 	cameraManager_->Add("main1", camera_);
 
+	std::vector<std::vector<int>> cardData;
+
+	if (stage == StageNum::tutorial)
+	{
+		cardData = tutorial;
+	}
+
 	/// ===Model=== ///
-	// const int gridSize = 5;                       // グリッドのサイズ
-	
 	cardManager_ = std::make_unique<CardManager>();
-	cardManager_->Initialize(cardData3x3,cameraManager_.get());
+	cardManager_->Initialize(cardData,cameraManager_.get());
 
 
 	// GlobalVariablesの取得
@@ -66,7 +71,7 @@ void GameScene::Initialize() {
 			cardGrid.push_back(cardManager_->GetCards()[y][x]->GetCardType());
 		}
 	}
-	globalVariables->SetValue("Cards", "CardGrid", cardData3x3);
+	globalVariables->SetValue("Cards", "CardGrid", cardData);
 }
 
 ///-------------------------------------------///
@@ -109,6 +114,97 @@ void GameScene::Update() {
 	ImGui::Begin("selectIndex");
 	ImGui::Text("Index Z = %d\nIndex X = %d", zIndex, xIndex);
 	ImGui::End();
+
+#endif // USE_IMGUI
+
+#ifdef USE_IMGUI
+
+	const char* stageNames[] =
+	{
+		"tutorial",
+		"card3x3_1",
+		"card3x3_2",
+		"card3x3_3",
+		"card3x3_4",
+		"card4x4_1",
+		"card4x4_2",
+		"card4x4_3",
+		"card5x5_1",
+		"card5x5_2",
+		"card5x5_3",
+		"card5x5_4",
+	};
+
+	if (ImGui::BeginCombo("Select Stage",stageNames[static_cast<int>(stage)])) {
+		///
+		if (ImGui::Selectable("tutorial")) {
+			cardManager_->CardDataRefresh(tutorial);
+			globalVariables->SetValue("Cards", "CardGrid", tutorial);
+			stage = StageNum::tutorial;
+		}
+		///
+		if (ImGui::Selectable("card3x3_1")) {
+			cardManager_->CardDataRefresh(card3x3_1);
+			globalVariables->SetValue("Cards", "CardGrid", card3x3_1);
+			stage = StageNum::card3x3_1;
+		}
+		///
+		if (ImGui::Selectable("card3x3_2")) {
+			cardManager_->CardDataRefresh(card3x3_2);
+			globalVariables->SetValue("Cards", "CardGrid", card3x3_2);
+			stage = StageNum::card3x3_2;
+		}
+		///
+		if (ImGui::Selectable("card3x3_3")) {
+			cardManager_->CardDataRefresh(card3x3_3);
+			globalVariables->SetValue("Cards", "CardGrid", card3x3_3);
+			stage = StageNum::card3x3_3;
+		}
+		///
+		if (ImGui::Selectable("card3x3_4")) {
+			cardManager_->CardDataRefresh(card3x3_4);
+			globalVariables->SetValue("Cards", "CardGrid", card3x3_4);
+			stage = StageNum::card3x3_4;
+		}
+		///
+		if (ImGui::Selectable("card4x4_1")) {
+			cardManager_->CardDataRefresh(card4x4_1);
+			globalVariables->SetValue("Cards", "CardGrid", card4x4_1);
+			stage = StageNum::card4x4_1;
+		}
+		if (ImGui::Selectable("card4x4_2")) {
+			cardManager_->CardDataRefresh(card4x4_2);
+			globalVariables->SetValue("Cards", "CardGrid", card4x4_2);
+			stage = StageNum::card4x4_2;
+		}
+		if (ImGui::Selectable("card4x4_3")) {
+			cardManager_->CardDataRefresh(card4x4_3);
+			globalVariables->SetValue("Cards", "CardGrid", card4x4_3);
+			stage = StageNum::card4x4_3;
+		}
+		if (ImGui::Selectable("card5x5_1")) {
+			cardManager_->CardDataRefresh(card5x5_1);
+			globalVariables->SetValue("Cards", "CardGrid", card5x5_1);
+			stage = StageNum::card5x5_1;
+		}
+		if (ImGui::Selectable("card5x5_2")) {
+			cardManager_->CardDataRefresh(card5x5_2);
+			globalVariables->SetValue("Cards", "CardGrid", card5x5_2);
+			stage = StageNum::card5x5_2;
+		}
+		if (ImGui::Selectable("card5x5_3")) {
+			cardManager_->CardDataRefresh(card5x5_3);
+			globalVariables->SetValue("Cards", "CardGrid", card5x5_3);
+			stage = StageNum::card5x5_3;
+		}
+		if (ImGui::Selectable("card5x5_4")) {
+			cardManager_->CardDataRefresh(card5x5_4);
+			globalVariables->SetValue("Cards", "CardGrid", card5x5_4);
+			stage = StageNum::card5x5_4;
+		}
+
+		ImGui::EndCombo();
+	}
 
 #endif // USE_IMGUI
 
