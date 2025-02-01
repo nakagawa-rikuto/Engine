@@ -5,7 +5,7 @@
 ///-------------------------------------------///
 void RasterizerState::Create(PipelineType Type) {
 	// RasterizerStateの設定
-	if (Type == PipelineType::Obj2D) {
+	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D) {
 
 		// カリングしない（裏面も描画させる）
 		rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE;
