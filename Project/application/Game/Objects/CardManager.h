@@ -30,6 +30,9 @@ public:
 
 	void CardDataRefresh(std::vector<std::vector<int>> cardData);
 
+	// 詰み処理
+	bool Checkmate();
+
 private:
 
 	// 表のカードがそろっているか
@@ -42,6 +45,7 @@ private:
 
 	void EightDirectionCheck(int yIndex[2], int xIndex[2]);
 
+	
 private:
 
 	std::vector<std::vector<std::shared_ptr<Card>>> cards_;
