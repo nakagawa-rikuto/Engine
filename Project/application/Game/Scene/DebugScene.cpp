@@ -428,6 +428,12 @@ void DebugScene::Update() {
 ///-------------------------------------------///
 void DebugScene::Draw() {
 #pragma region 背景スプライト描画
+
+	/// ===Sprite=== ///
+	if (isDisplay_.Sprite) {
+		sprite_->Draw(GroundType::Back); // GroundTypeで背景か前景を選択か初期は前景描画。 BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
+	}
+
 #pragma endregion
 
 #pragma region モデル描画
@@ -450,9 +456,6 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
-	/// ===Sprite=== ///
-	if (isDisplay_.Sprite) {
-		sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
-	}
+	
 #pragma endregion
 }

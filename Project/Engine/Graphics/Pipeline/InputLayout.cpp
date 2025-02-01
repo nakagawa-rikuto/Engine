@@ -5,7 +5,7 @@
 ///-------------------------------------------///
 void InputLayout::Create(PipelineType Type) {
 
-	if (Type == PipelineType::Obj2D) { /// ===Obj2D=== ///
+	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D) { /// ===Obj2D=== ///
 		/// ===Descsの設定=== ///
 		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
 		inputElementDescs[0].SemanticName = "POSITION";
