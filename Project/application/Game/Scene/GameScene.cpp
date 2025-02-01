@@ -132,9 +132,13 @@ void GameScene::Update() {
 
 	globalVariables->Update();
 
-	 // すべてのカードが obtained ならシーンを変更
+	/// ===シーン変更=== ///
 	if (cardManager_->AllCardsObtained()) {
+		// すべてのカードが obtained ならシーンを変更
 		sceneManager_->ChangeScene("Clear");
+	} else if (cardManager_->Checkmate()) {
+		// 詰みだったらTitleにシーン変更
+		sceneManager_->ChangeScene("Title");
 	}
 }
 
