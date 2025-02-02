@@ -29,6 +29,8 @@ public:/// ===メンバ関数=== ///
 
 private:/// ===メンバ関数=== ///
 
+	void RefreshCardData();
+
 private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
@@ -58,24 +60,186 @@ private:/// ===メンバ変数=== ///
 
 	std::unique_ptr<CardManager> cardManager_ = nullptr;
 
-	std::vector<std::vector<int>> cardData1x3 = 
+	enum class StageNum
 	{
-		{1,2,1} 
+		tutorial,
+		card3x3_1,
+		card3x3_2,
+		card3x3_3,
+		card3x3_4,
+		card4x4_1,
+		card4x4_2,
+		card4x4_3,
+		card5x5_1,
+		card5x5_2,
+		card5x5_3,
+		card5x5_4,
+
+		COUNT,
 	};
 
-	std::vector<std::vector<int>> cardData3x3 =
+	StageNum stage = StageNum::tutorial;
+
+	const std::list<std::vector<std::vector<int>>> cardDatas_ =
+	{
+		{
+			{1,2,1}
+		},
+		{
+			{1,3,2},
+			{2,1,2},
+			{2,1,3}
+		},
+		{
+			{1,2,2},
+			{2,1,2},
+			{3,2,3}
+		},
+		{
+			{1,2,1},
+			{1,1,2},
+			{2,2,2}
+		},
+		{
+			{1,3,1},
+			{2,3,2},
+			{1,3,1}
+		},
+		{
+			{1,2,1,3},
+			{2,2,3,2},
+			{1,3,1,3},
+			{2,1,2,3}
+		},
+		{
+			{1,2,2,4},
+			{4,3,4,1},
+			{1,1,2,1},
+			{4,2,3,2}
+		},
+		{
+			{1,3,2,1},
+		    {2,3,4,1},
+		    {4,4,2,3},
+		    {2,3,4,1}
+		},
+		{
+			{1,3,2,4,1},
+		    {3,1,3,3,2},
+		    {4,3,4,2,2},
+		    {2,2,2,4,1},
+		    {1,4,3,4,2}
+        },
+		{
+			{1,4,2,1,2},
+		    {3,1,4,3,3},
+		    {1,3,3,4,1},
+		    {4,2,1,3,1},
+		    {2,4,4,2,2}
+        },
+		{
+			{1,3,2,4,1},
+		    {3,1,3,3,2},
+		    {4,3,4,2,2},
+		    {2,2,2,4,1},
+		    {1,4,3,4,2}
+        },
+		{
+			{2,4,1,3,2},
+		    {3,1,4,2,1},
+		    {4,2,3,1,4},
+		    {1,3,2,4,3},
+		    {2,4,1,3,2}
+        }
+	};
+
+	/*const std::vector<std::vector<int>> tutorial =
+	{
+		{1,2,1}
+	};*/
+
+	/*const std::vector<std::vector<int>> card3x3_1 =
+	{
+		{1,3,2},
+		{2,1,2},
+		{2,1,3},
+	};*/
+
+	/*const std::vector<std::vector<int>> card3x3_2 =
+	{
+		{1,2,2},
+		{2,1,2},
+		{3,2,3}
+	};*/
+
+	/*const std::vector<std::vector<int>> card3x3_3 =
 	{
 		{1,2,1},
-		{3,3,3},
-		{1,1,1},
-	};
+		{1,1,2},
+		{2,2,2}
+	};*/
 
-	std::vector<std::vector<int>> cardData5x5 =
+	/*const std::vector<std::vector<int>> card3x3_4 =
 	{
-		{0,0,0,0,0},
-		{1,1,1,1,1},
-		{2,2,2,2,2},
-		{3,3,3,3,3},
-		{4,4,4,4,4},
-	};
+		{1,3,1},
+		{2,3,2},
+		{1,3,1}
+	};*/
+
+	/*const std::vector<std::vector<int>> card4x4_1 =
+	{
+		{1,2,1,3},
+		{2,2,3,2},
+		{1,3,1,3},
+		{2,1,2,3}
+	};*/
+
+	/*const std::vector<std::vector<int>> card4x4_2 =
+	{
+		
+	};*/
+
+	/*const std::vector<std::vector<int>> card4x4_3 =
+	{
+		{1,3,2,1},
+		{2,3,4,1},
+		{4,4,2,3},
+		{2,3,4,1}
+	};*/
+
+	/*const std::vector<std::vector<int>> card5x5_1 =
+	{
+		{1,3,2,4,1},
+		{3,1,3,3,2},
+		{4,3,4,2,2},
+		{2,2,2,4,1},
+		{1,4,3,4,2}
+	};*/
+
+	/*const std::vector<std::vector<int>> card5x5_2 =
+	{
+		{1,4,2,1,2},
+		{3,1,4,3,3},
+		{1,3,3,4,1},
+		{4,2,1,3,1},
+		{2,4,4,2,2}
+	};*/
+
+	/*const std::vector<std::vector<int>> card5x5_3
+	{
+		{1,3,2,4,1},
+		{3,1,3,3,2},
+		{4,3,4,2,2},
+		{2,2,2,4,1},
+		{1,4,3,4,2}
+	};*/
+
+	/*const std::vector<std::vector<int>> card5x5_4 =
+	{
+		{2,4,1,3,2},
+		{3,1,4,2,1},
+		{4,2,3,1,4},
+		{1,3,2,4,3},
+		{2,4,1,3,2}
+	};*/
 };
