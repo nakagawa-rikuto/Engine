@@ -7,9 +7,7 @@
 ///-------------------------------------------///
 /// デストラクタ
 ///-------------------------------------------///
-GameScene::~GameScene() {
-	cardManager_.reset();
-}
+GameScene::~GameScene() { cardManager_.reset(); }
 
 ///-------------------------------------------///
 /// 初期化
@@ -31,8 +29,14 @@ void GameScene::Initialize() {
 
 	Loader_->LoadModel("Particle");
 
-	//std::list<std::string> cardModels;
+	// std::list<std::string> cardModels;
 
+	// スプライトの読み込み
+	const std::string& bgSprite = "./Resource/backGround.png";
+	Loader_->LoadTexture(bgSprite);
+
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->Initialize(bgSprite);
 
 	/// ===Camera=== ///
 	// Camera情報
@@ -52,7 +56,6 @@ void GameScene::Initialize() {
 	/// ===Model=== ///
 	cardManager_ = std::make_unique<CardManager>();
 	cardManager_->Initialize(*it, cameraManager_.get());
-
 
 	// GlobalVariablesの取得
 	globalVariables = GlobalVariables::GetInstance();
@@ -120,6 +123,8 @@ void GameScene::Update() {
 
 #endif // USE_IMGUI
 
+	sprite_->Update();
+
 	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
 	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
 
@@ -147,6 +152,9 @@ void GameScene::Update() {
 ///-------------------------------------------///
 void GameScene::Draw() {
 #pragma region 背景スプライト描画
+
+	sprite_->Draw(GroundType::Back);
+
 #pragma endregion
 
 #pragma region モデル描画
@@ -159,22 +167,9 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-void GameScene::RefreshCardData()
-{
-	const char* stageNames[] =
-	{
-		"tutorial",
-		"card3x3_1",
-		"card3x3_2",
-		"card3x3_3",
-		"card3x3_4",
-		"card4x4_1",
-		"card4x4_2",
-		"card4x4_3",
-		"card5x5_1",
-		"card5x5_2",
-		"card5x5_3",
-		"card5x5_4",
+void GameScene::RefreshCardData() {
+	const char* stageNames[] = {
+	    "tutorial", "card3x3_1", "card3x3_2", "card3x3_3", "card3x3_4", "card4x4_1", "card4x4_2", "card4x4_3", "card5x5_1", "card5x5_2", "card5x5_3", "card5x5_4",
 	};
 
 	if (ImGui::BeginCombo("Select Stage", stageNames[static_cast<int>(stage)])) {
@@ -266,4 +261,3 @@ void GameScene::RefreshCardData()
 		ImGui::EndCombo();
 	}
 }
-

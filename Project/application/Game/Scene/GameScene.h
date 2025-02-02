@@ -4,6 +4,8 @@
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
 
+#include "application/2d/Sprite.h"
+
 #include "application/Game/Objects/CardManager.h"
 
 #include <memory>
@@ -50,6 +52,10 @@ private:/// ===メンバ変数=== ///
 	int zIndex = 0;
 
 	const int gridSize = 5;
+
+	/// ===Sprite=== /// 
+
+	std::unique_ptr<Sprite> sprite_;
 
 	// マウス用変数
 	bool TriggerLeft_ = false;
