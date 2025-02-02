@@ -97,12 +97,14 @@ void SelectEmitter::SetActive(bool flag) { isActive_ = flag; }
 /// ImGui
 ///-------------------------------------------///
 void SelectEmitter::UpdateImGui() {
+#ifdef USE_IMGUI
 	ImGui::Begin("SelectParticle");
 	ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
 	ImGui::DragFloat3("aabbMin", &aabbMin_.x, 0.01f);
 	ImGui::DragFloat3("aabbMax", &aabbMax_.x, 0.01f);
 	ImGui::Checkbox("isActive", &isActive_);
 	ImGui::End();
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 

@@ -9,7 +9,7 @@ GlobalVariables* GlobalVariables::GetInstance() {
 }
 
 void GlobalVariables::Update() {
-
+#ifdef USE_IMGUI
 	if (!ImGui::Begin("Global Variables", nullptr, ImGuiWindowFlags_MenuBar)) {
 		ImGui::End();
 		return;
@@ -45,6 +45,7 @@ void GlobalVariables::Update() {
 		}
 	}
 	ImGui::End();
+#endif // USE_IMGUI
 }
 
 
@@ -55,7 +56,7 @@ void GlobalVariables::CreateGroup(const std::string& groupName) {
 }
 
 void GlobalVariables::DisplayGrid(const std::string& windowName, const std::vector<int32_t>& values, int gridSize) {
-
+#ifdef USE_IMGUI
 	if (ImGui::Begin(windowName.c_str())) {
 		for (int z = 0; z < gridSize; ++z) {
 			for (int x = 0; x < gridSize; ++x) {
@@ -72,6 +73,7 @@ void GlobalVariables::DisplayGrid(const std::string& windowName, const std::vect
 		}
 		ImGui::End();
 	}
+#endif // USE_IMGUI
 }
 
 std::vector<int32_t> GlobalVariables::CheckMissingPairs(const std::string& groupName, const std::string& key) {

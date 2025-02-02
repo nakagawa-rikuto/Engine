@@ -51,6 +51,9 @@ void GameScene::Initialize() {
 
 	auto it = cardDatas_.begin();
 
+	stage = StageNum::card5x5_1;
+
+	// vectorの要素数をステージ分追加
 	std::advance(it, static_cast<int>(stage));
 
 	/// ===Model=== ///

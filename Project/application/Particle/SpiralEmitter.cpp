@@ -119,6 +119,7 @@ void SpiralEmitter::SetPosition(const Vector3& posititon) { transform_.translate
 /// ImGui
 ///-------------------------------------------///
 void SpiralEmitter::UpdateImGui() {
+#ifdef USE_IMGUI
     ImGui::DragFloat("UpSpeed", &verticalSpeed_, 0.01f);
     ImGui::DragFloat("radius", &spiralRadius_, 0.01f);
     ImGui::DragFloat("maxLifeTime", &maxLifetime_, 0.01f);
@@ -127,6 +128,7 @@ void SpiralEmitter::UpdateImGui() {
     ImGui::DragFloat("spiralRadiusMax_", &spiralRadiusMax_, 0.01f);
     ImGui::DragFloat("spiralRadiusMin_", &spiralRadiusMin_, 0.01f);
     ImGui::DragFloat("spiralRadiusSpeed_", &spiralRadiusSpeed_, 0.01f);
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 
