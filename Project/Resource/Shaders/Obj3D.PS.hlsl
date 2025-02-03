@@ -64,7 +64,7 @@ PixlShaderOutput main(VertexShaderOutput input)
     output.color = gMaterial.color;
     
     // UV
-    float4 transformdUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
+    float4 transformdUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     // TextureをSamplingする
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
     // カメラへの方向を算出

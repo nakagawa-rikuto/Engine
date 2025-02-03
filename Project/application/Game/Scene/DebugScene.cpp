@@ -74,9 +74,9 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall", LightType::SpotLight);          // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Model>();
-	model2_->Initialize("terrain", LightType::PointLight);
+	model2_->Initialize("terrain", LightType::SpotLight);
 	modelLight_ = std::make_unique<Model>();
 	modelLight_->Initialize("Particle");
 	// modelLight_->SetTransform({ spot_.position }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
@@ -215,19 +215,19 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
 			ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);*/
 			
-			ImGui::ColorEdit4("pointLightColor", &point_.color.x);
+			/*ImGui::ColorEdit4("pointLightColor", &point_.color.x);
 			ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
 			ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
 			ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
-			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
+			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);*/
 			
-			/*ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
+			ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
 			ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
 			ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
 			ImGui::DragFloat3("SpotLightDirection", &spot_.direction.x, 0.01f);
 			ImGui::DragFloat("SpotLightDistance", &spot_.distance, 0.01f);
 			ImGui::DragFloat("SpotLightDecay", &spot_.decay, 0.01f);
-			ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);*/
+			ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);
 		}
 	}
 	/// ===Particle1=== ///
@@ -407,7 +407,7 @@ void DebugScene::Update() {
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
 
-	modelLight_->SetPosition(point_.position);
+	modelLight_->SetPosition(spot_.position);
 	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());	
 	modelLight_->Update();
 #pragma endregion
