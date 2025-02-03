@@ -64,6 +64,51 @@ bool Controller::TriggerButton(int deviceIndex, int buttonIndex) {
 }
 
 ///-------------------------------------------/// 
+/// スティックの値を取得
+///-------------------------------------------///
+float Controller::GetStickValue(int deviceIndex, ControllerValueType stickType) {
+	if (deviceIndex < 0 || deviceIndex >= static_cast<int>(controllers_.size())) {
+		return 0.0f; // 無効なデバイスインデックス
+	}
+
+	ControllerData& controller = controllers_[deviceIndex];
+	LONG rawValue = 0;
+
+	// DirectInputのスティック値を取得
+	switch (stickType) {
+	case ControllerValueType::LeftStickX:
+		rawValue = controller.state_.lX;
+		break;
+	case ControllerValueType::LeftStickY:
+		rawValue = controller.state_.lY;
+		break;
+	case ControllerValueType::RightStickX:
+		rawValue = controller.state_.lRx;
+		break;
+	case ControllerValueType::RightStickY:
+		rawValue = controller.state_.lRy;
+		break;
+	default:
+		return 0.0f; // 無効なスティックタイプ
+	}
+
+	// スティック値の範囲 (-1000 ~ 1000) を -1.0 ~ 1.0 に正規化
+	float normalizedValue = static_cast<float>(rawValue) / 1000.0f;
+
+	// デッドゾーン処理
+	if (fabs(normalizedValue) < deadZone_) {
+		return 0.0f;
+	}
+
+	return normalizedValue;
+}
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+float Controller::SetDeadZone(const float& deadZone) { deadZone_ = deadZone; }
+
+///-------------------------------------------/// 
 /// ラムダ式の代わりのコールバック関数
 ///-------------------------------------------///
 BOOL Controller::EnumDevicesCallback(const DIDEVICEINSTANCE* instance, void* context) {
