@@ -434,7 +434,9 @@ void DebugScene::Update() {
 	/// ===Particle=== ///
 #pragma region Particle
 	windParticle_->Update();
+	explosionParticle_->SetPosition(particleTranslate_);
 	explosionParticle_->Update();
+	confettiParticle_->SetPosition(particleTranslate_);
 	confettiParticle_->Update();
 	SpiralParticle_->SetPosition(particleTranslate_);
 	SpiralParticle_->Update();
