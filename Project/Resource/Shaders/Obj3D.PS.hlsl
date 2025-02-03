@@ -107,6 +107,7 @@ PixlShaderOutput main(VertexShaderOutput input)
             // 内積の計算
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
+            // Lightの計算
             diffuseDirectionalLight = 
             gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
             specularDirectionalLight = 
@@ -118,6 +119,7 @@ PixlShaderOutput main(VertexShaderOutput input)
             float NdotH = dot(normal, halfVector);
             diffuseFactor = pow(NdotH * 0.5f + 0.5f, 2.0f);
             specularPow = pow(saturate(NdotH), gMaterial.shininess);
+            // Lightの計算
             diffuseDirectionalLight = 
             gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
             specularDirectionalLight = 
@@ -134,6 +136,7 @@ PixlShaderOutput main(VertexShaderOutput input)
             // 距離による減衰 (1 / 距離の2乗)
             distance = length(gPointLight.position - input.worldPosition);  // ポイントライトへの距離
             factor = pow(saturate(-distance / gPointLight.radius + 1.0f), gPointLight.decay);  // 指数によるコントロール
+            // Lightの計算
             diffusePointLight = 
             gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * diffuseFactor * gPointLight.intensity * factor;
             specularPointLight = 
@@ -153,6 +156,7 @@ PixlShaderOutput main(VertexShaderOutput input)
             // Falloff(フォールオフ)を追加する
             float cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
             float falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0f - gSpotLight.cosAngle));
+            // Lightの計算
             diffuseSpotLight = 
             gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * diffuseFactor * gSpotLight.intensity * factor * falloffFactor;
             specularSpotLight = 
