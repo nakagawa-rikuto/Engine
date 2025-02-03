@@ -129,7 +129,7 @@ PixlShaderOutput main(VertexShaderOutput input)
         {
             diffuseFactor = saturate(dot(normal, -pointLightDirection));
             // 入射光の反射ベクトル
-            reflectLight = reflect(-pointLightDirection, normal);
+            reflectLight = reflect(pointLightDirection, normal);
             // 内積の計算 
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
@@ -146,7 +146,7 @@ PixlShaderOutput main(VertexShaderOutput input)
         {
             diffuseFactor = saturate(dot(normal, -spotLightDirectionOnSurface));
             // 入射光の反射ベクトル
-            reflectLight = reflect(-spotLightDirectionOnSurface, normal);
+            reflectLight = reflect(spotLightDirectionOnSurface, normal);
               // 内積の計算 
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
