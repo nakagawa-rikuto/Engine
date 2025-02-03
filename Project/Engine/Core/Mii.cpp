@@ -90,7 +90,7 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// PipelineManagerの生成
 	pipelineManager_ = std::make_unique<PipelineManager>();
-	pipelineManager_->Initialize();
+	pipelineManager_->Initialize(dXCommon_.get());;
 
 	// TextureManagerの生成
 	textureManager_ = std::make_unique<TextureManager>();
