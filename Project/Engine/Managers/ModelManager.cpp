@@ -138,8 +138,7 @@ Node ModelManager::ReadNode(aiNode* node) {
 	Node result;
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation; // nodeのlocalMatrixを取得
 	aiLocalMatrix.Transpose(); // 列ベクトル形式を行ベクトル形式に転置
-	result.localMatrix.m[0][0] = aiLocalMatrix[0][0]; // 他の要素も同様に
-	// ...
+	std::memcpy(result.localMatrix.m, &aiLocalMatrix, sizeof(aiMatrix4x4)); // aiMatrix4x4 のデータを result.localMatrix にコピー (memcpy を使用)
 	result.name = node->mName.C_Str(); // Node名を格納
 	result.children.resize(node->mNumChildren); // 子供の数だけ確保
 	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
