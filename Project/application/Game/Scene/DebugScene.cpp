@@ -74,9 +74,9 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall", LightType::SpotLight);          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Model>();
-	model2_->Initialize("terrain", LightType::SpotLight);
+	model2_->Initialize("terrain", LightType::PointLight);
 	modelLight_ = std::make_unique<Model>();
 	modelLight_->Initialize("Particle");
 	// modelLight_->SetTransform({ spot_.position }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
@@ -208,19 +208,22 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Rotate", &modelRotate_.x, 0.1f);
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
-			// Light
+			// Shiniess
 			ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
-
-			/*ImGui::ColorEdit4("LigthColor", &directional_.color.x);
+			// DirectionalLight
+			ImGui::Text("DirectionalLight");
+			ImGui::ColorEdit4("LigthColor", &directional_.color.x);
 			ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
-			ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);*/
-			
-			/*ImGui::ColorEdit4("pointLightColor", &point_.color.x);
+			ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
+			// PointLight
+			ImGui::Text("PointLight");
+			ImGui::ColorEdit4("pointLightColor", &point_.color.x);
 			ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
 			ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
 			ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
-			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);*/
-			
+			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
+			// SpotLight
+			ImGui::Text("SpotLight");
 			ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
 			ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
 			ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
@@ -407,7 +410,7 @@ void DebugScene::Update() {
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
 
-	modelLight_->SetPosition(spot_.position);
+	modelLight_->SetPosition(point_.position);
 	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());	
 	modelLight_->Update();
 #pragma endregion
