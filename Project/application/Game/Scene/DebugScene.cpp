@@ -390,7 +390,9 @@ void DebugScene::Update() {
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	model_->SetTransform(modelTranslate_, modelRotate_, modelScale_);
+	model_->SetPosition(modelTranslate_);
+	model_->SetRotate(modelRotate_);
+	model_->SetScale(modelScale_);
 	model_->SetColor(modelColor_);
 	model_->SetShininess(light_);
 	model_->SetDirctionalLightData(directional_);
@@ -405,7 +407,7 @@ void DebugScene::Update() {
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
 
-	modelLight_->SetTransform(spot_.position, { 0.0f, 0.0f,0.0f }, { 0.5f,0.5f,0.5f });
+	modelLight_->SetPosition(spot_.position);
 	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());	
 	modelLight_->Update();
 #pragma endregion

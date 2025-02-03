@@ -33,11 +33,9 @@ const Vector4& Model::GetColor() const { return color_; }
 /// Setter
 ///-------------------------------------------///
 /// ===モデル=== ///
-void Model::SetTransform(const Vector3& postion, const Vector3& rotate, const Vector3& scale) { 
-	worldTransform_.translate = postion; 
-	worldTransform_.rotate = rotate;
-	worldTransform_.scale = scale;
-}
+void Model::SetPosition(const Vector3& position) { worldTransform_.translate = position; }
+void Model::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
+void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void Model::SetColor(const Vector4& color) { color_ = color; }
 /// ===ライト=== ///
 void Model::SetShininess(LightInfo info) { light_.shininess = info.shininess; }

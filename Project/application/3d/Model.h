@@ -38,8 +38,10 @@ public: /// ===Getter=== ///
 	const Vector4& GetColor() const;
 
 public: /// ===Setter=== ///
-	// モデル座標
-	void SetTransform(const Vector3& postion, const Vector3& rotate, const Vector3& scale);
+	// モデルTransform
+	void SetPosition(const Vector3& position);
+	void SetRotate(const Vector3& rotate);
+	void SetScale(const Vector3& scale);
 	// モデルカラー
 	void SetColor(const Vector4& color);
 	// Lightの光沢度
