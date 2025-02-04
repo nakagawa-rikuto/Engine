@@ -59,7 +59,7 @@ void TitleScene::Update() {
 
 	titleSprite_->Update();
 
-	if (Mii::TriggerKey(DIK_SPACE) || Mii::TriggerMouse(MouseButtonType::Left)) {
+	if (Mii::TriggerMouse(MouseButtonType::Left)) {
 		sceneManager_->ChangeScene("Select");
 	}
 }
