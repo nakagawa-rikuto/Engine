@@ -118,14 +118,18 @@ void Sprite::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void Sprite::Draw(BlendMode mode) {
+void Sprite::Draw(GroundType type, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Obj2D, mode);
+	if (type == GroundType::Front) {
+		Mii::SetPSO(commandList, PipelineType::ForGround2D, mode);
+	} else if (type == GroundType::Back) {
+		Mii::SetPSO(commandList, PipelineType::BackGround2D, mode);
+	}
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// IndexBufferViewの設定

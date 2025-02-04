@@ -6,13 +6,22 @@
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
 PipelineManager::PipelineManager() = default;
-PipelineManager::~PipelineManager() { pipelines_.clear(); }
+PipelineManager::~PipelineManager() { 
+	pipelines_.clear(); 
+	compiler_.clear();
+}
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void PipelineManager::Initialize() {
+void PipelineManager::Initialize(DXCommon* dxCommon) {
 	for (PipelineType type : AllPipelineTypes()) {
+
+		// もしかしたらブレンドモード以外も作るべきかも
+		auto compiler = std::make_unique<Compiler>();
+		compiler->Initialize(dxCommon, type);
+		compiler_[type] = std::move(compiler);
+
 		for (BlendMode mode : AllBlendModes()) {
 			
 			// ペアのキーを作成
@@ -20,7 +29,7 @@ void PipelineManager::Initialize() {
 
 			// パイプラインの作成
 			auto pipeline = std::make_unique<PipelineStateObjectCommon>();
-			pipeline->Create(type, mode);
+			pipeline->Create(dxCommon, compiler_[type].get(), type, mode);
 
 			// パイプラインの追加
 			pipelines_[key] = std::move(pipeline);

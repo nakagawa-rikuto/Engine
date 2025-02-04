@@ -3,11 +3,15 @@
 // Engine
 #include "Engine/Graphics/Pipeline/PipelineStateObjectCommon.h"
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
+#include "Engine/Graphics/Pipeline/Compiler.h"
 // c++
 #include <unordered_map>
 #include <memory>
 #include <utility> // std::pair
 #include <functional> // std::hash
+
+/// ===前方宣言=== ///
+class DXCommon;
 
 ///-------------------------------------------/// 
 /// std::pair 用のハッシュ関数を特殊化
@@ -30,13 +34,14 @@ public:
     ~PipelineManager();
 
     // 初期化
-    void Initialize();
+    void Initialize(DXCommon* dxCommon);
     // PSOの設定
     void SetPipeline(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode);
 
 private:/// ===変数=== ///
     /// パイプラインの管理
     std::unordered_map<std::pair<PipelineType, BlendMode>, std::unique_ptr<PipelineStateObjectCommon>> pipelines_;
+    std::unordered_map<PipelineType, std::unique_ptr<Compiler>> compiler_;
 
 private:/// ===関数=== ///
     /// 指定されたパイプラインを取得

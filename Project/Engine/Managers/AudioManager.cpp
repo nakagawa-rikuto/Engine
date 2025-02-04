@@ -49,7 +49,10 @@ void AudioManager::Initialze() {
 /// 音声データの読み込み
 ///-------------------------------------------///
 void AudioManager::Load(const std::string& key, const std::string& filename, bool isMP3) {
-	assert(soundDatas_.find(key) == soundDatas_.end());
+	// 既に存在する場合はスキップ
+	if (soundDatas_.find(key) != soundDatas_.end()) {
+		return; // 何もしない
+	}
 	if (isMP3) {
 		soundDatas_[key] = LoadMP3(filename);
 	} else {

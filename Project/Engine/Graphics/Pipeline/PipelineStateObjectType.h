@@ -9,8 +9,10 @@
 ///-------------------------------------------///
 enum PipelineType {
 	// 随時追加していく
-	// 2D
-	Obj2D,
+	// 前景2D
+	ForGround2D,
+	// 背景2D
+	BackGround2D,
 	// 3D
 	Obj3D,
 	// Particle
@@ -48,7 +50,7 @@ enum BlendMode {
 
 // 列挙型の全値を取得する関数
 constexpr std::array<PipelineType, static_cast<size_t>(PipelineType::CountOfPipelineType)> AllPipelineTypes() {
-	return { PipelineType::Obj2D, PipelineType::Obj3D, PipelineType::Particle };
+	return { PipelineType::ForGround2D, PipelineType::BackGround2D, PipelineType::Obj3D, PipelineType::Particle };
 }
 constexpr std::array<BlendMode, static_cast<size_t>(BlendMode::kCountOfBlendMode)> AllBlendModes() {
 	return { BlendMode::kBlendModeNone, BlendMode::KBlendModeNormal, BlendMode::kBlendModeAdd,

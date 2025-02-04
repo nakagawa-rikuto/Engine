@@ -1,7 +1,7 @@
 #pragma once
 /// ===include=== ///
-#include "Engine/Core/CData.h"
 #include "Engine/Core/ComPtr.h"
+#include "Engine/DataInfo/CData.h"
 
 ///=====================================================/// 
 /// カメラBuffer

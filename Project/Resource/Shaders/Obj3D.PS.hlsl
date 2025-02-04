@@ -64,7 +64,7 @@ PixlShaderOutput main(VertexShaderOutput input)
     output.color = gMaterial.color;
     
     // UV
-    float4 transformdUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
+    float4 transformdUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     // TextureをSamplingする
     float4 textureColor = gTexture.Sample(gSampler, transformdUV.xy);
     // カメラへの方向を算出
@@ -107,6 +107,7 @@ PixlShaderOutput main(VertexShaderOutput input)
             // 内積の計算
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
+            // Lightの計算
             diffuseDirectionalLight = 
             gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
             specularDirectionalLight = 
@@ -118,6 +119,7 @@ PixlShaderOutput main(VertexShaderOutput input)
             float NdotH = dot(normal, halfVector);
             diffuseFactor = pow(NdotH * 0.5f + 0.5f, 2.0f);
             specularPow = pow(saturate(NdotH), gMaterial.shininess);
+            // Lightの計算
             diffuseDirectionalLight = 
             gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * diffuseFactor * gDirectionalLight.intensity;
             specularDirectionalLight = 
@@ -127,13 +129,14 @@ PixlShaderOutput main(VertexShaderOutput input)
         {
             diffuseFactor = saturate(dot(normal, -pointLightDirection));
             // 入射光の反射ベクトル
-            reflectLight = reflect(-pointLightDirection, normal);
+            reflectLight = reflect(pointLightDirection, normal);
             // 内積の計算 
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
             // 距離による減衰 (1 / 距離の2乗)
             distance = length(gPointLight.position - input.worldPosition);  // ポイントライトへの距離
             factor = pow(saturate(-distance / gPointLight.radius + 1.0f), gPointLight.decay);  // 指数によるコントロール
+            // Lightの計算
             diffusePointLight = 
             gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * diffuseFactor * gPointLight.intensity * factor;
             specularPointLight = 
@@ -143,7 +146,7 @@ PixlShaderOutput main(VertexShaderOutput input)
         {
             diffuseFactor = saturate(dot(normal, -spotLightDirectionOnSurface));
             // 入射光の反射ベクトル
-            reflectLight = reflect(-spotLightDirectionOnSurface, normal);
+            reflectLight = reflect(spotLightDirectionOnSurface, normal);
               // 内積の計算 
             RdotE = dot(reflectLight, toEye);
             specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
@@ -153,6 +156,7 @@ PixlShaderOutput main(VertexShaderOutput input)
             // Falloff(フォールオフ)を追加する
             float cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
             float falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0f - gSpotLight.cosAngle));
+            // Lightの計算
             diffuseSpotLight = 
             gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * diffuseFactor * gSpotLight.intensity * factor * falloffFactor;
             specularSpotLight = 

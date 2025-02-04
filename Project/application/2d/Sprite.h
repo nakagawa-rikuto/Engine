@@ -7,6 +7,11 @@
 // Pipline
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
 
+enum class GroundType {
+	Front,
+	Back
+};
+
 ///=====================================================/// 
 /// スプライト
 ///=====================================================///
@@ -29,7 +34,7 @@ public: /// ===基本的な関数=== ///
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
+	void Draw(GroundType type = GroundType::Front, BlendMode mode = BlendMode::KBlendModeNormal);
 
 public:/// ===Getter=== ///
 

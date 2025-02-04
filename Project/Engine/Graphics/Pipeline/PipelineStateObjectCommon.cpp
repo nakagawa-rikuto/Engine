@@ -1,4 +1,6 @@
 #include "PipelineStateObjectCommon.h"
+// Compiler
+#include "Engine/Graphics/Pipeline/Compiler.h"
 // Engine
 #include "Engine/Core/Mii.h"
 #include "Engine/Core/DXCommon.h"
@@ -19,15 +21,12 @@ PipelineStateObjectCommon::~PipelineStateObjectCommon() {
 	inputLayout_.reset();
 	rasterizerState_.reset();
 	depthStencil_.reset();
-	compiler_.reset();
 }
 
 ///-------------------------------------------/// 
 /// PSOの作成
 ///-------------------------------------------///
-void PipelineStateObjectCommon::Create(PipelineType Type, BlendMode Mode) {
-
-	DXCommon* dxCommon = Mii::GetDXCommon();
+void PipelineStateObjectCommon::Create(DXCommon* dxCommon, Compiler* compiler, PipelineType Type, BlendMode Mode) {
 
 	// RootSignatureの生成
 	rootSignature_ = std::make_unique<RootSignature>();
@@ -50,8 +49,7 @@ void PipelineStateObjectCommon::Create(PipelineType Type, BlendMode Mode) {
 	depthStencil_->Create(Type);
 
 	// Compilerの初期化
-	compiler_ = std::make_unique<Compiler>();
-	compiler_->Initialize(dxCommon, Type);
+	compiler_ = compiler;
 
 	// PipelineState
 	CreatePipelineState(dxCommon);

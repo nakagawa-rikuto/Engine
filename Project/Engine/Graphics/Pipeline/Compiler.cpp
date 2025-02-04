@@ -10,7 +10,7 @@
 ///-------------------------------------------///
 void Compiler::Initialize(DXCommon* dxCommon, PipelineType Type) {
 
-	if (Type == PipelineType::Obj2D) {
+	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D ) {
 
 		// VS
 		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj2D.VS.hlsl", L"vs_6_0",

@@ -2,6 +2,7 @@
 
 #include "Engine/Core/Mii.h"
 #include "application/Game/Stage/Block.h"
+#include "Engine/Service/Input.h"
 
 #ifdef _DEBUG
 #include "imgui.h"
@@ -40,7 +41,7 @@ void Player::NotCollisision() { isCollision_ = false; }
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Player::Inititalze(const std::string & modelName, Camera* camera) {
+void Player::Inititalze(const std::string& modelName, Camera* camera) {
 
 	/// ===Transform情報=== ///
 	pos_ = { 0.0f, 3.0f, 0.0f };
@@ -49,7 +50,7 @@ void Player::Inititalze(const std::string & modelName, Camera* camera) {
 	/// ===Model=== ///
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelName);
-	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, {1.0f, 1.0f, 1.0f});
+	model_->SetPosition(pos_);
 	model_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 	model_->SetCamera(camera);
 }
@@ -79,7 +80,7 @@ void Player::Update(Camera * camera, bool Mode) {
 	}
 
 	// モデルの更新
-	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+	model_->SetPosition(pos_);
 	model_->SetCamera(camera);
 	model_->Update();
 }
@@ -120,15 +121,15 @@ void Player::Move3D() {
 
 	/// ===入力処理=== ///
 	// ｚ軸移動
-	if (Mii::PushKey(DIK_W)) {
+	if (Input::PushKey(DIK_W)) {
 		pos_.z += 0.4f;
-	} else if (Mii::PushKey(DIK_S)) {
+	} else if (Input::PushKey(DIK_S)) {
 		pos_.z -= 0.4f;
 	}
 	// ｘ軸移動
-	if (Mii::PushKey(DIK_D)) {
+	if (Input::PushKey(DIK_D)) {
 		pos_.x += 0.4f;
-	} else if (Mii::PushKey(DIK_A)) {
+	} else if (Input::PushKey(DIK_A)) {
 		pos_.x -= 0.4f;
 	}
 
@@ -138,9 +139,9 @@ void Player::Move2D() {
 
 	/// ===入力処理=== ///
 	// ｘ軸移動
-	if (Mii::PushKey(DIK_D)) {
+	if (Input::PushKey(DIK_D)) {
 		pos_.x += 0.4f;
-	} else if (Mii::PushKey(DIK_A)) {
+	} else if (Input::PushKey(DIK_A)) {
 		pos_.x -= 0.4f;
 	}
 }

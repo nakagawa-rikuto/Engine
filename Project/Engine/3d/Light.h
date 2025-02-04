@@ -1,8 +1,9 @@
 #pragma once
 /// ===include=== ///
-#include "Engine/Core/CData.h"
 #include "Engine/Core/ComPtr.h"
+#include "Engine/DataInfo/CData.h"
 
+/// ===Lightの種類のenum=== ///
 enum class LightType {
 	Lambert,
 	HalfLambert,
