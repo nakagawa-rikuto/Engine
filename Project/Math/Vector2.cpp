@@ -83,6 +83,14 @@ Vector2& Vector2::operator/=(const float& v) {
 	return *this;
 }
 
+///-------------------------------------------/// 
+/// 追加
+///-------------------------------------------///
+Vector2 Vector2::operator+(const Vector2& v) const { return Vector2(x + v.x, y + v.y); }
+Vector2 Vector2::operator-(const Vector2& v) const { return Vector2(x - v.x, y - v.y); }
+Vector2 Vector2::operator*(const Vector2& v) const { return Vector2(x * v.x, y * v.y); }
+Vector2 Vector2::operator/(const Vector2& v) const { return Vector2(x / v.x, y / v.y); }
+
 ///=====================================================///
 ///内積の計算
 ///=====================================================///

@@ -16,53 +16,81 @@ void GameScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 
+	/// ===読み込み=== ///
 	// モデルの読み込み
 	const std::string& CardModel1 = "Card1";
 	const std::string& CardModel2 = "Card2";
 	const std::string& CardModel3 = "Card3";
 	const std::string& CardModel4 = "Card4";
-
 	Loader_->LoadModel(CardModel1);
 	Loader_->LoadModel(CardModel2);
 	Loader_->LoadModel(CardModel3);
 	Loader_->LoadModel(CardModel4);
-
+	// パーティクル
 	Loader_->LoadModel("Particle");
-
-	// std::list<std::string> cardModels;
-
 	// スプライトの読み込み
 	const std::string& bgSprite = "./Resource/backGround.png";
 	Loader_->LoadTexture(bgSprite);
-
+	const std::string& tutorialSprite = "Resource/Tutorial/Tutorial.png";
+	const std::string& tutorialArrowSprite = "Resource/Tutorial/Arrow.png";
+	Loader_->LoadTexture(tutorialSprite);
+	Loader_->LoadTexture(tutorialArrowSprite);
+	
+	/// ===Sprite=== ///
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize(bgSprite);
+	if (sceneManager_->GetLevel() == StageLevel::tutorial) {
+		// 生成
+		tutorialSprite_ = std::make_unique<Sprite>();
+		tutorialArrowSprite_ = std::make_unique<Sprite>();
+		tutorialbgSprite_ = std::make_unique<Sprite>();
+		// 初期化
+		// tutorialSprite
+		tutorialSprite_->Initialize(tutorialSprite);
+		tutorialSprite_->SetPosition({ 640.0f, 360.0f });
+		tutorialSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+		tutorialSprite_->SetSize({ 500.0f, 500.0f });
+		// tutorialArrowSprite
+		tutorialArrowSprite_->Initialize(tutorialArrowSprite);
+		tutorialArrowSprite_->SetPosition({ 410.0f, 130.0f });
+		tutorialArrowSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+		tutorialArrowSprite_->SetSize({ 30.0f, 30.0f });
+		// tutorialBGSprite
+		tutorialbgSprite_->Initialize(bgSprite);
+		tutorialbgSprite_->SetColor({ 0.0f, 0.0f, 0.0f, 0.9f });
+
+		// モードの設定
+		mode_ = Tutorial::Sprite;
+	}
+
 
 	/// ===Camera=== ///
 	// Camera情報
 	cameraPos_ = { 0.0f, 0.0f, -70.0f };
 	cameraRotate_ = { 0.0f, 0.0f, 0.0f };
 	cameraScale_ = { 0.0f, 0.0f, 0.0f };
-
 	camera_ = std::make_shared<Camera>();
 	camera_->Initialize();
 	camera_->SetTranslate(cameraPos_);
 	cameraManager_->Add("main1", camera_);
+	cameraManager_->SetActiveCamera("main1");
 
 	// GlobalVariablesの取得
 	globalVariables = GlobalVariables::GetInstance();
-
 	// カードデータの登録
 	const char* groupNameCards = "Cards";
 	globalVariables->CreateGroup(groupNameCards);
 
 	/// ===Model=== ///
+	// モデルの生成
 	cardManager_ = std::make_unique<CardManager>();
-
 	// ステージの設定
 	auto it = cardDatas_.begin();
+	// ステージ番号分、要素数を進める
 	std::advance(it, static_cast<int>(sceneManager_->GetLevel()));
+	// カードマネージャクラスを初期化
 	cardManager_->Initialize(*it, cameraManager_.get());
+	// デバッグ用ImGui２も設定
 	globalVariables->SetValue("Cards", "CardGrid", *it);
 
 	// デバッグ表示用に GlobalVariables にデータを登録
@@ -122,28 +150,59 @@ void GameScene::Update() {
 	RefreshCardData();
 
 #endif // USE_IMGUI
+	// Tutorialの場合
+	if (sceneManager_->GetLevel() == StageLevel::tutorial && mode_ == Tutorial::Sprite) {
+		// マウスの処理
+		mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+		mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
 
-	sprite_->Update();
+		// カードマネージャの更新
+		cardManager_->Update(mousePosition_);
 
-	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+		// Spriteの更新
+		sprite_->Update();
+		tutorialSprite_->Update();
+		tutorialArrowSprite_->Update();
+		tutorialbgSprite_->Update();
 
-	cardManager_->Update(mousePosition_);
+		//cameraManager_->SetActiveCamera("main1");
+		camera_->SetTranslate(cameraPos_);
+		cameraManager_->UpdateAllCameras();
 
-	cameraManager_->SetActiveCamera("main1");
-	camera_->SetTranslate(cameraPos_);
-	// camera_->SetRotate(cameraRotate_);
-	cameraManager_->UpdateAllCameras();
+		// デバッグ用ImGui情報
+		globalVariables->Update();
 
-	globalVariables->Update();
+		// spriteArrowとの当たり判定を行い当たったらmodeをPlayに変える
+		if(ChaekCollisisonTutorial()){
+		   mode_ = Tutorial::Play;
+		}
 
-	/// ===シーン変更=== ///
-	if (cardManager_->AllCardsObtained()) {
-		// すべてのカードが obtained ならシーンを変更
-		sceneManager_->ChangeScene("Clear");
-	} else if (cardManager_->Checkmate()) {
-		// 詰みだったらTitleにシーン変更
-		sceneManager_->ChangeScene("Title");
+	} else {
+
+		// マウスの処理
+		mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+		mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+
+		// カードマネージャの更新
+		cardManager_->Update(mousePosition_);
+
+		// Spriteの更新
+		sprite_->Update();
+
+		//cameraManager_->SetActiveCamera("main1");
+		camera_->SetTranslate(cameraPos_);
+		cameraManager_->UpdateAllCameras();
+
+		globalVariables->Update();
+
+		/// ===シーン変更=== ///
+		if (cardManager_->AllCardsObtained()) {
+			// すべてのカードが obtained ならシーンを変更
+			sceneManager_->ChangeScene("Clear");
+		} else if (cardManager_->Checkmate()) {
+			// 詰みだったらTitleにシーン変更
+			sceneManager_->ChangeScene("Title");
+		}
 	}
 }
 
@@ -164,6 +223,12 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
+	// tutorialの処理
+	if (sceneManager_->GetLevel() == StageLevel::tutorial && mode_ == Tutorial::Sprite) {
+		tutorialbgSprite_->Draw();
+		tutorialSprite_->Draw();
+		tutorialArrowSprite_->Draw();
+	}
 #pragma endregion
 }
 
@@ -248,4 +313,17 @@ void GameScene::RefreshCardData() {
 		}
 		ImGui::EndCombo();
 	}
+}
+
+// 当たり判定
+bool GameScene::ChaekCollisisonTutorial() {
+
+	Vector2 diffVector = tutorialArrowSprite_->GetPosition() - mousePosition_;
+	float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
+	if (len < 15.0f) {
+		if (Mii::TriggerMouse(MouseButtonType::Left)) {
+			return true;
+		}
+	}
+	return false;
 }

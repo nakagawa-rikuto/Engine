@@ -139,93 +139,20 @@ private:/// ===メンバ変数=== ///
         }
 	};
 
-	/*const std::vector<std::vector<int>> tutorial =
-	{
-		{1,2,1}
-	};*/
+private: /// ===チュートリアル=== ///
+	// 内容スプライトを何枚か見た後にチュートリアル用のステージで遊べるようにする。
+	enum class Tutorial {
+		Sprite,
+		Play
+	};
+	// チュートリアル
+	Tutorial mode_ = Tutorial::Sprite;
 
-	/*const std::vector<std::vector<int>> card3x3_1 =
-	{
-		{1,3,2},
-		{2,1,2},
-		{2,1,3},
-	};*/
+	// チュートリアル用スプライト
+	std::unique_ptr<Sprite> tutorialSprite_;
+	std::unique_ptr<Sprite> tutorialArrowSprite_;
+	std::unique_ptr<Sprite> tutorialbgSprite_;
 
-	/*const std::vector<std::vector<int>> card3x3_2 =
-	{
-		{1,2,2},
-		{2,1,2},
-		{3,2,3}
-	};*/
-
-	/*const std::vector<std::vector<int>> card3x3_3 =
-	{
-		{1,2,1},
-		{1,1,2},
-		{2,2,2}
-	};*/
-
-	/*const std::vector<std::vector<int>> card3x3_4 =
-	{
-		{1,3,1},
-		{2,3,2},
-		{1,3,1}
-	};*/
-
-	/*const std::vector<std::vector<int>> card4x4_1 =
-	{
-		{1,2,1,3},
-		{2,2,3,2},
-		{1,3,1,3},
-		{2,1,2,3}
-	};*/
-
-	/*const std::vector<std::vector<int>> card4x4_2 =
-	{
-		
-	};*/
-
-	/*const std::vector<std::vector<int>> card4x4_3 =
-	{
-		{1,3,2,1},
-		{2,3,4,1},
-		{4,4,2,3},
-		{2,3,4,1}
-	};*/
-
-	/*const std::vector<std::vector<int>> card5x5_1 =
-	{
-		{1,3,2,4,1},
-		{3,1,3,3,2},
-		{4,3,4,2,2},
-		{2,2,2,4,1},
-		{1,4,3,4,2}
-	};*/
-
-	/*const std::vector<std::vector<int>> card5x5_2 =
-	{
-		{1,4,2,1,2},
-		{3,1,4,3,3},
-		{1,3,3,4,1},
-		{4,2,1,3,1},
-		{2,4,4,2,2}
-	};*/
-
-	/*const std::vector<std::vector<int>> card5x5_3
-	{
-		{1,3,2,4,1},
-		{3,1,3,3,2},
-		{4,3,4,2,2},
-		{2,2,2,4,1},
-		{1,4,3,4,2}
-	};*/
-
-	/*const std::vector<std::vector<int>> card5x5_4 =
-	{
-		{2,4,1,3,2},
-		{3,1,4,2,1},
-		{4,2,3,1,4},
-		{1,3,2,4,3},
-		{2,4,1,3,2}
-	};*/
+	// チュートリアル用の当たり判定処理
+	bool ChaekCollisisonTutorial();
 };

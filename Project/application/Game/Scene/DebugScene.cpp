@@ -58,7 +58,9 @@ void DebugScene::Initialize() {
 	/// ===スプライトの初期化=== ///
 #pragma region Spriteの初期化
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(uvTexture);                   // 初期化(const std::string& spriteNameが必須)
+	sprite_->Initialize(uvTexture);         // 初期化(const std::string& spriteNameが必須)
+	sprite_->SetPosition(spriteTranslate_);
+	sprite_->SetAnchorPoint({ 0.5f, 0.5f });
 	/* // テクスチャの使い方
 	sprite->SetPosition(Vector2(0.0f, 0.0f));           // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                          // 回転の設定(初期値は0.0);
