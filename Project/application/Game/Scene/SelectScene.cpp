@@ -96,6 +96,7 @@ void SelectScene::Update() {
 		sceneManager_->SetLevel(StageLevel::tutorial);
 		sceneManager_->ChangeScene("Game");
 	}
+
 	// マウスクリック時に当たり判定をチェック
 	CheckMouseCollision();
 }

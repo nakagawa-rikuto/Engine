@@ -5,6 +5,8 @@
 
 #include <memory>
 
+
+
 class CardManager
 {
 public:
@@ -30,10 +32,21 @@ public:
 
 	void CardDataRefresh(std::vector<std::vector<int>> cardData);
 
+	int GetStepCount() { return stepCount; }
+	int GetEraseCardMaxCount() { return eraseCardMaxCount; }
+	int GetEraseCardCount() { return eraseCardCount; }
+	int GetEraseCount() { return eraseCount; }
+	int GetAllObtainedCardCount() { return allObtainedCardCount; }
+
+	int step10obtainedCount = 0;
+
+	int step15obtainedCount = 0;
+
 	// 詰み処理
 	bool Checkmate();
 
 private:
+
 
 	// 表のカードがそろっているか
 	void CheckFrontPair();
@@ -43,7 +56,9 @@ private:
 
 	bool CountStateCard(Card::CardState state);
 
-	void EightDirectionCheck(int yIndex[2], int xIndex[2]);
+	int EightDirectionCheck(int yIndex[2], int xIndex[2]);
+
+	int CountState(Card::CardState state);
 
 	
 private:
@@ -58,4 +73,20 @@ private:
 	size_t cols = 0;
 
 	CameraManager* cameraManager_ = nullptr;
+
+	// 手数
+	int stepCount = 0;
+
+	// 同時に挟んで消した数
+	int eraseCardMaxCount = 0;
+
+	// 挟んで消したカード
+	int eraseCardCount = 0;
+
+	int eraseCount = 0;
+
+	// 
+	int allObtainedCardCount = 0;
+	
+	
 };
