@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Core/CData.h"
 #include "Engine/Core/ComPtr.h"
+#include "Engine/DataInfo/CData.h"
 
 ///=====================================================/// 
 /// IndexBuffer3D

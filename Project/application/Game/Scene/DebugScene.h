@@ -67,6 +67,8 @@ private:/// ===メンバ変数=== ///
 	// モデル
 	std::unique_ptr<Model> model_;
 	std::unique_ptr<Model> model2_;
+	// モデルライト
+	std::unique_ptr<Model> modelLight_;
 	// Particle
 	std::shared_ptr<WindEmitter> windParticle_;
 	std::shared_ptr<ExplosionEmitter> explosionParticle_;

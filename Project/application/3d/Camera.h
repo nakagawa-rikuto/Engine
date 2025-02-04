@@ -1,6 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Core/CData.h"
+#include "Engine/DataInfo/CData.h"
 
 ///=====================================================/// 
 /// カメラ

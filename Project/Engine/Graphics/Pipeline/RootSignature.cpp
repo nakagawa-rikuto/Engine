@@ -17,7 +17,7 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 	HRESULT hr;
 
 	
-	if (Type == PipelineType::Obj2D) { /// ===Obj2D=== ///
+	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D) { /// ===Obj2D=== ///
 		/// ===RootSignatureの生成=== ///
 		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignatureObj2D{};
 		descriptionRootSignatureObj2D.Flags =

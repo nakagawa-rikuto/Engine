@@ -1,8 +1,8 @@
 #pragma once
 /// ===include=== ///
 // Engine
-#include "Engine/Core/CData.h"
 #include "Engine/Core/ComPtr.h"
+#include "Engine/DataInfo/CData.h"
 
 ///=====================================================/// 
 /// Material2D

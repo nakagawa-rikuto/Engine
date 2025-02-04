@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Audio\Audio.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
+    <ClCompile Include="Engine\Input\Controller.cpp" />
     <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
     <ClCompile Include="application\Game\Stage\Block.cpp" />
@@ -122,13 +123,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Manager\CameraManager.cpp" />
     <ClCompile Include="application\3d\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
-    <ClCompile Include="Engine\Input\Input.cpp" />
+    <ClCompile Include="Engine\Service\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
     <ClCompile Include="Engine\3d\Material3D.cpp" />
     <ClCompile Include="Engine\Managers\ImGuiManager.cpp" />
     <ClCompile Include="application\Game\Scene\IScene.cpp" />
     <ClCompile Include="Engine\Service\Loader.cpp" />
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
+    <ClCompile Include="Engine\Input\InputCommon.cpp" />
+    <ClCompile Include="Engine\Input\Keyboard.cpp" />
     <ClCompile Include="application\Game\Stage\Goal.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
@@ -182,6 +185,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Manager\ParticleManager.cpp" />
     <ClCompile Include="Engine\Particle\ParticleSetUp.cpp" />
     <ClCompile Include="application\Particle\WindEmitter.cpp" />
+    <ClCompile Include="Engine\Input\Mouse.cpp" />
     <ClCompile Include="application\Game\Entity\Player.cpp" />
     <ClCompile Include="application\Game\Stage\SkyDome.cpp" />
   </ItemGroup>
@@ -189,6 +193,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Audio\Audio.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
+    <ClInclude Include="Engine\DataInfo\InputData.h" />
+    <ClInclude Include="Engine\Input\Controller.h" />
     <ClInclude Include="Engine\Managers\CSVManager.h" />
     <ClInclude Include="Engine\3d\Camera3D.h" />
     <ClInclude Include="Engine\Particle\ParticleData.h" />
@@ -200,17 +206,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Game\Scene\GameOverScene.h" />
     <ClInclude Include="application\Manager\CameraManager.h" />
     <ClInclude Include="application\3d\Camera.h" />
-    <ClInclude Include="Engine\Core\CData.h" />
+    <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
-    <ClInclude Include="Engine\Input\Input.h" />
+    <ClInclude Include="Engine\Service\Input.h" />
     <ClInclude Include="Engine\Core\Logger.h" />
     <ClInclude Include="Engine\3d\Material3D.h" />
     <ClInclude Include="Engine\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Game\Scene\IScene.h" />
     <ClInclude Include="Engine\Scene\SceneType.h" />
-    <ClInclude Include="Engine\Core\FileTypeData.h" />
+    <ClInclude Include="Engine\DataInfo\FileTypeData.h" />
     <ClInclude Include="Engine\Service\Loader.h" />
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
+    <ClInclude Include="Engine\Input\InputCommon.h" />
+    <ClInclude Include="Engine\Input\Keyboard.h" />
     <ClInclude Include="Math\MathData.h" />
     <ClInclude Include="application\Game\Stage\Goal.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
@@ -267,6 +275,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Manager\ParticleManager.h" />
     <ClInclude Include="Engine\Particle\ParticleSetUp.h" />
     <ClInclude Include="application\Particle\WindEmitter.h" />
+    <ClInclude Include="Engine\Input\Mouse.h" />
     <ClInclude Include="application\Game\Entity\Player.h" />
     <ClInclude Include="application\Game\Stage\SkyDome.h" />
   </ItemGroup>

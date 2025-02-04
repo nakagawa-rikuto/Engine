@@ -1,8 +1,9 @@
 #include "DebugScene.h"
 // SceneManager
 #include "application/Manager/SceneManager.h"
-#include "Engine/Core/Mii.h"
+// Service
 #include "Engine/Service/Loader.h"
+#include "Engine/Service/Input.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -15,12 +16,14 @@ DebugScene::~DebugScene() {
 	camera2_.reset();
 	// model
 	model_.reset();
+	model2_.reset();
+	modelLight_.reset();
 	// audio
 	audio_->StopSound("fanfare");
 	audio_->StopSound("clear");
 	// Loader
-	Loader::UnloadSound("fanfare");
-	Loader::UnloadSound("clear");
+	//Loader::UnloadSound("fanfare");
+	//Loader::UnloadSound("clear");
 	// Particle
 	windParticle_.reset();
 	explosionParticle_.reset();
@@ -46,13 +49,12 @@ void DebugScene::Initialize() {
 	Loader::LoadTexture("monsterBall", "./Resource/monsterBall.png");
 
 	// モデルの読み込み
-	Loader::LoadModel("GlTF", ModelFileType::GLTF);
+	Loader::LoadModel("GlTF", ModelFileType::GLTF); // GLTFファイルを読み込むときはModelFileTypeで選択しなければいけない
 	Loader::LoadModel("MonsterBall");
 	Loader::LoadModel("terrain");
 	Loader::LoadModel("axis");
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
-	
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -72,9 +74,12 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall");          // 初期化(const std::string& modelNameが必須)
+	model_->Initialize("MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Model>();
 	model2_->Initialize("terrain", LightType::PointLight);
+	modelLight_ = std::make_unique<Model>();
+	modelLight_->Initialize("Particle");
+	// modelLight_->SetTransform({ spot_.position }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	/* // モデルの使い方                        
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -203,19 +208,22 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Rotate", &modelRotate_.x, 0.1f);
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
-			// Light
+			// Shiniess
 			ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
-
+			// DirectionalLight
+			ImGui::Text("DirectionalLight");
 			ImGui::ColorEdit4("LigthColor", &directional_.color.x);
 			ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
 			ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
-			
+			// PointLight
+			ImGui::Text("PointLight");
 			ImGui::ColorEdit4("pointLightColor", &point_.color.x);
 			ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
 			ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
 			ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
 			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
-			
+			// SpotLight
+			ImGui::Text("SpotLight");
 			ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
 			ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
 			ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
@@ -223,7 +231,6 @@ void DebugScene::Update() {
 			ImGui::DragFloat("SpotLightDistance", &spot_.distance, 0.01f);
 			ImGui::DragFloat("SpotLightDecay", &spot_.decay, 0.01f);
 			ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);
-			
 		}
 	}
 	/// ===Particle1=== ///
@@ -296,18 +303,18 @@ void DebugScene::Update() {
 	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.1f);
 	ImGui::End();
 	/// ===Keybord=== ///
-	ImGui::Begin("Keybord");
+	/*ImGui::Begin("Keybord");
 	ImGui::Text("WSADデカメラのポジションを移動");
-	ImGui::End();
+	ImGui::End();*/
 	/// ===Mouse=== ///
-	ImGui::Begin("Mouse");
+	/*ImGui::Begin("Mouse");
 	ImGui::Checkbox("PushLeft", &PushLeft_);
 	ImGui::Checkbox("TriggerRight", &TriggerRight_);
 	ImGui::DragFloat2("MousePosition", &mousePosition_.x, 0.1f);
-	ImGui::End();
+	ImGui::End();*/
 	/// ===Controller=== ///
-	ImGui::Begin("Controller");
-	ImGui::End();
+	/*ImGui::Begin("Controller");
+	ImGui::End();*/
 	/// ===Audio=== ///
 	ImGui::Begin("Audio");
 	ImGui::Checkbox("play", &playAudio);
@@ -328,39 +335,39 @@ void DebugScene::Update() {
 
 	/// ===キーボード関連の処理=== ///
 #pragma region キーボード関連の処理
-	if (Mii::PushKey(DIK_D)) {
+	if (Input::PushKey(DIK_D)) {
 		cameraPos.x += 0.01f;
-	} else if (Mii::PushKey(DIK_A)) {
+	} else if (Input::PushKey(DIK_A)) {
 		cameraPos.x -= 0.01f;
 	}
-	if (Mii::PushKey(DIK_W)) {
+	if (Input::PushKey(DIK_W)) {
 		cameraPos.y += 0.01f;
-	} else if (Mii::PushKey(DIK_S)) {
+	} else if (Input::PushKey(DIK_S)) {
 		cameraPos.y -= 0.01f;
 	}
-	if (Mii::PushKey(DIK_UP)) {
+	if (Input::PushKey(DIK_UP)) {
 		cameraPos.z += 0.01f;
-	} else if (Mii::PushKey(DIK_DOWN)) {
+	} else if (Input::PushKey(DIK_DOWN)) {
 		cameraPos.z -= 0.01f;
 	}
 #pragma endregion
 
 	/// ===マウス関連の処理=== ///
 #pragma region マウス関連の処理
-	if (Mii::PushMouse(MouseButtonType::Left)) {
+	if (Input::PushMouse(MouseButtonType::Left)) {
 		PushLeft_ = true;
 	} else {
 		PushLeft_ = false;
 	}
-	if (Mii::TriggerMouse(MouseButtonType::Right)) {
+	if (Input::TriggerMouse(MouseButtonType::Right)) {
 		if (TriggerRight_) {
 			TriggerRight_ = false;
 		} else {
 			TriggerRight_ = true;
 		}
 	}
-	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+	mousePosition_.x = static_cast<float>(Input::GetMousePosition().x);
+	mousePosition_.y = static_cast<float>(Input::GetMousePosition().y);
 #pragma endregion
 
 	/// ===Audioのセット=== ///
@@ -386,25 +393,26 @@ void DebugScene::Update() {
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	/// ===回転処理=== ///
-	if (isRotate) {
-		modelRotate_.y += 0.1f;
-		modelRotate_.x += 0.1f;
-		modelRotate_.z -= 0.1f;
-	}
-	model_->SetTransform(modelTranslate_, modelRotate_, modelScale_);
+	model_->SetPosition(modelTranslate_);
+	model_->SetRotate(modelRotate_);
+	model_->SetScale(modelScale_);
 	model_->SetColor(modelColor_);
 	model_->SetShininess(light_);
 	model_->SetDirctionalLightData(directional_);
-	model2_->SetDirctionalLightData(directional_);
 	model_->SetPointLightData(point_);
-	model2_->SetPointLightData(point_);
 	model_->SetSpotLightData(spot_);
-	model2_->SetSpotLightData(spot_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
-	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
+	
+	model2_->SetDirctionalLightData(directional_);
+	model2_->SetPointLightData(point_);
+	model2_->SetSpotLightData(spot_);
+	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
+
+	modelLight_->SetPosition(point_.position);
+	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());	
+	modelLight_->Update();
 #pragma endregion
 
 	/// ===Particle=== ///
@@ -429,6 +437,12 @@ void DebugScene::Update() {
 ///-------------------------------------------///
 void DebugScene::Draw() {
 #pragma region 背景スプライト描画
+
+	/// ===Sprite=== ///
+	if (isDisplay_.Sprite) {
+		sprite_->Draw(GroundType::Back); // GroundTypeで背景か前景を選択か初期は前景描画。 BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
+	}
+
 #pragma endregion
 
 #pragma region モデル描画
@@ -436,7 +450,8 @@ void DebugScene::Draw() {
 	if (isDisplay_.Model) {
 		model2_->Draw();
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
-		
+		model2_->Draw();
+		modelLight_->Draw();
 	}
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {
@@ -452,9 +467,5 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
-	/// ===Sprite=== ///
-	if (isDisplay_.Sprite) {
-		sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
-	}
 #pragma endregion
 }

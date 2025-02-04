@@ -23,7 +23,7 @@
     <ClCompile Include="application\Manager\CameraManager.cpp" />
     <ClCompile Include="application\3d\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
-    <ClCompile Include="Engine\Input\Input.cpp" />
+    <ClCompile Include="Engine\Service\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
     <ClCompile Include="Engine\3d\Material3D.cpp" />
     <ClCompile Include="Engine\Managers\ImGuiManager.cpp" />
@@ -83,6 +83,10 @@
     <ClCompile Include="application\Particle\WindEmitter.cpp" />
     <ClCompile Include="application\Particle\ExplosionEmitter.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
+    <ClCompile Include="Engine\Input\InputCommon.cpp" />
+    <ClCompile Include="Engine\Input\Keyboard.cpp" />
+    <ClCompile Include="Engine\Input\Mouse.cpp" />
+    <ClCompile Include="Engine\Input\Controller.cpp" />
     <ClCompile Include="application\Game\Stage\Block.cpp" />
     <ClCompile Include="application\Game\Stage\Goal.cpp" />
     <ClCompile Include="application\Game\Entity\Player.cpp" />
@@ -101,9 +105,9 @@
     <ClInclude Include="application\Game\Scene\GameOverScene.h" />
     <ClInclude Include="application\Manager\CameraManager.h" />
     <ClInclude Include="application\3d\Camera.h" />
-    <ClInclude Include="Engine\Core\CData.h" />
+    <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
-    <ClInclude Include="Engine\Input\Input.h" />
+    <ClInclude Include="Engine\Service\Input.h" />
     <ClInclude Include="Engine\Core\Logger.h" />
     <ClInclude Include="Engine\3d\Material3D.h" />
     <ClInclude Include="Engine\Managers\ImGuiManager.h" />
@@ -167,6 +171,12 @@
     <ClInclude Include="application\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
     <ClInclude Include="Engine\Scene\SceneType.h" />
+    <ClInclude Include="Engine\DataInfo\FileTypeData.h" />
+    <ClInclude Include="Engine\Input\InputCommon.h" />
+    <ClInclude Include="Engine\Input\Keyboard.h" />
+    <ClInclude Include="Engine\Input\Mouse.h" />
+    <ClInclude Include="Engine\Input\Controller.h" />
+    <ClInclude Include="Engine\DataInfo\InputData.h" />
     <ClInclude Include="Engine\Core\FileTypeData.h" />
     <ClInclude Include="application\Game\Stage\Block.h" />
     <ClInclude Include="application\Game\Stage\Goal.h" />

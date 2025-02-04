@@ -6,7 +6,6 @@
 #include "Engine/Graphics/Pipeline/BlendState.h"
 #include "Engine/Graphics/Pipeline/DepthStencil.h"
 #include "Engine/Graphics/Pipeline/RasterizerState.h"
-#include "Engine/Graphics/Pipeline/Compiler.h"
 
 // PipelineType
 #include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
@@ -24,6 +23,7 @@
 
 /// ===前方宣言=== ///
 class DXCommon;
+class Compiler;
 
 class PipelineStateObjectCommon {
 public:
@@ -32,7 +32,7 @@ public:
 	~PipelineStateObjectCommon();
 
 	// PSOの生成
-	void Create(PipelineType Type, BlendMode Mode);
+	void Create(DXCommon* dxcommon, Compiler* compiler, PipelineType Type, BlendMode Mode);
 	// PSOのセット
 	void SetPSO(ID3D12GraphicsCommandList* commandList);
 
@@ -44,7 +44,7 @@ private:/// ===変数=== ///
 	std::unique_ptr<BlendState> blendState_;           // BlendState
 	std::unique_ptr<RasterizerState> rasterizerState_; // RasterizerState
 	std::unique_ptr<DepthStencil> depthStencil_;       // DepthStencil
-	std::unique_ptr<Compiler> compiler_;               // Compiler
+	Compiler* compiler_;                               // Compiler
 
 	ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_{};
