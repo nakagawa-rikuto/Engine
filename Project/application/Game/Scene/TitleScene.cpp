@@ -60,7 +60,7 @@ void TitleScene::Update() {
 	titleModel_->SetCamera(cameraManager_->GetActiveCamera().get());
 
 	if (Mii::TriggerKey(DIK_SPACE)) {
-		sceneManager_->ChangeScene("Game");
+		sceneManager_->ChangeScene("Select");
 	}
 }
 

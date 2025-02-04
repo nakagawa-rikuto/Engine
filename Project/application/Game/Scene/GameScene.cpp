@@ -40,25 +40,14 @@ void GameScene::Initialize() {
 
 	/// ===Camera=== ///
 	// Camera情報
-	cameraPos_ = {0.0f, 0.0f, -70.0f};
-	cameraRotate_ = {0.0f, 0.0f, 0.0f};
-	cameraScale_ = {0.0f, 0.0f, 0.0f};
+	cameraPos_ = { 0.0f, 0.0f, -70.0f };
+	cameraRotate_ = { 0.0f, 0.0f, 0.0f };
+	cameraScale_ = { 0.0f, 0.0f, 0.0f };
 
 	camera_ = std::make_shared<Camera>();
 	camera_->Initialize();
 	camera_->SetTranslate(cameraPos_);
 	cameraManager_->Add("main1", camera_);
-
-	auto it = cardDatas_.begin();
-
-	stage = StageNum::card5x5_1;
-
-	// vectorの要素数をステージ分追加
-	std::advance(it, static_cast<int>(stage));
-
-	/// ===Model=== ///
-	cardManager_ = std::make_unique<CardManager>();
-	cardManager_->Initialize(*it, cameraManager_.get());
 
 	// GlobalVariablesの取得
 	globalVariables = GlobalVariables::GetInstance();
@@ -67,6 +56,15 @@ void GameScene::Initialize() {
 	const char* groupNameCards = "Cards";
 	globalVariables->CreateGroup(groupNameCards);
 
+	/// ===Model=== ///
+	cardManager_ = std::make_unique<CardManager>();
+
+	// ステージの設定
+	auto it = cardDatas_.begin();
+	std::advance(it, static_cast<int>(sceneManager_->GetLevel()));
+	cardManager_->Initialize(*it, cameraManager_.get());
+	globalVariables->SetValue("Cards", "CardGrid", *it);
+
 	// デバッグ表示用に GlobalVariables にデータを登録
 	std::vector<int32_t> cardGrid;
 	for (int y = 0; y < cardManager_->GetRows(); ++y) {
@@ -74,7 +72,6 @@ void GameScene::Initialize() {
 			cardGrid.push_back(cardManager_->GetCards()[y][x]->GetCardType());
 		}
 	}
-	globalVariables->SetValue("Cards", "CardGrid", *it);
 }
 
 ///-------------------------------------------///
@@ -172,92 +169,80 @@ void GameScene::Draw() {
 
 void GameScene::RefreshCardData() {
 	const char* stageNames[] = {
-	    "tutorial", "card3x3_1", "card3x3_2", "card3x3_3", "card3x3_4", "card4x4_1", "card4x4_2", "card4x4_3", "card5x5_1", "card5x5_2", "card5x5_3", "card5x5_4",
+		"tutorial", "card3x3_1", "card3x3_2", "card3x3_3", "card3x3_4", "card4x4_1", "card4x4_2", "card4x4_3", "card5x5_1", "card5x5_2", "card5x5_3", "card5x5_4",
 	};
 
-	if (ImGui::BeginCombo("Select Stage", stageNames[static_cast<int>(stage)])) {
+	if (ImGui::BeginCombo("Select Stage", stageNames[static_cast<int>(sceneManager_->GetLevel())])) {
 
 		if (ImGui::Selectable("tutorial")) {
-			stage = StageNum::tutorial;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::tutorial));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card3x3_1")) {
-			stage = StageNum::card3x3_1;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card3x3_1));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card3x3_2")) {
-			stage = StageNum::card3x3_2;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card3x3_2));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card3x3_3")) {
-			stage = StageNum::card3x3_3;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card3x3_3));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card3x3_4")) {
-			stage = StageNum::card3x3_4;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card3x3_4));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card4x4_1")) {
-			stage = StageNum::card4x4_1;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card4x4_1));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card4x4_2")) {
-			stage = StageNum::card4x4_2;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card4x4_2));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card4x4_3")) {
-			stage = StageNum::card4x4_3;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card4x4_3));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card5x5_1")) {
-			stage = StageNum::card5x5_1;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card5x5_1));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card5x5_2")) {
-			stage = StageNum::card5x5_2;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card5x5_2));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card5x5_3")) {
-			stage = StageNum::card5x5_3;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card5x5_3));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}
 		if (ImGui::Selectable("card5x5_4")) {
-			stage = StageNum::card5x5_4;
 			auto it = cardDatas_.begin();
-			std::advance(it, static_cast<int>(stage));
+			std::advance(it, static_cast<int>(StageLevel::card5x5_4));
 			cardManager_->CardDataRefresh(*it);
 			globalVariables->SetValue("Cards", "CardGrid", *it);
 		}

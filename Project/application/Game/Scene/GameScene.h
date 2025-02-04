@@ -66,26 +66,6 @@ private:/// ===メンバ変数=== ///
 
 	std::unique_ptr<CardManager> cardManager_ = nullptr;
 
-	enum class StageNum
-	{
-		tutorial,
-		card3x3_1,
-		card3x3_2,
-		card3x3_3,
-		card3x3_4,
-		card4x4_1,
-		card4x4_2,
-		card4x4_3,
-		card5x5_1,
-		card5x5_2,
-		card5x5_3,
-		card5x5_4,
-
-		COUNT,
-	};
-
-	StageNum stage = StageNum::tutorial;
-
 	const std::list<std::vector<std::vector<int>>> cardDatas_ =
 	{
 		{

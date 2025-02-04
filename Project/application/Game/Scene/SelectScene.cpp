@@ -1,6 +1,7 @@
 #include "SelectScene.h"
 // SceneManager
 #include "application/Manager/SceneManager.h"
+#include "Engine/Core/Mii.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -24,6 +25,11 @@ void SelectScene::Update() {
 	ImGui::Begin("SelectScene");
 	ImGui::End();
 #endif // USE_IMGUI
+
+	if (Mii::PushKey(DIK_SPACE)) {
+		sceneManager_->SetLevel(StageLevel::tutorial);
+		sceneManager_->ChangeScene("Game");
+	}
 }
 
 ///-------------------------------------------/// 
