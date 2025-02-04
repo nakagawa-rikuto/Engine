@@ -1,7 +1,7 @@
 #include "SelectScene.h"
 // SceneManager
-#include "application/Manager/SceneManager.h"
 #include "Engine/Core/Mii.h"
+#include "application/Manager/SceneManager.h"
 
 #include "Engine/Core/Mii.h"
 
@@ -96,8 +96,6 @@ void SelectScene::Update() {
 		sceneManager_->SetLevel(StageLevel::tutorial);
 		sceneManager_->ChangeScene("Game");
 	}
-}
-
 	// マウスクリック時に当たり判定をチェック
 	CheckMouseCollision();
 }
