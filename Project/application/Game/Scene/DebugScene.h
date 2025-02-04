@@ -82,7 +82,7 @@ private:/// ===メンバ変数=== ///
 	Vector4 modelColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	bool isRotate = false;
 	// sprite
-	Vector2 spriteTranslate_ = { 0.0f, 0.0f };
+	Vector2 spriteTranslate_ = { 640.0f, 360.0f };
 	float spriteRotate_ = 0.0f;
 	Vector2 spriteSize_ = { 100.0f, 100.0f };
 	Vector4 spriteColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
