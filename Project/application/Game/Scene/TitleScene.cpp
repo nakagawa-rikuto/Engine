@@ -15,10 +15,11 @@ void TitleScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 
-	Loader_->LoadModel("title");
+	const std::string& titleTexture = "./Resource/title.png";
+	Loader_->LoadTexture(titleTexture);
 
-	titleModel_ = std::make_unique<Model>();
-	titleModel_->Initialize("title");
+	titleSprite_ = std::make_unique<Sprite>();
+	titleSprite_->Initialize(titleTexture);
 
 	/// ===Camera=== ///
 	// Camera情報
@@ -56,11 +57,10 @@ void TitleScene::Update() {
 	camera_->SetTranslate(cameraPos_);
 	cameraManager_->UpdateAllCameras();
 
-	titleModel_->Update();
-	titleModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+	titleSprite_->Update();
 
-	if (Mii::TriggerKey(DIK_SPACE)) {
-		sceneManager_->ChangeScene("Game");
+	if (Mii::TriggerKey(DIK_SPACE) || Mii::TriggerMouse(MouseButtonType::Left)) {
+		sceneManager_->ChangeScene("Select");
 	}
 }
 
@@ -73,7 +73,7 @@ void TitleScene::Draw() {
 
 #pragma region モデル描画
 
-	titleModel_->Draw();
+	titleSprite_->Draw();
 
 #pragma endregion
 

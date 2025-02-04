@@ -2,7 +2,7 @@
 /// ===Include=== ///
 // IScene
 #include "application/3d/Camera.h"
-#include "application/3d/Model.h"
+#include "application/2d/Sprite.h"
 #include "application/Game/Scene/IScene.h"
 
 #include <memory>
@@ -34,6 +34,6 @@ private: /// ===メンバ変数=== ///
 	Vector3 cameraRotate_;
 	Vector3 cameraScale_;
 
-	// タイトル文字モデル
-	std::unique_ptr<Model> titleModel_ = nullptr;
+	// タイトル文字スプライト
+	std::unique_ptr<Sprite> titleSprite_ = nullptr;
 };
