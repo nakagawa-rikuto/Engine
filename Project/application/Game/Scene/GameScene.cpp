@@ -63,7 +63,6 @@ void GameScene::Initialize() {
 		mode_ = Tutorial::Sprite;
 	}
 
-
 	/// ===Camera=== ///
 	// Camera情報
 	cameraPos_ = { 0.0f, 0.0f, -70.0f };
