@@ -2,6 +2,9 @@
 #include "application/3d/Model.h"
 #include <memory>
 
+/// ====== ///
+class Camera;
+
 ///=====================================================/// 
 /// スカイドーム
 ///=====================================================///
@@ -12,7 +15,7 @@ public:
 	~SkyDome();
 
 	void Initialize(const std::string& filename);
-	void Update();
+	void Update(Camera* camera);
 	void Draw();
 
 private:

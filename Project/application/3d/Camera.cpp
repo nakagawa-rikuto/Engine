@@ -2,6 +2,10 @@
 
 #include "Engine/Core/WinApp.h"
 #include "Math/sMath.h"
+#ifdef USE_IMGUI
+#include <imgui.h>
+#endif // USE_IMGUI
+
 
 ///-------------------------------------------/// 
 /// Getter
@@ -67,6 +71,18 @@ void Camera::Update() {
 		projectionMatrix_ = MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
 	}
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+}
+
+///-------------------------------------------/// 
+/// 情報(ImGui)
+///-------------------------------------------///
+void Camera::Info() {
+#ifdef USE_IMGUI
+	ImGui::Begin("CameraInfo");
+	ImGui::DragFloat3("Transform", &transform_.translate.x, 0.01f);
+	ImGui::End();
+#endif // USE_IMGUI
+
 }
 
 ///-------------------------------------------/// 

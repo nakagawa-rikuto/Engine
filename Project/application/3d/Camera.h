@@ -20,6 +20,7 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+	void Info();
 
 public:/// ===追加=== ///
 	// 2D用の初期化

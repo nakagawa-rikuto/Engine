@@ -2,9 +2,12 @@
 /// ===Includ=== ///
 #include "application/Game/Scene/IScene.h"
 // Game
+#include "application/3d/Model.h"
+#include "application/3d/Camera.h"
 #include "application/Game/Entity/Player.h"
 #include "application/Game/Stage/Goal.h"
 #include "application/Game/Stage/Block.h"
+#include "application/Game/Stage/SkyDome.h"
 // Sprite
 #include "application/2d/Sprite.h"
 
@@ -51,6 +54,9 @@ private:/// ===メンバ変数=== ///
 
 	/// ===Sprite=== ///
 	std::unique_ptr<Sprite> sprite_;
+
+	/// ===SkyDome=== ///
+	std::unique_ptr<SkyDome> skyDome_;
 
 private:
 

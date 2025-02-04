@@ -19,7 +19,8 @@ void SkyDome::Initialize(const std::string & filename) {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void SkyDome::Update() {
+void SkyDome::Update(Camera* camera) {
+	model_->SetCamera(camera);
 	model_->Update();
 }
 

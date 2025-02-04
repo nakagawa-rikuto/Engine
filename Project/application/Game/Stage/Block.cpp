@@ -20,7 +20,7 @@ void Block::Initialze(const std::string& modelName, const Vector3& position, Cam
 	model_->Initialize(modelName);
 
 	// モデルに位置を設定
-	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 	model_->SetCamera(camera);
 }
 

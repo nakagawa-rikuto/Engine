@@ -49,8 +49,8 @@ void Player::Inititalze(const std::string & modelName, Camera* camera) {
 	/// ===Model=== ///
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelName);
-	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, {0.0f, 0.0f, 0.0f});
-	model_->SetColor({ 1.0f, 0.0f, 0.0f, 0.0f });
+	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, {1.0f, 1.0f, 1.0f});
+	model_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 	model_->SetCamera(camera);
 }
 
@@ -61,12 +61,11 @@ void Player::Update(Camera * camera, bool Mode) {
 
 #ifdef USE_IMGUI
 	ImGui::Begin("Player");
-	ImGui::DragFloat3("Translate", &pos_.x, 0.01f);
+	ImGui::DragFloat3("Translate", &pos_.x, 0.01f); 
 	ImGui::End();
 #endif // USE_IMGUI
 
-
-
+	// 落下処理
 	if (!isCollision_) {
 		pos_.y -= 0.4f;
 	}
@@ -80,7 +79,7 @@ void Player::Update(Camera * camera, bool Mode) {
 	}
 
 	// モデルの更新
-	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+	model_->SetTransform(pos_, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 	model_->SetCamera(camera);
 	model_->Update();
 }

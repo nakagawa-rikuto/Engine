@@ -14,6 +14,7 @@ GameScene::~GameScene() {
     player_.reset();
     goal_.reset();
     blocks_.clear();
+    skyDome_.reset();
 }
 
 ///-------------------------------------------/// 
@@ -36,6 +37,9 @@ void GameScene::Initialize() {
     // Goalモデルの読み込み
     const std::string& GoalModel = "Goal";
     Loader::LoadModel(GoalModel);
+    // SkyDomeモデルの読み込み
+    const std::string& SkyDomeModel = "skyDome";
+    Loader::LoadModel(SkyDomeModel);
 
     /// ===カメラ関連=== ///
    // カメラのTransform情報を書き込む(最初は3D)
@@ -49,7 +53,6 @@ void GameScene::Initialize() {
     camera_->SetTranslate(cameraPos_);
     camera_->SetRotate(cameraRotate_);
     camera_->SetScale(cameraScale_);
-
     // カメラの追加
     cameraManager_->Add("3D", camera_);
     // アクティブカメラのセット
@@ -107,7 +110,9 @@ void GameScene::Initialize() {
     sprite_->Initialize("GameScene");
     sprite_->SetPosition({ 20.0f, 50.0f });
 
-   
+    /// ===SkyDome=== ///
+    skyDome_ = std::make_unique<SkyDome>();
+    skyDome_->Initialize(SkyDomeModel);
 }
 
 ///-------------------------------------------/// 
@@ -128,14 +133,18 @@ void GameScene::Update() {
 
 #endif // USE_IMGUI
 
+    camera_->Info();
+
     /// ===モードの切り替え=== ///
     if (Mii::TriggerKey(DIK_Q)) {
         if (Mode3D_) {
+            camera_->SwitchTo2DMode();
             Mode3D_ = false;
             cameraPos_ = { -8.5f, -9.5f, 0.0f };
             cameraRotate_ = { 0.0f, 0.0f, 0.0f };
             cameraScale_ = { 1.0f, 0.5f, 1.0f };
         } else {
+            camera_->SwitchTo3DMode();
             SwithcTo3DMode();
             Mode3D_ = true;
             cameraPos_ = { player_->GetPos().x, player_->GetPos().y + 7.0f, player_->GetPos().z - 40.0f };
@@ -145,15 +154,16 @@ void GameScene::Update() {
     }
     // カメラの切り替え
     if (Mode3D_) {
-        camera_->SwitchTo3DMode();
         cameraPos_ = { player_->GetPos().x, player_->GetPos().y + 7.0f, player_->GetPos().z - 40.0f };
         // 衝突判定(3D)
         IsCollisison3D();
     } else {
-        camera_->SwitchTo2DMode();
         // 衝突判定(2D)
         IsCollisison2D();
     }
+
+    /// ===Spriteの更新=== ///
+    sprite_->Update();
 
     // Playerの更新
     player_->Update(cameraManager_->GetActiveCamera().get(), Mode3D_);
@@ -167,14 +177,14 @@ void GameScene::Update() {
     // Goalの更新
     goal_->Update(cameraManager_->GetActiveCamera().get());
 
+    /// ===skyDome=== ///
+    skyDome_->Update(cameraManager_->GetActiveCamera().get());
+
     // カメラセット
     camera_->SetTranslate(cameraPos_);
     camera_->SetRotate(cameraRotate_);
     camera_->SetScale(cameraScale_);
-    cameraManager_->UpdateAllCameras();
-
-    /// ===Spriteの更新=== ///
-    sprite_->Update();
+    camera_->Update();
 
     /// ===シーンの切り替え処理=== ///
     if (IsCollisionGoalBlock()) {
@@ -192,23 +202,25 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
+
+    skyDome_->Draw();
+
     // Blockの描画
-    //for (const auto& block : blocks_) {
-    //    if (block) { // nullptr チェック
-    //        block->Draw();
-    //    }
-    //}
-    // Goalの描画
-    //goal_->Draw();
+    for (const auto& block : blocks_) {
+        if (block) { // nullptr チェック
+            block->Draw();
+        }
+    }
     // Playerの描画
     player_->Draw();
+    // Goalの描画
+    //goal_->Draw();
     
 
 #pragma endregion
 
 #pragma region 前景スプライト描画
     sprite_->Draw();
-
 #pragma endregion
 }
 
