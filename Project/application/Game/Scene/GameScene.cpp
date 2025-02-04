@@ -63,6 +63,24 @@ void GameScene::Initialize() {
 		mode_ = Tutorial::Sprite;
 	}
 
+	const std::string missionSprites_[11] = { 
+		"./Resource/Mission/mission1.png", "./Resource/Mission/mission1.png",  "./Resource/Mission/mission3.png", "./Resource/Mission/mission4.png",
+	    "./Resource/Mission/mission5.png", "./Resource/Mission/mission6.png",  "./Resource/Mission/mission7.png", "./Resource/Mission/mission8.png",
+		"./Resource/Mission/mission9.png", "./Resource/Mission/mission10.png", "./Resource/Mission/mission11.png" 
+	};
+
+	for (int i = 0; i < 11; i++) {
+		Loader_->LoadTexture(missionSprites_[i]);
+	}
+
+	missionSprite_ = std::make_unique<Sprite>();
+	missionSprite_->Initialize(missionSprites_[static_cast<int>(sceneManager_->GetLevel()) -1]);
+
+	missionSprite_->SetPosition({ 20.0f,20.0f });
+	missionSprite_->SetSize({ 305.0f, 75.0f });
+
+	missionSprite_->Update();
+
 	/// ===Camera=== ///
 	// Camera情報
 	cameraPos_ = { 0.0f, 0.0f, -70.0f };
@@ -248,6 +266,9 @@ void GameScene::Draw() {
 		tutorialSprite_->Draw();
 		tutorialArrowSprite_->Draw();
 	}
+
+	missionSprite_->Draw();
+
 #pragma endregion
 }
 
