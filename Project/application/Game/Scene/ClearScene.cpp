@@ -32,8 +32,8 @@ void ClearScene::Initialize() {
 void ClearScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
-	ImGui::Begin("ClearScene");
-	ImGui::End();
+	/*ImGui::Begin("ClearScene");
+	ImGui::End();*/
 #endif // USE_IMGUI
 
 	/// ===Spriteの更新=== ///

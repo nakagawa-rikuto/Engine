@@ -61,9 +61,9 @@ void Player::Inititalze(const std::string& modelName, Camera* camera) {
 void Player::Update(Camera * camera, bool Mode) {
 
 #ifdef USE_IMGUI
-	ImGui::Begin("Player");
+	/*ImGui::Begin("Player");
 	ImGui::DragFloat3("Translate", &pos_.x, 0.01f); 
-	ImGui::End();
+	ImGui::End();*/
 #endif // USE_IMGUI
 
 	// 落下処理

@@ -32,8 +32,8 @@ void GameOverScene::Initialize() {
 void GameOverScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
-	ImGui::Begin("GameOverScene");
-	ImGui::End();
+	/*ImGui::Begin("GameOverScene");
+	ImGui::End();*/
 #endif // USE_IMGUI
 
 	/// ===Spriteの更新=== ///

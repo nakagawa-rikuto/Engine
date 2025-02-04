@@ -38,7 +38,7 @@ void SceneManager::Update() {
 	}
 
 	// ImGui
-	SceneObservation();
+	//SceneObservation();
 }
 
 ///-------------------------------------------/// 

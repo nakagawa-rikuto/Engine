@@ -122,7 +122,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
-	ImGui::Begin("GameScene");
+	/*ImGui::Begin("GameScene");
 	ImGui::End();
 
     ImGui::Begin("Camera");
@@ -130,11 +130,11 @@ void GameScene::Update() {
     ImGui::DragFloat3("Rotate", &cameraRotate_.x, 0.01f);
     ImGui::DragFloat3("Scale", &cameraScale_.x, 0.01f);
     ImGui::Checkbox("2Dor3D", &Mode3D_);
-    ImGui::End();
+    ImGui::End();*/
 
 #endif // USE_IMGUI
 
-    camera_->Info();
+    //camera_->Info();
 
     /// ===モードの切り替え=== ///
     if (Input::TriggerKey(DIK_Q)) {
@@ -155,10 +155,12 @@ void GameScene::Update() {
     }
     // カメラの切り替え
     if (Mode3D_) {
+        
         cameraPos_ = { player_->GetPos().x, player_->GetPos().y + 7.0f, player_->GetPos().z - 40.0f };
         // 衝突判定(3D)
         IsCollisison3D();
     } else {
+        
         // 衝突判定(2D)
         IsCollisison2D();
     }
@@ -215,7 +217,7 @@ void GameScene::Draw() {
     // Playerの描画
     player_->Draw();
     // Goalの描画
-    //goal_->Draw();
+    goal_->Draw();
     
 
 #pragma endregion

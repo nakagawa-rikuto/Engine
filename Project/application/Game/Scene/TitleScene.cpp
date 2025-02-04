@@ -32,8 +32,8 @@ void TitleScene::Initialize() {
 void TitleScene::Update() {
 	/// ===デバック用ImGui=== ///
 #ifdef USE_IMGUI
-	ImGui::Begin("TitleScene");
-	ImGui::End();
+	/*ImGui::Begin("TitleScene");
+	ImGui::End();*/
 #endif // USE_IMGUI
 
 	/// ===Spriteの更新=== ///
