@@ -446,10 +446,11 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
+	model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
 		model2_->Draw();
-		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+		
 		model2_->Draw();
 		modelLight_->Draw();
 	}

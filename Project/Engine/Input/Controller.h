@@ -34,7 +34,7 @@ public:
 	
 	// Setter
 	// デッドゾーン
-	float SetDeadZone(const float& deadZone);
+	void SetDeadZone(const float& deadZone);
 
 private:
 	WinApp* winApp_ = nullptr;

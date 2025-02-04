@@ -3,6 +3,7 @@
 #include "application/Manager/SceneManager.h"
 #include "Engine/Core/Mii.h"
 #include "Engine/Service/Loader.h"
+#include "Engine/Service/Input.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -39,7 +40,7 @@ void GameOverScene::Update() {
 	sprite_->Update();
 
 	// シーン切り替え
-	if (Mii::TriggerKey(DIK_SPACE)) {
+	if (Input::TriggerKey(DIK_SPACE)) {
 		sceneManager_->ChangeScene(SceneType::Title);
 	}
 }

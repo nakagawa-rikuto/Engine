@@ -12,7 +12,7 @@ Goal::~Goal() { model_.reset(); }
 void Goal::Initialze(const std::string & modelName, const Vector3 & pos, Camera* camera) {
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelName);
-	model_->SetTransform({ pos.x, pos.y + 4.0f, pos.z }, { 0.0f, 0.0f, 0.0f }, {1.0f, 1.0f, 1.0f});
+	model_->SetPosition({ pos.x, pos.y + 4.0f, pos.z });
 	model_->SetCamera(camera);
 }
 

@@ -4,6 +4,7 @@
 
 #include "Engine/Core/Mii.h"
 #include "Engine/Service/Loader.h"
+#include "Engine/Service/Input.h"
 
 #include "Math/sMath.h"
 
@@ -136,7 +137,7 @@ void GameScene::Update() {
     camera_->Info();
 
     /// ===モードの切り替え=== ///
-    if (Mii::TriggerKey(DIK_Q)) {
+    if (Input::TriggerKey(DIK_Q)) {
         if (Mode3D_) {
             camera_->SwitchTo2DMode();
             Mode3D_ = false;
