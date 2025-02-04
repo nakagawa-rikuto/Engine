@@ -29,7 +29,7 @@ void ConfettiEmitter::Initialze(const std::string& filename) {
     explosionCenter_ = { 0.0f, 0.0f, 0.0f };
     explosionRadius_ = 0.5f; // 初期位置を密集させる
     gravity_ = -9.8f; // 重力加速度
-    upwardForce_ = 15.0f; // 上方向の初期加速度を追加
+    upwardForce_ = 20.0f; // 上方向の初期加速度を追加
     maxLifetime_ = 2.0f; // パーティクルの寿命を調整
 
     /// ===トランスフォームの初期化=== ///
@@ -130,7 +130,7 @@ ParticleData ConfettiEmitter::MakeConfettiParticle(std::mt19937& randomEngine, c
     };
 
     particle.transform.translate = center + direction;
-    particle.velocity = direction * 5.0f; // 高速で散らばる
+    particle.velocity = direction * 10.0f; // 高速で散らばる
     particle.velocity.y += upwardForce_; // 上方向の初期加速度を加える
     particle.color = { distColor(randomEngine), distColor(randomEngine), distColor(randomEngine), 1.0f }; // ランダムな色
     particle.lifeTime = 6.0f;

@@ -3,7 +3,7 @@
 #include "application/Game/Scene/MyGame.h"
 
 /// ===ゲームタイトル=== ///
-const wchar_t kWindowTitle[] = L"MiiEngine";
+const wchar_t kWindowTitle[] = L"2325_神経神経衰弱";
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {

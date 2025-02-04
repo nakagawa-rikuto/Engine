@@ -30,6 +30,12 @@ struct Vector2 final {
 	Vector2& operator/=(const Vector2& v);
 	Vector2 operator/(const float& v);
 	Vector2& operator/=(const float& v);
+
+	// const | const
+	Vector2 operator+(const Vector2& v)const;
+	Vector2 operator-(const Vector2& v)const;
+	Vector2 operator*(const Vector2& v)const;
+	Vector2 operator/(const Vector2& v)const;
 };
 
 /// ===内積の計算=== ///

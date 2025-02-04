@@ -54,6 +54,14 @@ void SceneManager::Draw() {
 }
 
 ///-------------------------------------------/// 
+/// Setter・Getter
+///-------------------------------------------///
+// Setter
+void SceneManager::SetLevel(StageLevel level) { level_ = level; }
+// Getter
+StageLevel SceneManager::GetLevel() { return level_; }
+
+///-------------------------------------------/// 
 /// シーン変更
 ///-------------------------------------------///
 void SceneManager::ChangeScene(const std::string& sceneName) {

@@ -58,7 +58,9 @@ void DebugScene::Initialize() {
 	/// ===スプライトの初期化=== ///
 #pragma region Spriteの初期化
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(uvTexture);                   // 初期化(const std::string& spriteNameが必須)
+	sprite_->Initialize(uvTexture);         // 初期化(const std::string& spriteNameが必須)
+	sprite_->SetPosition(spriteTranslate_);
+	sprite_->SetAnchorPoint({ 0.5f, 0.5f });
 	/* // テクスチャの使い方
 	sprite->SetPosition(Vector2(0.0f, 0.0f));           // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                          // 回転の設定(初期値は0.0);
@@ -434,7 +436,9 @@ void DebugScene::Update() {
 	/// ===Particle=== ///
 #pragma region Particle
 	windParticle_->Update();
+	explosionParticle_->SetPosition(particleTranslate_);
 	explosionParticle_->Update();
+	confettiParticle_->SetPosition(particleTranslate_);
 	confettiParticle_->Update();
 	SpiralParticle_->SetPosition(particleTranslate_);
 	SpiralParticle_->Update();
@@ -454,6 +458,10 @@ void DebugScene::Update() {
 ///-------------------------------------------///
 void DebugScene::Draw() {
 #pragma region 背景スプライト描画
+	/// ===Sprite=== ///
+	if (isDisplay_.Sprite) {
+		sprite_->Draw(GroundType::Back); // GroundTypeで背景か前景を選択か初期は前景描画。 BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
+	}
 #pragma endregion
 
 #pragma region モデル描画
@@ -479,9 +487,5 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
-	/// ===Sprite=== ///
-	if (isDisplay_.Sprite) {
-		sprite_->Draw(); // BlendMode変更可　sprite->Draw(BlendMode::kBlendModeAdd);  
-	}
 #pragma endregion
 }

@@ -4,6 +4,8 @@
 #include "application/3d/Model.h"
 #include "application/3d/Camera.h"
 
+#include "application/2d/Sprite.h"
+
 #include "application/Game/Objects/CardManager.h"
 
 #include <memory>
@@ -53,7 +55,7 @@ private:/// ===メンバ関数=== ///
 	void RefreshCardData();
 
 	void CheckStarFlag();
-
+  
 private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
@@ -74,6 +76,10 @@ private:/// ===メンバ変数=== ///
 
 	const int gridSize = 5;
 
+	/// ===Sprite=== /// 
+
+	std::unique_ptr<Sprite> sprite_;
+
 	// マウス用変数
 	bool TriggerLeft_ = false;
 	Vector2 mousePosition_ = { 0.0f, 0.0f };
@@ -86,26 +92,6 @@ private:/// ===メンバ変数=== ///
 	bool star1Flag = false;
 
 	bool star2Flag = false;
-
-	enum class StageNum
-	{
-		tutorial,
-		card3x3_1,
-		card3x3_2,
-		card3x3_3,
-		card3x3_4,
-		card4x4_1,
-		card4x4_2,
-		card4x4_3,
-		card5x5_1,
-		card5x5_2,
-		card5x5_3,
-		card5x5_4,
-
-		COUNT,
-	};
-
-	StageNum stage = StageNum::tutorial;
 
 	const std::list<std::vector<std::vector<int>>> cardDatas_ =
 	{
@@ -194,4 +180,21 @@ private:/// ===メンバ変数=== ///
 		{10,{15,0,0,0,0,0,0,15,25}},
 		{11,{15,0,0,0,0,5,0,15,0}},
 	};
+  
+private: /// ===チュートリアル=== ///
+	// 内容スプライトを何枚か見た後にチュートリアル用のステージで遊べるようにする。
+	enum class Tutorial {
+		Sprite,
+		Play
+	};
+	// チュートリアル
+	Tutorial mode_ = Tutorial::Sprite;
+
+	// チュートリアル用スプライト
+	std::unique_ptr<Sprite> tutorialSprite_;
+	std::unique_ptr<Sprite> tutorialArrowSprite_;
+	std::unique_ptr<Sprite> tutorialbgSprite_;
+
+	// チュートリアル用の当たり判定処理
+	bool ChaekCollisisonTutorial();
 };

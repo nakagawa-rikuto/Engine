@@ -75,7 +75,7 @@ void ExplosionEmitter::Update() {
         float alpha = 1.0f - (it->currentTime / it->lifeTime);
         it->color.w = alpha;
 
-        // WVPマトリクス
+        // WVPMatrix
         Matrix4x4 worldMatrix = MakeAffineMatrix(it->transform.scale, it->transform.rotate, it->transform.translate);
         Matrix4x4 cameraMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
         Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);

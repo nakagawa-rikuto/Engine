@@ -42,6 +42,9 @@ public:
 
 	int step15obtainedCount = 0;
 
+	// 詰み処理
+	bool Checkmate();
+
 private:
 
 
@@ -57,6 +60,7 @@ private:
 
 	int CountState(Card::CardState state);
 
+	
 private:
 
 	std::vector<std::vector<std::shared_ptr<Card>>> cards_;

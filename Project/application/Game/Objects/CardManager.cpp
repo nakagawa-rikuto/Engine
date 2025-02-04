@@ -339,8 +339,6 @@ int CardManager::EightDirectionCheck(int yIndex[2], int xIndex[2]) {
 
 	eraseCardCount += obtainedCount;
 
-
-
 	return obtainedCount;
 }
 
@@ -357,3 +355,44 @@ int CardManager::CountState(Card::CardState state)
 
 	return count;
 }
+
+///-------------------------------------------/// 
+/// 詰み検索
+///-------------------------------------------///
+bool CardManager::Checkmate() {
+	/// ===カウントの初期化=== ///
+	int numOneCount = 0;
+	int numTwoCount = 0;
+	int numThreeCount = 0;
+	int numFourCount = 0;
+	int numFiveCount = 0;
+
+	/// ===検索=== ///
+	for (int y = 0; y < rows; ++y) {
+		for (int x = 0; x < cols; ++x) {
+			if (cards_[y][x]->GetCurrentState() == Card::CardState::back ||
+				cards_[y][x]->GetCurrentState() == Card::CardState::front ||
+				cards_[y][x]->GetCurrentState() == Card::CardState::show) {
+				// 状態チェック
+				if (cards_[y][x]->GetCardType() == 1) {
+					numOneCount++;
+				} else if (cards_[y][x]->GetCardType() == 2) {
+					numTwoCount++;
+				} else if (cards_[y][x]->GetCardType() == 3) {
+					numThreeCount++;
+				} else if (cards_[y][x]->GetCardType() == 4) {
+					numFourCount++;
+				} else if (cards_[y][x]->GetCardType() == 5) {
+					numFiveCount++;
+				}
+			}
+		}
+	}
+	// 詰みチェック
+	if (numOneCount < 2 && numTwoCount < 2 && numThreeCount < 2 && numFourCount < 2 && numFiveCount < 2) {
+		return true;
+	}
+	// 詰み出なければfalse
+	return false;
+}
+
