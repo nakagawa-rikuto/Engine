@@ -13,6 +13,27 @@
 
 #include "application/Game/GlobalVariables/GlobalVariables.h"
 
+struct Mission
+{
+	// 手数のクリア定数
+	int kStepCount;
+
+	// 挟んで消したカードのクリア定数
+	int kEraseCardCount1;
+	int kEraseCardCount2;
+	// 一度に挟んで消したカードのクリア定数
+	int kMaxEraseCardCount1;
+	int kMaxEraseCardCount2;
+
+	// 挟んで消した回数のクリア定数
+	int kEraseCount1;
+	int kEraseCount2;
+
+	// 消した全てのカードのクリア定数
+	int kEraseAllCount1;
+	int kEraseAllCount2;
+};
+
 ///=====================================================/// 
 /// ゲームシーン
 ///=====================================================///
@@ -33,6 +54,8 @@ private:/// ===メンバ関数=== ///
 
 	void RefreshCardData();
 
+	void CheckStarFlag();
+  
 private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
@@ -65,6 +88,10 @@ private:/// ===メンバ変数=== ///
 	std::vector<int32_t> cardAnswers;
 
 	std::unique_ptr<CardManager> cardManager_ = nullptr;
+
+	bool star1Flag = false;
+
+	bool star2Flag = false;
 
 	const std::list<std::vector<std::vector<int>>> cardDatas_ =
 	{
@@ -139,6 +166,21 @@ private:/// ===メンバ変数=== ///
         }
 	};
 
+	std::unordered_map<int, Mission> stageMissions
+	{
+		{1,{7,0,0,0,0,1,0,9,0}},
+		{2,{7,0,0,0,0,1,0,9,0}},
+		{3,{0,0,0,0,0,1,2,0,0}},
+		{4,{0,0,0,0,0,2,3,0,0}},
+		{5,{0,0,0,2,0,2,0,0,0}},
+		{6,{10,0,0,0,0,2,0,12,0}},
+		{7,{0,3,0,0,0,3,0,0,16}},
+		{8,{0,0,0,3,0,5,0,0,0}},
+		{9,{0,0,0,3,0,0,0,0,25}},
+		{10,{15,0,0,0,0,0,0,15,25}},
+		{11,{15,0,0,0,0,5,0,15,0}},
+	};
+  
 private: /// ===チュートリアル=== ///
 	// 内容スプライトを何枚か見た後にチュートリアル用のステージで遊べるようにする。
 	enum class Tutorial {
