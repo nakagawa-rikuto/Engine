@@ -210,6 +210,11 @@ void GameScene::Update() {
 		}
 
 		/// ===シーン変更=== ///
+		if (Mii::TriggerKey(DIK_SPACE)) {
+			sceneManager_->ChangeScene("Game");
+		}
+
+		/*/// ===シーン変更=== ///
 		if (star1Flag && star2Flag) {
 			sceneManager_->ChangeScene("Clear");
 		} else if (star2Flag && !star1Flag) {
@@ -218,7 +223,7 @@ void GameScene::Update() {
 			sceneManager_->ChangeScene("GameOver");
 		} else if (cardManager_->Checkmate()) {
 			sceneManager_->ChangeScene("Title");
-		}
+		}*/
 	}
 }
 
