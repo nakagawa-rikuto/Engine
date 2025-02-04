@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 	const std::string& tutorialArrowSprite = "Resource/Tutorial/Arrow.png";
 	Loader_->LoadTexture(tutorialSprite);
 	Loader_->LoadTexture(tutorialArrowSprite);
-	
+
 	/// ===Sprite=== ///
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize(bgSprite);
@@ -173,8 +173,8 @@ void GameScene::Update() {
 		globalVariables->Update();
 
 		// spriteArrowとの当たり判定を行い当たったらmodeをPlayに変える
-		if(ChaekCollisisonTutorial()){
-		   mode_ = Tutorial::Play;
+		if (ChaekCollisisonTutorial()) {
+			mode_ = Tutorial::Play;
 		}
 
 	} else {
@@ -195,19 +195,19 @@ void GameScene::Update() {
 
 		globalVariables->Update();
 
-     // すべてのカードが obtained ならシーンを変更
-	if (cardManager_->AllCardsObtained()) {
-
-		CheckStarFlag();
-		}
-    
-		/// ===シーン変更=== ///
+		// すべてのカードが obtained ならシーンを変更
 		if (cardManager_->AllCardsObtained()) {
-			// すべてのカードが obtained ならシーンを変更
+			CheckStarFlag();
+		}
+
+		/// ===シーン変更=== ///
+		if (star1Flag) {
+			sceneManager_->ChangeScene("GameOver");
+		} else if (star2Flag) {
 			sceneManager_->ChangeScene("Clear");
 		} else if (cardManager_->Checkmate()) {
-			// 詰みだったらTitleにシーン変更
 			sceneManager_->ChangeScene("Title");
+		}
 	}
 }
 
@@ -317,10 +317,10 @@ void GameScene::RefreshCardData() {
 		ImGui::EndCombo();
 	}
 }
-  
+
 void GameScene::CheckStarFlag()
 {
-	Mission mission = stageMissions[static_cast<int>(stage)];
+	Mission mission = stageMissions[static_cast<int>(sceneManager_->GetLevel())];
 
 
 	if (mission.kStepCount > 0)
@@ -331,8 +331,7 @@ void GameScene::CheckStarFlag()
 			{
 				star1Flag = true;
 			}
-		}
-		else 
+		} else
 		{
 			if (mission.kStepCount == 10 && cardManager_.get()->step10obtainedCount >= mission.kEraseAllCount1)
 			{
@@ -344,8 +343,7 @@ void GameScene::CheckStarFlag()
 				star1Flag = true;
 			}
 		}
-	}
-	else
+	} else
 	{
 		if (mission.kEraseAllCount1 > 0 && mission.kEraseAllCount1 <= cardManager_->GetAllObtainedCardCount())
 		{
@@ -360,8 +358,7 @@ void GameScene::CheckStarFlag()
 			if (!star1Flag)
 			{
 				star1Flag = true;
-			}
-			else
+			} else
 			{
 				star2Flag = true;
 			}
@@ -375,14 +372,13 @@ void GameScene::CheckStarFlag()
 			if (!star1Flag)
 			{
 				star1Flag = true;
-			}
-			else
+			} else
 			{
 				star2Flag = true;
 			}
 		}
 	}
-	
+
 
 	if (mission.kMaxEraseCardCount1 > 0)
 	{
@@ -391,8 +387,7 @@ void GameScene::CheckStarFlag()
 			if (!star1Flag)
 			{
 				star1Flag = true;
-			}
-			else
+			} else
 			{
 				star2Flag = true;
 			}
@@ -406,8 +401,7 @@ void GameScene::CheckStarFlag()
 			if (!star1Flag)
 			{
 				star1Flag = true;
-			}
-			else
+			} else
 			{
 				star2Flag = true;
 			}
@@ -421,8 +415,7 @@ void GameScene::CheckStarFlag()
 			if (!star1Flag)
 			{
 				star1Flag = true;
-			}
-			else
+			} else
 			{
 				star2Flag = true;
 			}
@@ -436,8 +429,7 @@ void GameScene::CheckStarFlag()
 			if (!star1Flag)
 			{
 				star1Flag = true;
-			}
-			else
+			} else
 			{
 				star2Flag = true;
 			}
