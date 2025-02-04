@@ -89,6 +89,8 @@ private:/// ===メンバ変数=== ///
 
 	std::unique_ptr<CardManager> cardManager_ = nullptr;
 
+	std::unique_ptr<Sprite> missionSprite_;
+
 	bool star1Flag = false;
 
 	bool star2Flag = false;
