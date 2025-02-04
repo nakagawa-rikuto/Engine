@@ -106,7 +106,7 @@ float Controller::GetStickValue(int deviceIndex, ControllerValueType stickType) 
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-float Controller::SetDeadZone(const float& deadZone) { deadZone_ = deadZone; }
+void Controller::SetDeadZone(const float& deadZone) { deadZone_ = deadZone; }
 
 ///-------------------------------------------/// 
 /// ラムダ式の代わりのコールバック関数
