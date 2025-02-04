@@ -124,27 +124,28 @@ void SelectScene::Draw() {
 }
 
 void SelectScene::CheckMouseCollision() {
-	bool isMouseDown = Mii::PushMouse(MouseButtonType::Left);
-	if (isMouseDown && !isMousePressed_) {
-		isMousePressed_ = true;
 
-		for (int i = 0; i < 11; i++) {
-			Vector2 spritePos = stageSprite_[i]->GetPosition();
-			Vector2 spriteSize = stageSprite_[i]->GetSize();
 
-			// スプライトの中心座標ではなく、左上座標を取得
-			float left = spritePos.x;
-			float right = spritePos.x + spriteSize.x;
-			float top = spritePos.y;
-			float bottom = spritePos.y + spriteSize.y;
+	for (int i = 0; i < 11; i++) {
+		Vector2 spritePos = stageSprite_[i]->GetPosition();
+		Vector2 spriteSize = stageSprite_[i]->GetSize();
 
-			if (mousePosition_.x >= left && mousePosition_.x <= right && mousePosition_.y >= top && mousePosition_.y <= bottom) {
+		// スプライトの中心座標ではなく、左上座標を取得
+		float left = spritePos.x;
+		float right = spritePos.x + spriteSize.x;
+		float top = spritePos.y;
+		float bottom = spritePos.y + spriteSize.y;
+
+		if (mousePosition_.x >= left && mousePosition_.x <= right && mousePosition_.y >= top && mousePosition_.y <= bottom) {
+			stageSprite_[i]->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+			if (Mii::TriggerMouse(MouseButtonType::Left)) {
 				sceneManager_->SetLevel(static_cast<StageLevel>(i + 1));
 				sceneManager_->ChangeScene("Game");
 				break;
 			}
+		} else {
+			stageSprite_[i]->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 		}
-	} else if (!isMouseDown) {
-		isMousePressed_ = false;
 	}
+
 }
