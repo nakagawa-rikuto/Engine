@@ -47,7 +47,7 @@ public:
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3& value);
 	// 値のセット (std::vector)
 	void SetValue(const std::string& groupName, const std::string& key, const std::vector<int32_t>& values);
-	// 
+	//
 	void SetValue(const std::string& groupName, const std::string& key, const std::vector<std::vector<int>>& values);
 
 private:

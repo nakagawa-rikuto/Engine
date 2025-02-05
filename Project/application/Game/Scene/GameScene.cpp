@@ -203,139 +203,164 @@ void GameScene::Update() {
 
 #endif // USE_IMGUI
 
-	if (Mii::TriggerMouse(MouseButtonType::Left)) {
-		TriggerLeft_ = true;
-	} else {
-		TriggerLeft_ = false;
-	}
+	
+	// フェードの更新
+	fade_->Update();
 
-	// マウスの処理
-	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
-
-	// シーンの状態にる処理
-	switch (situation_) {
-	case GameScene::GameSituation::Play:
-		// Tutorialの場合
-		if (sceneManager_->GetLevel() == StageLevel::tutorial && mode_ == Tutorial::Sprite) {
-
-			// カードマネージャの更新
-			cardManager_->Update(mousePosition_);
-
-			// Spriteの更新
-			sprite_->Update();
-			tutorialSprite_->Update();
-			tutorialArrowSprite_->Update();
-			tutorialbgSprite_->Update();
-
-			//cameraManager_->SetActiveCamera("main1");
-			camera_->SetTranslate(cameraPos_);
-			cameraManager_->UpdateAllCameras();
-
-			// デバッグ用ImGui情報
-			globalVariables->Update();
-
-			// spriteArrowとの当たり判定を行い当たったらmodeをPlayに変える
-			if (ChaekCollisisonTutorial()) {
-				mode_ = Tutorial::Play;
-			}
-
+	switch (phase_) {
+	case Phase::kFadeIn:
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+		break;
+	case Phase::kMain:
+		if (Mii::TriggerMouse(MouseButtonType::Left)) {
+			TriggerLeft_ = true;
 		} else {
+			TriggerLeft_ = false;
+		}
 
-			// マウスの処理
-			mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-			mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+		// マウスの処理
+		mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+		mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
 
-			// カードマネージャの更新
-			cardManager_->Update(mousePosition_);
+		// シーンの状態にる処理
+		switch (situation_) {
+		case GameScene::GameSituation::Play:
+			// Tutorialの場合
+			if (sceneManager_->GetLevel() == StageLevel::tutorial && mode_ == Tutorial::Sprite) {
 
-			// Spriteの更新
-			sprite_->Update();
+				// カードマネージャの更新
+				cardManager_->Update(mousePosition_);
 
-			//cameraManager_->SetActiveCamera("main1");
-			camera_->SetTranslate(cameraPos_);
-			cameraManager_->UpdateAllCameras();
+				// Spriteの更新
+				sprite_->Update();
+				tutorialSprite_->Update();
+				tutorialArrowSprite_->Update();
+				tutorialbgSprite_->Update();
 
-			globalVariables->Update();
+				// cameraManager_->SetActiveCamera("main1");
+				camera_->SetTranslate(cameraPos_);
+				cameraManager_->UpdateAllCameras();
 
-			// すべてのカードが obtained ならシーンを変更
-			if (cardManager_->AllCardsObtained()) {
-				CheckStarFlag();
+				// デバッグ用ImGui情報
+				globalVariables->Update();
+
+				// spriteArrowとの当たり判定を行い当たったらmodeをPlayに変える
+				if (ChaekCollisisonTutorial()) {
+					mode_ = Tutorial::Play;
+				}
+
+			} else {
+
+				// マウスの処理
+				mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+				mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+
+				// カードマネージャの更新
+				cardManager_->Update(mousePosition_);
+
+				// Spriteの更新
+				sprite_->Update();
+
+				// cameraManager_->SetActiveCamera("main1");
+				camera_->SetTranslate(cameraPos_);
+				cameraManager_->UpdateAllCameras();
+
+				globalVariables->Update();
+
+				// すべてのカードが obtained ならシーンを変更
+				if (cardManager_->AllCardsObtained()) {
+					CheckStarFlag();
+				}
+
+				/// ===シーン変更=== ///
+				if (Mii::TriggerKey(DIK_ESCAPE)) {
+					situation_ = GameSituation::Pause;
+				}
+				if (cardManager_->AllCardsObtained()) {
+					situation_ = GameSituation::GameClear;
+				} else if (cardManager_->Checkmate()) {
+					situation_ = GameSituation::GameOver;
+				}
 			}
+			break;
+		case GameScene::GameSituation::Pause:
 
 			/// ===シーン変更=== ///
 			if (Mii::TriggerKey(DIK_ESCAPE)) {
-				situation_ = GameSituation::Pause;
+				situation_ = GameSituation::Play;
 			}
-			if (cardManager_->AllCardsObtained()) {
-				situation_ = GameSituation::GameClear;
-			} else if (cardManager_->Checkmate()) {
-				situation_ = GameSituation::GameOver;
+
+			// スプライトの更新
+			retrySprite_->Update();
+			titleSprite_->Update();
+			selectSprite_->Update();
+
+			/// ===当たり判定の処理=== ///
+			if (CheakCollisionSituationRetry()) {
+
+				sceneManager_->ChangeScene("Game");
+			} else if (CheakCollisionSituationSelect()) {
+				sceneManager_->ChangeScene("Select");
+			} else if (CheakCollisionSituationTitle()) {
+				sceneManager_->ChangeScene("Title");
+			}
+
+			break;
+		case GameScene::GameSituation::GameClear:
+
+			// スプライトの更新
+			retrySprite_->Update();
+			titleSprite_->Update();
+			selectSprite_->Update();
+
+			/// ===当たり判定の処理=== ///
+			if (CheakCollisionSituationRetry()) {
+				sceneManager_->ChangeScene("Game");
+			} else if (CheakCollisionSituationSelect()) {
+				sceneManager_->ChangeScene("Select");
+			} else if (CheakCollisionSituationTitle()) {
+				sceneManager_->ChangeScene("Title");
+			}
+
+			break;
+		case GameScene::GameSituation::GameOver:
+
+			// スプライトの更新
+			retrySprite_->Update();
+			titleSprite_->Update();
+			selectSprite_->Update();
+
+			/// ===当たり判定の処理=== ///
+			if (CheakCollisionSituationRetry()) {
+				phase_ = Phase::kFadeOut;
+				fade_->Start(Fade::Status::FadeOut, fadeTimer_);
+			} else if (CheakCollisionSituationSelect()) {
+				phase_ = Phase::kFadeOut;
+				fade_->Start(Fade::Status::FadeOut, fadeTimer_);
+			} else if (CheakCollisionSituationTitle()) {
+				phase_ = Phase::kFadeOut;
+				fade_->Start(Fade::Status::FadeOut, fadeTimer_);
+			}
+
+			break;
+		default:
+			break;
+		}
+		break;
+	case Phase::kFadeOut:
+		if (fade_->IsFinished()) {
+			if (CheakCollisionSituationRetry()) {
+				sceneManager_->ChangeScene("Game");
+			} else if (CheakCollisionSituationSelect()) {
+				sceneManager_->ChangeScene("Select");
+			} else if (CheakCollisionSituationTitle()) {
+				sceneManager_->ChangeScene("Title");
 			}
 		}
-		break;
-	case GameScene::GameSituation::Pause:
-
-		/// ===シーン変更=== ///
-		if (Mii::TriggerKey(DIK_ESCAPE)) {
-			situation_ = GameSituation::Play;
-		}
-
-		// スプライトの更新
-		retrySprite_->Update();
-		titleSprite_->Update();
-		selectSprite_->Update();
-
-		/// ===当たり判定の処理=== ///
-		if (CheakCollisionSituationRetry()) {
-			sceneManager_->ChangeScene("Game");
-		} else if (CheakCollisionSituationSelect()) {
-			sceneManager_->ChangeScene("Select");
-		} else if (CheakCollisionSituationTitle()) {
-			sceneManager_->ChangeScene("Title");
-		}
-
-		break;
-	case GameScene::GameSituation::GameClear:
-
-		// スプライトの更新
-		retrySprite_->Update();
-		titleSprite_->Update();
-		selectSprite_->Update();
-
-		/// ===当たり判定の処理=== ///
-		if (CheakCollisionSituationRetry()) {
-			sceneManager_->ChangeScene("Game");
-		} else if (CheakCollisionSituationSelect()) {
-			sceneManager_->ChangeScene("Select");
-		} else if (CheakCollisionSituationTitle()) {
-			sceneManager_->ChangeScene("Title");
-		}
-
-		break;
-	case GameScene::GameSituation::GameOver:
-
-		// スプライトの更新
-		retrySprite_->Update();
-		titleSprite_->Update();
-		selectSprite_->Update();
-
-		/// ===当たり判定の処理=== ///
-		if (CheakCollisionSituationRetry()) {
-			sceneManager_->ChangeScene("Game");
-		} else if (CheakCollisionSituationSelect()) {
-			sceneManager_->ChangeScene("Select");
-		} else if (CheakCollisionSituationTitle()) {
-			sceneManager_->ChangeScene("Title");
-		}
-
-		break;
-	default:
 		break;
 	}
-
-	
-
 	
 }
 
@@ -382,6 +407,8 @@ void GameScene::Draw() {
 		selectSprite_->Draw();
 		gameOverSprite_->Draw();
 	}
+
+	fade_->Draw();
 
 #pragma endregion
 }
