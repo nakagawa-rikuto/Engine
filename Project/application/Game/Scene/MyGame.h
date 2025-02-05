@@ -4,6 +4,7 @@
 #include "Engine/Scene/Framework.h"
 // SceneManager
 #include "application/Manager/SceneManager.h"
+#include "application/Load/AssetLoader.h"
 
 ///=====================================================/// 
 /// ゲーム全体
@@ -26,6 +27,9 @@ public:
 private:/// ====== ///
 	// ゲーム終了フラグ
 	bool endRequst_ = false;
+
+	// Load
+	std::unique_ptr<AssetLoader> Loader_;
 
 	/// ===シーン=== ///
 	// シーンマネージャ
