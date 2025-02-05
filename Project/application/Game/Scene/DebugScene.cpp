@@ -17,9 +17,6 @@ DebugScene::~DebugScene() {
 	// audio
 	audio_->StopSound("fanfare");
 	audio_->StopSound("clear");
-	// Loader
-	Loader_->UnloadSound("fanfare");
-	Loader_->UnloadSound("clear");
 	// Particle
 	windParticle_.reset();
 	explosionParticle_.reset();
@@ -35,10 +32,6 @@ void DebugScene::Initialize() {
 
 	/// ===読み込み=== ///
 #pragma region 読み込み処理
-	// 音声データの読み込み
-	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
-	// MP3を読み込むとものすごく重い
-	//load_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
 
 	// テクスチャの読み込み
 	const std::string& uvTexture = "./Resource/uvChecker.png";
@@ -395,11 +388,11 @@ void DebugScene::Update() {
 	/// ===Audioのセット=== ///
 #pragma region Audioのセット
 	if (playAudio) {
-		audio_->PlayeSound("fanfare", false);
-		audio_->VolumeSound("fanfare", volume);
-		audio_->PitchSound("fanfare", pitch);
+		audio_->PlayeSound("clear", false);
+		audio_->VolumeSound("clear", volume);
+		audio_->PitchSound("clear", pitch);
 	} else {
-		audio_->StopSound("fanfare");
+		audio_->StopSound("clear");
 		audio_->StopSound("fanfare");
 	}
 #pragma endregion

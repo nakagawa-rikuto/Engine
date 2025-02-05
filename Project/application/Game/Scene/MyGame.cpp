@@ -58,6 +58,12 @@ void MyGame::Initialize(const wchar_t* title) {
 	const std::string& particle = "Particle";
 	Loader_->LoadModel(particle);
 
+	// Audio
+	// 音声データの読み込み
+	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
+	// MP3を読み込むとものすごく重い
+	Loader_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
+
 	// シーンファクトリーの生成
 	sceneFactory_ = std::make_unique<SceneFactory>();
 	// シーンマネージャの初期化
