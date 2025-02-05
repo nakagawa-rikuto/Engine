@@ -92,7 +92,7 @@ void TitleScene::Update() {
 
 			audio_->StopSound("GamePlay");
 
-			sceneManager_->ChangeScene("Select");
+			sceneManager_->ChangeScene("Game");
 		}
 		break;
 	}
