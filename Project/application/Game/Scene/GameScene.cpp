@@ -34,17 +34,17 @@ void GameScene::Initialize() {
 		// 初期化
 		// tutorialSprite
 		tutorialSprite_->Initialize("Resource/Tutorial/Tutorial.png");
-		tutorialSprite_->SetPosition({ 640.0f, 360.0f });
-		tutorialSprite_->SetAnchorPoint({ 0.5f, 0.5f });
-		tutorialSprite_->SetSize({ 500.0f, 500.0f });
+		tutorialSprite_->SetPosition({640.0f, 360.0f});
+		tutorialSprite_->SetAnchorPoint({0.5f, 0.5f});
+		tutorialSprite_->SetSize({500.0f, 500.0f});
 		// tutorialArrowSprite
 		tutorialArrowSprite_->Initialize("Resource/Tutorial/Arrow.png");
-		tutorialArrowSprite_->SetPosition({ 410.0f, 130.0f });
-		tutorialArrowSprite_->SetAnchorPoint({ 0.5f, 0.5f });
-		tutorialArrowSprite_->SetSize({ 30.0f, 30.0f });
+		tutorialArrowSprite_->SetPosition({410.0f, 130.0f});
+		tutorialArrowSprite_->SetAnchorPoint({0.5f, 0.5f});
+		tutorialArrowSprite_->SetSize({30.0f, 30.0f});
 		// tutorialBGSprite
 		tutorialbgSprite_->Initialize("Resource/backGround.png");
-		tutorialbgSprite_->SetColor({ 0.0f, 0.0f, 0.0f, 0.9f });
+		tutorialbgSprite_->SetColor({0.0f, 0.0f, 0.0f, 0.9f});
 
 		tutorialSprite_->Update();
 		tutorialArrowSprite_->Update();
@@ -54,11 +54,9 @@ void GameScene::Initialize() {
 		mode_ = Tutorial::Sprite;
 	} else {
 		// ミッション
-		const std::string missionSprites_[11] = {
-			"./Resource/Mission/mission1.png", "./Resource/Mission/mission1.png",  "./Resource/Mission/mission3.png", "./Resource/Mission/mission4.png",
-			"./Resource/Mission/mission5.png", "./Resource/Mission/mission6.png",  "./Resource/Mission/mission7.png", "./Resource/Mission/mission8.png",
-			"./Resource/Mission/mission9.png", "./Resource/Mission/mission10.png", "./Resource/Mission/mission11.png"
-		};
+		const std::string missionSprites_[11] = {"./Resource/Mission/mission1.png", "./Resource/Mission/mission1.png",  "./Resource/Mission/mission3.png", "./Resource/Mission/mission4.png",
+		                                         "./Resource/Mission/mission5.png", "./Resource/Mission/mission6.png",  "./Resource/Mission/mission7.png", "./Resource/Mission/mission8.png",
+		                                         "./Resource/Mission/mission9.png", "./Resource/Mission/mission10.png", "./Resource/Mission/mission11.png"};
 
 		for (int i = 0; i < 11; i++) {
 			Loader_->LoadTexture(missionSprites_[i]);
@@ -66,8 +64,8 @@ void GameScene::Initialize() {
 
 		missionSprite_ = std::make_unique<Sprite>();
 		missionSprite_->Initialize(missionSprites_[static_cast<int>(sceneManager_->GetLevel()) - 1]);
-		missionSprite_->SetPosition({ 20.0f,20.0f });
-		missionSprite_->SetSize({ 305.0f, 75.0f });
+		missionSprite_->SetPosition({20.0f, 20.0f});
+		missionSprite_->SetSize({305.0f, 75.0f});
 		missionSprite_->Update();
 	}
 
@@ -80,45 +78,44 @@ void GameScene::Initialize() {
 	selectSprite_ = std::make_unique<Sprite>();
 	// BG
 	situationBGSprite_->Initialize("Resource/backGround.png");
-	situationBGSprite_->SetColor({ 0.0f, 0.0f, 0.0f, 0.9f });
+	situationBGSprite_->SetColor({0.0f, 0.0f, 0.0f, 0.9f});
 	situationBGSprite_->Update();
 	// Title
 	titleSprite_->Initialize("Resource/Scene/TitleSelect.png");
-	titleSprite_->SetAnchorPoint({ 0.5f, 0.5f });
-	titleSprite_->SetPosition({ 900.0f, 500.0f });
-	titleSprite_->SetSize({ 100.0f, 100.0f });
+	titleSprite_->SetAnchorPoint({0.5f, 0.5f});
+	titleSprite_->SetPosition({380.0f, 500.0f});
+	titleSprite_->SetSize({100.0f, 100.0f});
 	titleSprite_->Update();
 	// Retry
 	retrySprite_->Initialize("Resource/Scene/Retry.png");
-	retrySprite_->SetAnchorPoint({ 0.5f, 0.5f });
-	retrySprite_->SetPosition({ 640.0f, 500.0f });
-	retrySprite_->SetSize({ 100.0f, 100.0f });
+	retrySprite_->SetAnchorPoint({0.5f, 0.5f});
+	retrySprite_->SetPosition({640.0f, 500.0f});
+	retrySprite_->SetSize({100.0f, 100.0f});
 	retrySprite_->Update();
 	// Select
 	selectSprite_->Initialize("Resource/Scene/Select.png");
-	selectSprite_->SetAnchorPoint({ 0.5f, 0.5f });
-	selectSprite_->SetPosition({ 380.0f, 500.0f });
-	selectSprite_->SetSize({ 100.0f, 100.0f });
+	selectSprite_->SetAnchorPoint({0.5f, 0.5f});
+	selectSprite_->SetPosition({900.0f, 500.0f});
+	selectSprite_->SetSize({100.0f, 100.0f});
 	selectSprite_->Update();
 	// Clear
 	clearSprite_->Initialize("Resource/gameClear.png");
-	clearSprite_->SetAnchorPoint({ 0.5f, 0.5f });
-	clearSprite_->SetPosition({ 640.0f, 200.0f });
-	clearSprite_->SetSize({ 700.0f, 150.0f });
+	clearSprite_->SetAnchorPoint({0.5f, 0.5f});
+	clearSprite_->SetPosition({640.0f, 200.0f});
+	clearSprite_->SetSize({700.0f, 150.0f});
 	clearSprite_->Update();
 	// GameOver
 	gameOverSprite_->Initialize("Resource/gameOver.png");
-	gameOverSprite_->SetAnchorPoint({ 0.5f, 0.5f });
-	gameOverSprite_->SetPosition({ 640.0f, 200.0f });
-	gameOverSprite_->SetSize({ 700.0f, 150.0f });
+	gameOverSprite_->SetAnchorPoint({0.5f, 0.5f});
+	gameOverSprite_->SetPosition({640.0f, 200.0f});
+	gameOverSprite_->SetSize({700.0f, 150.0f});
 	gameOverSprite_->Update();
-
 
 	/// ===Camera=== ///
 	// Camera情報
-	cameraPos_ = { 0.0f, 0.0f, -70.0f };
-	cameraRotate_ = { 0.0f, 0.0f, 0.0f };
-	cameraScale_ = { 0.0f, 0.0f, 0.0f };
+	cameraPos_ = {0.0f, 0.0f, -70.0f};
+	cameraRotate_ = {0.0f, 0.0f, 0.0f};
+	cameraScale_ = {0.0f, 0.0f, 0.0f};
 	camera_ = std::make_shared<Camera>();
 	camera_->Initialize();
 	camera_->SetTranslate(cameraPos_);
@@ -222,7 +219,6 @@ void GameScene::Update() {
 
 #endif // USE_IMGUI
 
-	
 	// フェードの更新
 	fade_->Update();
 
@@ -234,9 +230,9 @@ void GameScene::Update() {
 		break;
 	case Phase::kMain:
 		/*if (Mii::TriggerMouse(MouseButtonType::Left)) {
-			TriggerLeft_ = true;
+		    TriggerLeft_ = true;
 		} else {
-			TriggerLeft_ = false;
+		    TriggerLeft_ = false;
 		}*/
 
 		// マウスの処理
@@ -270,8 +266,7 @@ void GameScene::Update() {
 					mode_ = Tutorial::Play;
 				}
 
-			}
-			else {
+			} else {
 
 				// カードマネージャの更新
 				cardManager_->Update(mousePosition_);
@@ -309,8 +304,7 @@ void GameScene::Update() {
 					audio_->StopSound("GamePlay");
 
 					situation_ = GameSituation::GameClear;
-				}
-				else if (cardManager_->Checkmate()) {
+				} else if (cardManager_->Checkmate()) {
 					audio_->PlayeSound("GObgm", true);
 
 					audio_->StopSound("GamePlay");
@@ -340,13 +334,11 @@ void GameScene::Update() {
 				audio_->StopSound("clock");
 
 				sceneManager_->ChangeScene("Game");
-			}
-			else if (CheakCollisionSituationSelect()) {
+			} else if (CheakCollisionSituationSelect()) {
 				audio_->StopSound("clock");
 
 				sceneManager_->ChangeScene("Select");
-			}
-			else if (CheakCollisionSituationTitle()) {
+			} else if (CheakCollisionSituationTitle()) {
 				audio_->StopSound("clock");
 
 				sceneManager_->ChangeScene("Title");
@@ -367,13 +359,11 @@ void GameScene::Update() {
 				audio_->StopSound("GCbgm");
 
 				sceneManager_->ChangeScene("Game");
-			}
-			else if (CheakCollisionSituationSelect()) {
+			} else if (CheakCollisionSituationSelect()) {
 				audio_->StopSound("GCbgm");
 
 				sceneManager_->ChangeScene("Select");
-			}
-			else if (CheakCollisionSituationTitle()) {
+			} else if (CheakCollisionSituationTitle()) {
 				audio_->StopSound("GCbgm");
 
 				sceneManager_->ChangeScene("Title");
@@ -392,13 +382,11 @@ void GameScene::Update() {
 				audio_->StopSound("GObgm");
 
 				sceneManager_->ChangeScene("Game");
-			}
-			else if (CheakCollisionSituationSelect()) {
+			} else if (CheakCollisionSituationSelect()) {
 				audio_->StopSound("GObgm");
 
 				sceneManager_->ChangeScene("Select");
-			}
-			else if (CheakCollisionSituationTitle()) {
+			} else if (CheakCollisionSituationTitle()) {
 				audio_->StopSound("GObgm");
 
 				sceneManager_->ChangeScene("Title");
@@ -409,9 +397,6 @@ void GameScene::Update() {
 			break;
 		}
 	}
-
-
-	
 }
 
 ///-------------------------------------------///
@@ -434,7 +419,7 @@ void GameScene::Draw() {
 		tutorialbgSprite_->Draw();
 		tutorialSprite_->Draw();
 		tutorialArrowSprite_->Draw();
-	} else if(sceneManager_->GetLevel() != StageLevel::tutorial){
+	} else if (sceneManager_->GetLevel() != StageLevel::tutorial) {
 		missionSprite_->Draw();
 	}
 
@@ -473,12 +458,12 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-///-------------------------------------------/// 
+///-------------------------------------------///
 /// ImGui
 ///-------------------------------------------///
 void GameScene::RefreshCardData() {
 	const char* stageNames[] = {
-		"tutorial", "card3x3_1", "card3x3_2", "card3x3_3", "card3x3_4", "card4x4_1", "card4x4_2", "card4x4_3", "card5x5_1", "card5x5_2", "card5x5_3", "card5x5_4",
+	    "tutorial", "card3x3_1", "card3x3_2", "card3x3_3", "card3x3_4", "card4x4_1", "card4x4_2", "card4x4_3", "card5x5_1", "card5x5_2", "card5x5_3", "card5x5_4",
 	};
 
 	if (ImGui::BeginCombo("Select Stage", stageNames[static_cast<int>(sceneManager_->GetLevel())])) {
@@ -571,129 +556,94 @@ void GameScene::RefreshCardData() {
 	}
 }
 
-///-------------------------------------------/// 
+///-------------------------------------------///
 /// ミッション
 ///-------------------------------------------///
-void GameScene::CheckStarFlag()
-{
+void GameScene::CheckStarFlag() {
 	Mission mission = stageMissions[static_cast<int>(sceneManager_->GetLevel())];
 
-
-	if (mission.kStepCount > 0)
-	{
-		if (mission.kStepCount >= cardManager_->GetStepCount())
-		{
-			if (mission.kEraseAllCount1 > 0 && mission.kEraseAllCount1 <= cardManager_->GetAllObtainedCardCount())
-			{
+	if (mission.kStepCount > 0) {
+		if (mission.kStepCount >= cardManager_->GetStepCount()) {
+			if (mission.kEraseAllCount1 > 0 && mission.kEraseAllCount1 <= cardManager_->GetAllObtainedCardCount()) {
 				star1Flag = true;
 			}
-		} else
-		{
-			if (mission.kStepCount == 10 && cardManager_.get()->step10obtainedCount >= mission.kEraseAllCount1)
-			{
+		} else {
+			if (mission.kStepCount == 10 && cardManager_.get()->step10obtainedCount >= mission.kEraseAllCount1) {
 				star1Flag = true;
 			}
 
-			if (mission.kStepCount == 15 && cardManager_.get()->step15obtainedCount >= mission.kEraseAllCount1)
-			{
+			if (mission.kStepCount == 15 && cardManager_.get()->step15obtainedCount >= mission.kEraseAllCount1) {
 				star1Flag = true;
 			}
 		}
-	} else
-	{
-		if (mission.kEraseAllCount1 > 0 && mission.kEraseAllCount1 <= cardManager_->GetAllObtainedCardCount())
-		{
+	} else {
+		if (mission.kEraseAllCount1 > 0 && mission.kEraseAllCount1 <= cardManager_->GetAllObtainedCardCount()) {
 			star1Flag = true;
 		}
 	}
 
-	if (mission.kEraseCardCount1 > 0)
-	{
-		if (mission.kEraseCardCount1 <= cardManager_->GetEraseCardCount())
-		{
-			if (!star1Flag)
-			{
+	if (mission.kEraseCardCount1 > 0) {
+		if (mission.kEraseCardCount1 <= cardManager_->GetEraseCardCount()) {
+			if (!star1Flag) {
 				star1Flag = true;
-			} else
-			{
+			} else {
 				star2Flag = true;
 			}
 		}
 	}
 
-	if (mission.kEraseCardCount2 > 0)
-	{
-		if (mission.kEraseCardCount2 <= cardManager_->GetEraseCardCount())
-		{
-			if (!star1Flag)
-			{
+	if (mission.kEraseCardCount2 > 0) {
+		if (mission.kEraseCardCount2 <= cardManager_->GetEraseCardCount()) {
+			if (!star1Flag) {
 				star1Flag = true;
-			} else
-			{
+			} else {
 				star2Flag = true;
 			}
 		}
 	}
 
-
-	if (mission.kMaxEraseCardCount1 > 0)
-	{
-		if (mission.kMaxEraseCardCount1 <= cardManager_->GetEraseCardMaxCount())
-		{
-			if (!star1Flag)
-			{
+	if (mission.kMaxEraseCardCount1 > 0) {
+		if (mission.kMaxEraseCardCount1 <= cardManager_->GetEraseCardMaxCount()) {
+			if (!star1Flag) {
 				star1Flag = true;
-			} else
-			{
+			} else {
 				star2Flag = true;
 			}
 		}
 	}
 
-	if (mission.kEraseCount1 > 0)
-	{
-		if (mission.kEraseCount1 <= cardManager_->GetEraseCount())
-		{
-			if (!star1Flag)
-			{
+	if (mission.kEraseCount1 > 0) {
+		if (mission.kEraseCount1 <= cardManager_->GetEraseCount()) {
+			if (!star1Flag) {
 				star1Flag = true;
-			} else
-			{
+			} else {
 				star2Flag = true;
 			}
 		}
 	}
 
-	if (mission.kEraseCount2 > 0)
-	{
-		if (mission.kEraseCount2 <= cardManager_->GetEraseCount())
-		{
-			if (!star1Flag)
-			{
+	if (mission.kEraseCount2 > 0) {
+		if (mission.kEraseCount2 <= cardManager_->GetEraseCount()) {
+			if (!star1Flag) {
 				star1Flag = true;
-			} else
-			{
+			} else {
 				star2Flag = true;
 			}
 		}
 	}
 
-	if (mission.kEraseAllCount2 > 0)
-	{
-		if (mission.kEraseAllCount2 <= cardManager_->GetAllObtainedCardCount())
-		{
-			if (!star1Flag)
-			{
+	if (mission.kEraseAllCount2 > 0) {
+		if (mission.kEraseAllCount2 <= cardManager_->GetAllObtainedCardCount()) {
+			if (!star1Flag) {
 				star1Flag = true;
-			} else
-			{
+			} else {
 				star2Flag = true;
 			}
 		}
 	}
 }
 
-///-------------------------------------------/// 
+///-------------------------------------------///
 /// 当たり判定
 ///-------------------------------------------///
 // チュートリアル
@@ -713,7 +663,7 @@ bool GameScene::CheakCollisionSituationRetry() {
 	Vector2 diffVector = retrySprite_->GetPosition() - mousePosition_;
 	float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
 	if (len < 50.0f) {
-		retrySprite_->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+		retrySprite_->SetColor({0.9f, 0.2f, 0.4f, 1.0f});
 		if (Mii::TriggerMouse(MouseButtonType::Left)) {
 			return true;
 		}
@@ -726,12 +676,12 @@ bool GameScene::CheakCollisionSituationTitle() {
 	Vector2 diffVector = titleSprite_->GetPosition() - mousePosition_;
 	float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
 	if (len < 50.0f) {
-		titleSprite_->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+		titleSprite_->SetColor({0.9f, 0.2f, 0.4f, 1.0f});
 		if (Mii::TriggerMouse(MouseButtonType::Left)) {
 			return true;
 		}
 	} else {
-		titleSprite_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+		titleSprite_->SetColor({1.0f, 1.0f, 1.0f, 1.0f});
 	}
 	return false;
 }
@@ -739,12 +689,12 @@ bool GameScene::CheakCollisionSituationSelect() {
 	Vector2 diffVector = selectSprite_->GetPosition() - mousePosition_;
 	float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
 	if (len < 50.0f) {
-		selectSprite_->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+		selectSprite_->SetColor({0.9f, 0.2f, 0.4f, 1.0f});
 		if (Mii::TriggerMouse(MouseButtonType::Left)) {
 			return true;
 		}
 	} else {
-		selectSprite_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+		selectSprite_->SetColor({1.0f, 1.0f, 1.0f, 1.0f});
 	}
 	return false;
 }
