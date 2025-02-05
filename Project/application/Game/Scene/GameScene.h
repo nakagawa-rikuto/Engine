@@ -199,5 +199,26 @@ private: /// ===チュートリアル=== ///
 
 	// チュートリアル用の当たり判定処理
 	bool ChaekCollisisonTutorial();
-private: /// ====== ///
+
+private: /// ===クリア後の処理=== ///
+	// ゲームの状態
+	enum class GameSituation {
+		Play,
+		Pause,
+		GameClear,
+		GameOver
+	};
+	GameSituation situation_ = GameSituation::Play;
+
+	std::unique_ptr<Sprite> situationBGSprite_;
+	std::unique_ptr<Sprite> clearSprite_;
+	std::unique_ptr<Sprite> gameOverSprite_;
+	std::unique_ptr<Sprite> titleSprite_;
+	std::unique_ptr<Sprite> retrySprite_;
+	std::unique_ptr<Sprite> selectSprite_;
+
+	// 当たり判定
+	bool CheakCollisionSituationRetry();
+	bool CheakCollisionSituationTitle();
+	bool CheakCollisionSituationSelect();
 };

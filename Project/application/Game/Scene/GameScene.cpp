@@ -35,6 +35,15 @@ void GameScene::Initialize() {
 	const std::string& tutorialArrowSprite = "Resource/Tutorial/Arrow.png";
 	Loader_->LoadTexture(tutorialSprite);
 	Loader_->LoadTexture(tutorialArrowSprite);
+	const std::string& Retry = "Resource/Scene/Retry.png";
+	const std::string& Select = "Resource/Scene/Select.png";
+	const std::string& TitleSelect = "Resource/Scene/TitleSelect.png";
+	Loader_->LoadTexture(Select);
+	Loader_->LoadTexture(Retry);
+	Loader_->LoadTexture(TitleSelect);
+
+	/// ====== ///
+	situation_ = GameSituation::Play;
 
 	/// ===Sprite=== ///
 	sprite_ = std::make_unique<Sprite>();
@@ -63,6 +72,7 @@ void GameScene::Initialize() {
 		mode_ = Tutorial::Sprite;
 	}
 
+	// ミッション
 	const std::string missionSprites_[11] = { 
 		"./Resource/Mission/mission1.png", "./Resource/Mission/mission1.png",  "./Resource/Mission/mission3.png", "./Resource/Mission/mission4.png",
 	    "./Resource/Mission/mission5.png", "./Resource/Mission/mission6.png",  "./Resource/Mission/mission7.png", "./Resource/Mission/mission8.png",
@@ -75,11 +85,40 @@ void GameScene::Initialize() {
 
 	missionSprite_ = std::make_unique<Sprite>();
 	missionSprite_->Initialize(missionSprites_[static_cast<int>(sceneManager_->GetLevel()) -1]);
-
 	missionSprite_->SetPosition({ 20.0f,20.0f });
 	missionSprite_->SetSize({ 305.0f, 75.0f });
-
 	missionSprite_->Update();
+
+	/// ===Sitation=== ///
+	situationBGSprite_ = std::make_unique<Sprite>();
+	clearSprite_ = std::make_unique<Sprite>();
+	gameOverSprite_ = std::make_unique<Sprite>();
+	titleSprite_ = std::make_unique<Sprite>();
+	retrySprite_ = std::make_unique<Sprite>();
+	selectSprite_ = std::make_unique<Sprite>();
+	// BG
+	situationBGSprite_->Initialize(bgSprite);
+	situationBGSprite_->SetColor({ 0.0f, 0.0f, 0.0f, 0.9f });
+	situationBGSprite_->Update();
+	// Title
+	titleSprite_->Initialize(TitleSelect);
+	titleSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+	titleSprite_->SetPosition({ 900.0f, 500.0f });
+	titleSprite_->SetSize({ 100.0f, 100.0f });
+	titleSprite_->Update();
+	// Retry
+	retrySprite_->Initialize(Retry);
+	retrySprite_->SetAnchorPoint({ 0.5f, 0.5f });
+	retrySprite_->SetPosition({ 640.0f, 500.0f });
+	retrySprite_->SetSize({ 100.0f, 100.0f });
+	retrySprite_->Update();
+	// Select
+	selectSprite_->Initialize(Select);
+	selectSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+	selectSprite_->SetPosition({ 380.0f, 500.0f });
+	selectSprite_->SetSize({ 100.0f, 100.0f });
+	selectSprite_->Update();
+
 
 	/// ===Camera=== ///
 	// Camera情報
@@ -147,7 +186,6 @@ void GameScene::Update() {
 	ImGui::End();
 
 #endif // USE_IMGUI
-
 #ifdef USE_IMGUI
 	ImGui::Begin("State");
 
@@ -157,14 +195,12 @@ void GameScene::Update() {
 	ImGui::End();
 
 #endif // USE_IMGUI
-
 #ifdef USE_IMGUI
 	ImGui::Begin("selectIndex");
 	ImGui::Text("Index Z = %d\nIndex X = %d", zIndex, xIndex);
 	ImGui::End();
 
 #endif // USE_IMGUI
-
 #ifdef USE_IMGUI
 
 	RefreshCardData();
@@ -177,72 +213,101 @@ void GameScene::Update() {
 		TriggerLeft_ = false;
 	}
 
-	// Tutorialの場合
-	if (sceneManager_->GetLevel() == StageLevel::tutorial && mode_ == Tutorial::Sprite) {
-		// マウスの処理
-		mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-		mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+	// マウスの処理
+	mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+	mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
 
-		// カードマネージャの更新
-		cardManager_->Update(mousePosition_);
+	// シーンの状態にる処理
+	switch (situation_) {
+	case GameScene::GameSituation::Play:
+		// Tutorialの場合
+		if (sceneManager_->GetLevel() == StageLevel::tutorial && mode_ == Tutorial::Sprite) {
 
-		// Spriteの更新
-		sprite_->Update();
-		tutorialSprite_->Update();
-		tutorialArrowSprite_->Update();
-		tutorialbgSprite_->Update();
+			// カードマネージャの更新
+			cardManager_->Update(mousePosition_);
 
-		//cameraManager_->SetActiveCamera("main1");
-		camera_->SetTranslate(cameraPos_);
-		cameraManager_->UpdateAllCameras();
+			// Spriteの更新
+			sprite_->Update();
+			tutorialSprite_->Update();
+			tutorialArrowSprite_->Update();
+			tutorialbgSprite_->Update();
 
-		// デバッグ用ImGui情報
-		globalVariables->Update();
+			//cameraManager_->SetActiveCamera("main1");
+			camera_->SetTranslate(cameraPos_);
+			cameraManager_->UpdateAllCameras();
 
-		// spriteArrowとの当たり判定を行い当たったらmodeをPlayに変える
-		if (ChaekCollisisonTutorial()) {
-			mode_ = Tutorial::Play;
+			// デバッグ用ImGui情報
+			globalVariables->Update();
+
+			// spriteArrowとの当たり判定を行い当たったらmodeをPlayに変える
+			if (ChaekCollisisonTutorial()) {
+				mode_ = Tutorial::Play;
+			}
+
+		} else {
+
+			// マウスの処理
+			mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
+			mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
+
+			// カードマネージャの更新
+			cardManager_->Update(mousePosition_);
+
+			// Spriteの更新
+			sprite_->Update();
+
+			//cameraManager_->SetActiveCamera("main1");
+			camera_->SetTranslate(cameraPos_);
+			cameraManager_->UpdateAllCameras();
+
+			globalVariables->Update();
+
+			// すべてのカードが obtained ならシーンを変更
+			if (cardManager_->AllCardsObtained()) {
+				CheckStarFlag();
+			}
+
+			/// ===シーン変更=== ///
+			if (Mii::TriggerKey(DIK_ESCAPE)) {
+				situation_ = GameSituation::Pause;
+			}
 		}
-
-	} else {
-
-		// マウスの処理
-		mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-		mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
-
-		// カードマネージャの更新
-		cardManager_->Update(mousePosition_);
-
-		// Spriteの更新
-		sprite_->Update();
-
-		//cameraManager_->SetActiveCamera("main1");
-		camera_->SetTranslate(cameraPos_);
-		cameraManager_->UpdateAllCameras();
-
-		globalVariables->Update();
-
-		// すべてのカードが obtained ならシーンを変更
-		if (cardManager_->AllCardsObtained()) {
-			CheckStarFlag();
-		}
+		break;
+	case GameScene::GameSituation::Pause:
 
 		/// ===シーン変更=== ///
-		if (Mii::TriggerKey(DIK_SPACE)) {
-			sceneManager_->ChangeScene("Game");
+		if (Mii::TriggerKey(DIK_ESCAPE)) {
+			situation_ = GameSituation::Play;
 		}
 
-		/*/// ===シーン変更=== ///
-		if (star1Flag && star2Flag) {
-			sceneManager_->ChangeScene("Clear");
-		} else if (star2Flag && !star1Flag) {
-			sceneManager_->ChangeScene("GameOver");
-		} else if (!star2Flag && star1Flag) {
-			sceneManager_->ChangeScene("GameOver");
-		} else if (cardManager_->Checkmate()) {
+		// スプライトの更新
+		retrySprite_->Update();
+		titleSprite_->Update();
+		selectSprite_->Update();
+
+		/// ===当たり判定の処理=== ///
+		if (CheakCollisionSituationRetry()) {
+			sceneManager_->ChangeScene("Game");
+		} else if (CheakCollisionSituationSelect()) {
+			sceneManager_->ChangeScene("Select");
+		} else if (CheakCollisionSituationTitle()) {
 			sceneManager_->ChangeScene("Title");
-		}*/
+		}
+
+		break;
+	case GameScene::GameSituation::GameClear:
+
+		break;
+	case GameScene::GameSituation::GameOver:
+
+		break;
+	default:
+		break;
 	}
+
+	
+
+	
 }
 
 ///-------------------------------------------///
@@ -268,6 +333,24 @@ void GameScene::Draw() {
 	}
 
 	missionSprite_->Draw();
+
+	// シーン別の描画処理
+	if (situation_ == GameSituation::Pause) {
+		situationBGSprite_->Draw();
+		titleSprite_->Draw();
+		retrySprite_->Draw();
+		selectSprite_->Draw();
+	} else if (situation_ == GameSituation::GameClear) {
+		situationBGSprite_->Draw();
+		titleSprite_->Draw();
+		retrySprite_->Draw();
+		selectSprite_->Draw();
+	} else if (situation_ == GameSituation::GameOver) {
+		situationBGSprite_->Draw();
+		titleSprite_->Draw();
+		retrySprite_->Draw();
+		selectSprite_->Draw();
+	}
 
 #pragma endregion
 }
@@ -492,7 +575,10 @@ void GameScene::CheckStarFlag()
 	}
 }
 
-// 当たり判定
+///-------------------------------------------/// 
+/// 当たり判定
+///-------------------------------------------///
+// チュートリアル
 bool GameScene::ChaekCollisisonTutorial() {
 
 	Vector2 diffVector = tutorialArrowSprite_->GetPosition() - mousePosition_;
@@ -501,6 +587,46 @@ bool GameScene::ChaekCollisisonTutorial() {
 		if (Mii::TriggerMouse(MouseButtonType::Left)) {
 			return true;
 		}
+	}
+	return false;
+}
+// シチュエーション
+bool GameScene::CheakCollisionSituationRetry() {
+	Vector2 diffVector = retrySprite_->GetPosition() - mousePosition_;
+	float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
+	if (len < 50.0f) {
+		retrySprite_->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+		if (Mii::TriggerMouse(MouseButtonType::Left)) {
+			return true;
+		}
+	} else {
+		retrySprite_->SetColor({1.0f, 1.0f, 1.0f, 1.0f});
+	}
+	return false;
+}
+bool GameScene::CheakCollisionSituationTitle() {
+	Vector2 diffVector = titleSprite_->GetPosition() - mousePosition_;
+	float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
+	if (len < 50.0f) {
+		titleSprite_->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+		if (Mii::TriggerMouse(MouseButtonType::Left)) {
+			return true;
+		}
+	} else {
+		titleSprite_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+	}
+	return false;
+}
+bool GameScene::CheakCollisionSituationSelect() {
+	Vector2 diffVector = selectSprite_->GetPosition() - mousePosition_;
+	float len = sqrtf(diffVector.x * diffVector.x + diffVector.y * diffVector.y);
+	if (len < 50.0f) {
+		selectSprite_->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+		if (Mii::TriggerMouse(MouseButtonType::Left)) {
+			return true;
+		}
+	} else {
+		selectSprite_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 	}
 	return false;
 }
