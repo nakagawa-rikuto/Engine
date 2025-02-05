@@ -144,6 +144,21 @@ void AudioManager::Stop(const std::string& key) {
 }
 
 ///-------------------------------------------/// 
+/// 全てのサウンドを停止
+///-------------------------------------------///
+void AudioManager::AllStop() {
+	for (auto& pair : sourceVoices_) {
+		if (pair.second) {
+			pair.second->Stop();
+			pair.second->FlushSourceBuffers();
+			pair.second->DestroyVoice();
+			pair.second = nullptr;
+		}
+	}
+	sourceVoices_.clear();
+}
+
+///-------------------------------------------/// 
 /// 音量の設定
 ///-------------------------------------------///
 void AudioManager::SetVolume(const std::string& key, float volume) {
