@@ -44,6 +44,8 @@ public:
 	// 詰み処理
 	bool Checkmate();
 
+	bool GetIsFlip() { return isFlipCard; }
+
 private:
 
 
@@ -85,5 +87,6 @@ private:
 	// 
 	int allObtainedCardCount = 0;
 	
-	
+	// カードをめくったか
+	bool isFlipCard = false;
 };

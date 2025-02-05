@@ -42,6 +42,9 @@ void GameScene::Initialize() {
 	Loader_->LoadTexture(Retry);
 	Loader_->LoadTexture(TitleSelect);
 
+	// SE読み込み
+	Loader_->LoadWave("flipCard", "./Resource/SE/flipCard.wav");
+
 	/// ====== ///
 	situation_ = GameSituation::Play;
 
@@ -252,6 +255,10 @@ void GameScene::Update() {
 
 			// カードマネージャの更新
 			cardManager_->Update(mousePosition_);
+
+			if (cardManager_->GetIsFlip()) {
+				audio_->PlayeSound("flipCard", false);
+			}
 
 			// Spriteの更新
 			sprite_->Update();

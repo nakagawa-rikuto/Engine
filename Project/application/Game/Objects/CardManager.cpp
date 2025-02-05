@@ -39,6 +39,8 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, CameraManag
 }
 
 void CardManager::Update(Vector2 mousePosition) {
+	isFlipCard = false;
+
 	CheckCursorCardCollision(mousePosition);
 
 	for (int y = 0; y < rows; ++y) {
@@ -212,6 +214,9 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition) {
 					if (triggerLeft_) {
 
 						cards_[y][x]->RequestState(Card::CardState::front);
+
+						// フラグを立てる
+						isFlipCard = true;
 
 						triggerLeft_ = false;
 					} else {
