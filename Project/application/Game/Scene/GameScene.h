@@ -199,4 +199,5 @@ private: /// ===チュートリアル=== ///
 
 	// チュートリアル用の当たり判定処理
 	bool ChaekCollisisonTutorial();
+private: /// ====== ///
 };
