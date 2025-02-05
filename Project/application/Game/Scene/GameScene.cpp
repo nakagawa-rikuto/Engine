@@ -162,10 +162,10 @@ void GameScene::Initialize() {
 	starSprite2_ = std::make_unique<Sprite>();
 	starSprite1_->Initialize("Resource/hosi/Hosi.png");
 	starSprite2_->Initialize("Resource/hosi/Hosi.png");
-	starSprite1_->SetSize({ 200.0f,200.0f });
-	starSprite1_->SetPosition({ 200.0f,200.0f });
-	starSprite2_->SetSize({ 200.0f,200.0f });
-	starSprite2_->SetPosition({ 600.0f,200.0f });
+	starSprite1_->SetSize({ 150.0f,150.0f });
+	starSprite1_->SetPosition({ 430.0f,300.0f });
+	starSprite2_->SetSize({ 150.0f,150.0f });
+	starSprite2_->SetPosition({ 680.0f,300.0f });
 	starSprite1_->Update();
 	starSprite2_->Update();
 }
@@ -431,6 +431,14 @@ void GameScene::Draw() {
 		selectSprite_->Draw();
 	} else if (situation_ == GameSituation::GameClear) {
 
+		
+
+		situationBGSprite_->Draw();
+		titleSprite_->Draw();
+		retrySprite_->Draw();
+		selectSprite_->Draw();
+		clearSprite_->Draw();
+
 		if (star1Flag)
 		{
 			starSprite1_->Draw();
@@ -439,12 +447,6 @@ void GameScene::Draw() {
 		{
 			starSprite2_->Draw();
 		}
-
-		situationBGSprite_->Draw();
-		titleSprite_->Draw();
-		retrySprite_->Draw();
-		selectSprite_->Draw();
-		clearSprite_->Draw();
 	} else if (situation_ == GameSituation::GameOver) {
 		situationBGSprite_->Draw();
 		titleSprite_->Draw();
