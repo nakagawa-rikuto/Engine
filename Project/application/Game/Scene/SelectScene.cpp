@@ -125,6 +125,8 @@ void SelectScene::Update() {
 		break;
 	case Phase::kFadeOut:
 		if (fade_->IsFinished()) {
+			audio_->StopSound("GamePlay");
+
 			sceneManager_->ChangeScene("Game");
 		}
 		break;
@@ -174,9 +176,6 @@ void SelectScene::CheckMouseCollision() {
 				phase_ = Phase::kFadeOut;
 				fade_->Start(Fade::Status::FadeOut, fadeTimer_);
 				sceneManager_->ChangeScene("Game");
-
-				/// BGM再生終了
-				audio_->StopSound("GamePlay");
 
 				break;
 			}

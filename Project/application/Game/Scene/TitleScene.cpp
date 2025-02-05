@@ -89,6 +89,9 @@ void TitleScene::Update() {
 		break;
 	case Phase::kFadeOut:
 		if (fade_->IsFinished()) {
+
+			audio_->StopSound("GamePlay");
+
 			sceneManager_->ChangeScene("Select");
 		}
 		break;

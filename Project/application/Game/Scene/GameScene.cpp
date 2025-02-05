@@ -255,7 +255,8 @@ void GameScene::Update() {
 					mode_ = Tutorial::Play;
 				}
 
-			} else {
+			}
+			else {
 
 				// マウスの処理
 				mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
@@ -264,13 +265,13 @@ void GameScene::Update() {
 				// カードマネージャの更新
 				cardManager_->Update(mousePosition_);
 
-			if (cardManager_->GetIsFlip()) {
-				audio_->PlayeSound("flipCard", false);
-				cardManager_->SetFlag(false);
-			}
+				if (cardManager_->GetIsFlip()) {
+					audio_->PlayeSound("flipCard", false);
+					cardManager_->SetFlag(false);
+				}
 
-			// Spriteの更新
-			sprite_->Update();
+				// Spriteの更新
+				sprite_->Update();
 
 				// cameraManager_->SetActiveCamera("main1");
 				camera_->SetTranslate(cameraPos_);
@@ -283,59 +284,62 @@ void GameScene::Update() {
 					CheckStarFlag();
 				}
 
+				/// ===シーン変更=== ///
+				if (Mii::TriggerKey(DIK_ESCAPE)) {
+					audio_->PlayeSound("clock", true);
+
+					audio_->StopSound("GamePlay");
+
+					situation_ = GameSituation::Pause;
+				}
+				if (cardManager_->AllCardsObtained()) {
+					audio_->PlayeSound("GCbgm", true);
+
+					audio_->StopSound("GamePlay");
+
+					situation_ = GameSituation::GameClear;
+				}
+				else if (cardManager_->Checkmate()) {
+					audio_->PlayeSound("GObgm", true);
+
+					audio_->StopSound("GamePlay");
+
+					situation_ = GameSituation::GameOver;
+				}
+			}
+			break;
+		case GameScene::GameSituation::Pause:
+
 			/// ===シーン変更=== ///
 			if (Mii::TriggerKey(DIK_ESCAPE)) {
-				audio_->PlayeSound("clock", true);
+				situation_ = GameSituation::Play;
 
-				audio_->StopSound("GamePlay");
+				audio_->PlayeSound("GamePlay", true);
 
-				situation_ = GameSituation::Pause;
+				audio_->StopSound("clock");
 			}
-			if (cardManager_->AllCardsObtained()) {
-				audio_->PlayeSound("GCbgm", true);
-
-				audio_->StopSound("GamePlay");
-
-				situation_ = GameSituation::GameClear;
-			} else if (cardManager_->Checkmate()) {
-				audio_->PlayeSound("GObgm", true);
-
-				audio_->StopSound("GamePlay");
-
-				situation_ = GameSituation::GameOver;
-			}
-		}
-		break;
-	case GameScene::GameSituation::Pause:
-
-		/// ===シーン変更=== ///
-		if (Mii::TriggerKey(DIK_ESCAPE)) {
-			situation_ = GameSituation::Play;
-
-			audio_->PlayeSound("GamePlay", true);
-
-			audio_->StopSound("clock");
-		}
 
 			// スプライトの更新
 			retrySprite_->Update();
 			titleSprite_->Update();
 			selectSprite_->Update();
 
-		/// ===当たり判定の処理=== ///
-		if (CheakCollisionSituationRetry()) {
-			audio_->StopSound("clock");
+			/// ===当たり判定の処理=== ///
+			if (CheakCollisionSituationRetry()) {
+				audio_->StopSound("clock");
 
-			sceneManager_->ChangeScene("Game");
-		} else if (CheakCollisionSituationSelect()) {
-			audio_->StopSound("clock");
+				sceneManager_->ChangeScene("Game");
+			}
+			else if (CheakCollisionSituationSelect()) {
+				audio_->StopSound("clock");
 
-			sceneManager_->ChangeScene("Select");
-		} else if (CheakCollisionSituationTitle()) {
-			audio_->StopSound("clock");
+				sceneManager_->ChangeScene("Select");
+			}
+			else if (CheakCollisionSituationTitle()) {
+				audio_->StopSound("clock");
 
-			sceneManager_->ChangeScene("Title");
-		}
+				sceneManager_->ChangeScene("Title");
+			}
 
 			break;
 		case GameScene::GameSituation::GameClear:
@@ -345,20 +349,22 @@ void GameScene::Update() {
 			titleSprite_->Update();
 			selectSprite_->Update();
 
-		/// ===当たり判定の処理=== ///
-		if (CheakCollisionSituationRetry()) {
-			audio_->StopSound("GCbgm");
+			/// ===当たり判定の処理=== ///
+			if (CheakCollisionSituationRetry()) {
+				audio_->StopSound("GCbgm");
 
-			sceneManager_->ChangeScene("Game");
-		} else if (CheakCollisionSituationSelect()) {
-			audio_->StopSound("GCbgm");
+				sceneManager_->ChangeScene("Game");
+			}
+			else if (CheakCollisionSituationSelect()) {
+				audio_->StopSound("GCbgm");
 
-			sceneManager_->ChangeScene("Select");
-		} else if (CheakCollisionSituationTitle()) {
-			audio_->StopSound("GCbgm");
+				sceneManager_->ChangeScene("Select");
+			}
+			else if (CheakCollisionSituationTitle()) {
+				audio_->StopSound("GCbgm");
 
-			sceneManager_->ChangeScene("Title");
-		}
+				sceneManager_->ChangeScene("Title");
+			}
 
 			break;
 		case GameScene::GameSituation::GameOver:
@@ -368,24 +374,27 @@ void GameScene::Update() {
 			titleSprite_->Update();
 			selectSprite_->Update();
 
-		/// ===当たり判定の処理=== ///
-		if (CheakCollisionSituationRetry()) {
-			audio_->StopSound("GObgm");
+			/// ===当たり判定の処理=== ///
+			if (CheakCollisionSituationRetry()) {
+				audio_->StopSound("GObgm");
 
-			sceneManager_->ChangeScene("Game");
-		} else if (CheakCollisionSituationSelect()) {
-			audio_->StopSound("GObgm");
+				sceneManager_->ChangeScene("Game");
+			}
+			else if (CheakCollisionSituationSelect()) {
+				audio_->StopSound("GObgm");
 
-			sceneManager_->ChangeScene("Select");
-		} else if (CheakCollisionSituationTitle()) {
-			audio_->StopSound("GObgm");
+				sceneManager_->ChangeScene("Select");
+			}
+			else if (CheakCollisionSituationTitle()) {
+				audio_->StopSound("GObgm");
 
-			sceneManager_->ChangeScene("Title");
+				sceneManager_->ChangeScene("Title");
+			}
+
+			break;
+		default:
+			break;
 		}
-
-		break;
-	default:
-		break;
 	}
 
 
