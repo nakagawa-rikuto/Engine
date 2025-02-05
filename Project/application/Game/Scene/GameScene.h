@@ -164,4 +164,12 @@ private: /// ===クリア後の処理=== ///
 	bool CheakCollisionSituationRetry();
 	bool CheakCollisionSituationTitle();
 	bool CheakCollisionSituationSelect();
+
+	// フェード
+	std::unique_ptr<Fade> fade_ = nullptr;
+	// 現在のフェーズ
+	Phase phase_ = Phase::kFadeIn;
+
+	// フェードタイマー
+	const float fadeTimer_ = 1.0f;
 };
