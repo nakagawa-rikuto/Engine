@@ -4,6 +4,7 @@
 #include "application/Game/Scene/IScene.h"
 
 #include "application/2d/Sprite.h"
+#include "application/Game/Fade/Fade.h"
 
 ///=====================================================///
 /// セレクトシーン
@@ -12,6 +13,13 @@ class SelectScene : public IScene {
 public: /// ===メンバ関数=== ///
 	SelectScene() = default;
 	~SelectScene();
+
+	// ゲームのフェーズ
+	enum class Phase {
+		kFadeIn,  // フェードイン
+		kMain,    // メイン部
+		kFadeOut, // フェードアウト
+	};
 
 	// 初期化
 	void Initialize() override;
@@ -37,4 +45,12 @@ private: /// ===メンバ変数=== ///
 
 	// マウスクリック検出用
 	bool isMousePressed_ = false;
+
+	// フェード
+	std::unique_ptr<Fade> fade_ = nullptr;
+	// 現在のフェーズ
+	Phase phase_ = Phase::kFadeIn;
+
+	// フェードタイマー
+	const float fadeTimer_ = 1.0f;
 };

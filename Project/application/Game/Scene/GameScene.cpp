@@ -117,6 +117,16 @@ void GameScene::Initialize() {
 			cardGrid.push_back(cardManager_->GetCards()[y][x]->GetCardType());
 		}
 	}
+
+	const std::string& fadeTexture = "./Resource/back_white.png";
+	Loader_->LoadTexture(fadeTexture);
+
+	// フェード
+	fade_ = std::make_unique<Fade>();
+
+	fade_->Initialize(fadeTexture);
+
+	fade_->Start(Fade::Status::FadeIn, fadeTimer_);
 }
 
 ///-------------------------------------------///

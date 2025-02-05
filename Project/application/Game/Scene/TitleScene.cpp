@@ -31,6 +31,16 @@ void TitleScene::Initialize() {
 	camera_->Initialize();
 	camera_->SetTranslate(cameraPos_);
 	cameraManager_->Add("main2", camera_);
+
+	const std::string& fadeTexture = "./Resource/back_white.png";
+	Loader_->LoadTexture(fadeTexture);
+
+	// フェード
+	fade_ = std::make_unique<Fade>();
+
+	fade_->Initialize(fadeTexture);
+
+	fade_->Start(Fade::Status::FadeIn, fadeTimer_);
 }
 
 ///-------------------------------------------///
@@ -59,8 +69,26 @@ void TitleScene::Update() {
 
 	titleSprite_->Update();
 
-	if (Mii::TriggerMouse(MouseButtonType::Left)) {
-		sceneManager_->ChangeScene("Select");
+	// フェードの更新
+	fade_->Update();
+
+	switch (phase_) {
+	case Phase::kFadeIn:
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+		break;
+	case Phase::kMain:
+		if (Mii::TriggerMouse(MouseButtonType::Left)) {
+			phase_ = Phase::kFadeOut;
+			fade_->Start(Fade::Status::FadeOut, fadeTimer_);
+		}
+		break;
+	case Phase::kFadeOut:
+		if (fade_->IsFinished()) {
+			sceneManager_->ChangeScene("Select");
+		}
+		break;
 	}
 }
 
@@ -78,5 +106,8 @@ void TitleScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
+
+	fade_->Draw();
+
 #pragma endregion
 }
