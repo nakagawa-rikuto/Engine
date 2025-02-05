@@ -210,18 +210,10 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition) {
 			if (len < 50.0f && cards_[y][x]->GetCurrentState() == Card::CardState::back) {
 				cards_[y][x]->SetScale({1.3f, 1.3f, 1.3f});
 
-				if (Mii::PushMouse(MouseButtonType::Left)) {
-					if (triggerLeft_) {
+				if (Mii::TriggerMouse(MouseButtonType::Left)) {
+					cards_[y][x]->RequestState(Card::CardState::front);
 
-						cards_[y][x]->RequestState(Card::CardState::front);
-
-						// フラグを立てる
-						isFlipCard = true;
-
-						triggerLeft_ = false;
-					} else {
-						triggerLeft_ = true;
-					}
+					isFlipCard = true;
 				}
 			} 
 		}

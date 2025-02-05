@@ -31,19 +31,29 @@ void GameScene::Initialize() {
 	// スプライトの読み込み
 	const std::string& bgSprite = "./Resource/backGround.png";
 	Loader_->LoadTexture(bgSprite);
+	// Tutorial
 	const std::string& tutorialSprite = "Resource/Tutorial/Tutorial.png";
 	const std::string& tutorialArrowSprite = "Resource/Tutorial/Arrow.png";
 	Loader_->LoadTexture(tutorialSprite);
 	Loader_->LoadTexture(tutorialArrowSprite);
+	//Situation
 	const std::string& Retry = "Resource/Scene/Retry.png";
 	const std::string& Select = "Resource/Scene/Select.png";
 	const std::string& TitleSelect = "Resource/Scene/TitleSelect.png";
+	const std::string& Clear = "Resource/gameClear.png";
+	const std::string& GameOver = "Resource/gameOver.png";
 	Loader_->LoadTexture(Select);
 	Loader_->LoadTexture(Retry);
 	Loader_->LoadTexture(TitleSelect);
+	Loader_->LoadTexture(Clear);
+	Loader_->LoadTexture(GameOver);
 
 	// SE読み込み
 	Loader_->LoadWave("flipCard", "./Resource/SE/flipCard.wav");
+
+	Loader_->LoadWave("clock", "./Resource/BGM/clock.wav");
+
+	Loader_->LoadWave("GObgm", "./Resource/BGM/GameOver.wav");
 
 	/// ====== ///
 	situation_ = GameSituation::Play;
@@ -73,24 +83,24 @@ void GameScene::Initialize() {
 
 		// モードの設定
 		mode_ = Tutorial::Sprite;
+	} else {
+		// ミッション
+		const std::string missionSprites_[11] = {
+			"./Resource/Mission/mission1.png", "./Resource/Mission/mission1.png",  "./Resource/Mission/mission3.png", "./Resource/Mission/mission4.png",
+			"./Resource/Mission/mission5.png", "./Resource/Mission/mission6.png",  "./Resource/Mission/mission7.png", "./Resource/Mission/mission8.png",
+			"./Resource/Mission/mission9.png", "./Resource/Mission/mission10.png", "./Resource/Mission/mission11.png"
+		};
+
+		for (int i = 0; i < 11; i++) {
+			Loader_->LoadTexture(missionSprites_[i]);
+		}
+
+		missionSprite_ = std::make_unique<Sprite>();
+		missionSprite_->Initialize(missionSprites_[static_cast<int>(sceneManager_->GetLevel()) - 1]);
+		missionSprite_->SetPosition({ 20.0f,20.0f });
+		missionSprite_->SetSize({ 305.0f, 75.0f });
+		missionSprite_->Update();
 	}
-
-	// ミッション
-	const std::string missionSprites_[11] = { 
-		"./Resource/Mission/mission1.png", "./Resource/Mission/mission1.png",  "./Resource/Mission/mission3.png", "./Resource/Mission/mission4.png",
-	    "./Resource/Mission/mission5.png", "./Resource/Mission/mission6.png",  "./Resource/Mission/mission7.png", "./Resource/Mission/mission8.png",
-		"./Resource/Mission/mission9.png", "./Resource/Mission/mission10.png", "./Resource/Mission/mission11.png" 
-	};
-
-	for (int i = 0; i < 11; i++) {
-		Loader_->LoadTexture(missionSprites_[i]);
-	}
-
-	missionSprite_ = std::make_unique<Sprite>();
-	missionSprite_->Initialize(missionSprites_[static_cast<int>(sceneManager_->GetLevel()) -1]);
-	missionSprite_->SetPosition({ 20.0f,20.0f });
-	missionSprite_->SetSize({ 305.0f, 75.0f });
-	missionSprite_->Update();
 
 	/// ===Sitation=== ///
 	situationBGSprite_ = std::make_unique<Sprite>();
@@ -121,6 +131,18 @@ void GameScene::Initialize() {
 	selectSprite_->SetPosition({ 380.0f, 500.0f });
 	selectSprite_->SetSize({ 100.0f, 100.0f });
 	selectSprite_->Update();
+	// Clear
+	clearSprite_->Initialize(Clear);
+	clearSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+	clearSprite_->SetPosition({ 640.0f, 200.0f });
+	clearSprite_->SetSize({ 700.0f, 150.0f });
+	clearSprite_->Update();
+	// GameOver
+	gameOverSprite_->Initialize(GameOver);
+	gameOverSprite_->SetAnchorPoint({ 0.5f, 0.5f });
+	gameOverSprite_->SetPosition({ 640.0f, 200.0f });
+	gameOverSprite_->SetSize({ 700.0f, 150.0f });
+	gameOverSprite_->Update();
 
 
 	/// ===Camera=== ///
@@ -249,15 +271,12 @@ void GameScene::Update() {
 
 		} else {
 
-			// マウスの処理
-			mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-			mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
-
 			// カードマネージャの更新
 			cardManager_->Update(mousePosition_);
 
 			if (cardManager_->GetIsFlip()) {
 				audio_->PlayeSound("flipCard", false);
+				cardManager_->SetFlag(false);
 			}
 
 			// Spriteの更新
@@ -276,7 +295,18 @@ void GameScene::Update() {
 
 			/// ===シーン変更=== ///
 			if (Mii::TriggerKey(DIK_ESCAPE)) {
+				audio_->PlayeSound("clock", true);
+
 				situation_ = GameSituation::Pause;
+			}
+			if (cardManager_->AllCardsObtained()) {
+				audio_->PlayeSound("clock", true);
+
+				situation_ = GameSituation::GameClear;
+			} else if (cardManager_->Checkmate()) {
+				audio_->PlayeSound("clock", true);
+
+				situation_ = GameSituation::GameOver;
 			}
 		}
 		break;
@@ -285,7 +315,31 @@ void GameScene::Update() {
 		/// ===シーン変更=== ///
 		if (Mii::TriggerKey(DIK_ESCAPE)) {
 			situation_ = GameSituation::Play;
+			audio_->StopSound("clock");
 		}
+
+		// スプライトの更新
+		retrySprite_->Update();
+		titleSprite_->Update();
+		selectSprite_->Update();
+
+		/// ===当たり判定の処理=== ///
+		if (CheakCollisionSituationRetry()) {
+			audio_->StopSound("clock");
+
+			sceneManager_->ChangeScene("Game");
+		} else if (CheakCollisionSituationSelect()) {
+			audio_->StopSound("clock");
+
+			sceneManager_->ChangeScene("Select");
+		} else if (CheakCollisionSituationTitle()) {
+			audio_->StopSound("clock");
+
+			sceneManager_->ChangeScene("Title");
+		}
+
+		break;
+	case GameScene::GameSituation::GameClear:
 
 		// スプライトの更新
 		retrySprite_->Update();
@@ -302,17 +356,33 @@ void GameScene::Update() {
 		}
 
 		break;
-	case GameScene::GameSituation::GameClear:
-
-		break;
 	case GameScene::GameSituation::GameOver:
+
+		// スプライトの更新
+		retrySprite_->Update();
+		titleSprite_->Update();
+		selectSprite_->Update();
+
+		/// ===当たり判定の処理=== ///
+		if (CheakCollisionSituationRetry()) {
+			audio_->StopSound("GObgm");
+
+			sceneManager_->ChangeScene("Game");
+		} else if (CheakCollisionSituationSelect()) {
+			audio_->StopSound("GObgm");
+
+			sceneManager_->ChangeScene("Select");
+		} else if (CheakCollisionSituationTitle()) {
+			audio_->StopSound("GObgm");
+
+			sceneManager_->ChangeScene("Title");
+		}
 
 		break;
 	default:
 		break;
 	}
 
-	
 
 	
 }
@@ -337,9 +407,9 @@ void GameScene::Draw() {
 		tutorialbgSprite_->Draw();
 		tutorialSprite_->Draw();
 		tutorialArrowSprite_->Draw();
+	} else if(sceneManager_->GetLevel() != StageLevel::tutorial){
+		missionSprite_->Draw();
 	}
-
-	missionSprite_->Draw();
 
 	// シーン別の描画処理
 	if (situation_ == GameSituation::Pause) {
@@ -352,11 +422,13 @@ void GameScene::Draw() {
 		titleSprite_->Draw();
 		retrySprite_->Draw();
 		selectSprite_->Draw();
+		clearSprite_->Draw();
 	} else if (situation_ == GameSituation::GameOver) {
 		situationBGSprite_->Draw();
 		titleSprite_->Draw();
 		retrySprite_->Draw();
 		selectSprite_->Draw();
+		gameOverSprite_->Draw();
 	}
 
 #pragma endregion

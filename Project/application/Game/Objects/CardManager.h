@@ -46,6 +46,8 @@ public:
 
 	bool GetIsFlip() { return isFlipCard; }
 
+	void SetFlag(bool flag) { isFlipCard = flag; }
+
 private:
 
 
