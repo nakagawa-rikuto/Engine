@@ -61,6 +61,9 @@ void MyGame::Initialize(const wchar_t* title) {
 	// Audio
 	// 音声データの読み込み
 	Loader_->LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
+	Loader_->LoadWave("flipCard", "./Resource/SE/flipCard.wav");
+	Loader_->LoadWave("clock", "./Resource/BGM/clock.wav");
+	Loader_->LoadWave("GObgm", "./Resource/BGM/GameOver.wav");
 	// MP3を読み込むとものすごく重い
 	Loader_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
 
