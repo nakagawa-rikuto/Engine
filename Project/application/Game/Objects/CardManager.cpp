@@ -36,10 +36,6 @@ void CardManager::Initialize(std::vector<std::vector<int>> cardData, CameraManag
 	}
 
 	cameraManager_ = cameraManager;
-
-	// Particle
-	selectParticle_ = std::make_shared<SelectEmitter>();
-	selectParticle_->Initialze();
 }
 
 void CardManager::Update(Vector2 mousePosition) {
@@ -56,12 +52,6 @@ void CardManager::Update(Vector2 mousePosition) {
 	}
 
 	allObtainedCardCount = CountState(Card::CardState::obtained);
-
-#ifdef USE_IMGUI
-	selectParticle_->UpdateImGui();
-#endif // USE_IMGUI
-
-	selectParticle_->Update();
 	CheckFrontPair();
 }
 
@@ -72,8 +62,6 @@ void CardManager::Darw() {
 			cards_[y][x]->Draw();
 		}
 	}
-
-	selectParticle_->Draw();
 }
 
 void CardManager::CheckFrontPair() {
@@ -220,10 +208,6 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition) {
 			if (len < 50.0f && cards_[y][x]->GetCurrentState() == Card::CardState::back) {
 				cards_[y][x]->SetScale({1.3f, 1.3f, 1.3f});
 
-				// Particleの処理
-				selectParticle_->SetAABB(cards_[y][x]->GetAABB().min, cards_[y][x]->GetAABB().max);
-				selectParticle_->SetActive(true);
-
 				if (Mii::PushMouse(MouseButtonType::Left)) {
 					if (triggerLeft_) {
 
@@ -234,9 +218,7 @@ void CardManager::CheckCursorCardCollision(Vector2 mousePosition) {
 						triggerLeft_ = true;
 					}
 				}
-			} else {
-				selectParticle_->SetActive(false);
-			}
+			} 
 		}
 	}
 }
