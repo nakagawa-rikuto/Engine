@@ -89,6 +89,7 @@
     <ClCompile Include="application\Game\Objects\CardManager.cpp" />
     <ClCompile Include="application\Particle\SpiralEmitter.cpp" />
     <ClCompile Include="application\Particle\SelectEmitter.cpp" />
+    <ClCompile Include="application\Game\Fade\Fade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Audio\Audio.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="application\Game\Objects\CardManager.h" />
     <ClInclude Include="application\Particle\SpiralEmitter.h" />
     <ClInclude Include="application\Particle\SelectEmitter.h" />
+    <ClInclude Include="application\Game\Fade\Fade.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

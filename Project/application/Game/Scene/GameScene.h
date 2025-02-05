@@ -1,11 +1,12 @@
 #pragma once
 /// ===Includ=== ///
-#include "application/Game/Scene/IScene.h"
-#include "application/3d/Model.h"
 #include "application/3d/Camera.h"
+#include "application/3d/Model.h"
+#include "application/Game/Scene/IScene.h"
 
 #include "application/2d/Sprite.h"
 
+#include "application/Game/Fade/Fade.h"
 #include "application/Game/Objects/CardManager.h"
 
 #include <memory>
@@ -13,8 +14,7 @@
 
 #include "application/Game/GlobalVariables/GlobalVariables.h"
 
-struct Mission
-{
+struct Mission {
 	// 手数のクリア定数
 	int kStepCount;
 
@@ -34,14 +34,20 @@ struct Mission
 	int kEraseAllCount2;
 };
 
-///=====================================================/// 
+///=====================================================///
 /// ゲームシーン
 ///=====================================================///
 class GameScene : public IScene {
-public:/// ===メンバ関数=== ///
-
+public: /// ===メンバ関数=== ///
 	GameScene() = default;
 	~GameScene();
+
+	// ゲームのフェーズ
+	enum class Phase {
+		kFadeIn,  // フェードイン
+		kMain,    // メイン部
+		kFadeOut, // フェードアウト
+	};
 
 	// 初期化
 	void Initialize() override;
@@ -50,17 +56,16 @@ public:/// ===メンバ関数=== ///
 	// 描画
 	void Draw() override;
 
-private:/// ===メンバ関数=== ///
-
+private: /// ===メンバ関数=== ///
 	void RefreshCardData();
 
 	void CheckStarFlag();
-  
-private:/// ===メンバ変数=== ///
+
+private: /// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
 	/// </summary>
-	 
+
 	/// ===Camera=== ///
 	std::shared_ptr<Camera> camera_;
 	// Camera情報
@@ -69,20 +74,20 @@ private:/// ===メンバ変数=== ///
 	Vector3 cameraScale_;
 
 	/// ===Model=== ///
-	//std::vector<std::shared_ptr<Card>> cards_;
+	// std::vector<std::shared_ptr<Card>> cards_;
 
 	int xIndex = 0;
 	int zIndex = 0;
 
 	const int gridSize = 5;
 
-	/// ===Sprite=== /// 
+	/// ===Sprite=== ///
 
 	std::unique_ptr<Sprite> sprite_;
 
 	// マウス用変数
 	bool TriggerLeft_ = false;
-	Vector2 mousePosition_ = { 0.0f, 0.0f };
+	Vector2 mousePosition_ = {0.0f, 0.0f};
 
 	GlobalVariables* globalVariables;
 	std::vector<int32_t> cardAnswers;
@@ -95,100 +100,38 @@ private:/// ===メンバ変数=== ///
 
 	bool star2Flag = false;
 
-	const std::list<std::vector<std::vector<int>>> cardDatas_ =
-	{
-		{
-			{1,2,1}
-		},
-		{
-			{1,3,2},
-			{2,1,2},
-			{2,1,3}
-		},
-		{
-			{1,2,2},
-			{2,1,2},
-			{3,2,3}
-		},
-		{
-			{1,2,1},
-			{1,1,2},
-			{2,2,2}
-		},
-		{
-			{1,3,1},
-			{2,3,2},
-			{1,3,1}
-		},
-		{
-			{1,2,1,3},
-			{2,2,3,2},
-			{1,3,1,3},
-			{2,1,2,3}
-		},
-		{
-			{1,2,2,4},
-			{4,3,4,1},
-			{1,1,2,1},
-			{4,2,3,2}
-		},
-		{
-			{1,3,2,1},
-		    {2,3,4,1},
-		    {4,4,2,3},
-		    {2,3,4,1}
-		},
-		{
-			{1,3,2,4,1},
-		    {3,1,3,3,2},
-		    {4,3,4,2,2},
-		    {2,2,2,4,1},
-		    {1,4,3,4,2}
-        },
-		{
-			{1,4,2,1,2},
-		    {3,1,4,3,3},
-		    {1,3,3,4,1},
-		    {4,2,1,3,1},
-		    {2,4,4,2,2}
-        },
-		{
-			{1,3,2,4,1},
-		    {3,1,3,3,2},
-		    {4,3,4,2,2},
-		    {2,2,2,4,1},
-		    {1,4,3,4,2}
-        },
-		{
-			{2,4,1,3,2},
-		    {3,1,4,2,1},
-		    {4,2,3,1,4},
-		    {1,3,2,4,3},
-		    {2,4,1,3,2}
-        }
+	const std::list<std::vector<std::vector<int>>> cardDatas_ = {
+	    {{1, 2, 1}},
+	    {{1, 3, 2}, {2, 1, 2}, {2, 1, 3}},
+	    {{1, 2, 2}, {2, 1, 2}, {3, 2, 3}},
+	    {{1, 2, 1}, {1, 1, 2}, {2, 2, 2}},
+	    {{1, 3, 1}, {2, 3, 2}, {1, 3, 1}},
+	    {{1, 2, 1, 3}, {2, 2, 3, 2}, {1, 3, 1, 3}, {2, 1, 2, 3}},
+	    {{1, 2, 2, 4}, {4, 3, 4, 1}, {1, 1, 2, 1}, {4, 2, 3, 2}},
+	    {{1, 3, 2, 1}, {2, 3, 4, 1}, {4, 4, 2, 3}, {2, 3, 4, 1}},
+	    {{1, 3, 2, 4, 1}, {3, 1, 3, 3, 2}, {4, 3, 4, 2, 2}, {2, 2, 2, 4, 1}, {1, 4, 3, 4, 2}},
+	    {{1, 4, 2, 1, 2}, {3, 1, 4, 3, 3}, {1, 3, 3, 4, 1}, {4, 2, 1, 3, 1}, {2, 4, 4, 2, 2}},
+	    {{1, 3, 2, 4, 1}, {3, 1, 3, 3, 2}, {4, 3, 4, 2, 2}, {2, 2, 2, 4, 1}, {1, 4, 3, 4, 2}},
+	    {{2, 4, 1, 3, 2}, {3, 1, 4, 2, 1}, {4, 2, 3, 1, 4}, {1, 3, 2, 4, 3}, {2, 4, 1, 3, 2}}
+    };
+
+	std::unordered_map<int, Mission> stageMissions{
+	    {1,  {7, 0, 0, 0, 0, 1, 0, 9, 0}   },
+        {2,  {7, 0, 0, 0, 0, 1, 0, 9, 0}   },
+        {3,  {0, 0, 0, 0, 0, 1, 2, 0, 0}   },
+        {4,  {0, 0, 0, 0, 0, 2, 3, 0, 0}   },
+	    {5,  {0, 0, 0, 2, 0, 2, 0, 0, 0}   },
+        {6,  {10, 0, 0, 0, 0, 2, 0, 12, 0} },
+        {7,  {0, 3, 0, 0, 0, 3, 0, 0, 16}  },
+        {8,  {0, 0, 0, 3, 0, 5, 0, 0, 0}   },
+	    {9,  {0, 0, 0, 3, 0, 0, 0, 0, 25}  },
+        {10, {15, 0, 0, 0, 0, 0, 0, 15, 25}},
+        {11, {15, 0, 0, 0, 0, 5, 0, 15, 0} },
 	};
 
-	std::unordered_map<int, Mission> stageMissions
-	{
-		{1,{7,0,0,0,0,1,0,9,0}},
-		{2,{7,0,0,0,0,1,0,9,0}},
-		{3,{0,0,0,0,0,1,2,0,0}},
-		{4,{0,0,0,0,0,2,3,0,0}},
-		{5,{0,0,0,2,0,2,0,0,0}},
-		{6,{10,0,0,0,0,2,0,12,0}},
-		{7,{0,3,0,0,0,3,0,0,16}},
-		{8,{0,0,0,3,0,5,0,0,0}},
-		{9,{0,0,0,3,0,0,0,0,25}},
-		{10,{15,0,0,0,0,0,0,15,25}},
-		{11,{15,0,0,0,0,5,0,15,0}},
-	};
-  
 private: /// ===チュートリアル=== ///
 	// 内容スプライトを何枚か見た後にチュートリアル用のステージで遊べるようにする。
-	enum class Tutorial {
-		Sprite,
-		Play
-	};
+	enum class Tutorial { Sprite, Play };
 	// チュートリアル
 	Tutorial mode_ = Tutorial::Sprite;
 

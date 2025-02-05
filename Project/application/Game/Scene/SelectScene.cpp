@@ -20,9 +20,9 @@ void SelectScene::Initialize() {
 	bgSprite_ = std::make_unique<Sprite>();
 	bgSprite_->Initialize("Resource/backGround.png");
 
-	const std::string stageSprites[11] = { "./Resource/Stage/Stage1.png", "./Resource/Stage/Stage2.png",  "./Resource/Stage/Stage3.png", "./Resource/Stage/Stage4.png",
-										  "./Resource/Stage/Stage5.png", "./Resource/Stage/Stage6.png",  "./Resource/Stage/Stage7.png", "./Resource/Stage/Stage8.png",
-										  "./Resource/Stage/Stage9.png", "./Resource/Stage/Stage10.png", "./Resource/Stage/Stage11.png" };
+	const std::string stageSprites[11] = {"./Resource/Stage/Stage1.png", "./Resource/Stage/Stage2.png",  "./Resource/Stage/Stage3.png", "./Resource/Stage/Stage4.png",
+	                                      "./Resource/Stage/Stage5.png", "./Resource/Stage/Stage6.png",  "./Resource/Stage/Stage7.png", "./Resource/Stage/Stage8.png",
+	                                      "./Resource/Stage/Stage9.png", "./Resource/Stage/Stage10.png", "./Resource/Stage/Stage11.png"};
 
 	for (int i = 0; i < 11; i++) {
 		Loader_->LoadTexture(stageSprites[i]);
@@ -35,22 +35,22 @@ void SelectScene::Initialize() {
 	const float spacingY = 150.0f; // Y方向の間隔
 
 	// 各行の配置数
-	const int rowCounts[3] = { 4, 3, 4 };
+	const int rowCounts[3] = {4, 3, 4};
 
 	// 各スプライトの行と列
 	const int positions[11][2] = {
-		{0, 0},
-		{1, 0},
-		{2, 0},
-		{3, 0},
-		{0, 1},
-		{1, 1},
-		{2, 1},
-		{0, 2},
-		{1, 2},
-		{2, 2},
-		{3, 2}
-	};
+	    {0, 0},
+        {1, 0},
+        {2, 0},
+        {3, 0},
+        {0, 1},
+        {1, 1},
+        {2, 1},
+        {0, 2},
+        {1, 2},
+        {2, 2},
+        {3, 2}
+    };
 
 	for (int i = 0; i < 11; i++) {
 		stageSprite_[i] = std::make_unique<Sprite>();
@@ -65,9 +65,19 @@ void SelectScene::Initialize() {
 		// スプライトのX, Y座標を設定
 		float x = rowStartX + col * spacingX;
 		float y = startY + row * spacingY;
-		stageSprite_[i]->SetPosition({ x, y });
-		stageSprite_[i]->SetSize({ 100.0f, 100.0f });
+		stageSprite_[i]->SetPosition({x, y});
+		stageSprite_[i]->SetSize({100.0f, 100.0f});
 	}
+
+	const std::string& fadeTexture = "Resource/back_white.png";
+	Loader_->LoadTexture(fadeTexture);
+
+	// フェード
+	fade_ = std::make_unique<Fade>();
+
+	fade_->Initialize(fadeTexture);
+
+	fade_->Start(Fade::Status::FadeIn, fadeTimer_);
 }
 
 ///-------------------------------------------///
@@ -95,7 +105,27 @@ void SelectScene::Update() {
 	}
 
 	// マウスクリック時に当たり判定をチェック
-	CheckMouseCollision();
+	// CheckMouseCollision();
+
+	// フェードの更新
+	fade_->Update();
+
+	switch (phase_) {
+	case Phase::kFadeIn:
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+		break;
+	case Phase::kMain:
+		// マウスクリック時に当たり判定をチェック
+		CheckMouseCollision();
+		break;
+	case Phase::kFadeOut:
+		if (fade_->IsFinished()) {
+			sceneManager_->ChangeScene("Game");
+		}
+		break;
+	}
 }
 
 ///-------------------------------------------///
@@ -117,11 +147,12 @@ void SelectScene::Draw() {
 		stageSprite_[i]->Draw();
 	}
 
+	fade_->Draw();
+
 #pragma endregion
 }
 
 void SelectScene::CheckMouseCollision() {
-
 
 	for (int i = 0; i < 11; i++) {
 		Vector2 spritePos = stageSprite_[i]->GetPosition();
@@ -134,15 +165,15 @@ void SelectScene::CheckMouseCollision() {
 		float bottom = spritePos.y + spriteSize.y;
 
 		if (mousePosition_.x >= left && mousePosition_.x <= right && mousePosition_.y >= top && mousePosition_.y <= bottom) {
-			stageSprite_[i]->SetColor({ 0.9f, 0.2f, 0.4f, 1.0f });
+			stageSprite_[i]->SetColor({0.9f, 0.2f, 0.4f, 1.0f});
 			if (Mii::TriggerMouse(MouseButtonType::Left)) {
 				sceneManager_->SetLevel(static_cast<StageLevel>(i + 1));
-				sceneManager_->ChangeScene("Game");
+				phase_ = Phase::kFadeOut;
+				fade_->Start(Fade::Status::FadeOut, fadeTimer_);
 				break;
 			}
 		} else {
-			stageSprite_[i]->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+			stageSprite_[i]->SetColor({1.0f, 1.0f, 1.0f, 1.0f});
 		}
 	}
-
 }
