@@ -197,17 +197,29 @@ SoundData AudioManager::LoadWave(const std::string& filename) {
 	assert(format.chunk.size <= sizeof(format.fmt));
 	file.read((char*)&format.fmt, format.chunk.size);
 	// Dataチャンクの読み込み
+	//ChunkHeader data;
+	//file.read((char*)&data, sizeof(data));
+	//// JUNKチャンクを検出した場合
+	//if (strncmp(data.id, "JUNK", 4) == 0) {
+	//	// 読み取り位置をJUNKチャンクの終わりまで進める
+	//	file.seekg(data.size, std::ios_base::cur);
+	//	// 再度読み込み
+	//	file.read((char*)&data, sizeof(data));
+	//}
+	//if (strncmp(data.id, "data", 4) != 0) {
+	//	assert(0);
+	//}
 	ChunkHeader data;
-	file.read((char*)&data, sizeof(data));
-	// JUNKチャンクを検出した場合
-	if (strncmp(data.id, "JUNK", 4) == 0) {
-		// 読み取り位置をJUNKチャンクの終わりまで進める
-		file.seekg(data.size, std::ios_base::cur);
-		// 再度読み込み
+	while (true) {
 		file.read((char*)&data, sizeof(data));
-	}
-	if (strncmp(data.id, "data", 4) != 0) {
-		assert(0);
+
+		// "data" チャンクならループを抜ける
+		if (strncmp(data.id, "data", 4) == 0) {
+			break;
+		}
+
+		// 読み取り位置をチャンクの終わりまで進める
+		file.seekg(data.size, std::ios_base::cur);
 	}
 	// Dataチャンクのデータ部（波形データ）の読み込み
 	char* pBuffer = new char[data.size];
