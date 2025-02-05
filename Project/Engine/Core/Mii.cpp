@@ -106,6 +106,7 @@ void Mii::Update() {
 ///=====================================================///
 void Mii::Finalize() {
 	// 読み込んだ音声データの一括解放
+	audioManager_->AllStop();
 	audioManager_->UnloadAll();
 	// ImGuiの終了処理
 	imGuiManager_->Finalize();
