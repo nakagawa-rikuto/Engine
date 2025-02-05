@@ -26,6 +26,7 @@ void GameScene::Initialize() {
 	/// ===Sprite=== ///
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize("Resource/backGround.png");
+	sprite_->Update();
 	if (sceneManager_->GetLevel() == StageLevel::tutorial) {
 		// 生成
 		tutorialSprite_ = std::make_unique<Sprite>();
@@ -45,6 +46,10 @@ void GameScene::Initialize() {
 		// tutorialBGSprite
 		tutorialbgSprite_->Initialize("Resource/backGround.png");
 		tutorialbgSprite_->SetColor({ 0.0f, 0.0f, 0.0f, 0.9f });
+
+		tutorialSprite_->Update();
+		tutorialArrowSprite_->Update();
+		tutorialbgSprite_->Update();
 
 		// モードの設定
 		mode_ = Tutorial::Sprite;
@@ -218,11 +223,11 @@ void GameScene::Update() {
 		}
 		break;
 	case Phase::kMain:
-		if (Mii::TriggerMouse(MouseButtonType::Left)) {
+		/*if (Mii::TriggerMouse(MouseButtonType::Left)) {
 			TriggerLeft_ = true;
 		} else {
 			TriggerLeft_ = false;
-		}
+		}*/
 
 		// マウスの処理
 		mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
@@ -257,10 +262,6 @@ void GameScene::Update() {
 
 			}
 			else {
-
-				// マウスの処理
-				mousePosition_.x = static_cast<float>(Mii::GetMousePosition().x);
-				mousePosition_.y = static_cast<float>(Mii::GetMousePosition().y);
 
 				// カードマネージャの更新
 				cardManager_->Update(mousePosition_);

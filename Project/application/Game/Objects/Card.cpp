@@ -12,6 +12,7 @@ void Card::Initialize(const std::string& cardModel,int cardType, Vector3 positio
 	model->Initialize(cardModel);
 	model->SetPosition(position);
 	model->SetCamera(activeCamera.get());
+	model->Update();
 
 	// メンバ変数にカードの番号を記録
 	cardType_ = cardType;
