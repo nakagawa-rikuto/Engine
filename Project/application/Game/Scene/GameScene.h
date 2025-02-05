@@ -172,4 +172,7 @@ private: /// ===クリア後の処理=== ///
 
 	// フェードタイマー
 	const float fadeTimer_ = 1.0f;
+
+	std::unique_ptr<Sprite> starSprite1_;
+	std::unique_ptr<Sprite> starSprite2_;
 };

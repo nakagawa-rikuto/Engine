@@ -22,7 +22,6 @@ void GameScene::Initialize() {
 	/// ===BGM=== ///
 	audio_->PlayeSound("GamePlay", true);
 
-
 	/// ===Sprite=== ///
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize("Resource/backGround.png");
@@ -161,6 +160,17 @@ void GameScene::Initialize() {
 	fade_->Initialize(fadeTexture);
 
 	fade_->Start(Fade::Status::FadeIn, fadeTimer_);
+
+	starSprite1_ = std::make_unique<Sprite>();
+	starSprite2_ = std::make_unique<Sprite>();
+	starSprite1_->Initialize("Resource/hosi/Hosi.png");
+	starSprite2_->Initialize("Resource/hosi/Hosi.png");
+	starSprite1_->SetSize({ 200.0f,200.0f });
+	starSprite1_->SetPosition({ 200.0f,200.0f });
+	starSprite2_->SetSize({ 200.0f,200.0f });
+	starSprite2_->SetPosition({ 600.0f,200.0f });
+	starSprite1_->Update();
+	starSprite2_->Update();
 }
 
 ///-------------------------------------------///
@@ -349,6 +359,8 @@ void GameScene::Update() {
 			retrySprite_->Update();
 			titleSprite_->Update();
 			selectSprite_->Update();
+			starSprite1_->Update();
+			starSprite2_->Update();
 
 			/// ===当たり判定の処理=== ///
 			if (CheakCollisionSituationRetry()) {
@@ -433,6 +445,16 @@ void GameScene::Draw() {
 		retrySprite_->Draw();
 		selectSprite_->Draw();
 	} else if (situation_ == GameSituation::GameClear) {
+
+		if (star1Flag)
+		{
+			starSprite1_->Draw();
+		}
+		if (star2Flag)
+		{
+			starSprite2_->Draw();
+		}
+
 		situationBGSprite_->Draw();
 		titleSprite_->Draw();
 		retrySprite_->Draw();

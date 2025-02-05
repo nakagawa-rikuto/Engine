@@ -38,12 +38,13 @@ void MyGame::Initialize(const wchar_t* title) {
 	const std::string& TitleSelect = "Resource/Scene/TitleSelect.png";
 	const std::string& Clear = "Resource/gameClear.png";
 	const std::string& GameOver = "Resource/gameOver.png";
+	const std::string& star = "Resource/hosi/Hosi.png";
 	Loader_->LoadTexture(Select);
 	Loader_->LoadTexture(Retry);
 	Loader_->LoadTexture(TitleSelect);
 	Loader_->LoadTexture(Clear);
 	Loader_->LoadTexture(GameOver);
-
+	Loader_->LoadTexture(star);
 	/// ===モデルの読み込み=== ///
 	// GameScene
 	const std::string& CardModel1 = "Card1";
