@@ -16,44 +16,12 @@ void GameScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 
-	/// ===読み込み=== ///
-	// モデルの読み込み
-	const std::string& CardModel1 = "Card1";
-	const std::string& CardModel2 = "Card2";
-	const std::string& CardModel3 = "Card3";
-	const std::string& CardModel4 = "Card4";
-	Loader_->LoadModel(CardModel1);
-	Loader_->LoadModel(CardModel2);
-	Loader_->LoadModel(CardModel3);
-	Loader_->LoadModel(CardModel4);
-	// パーティクル
-	Loader_->LoadModel("Particle");
-	// スプライトの読み込み
-	const std::string& bgSprite = "./Resource/backGround.png";
-	Loader_->LoadTexture(bgSprite);
-	// Tutorial
-	const std::string& tutorialSprite = "Resource/Tutorial/Tutorial.png";
-	const std::string& tutorialArrowSprite = "Resource/Tutorial/Arrow.png";
-	Loader_->LoadTexture(tutorialSprite);
-	Loader_->LoadTexture(tutorialArrowSprite);
-	//Situation
-	const std::string& Retry = "Resource/Scene/Retry.png";
-	const std::string& Select = "Resource/Scene/Select.png";
-	const std::string& TitleSelect = "Resource/Scene/TitleSelect.png";
-	const std::string& Clear = "Resource/gameClear.png";
-	const std::string& GameOver = "Resource/gameOver.png";
-	Loader_->LoadTexture(Select);
-	Loader_->LoadTexture(Retry);
-	Loader_->LoadTexture(TitleSelect);
-	Loader_->LoadTexture(Clear);
-	Loader_->LoadTexture(GameOver);
-
 	/// ===Situationの初期化=== ///
 	situation_ = GameSituation::Play;
 
 	/// ===Sprite=== ///
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(bgSprite);
+	sprite_->Initialize("Resource/backGround.png");
 	if (sceneManager_->GetLevel() == StageLevel::tutorial) {
 		// 生成
 		tutorialSprite_ = std::make_unique<Sprite>();
@@ -61,17 +29,17 @@ void GameScene::Initialize() {
 		tutorialbgSprite_ = std::make_unique<Sprite>();
 		// 初期化
 		// tutorialSprite
-		tutorialSprite_->Initialize(tutorialSprite);
+		tutorialSprite_->Initialize("Resource/Tutorial/Tutorial.png");
 		tutorialSprite_->SetPosition({ 640.0f, 360.0f });
 		tutorialSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 		tutorialSprite_->SetSize({ 500.0f, 500.0f });
 		// tutorialArrowSprite
-		tutorialArrowSprite_->Initialize(tutorialArrowSprite);
+		tutorialArrowSprite_->Initialize("Resource/Tutorial/Arrow.png");
 		tutorialArrowSprite_->SetPosition({ 410.0f, 130.0f });
 		tutorialArrowSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 		tutorialArrowSprite_->SetSize({ 30.0f, 30.0f });
 		// tutorialBGSprite
-		tutorialbgSprite_->Initialize(bgSprite);
+		tutorialbgSprite_->Initialize("Resource/backGround.png");
 		tutorialbgSprite_->SetColor({ 0.0f, 0.0f, 0.0f, 0.9f });
 
 		// モードの設定
@@ -103,35 +71,35 @@ void GameScene::Initialize() {
 	retrySprite_ = std::make_unique<Sprite>();
 	selectSprite_ = std::make_unique<Sprite>();
 	// BG
-	situationBGSprite_->Initialize(bgSprite);
+	situationBGSprite_->Initialize("Resource/backGround.png");
 	situationBGSprite_->SetColor({ 0.0f, 0.0f, 0.0f, 0.9f });
 	situationBGSprite_->Update();
 	// Title
-	titleSprite_->Initialize(TitleSelect);
+	titleSprite_->Initialize("Resource/Scene/TitleSelect.png");
 	titleSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 	titleSprite_->SetPosition({ 900.0f, 500.0f });
 	titleSprite_->SetSize({ 100.0f, 100.0f });
 	titleSprite_->Update();
 	// Retry
-	retrySprite_->Initialize(Retry);
+	retrySprite_->Initialize("Resource/Scene/Retry.png");
 	retrySprite_->SetAnchorPoint({ 0.5f, 0.5f });
 	retrySprite_->SetPosition({ 640.0f, 500.0f });
 	retrySprite_->SetSize({ 100.0f, 100.0f });
 	retrySprite_->Update();
 	// Select
-	selectSprite_->Initialize(Select);
+	selectSprite_->Initialize("Resource/Scene/Select.png");
 	selectSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 	selectSprite_->SetPosition({ 380.0f, 500.0f });
 	selectSprite_->SetSize({ 100.0f, 100.0f });
 	selectSprite_->Update();
 	// Clear
-	clearSprite_->Initialize(Clear);
+	clearSprite_->Initialize("Resource/gameClear.png");
 	clearSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 	clearSprite_->SetPosition({ 640.0f, 200.0f });
 	clearSprite_->SetSize({ 700.0f, 150.0f });
 	clearSprite_->Update();
 	// GameOver
-	gameOverSprite_->Initialize(GameOver);
+	gameOverSprite_->Initialize("Resource/gameOver.png");
 	gameOverSprite_->SetAnchorPoint({ 0.5f, 0.5f });
 	gameOverSprite_->SetPosition({ 640.0f, 200.0f });
 	gameOverSprite_->SetSize({ 700.0f, 150.0f });

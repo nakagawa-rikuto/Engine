@@ -17,11 +17,8 @@ void SelectScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 
-	const std::string& bgTexture = "./Resource/backGround.png";
-	Loader_->LoadTexture(bgTexture);
-
 	bgSprite_ = std::make_unique<Sprite>();
-	bgSprite_->Initialize(bgTexture);
+	bgSprite_->Initialize("Resource/backGround.png");
 
 	const std::string stageSprites[11] = { "./Resource/Stage/Stage1.png", "./Resource/Stage/Stage2.png",  "./Resource/Stage/Stage3.png", "./Resource/Stage/Stage4.png",
 										  "./Resource/Stage/Stage5.png", "./Resource/Stage/Stage6.png",  "./Resource/Stage/Stage7.png", "./Resource/Stage/Stage8.png",
