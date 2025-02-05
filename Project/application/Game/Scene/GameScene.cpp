@@ -19,6 +19,10 @@ void GameScene::Initialize() {
 	/// ===Situationの初期化=== ///
 	situation_ = GameSituation::Play;
 
+	/// ===BGM=== ///
+	audio_->PlayeSound("GamePlay", true);
+
+
 	/// ===Sprite=== ///
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize("Resource/backGround.png");
@@ -258,14 +262,20 @@ void GameScene::Update() {
 			if (Mii::TriggerKey(DIK_ESCAPE)) {
 				audio_->PlayeSound("clock", true);
 
+				audio_->StopSound("GamePlay");
+
 				situation_ = GameSituation::Pause;
 			}
 			if (cardManager_->AllCardsObtained()) {
-				audio_->PlayeSound("clock", true);
+				audio_->PlayeSound("GCbgm", true);
+
+				audio_->StopSound("GamePlay");
 
 				situation_ = GameSituation::GameClear;
 			} else if (cardManager_->Checkmate()) {
-				audio_->PlayeSound("clock", true);
+				audio_->PlayeSound("GObgm", true);
+
+				audio_->StopSound("GamePlay");
 
 				situation_ = GameSituation::GameOver;
 			}
@@ -276,6 +286,9 @@ void GameScene::Update() {
 		/// ===シーン変更=== ///
 		if (Mii::TriggerKey(DIK_ESCAPE)) {
 			situation_ = GameSituation::Play;
+
+			audio_->PlayeSound("GamePlay", true);
+
 			audio_->StopSound("clock");
 		}
 
@@ -309,10 +322,16 @@ void GameScene::Update() {
 
 		/// ===当たり判定の処理=== ///
 		if (CheakCollisionSituationRetry()) {
+			audio_->StopSound("GCbgm");
+
 			sceneManager_->ChangeScene("Game");
 		} else if (CheakCollisionSituationSelect()) {
+			audio_->StopSound("GCbgm");
+
 			sceneManager_->ChangeScene("Select");
 		} else if (CheakCollisionSituationTitle()) {
+			audio_->StopSound("GCbgm");
+
 			sceneManager_->ChangeScene("Title");
 		}
 

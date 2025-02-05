@@ -68,6 +68,9 @@ void SelectScene::Initialize() {
 		stageSprite_[i]->SetPosition({ x, y });
 		stageSprite_[i]->SetSize({ 100.0f, 100.0f });
 	}
+
+	/// BGM再生
+	audio_->PlayeSound("GamePlay", true);
 }
 
 ///-------------------------------------------///
@@ -138,6 +141,10 @@ void SelectScene::CheckMouseCollision() {
 			if (Mii::TriggerMouse(MouseButtonType::Left)) {
 				sceneManager_->SetLevel(static_cast<StageLevel>(i + 1));
 				sceneManager_->ChangeScene("Game");
+
+				/// BGM再生終了
+				audio_->StopSound("GamePlay");
+
 				break;
 			}
 		} else {

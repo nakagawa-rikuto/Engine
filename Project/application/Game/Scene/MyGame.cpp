@@ -66,7 +66,8 @@ void MyGame::Initialize(const wchar_t* title) {
 	Loader_->LoadWave("GObgm", "./Resource/BGM/GameOver.wav");
 	// MP3を読み込むとものすごく重い
 	Loader_->LoadMP3("clear", "./Resource/BGM/clear.mp3");
-
+	Loader_->LoadMP3("GCbgm", "./Resource/BGM/GameClear.mp3");
+	Loader_->LoadMP3("GamePlay", "./Resource/BGM/GamePlay.mp3");
 	// シーンファクトリーの生成
 	sceneFactory_ = std::make_unique<SceneFactory>();
 	// シーンマネージャの初期化

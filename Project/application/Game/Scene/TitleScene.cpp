@@ -21,6 +21,9 @@ void TitleScene::Initialize() {
 	titleSprite_ = std::make_unique<Sprite>();
 	titleSprite_->Initialize(titleTexture);
 
+	/// BGM再生
+	audio_->PlayeSound("GamePlay", true);
+
 	/// ===Camera=== ///
 	// Camera情報
 	cameraPos_ = {3.0f, -0.5f, -10.0f};
@@ -60,6 +63,9 @@ void TitleScene::Update() {
 	titleSprite_->Update();
 
 	if (Mii::TriggerMouse(MouseButtonType::Left)) {
+
+		audio_->StopSound("GamePlay");
+
 		sceneManager_->ChangeScene("Game");
 	}
 }
