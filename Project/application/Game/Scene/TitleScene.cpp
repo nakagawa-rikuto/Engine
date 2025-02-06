@@ -91,7 +91,7 @@ void TitleScene::Update() {
 		if (fade_->IsFinished()) {
 
 			audio_->StopSound("GamePlay");
-
+			sceneManager_->SetLevel(StageLevel::tutorial);
 			sceneManager_->ChangeScene("Game");
 		}
 		break;
