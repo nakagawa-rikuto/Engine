@@ -2,8 +2,8 @@
 // SceneManager
 #include "application/Manager/SceneManager.h"
 // Service
-#include "Engine/Service/Loader.h"
 #include "Engine/Service/Input.h"
+#include "Engine/Service/Audio.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -18,12 +18,6 @@ DebugScene::~DebugScene() {
 	model_.reset();
 	model2_.reset();
 	modelLight_.reset();
-	// audio
-	audio_->StopSound("fanfare");
-	audio_->StopSound("clear");
-	// Loader
-	//Loader::UnloadSound("fanfare");
-	//Loader::UnloadSound("clear");
 	// Particle
 	windParticle_.reset();
 	explosionParticle_.reset();
@@ -37,26 +31,6 @@ void DebugScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
 
-	/// ===読み込み=== ///
-#pragma region 読み込み処理
-	// 音声データの読み込み
-	Loader::LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
-	// MP3を読み込むとものすごく重い
-	//Loader::LoadMP3("clear", "./Resource/BGM/clear.mp3");
-
-	// テクスチャの読み込み
-	Loader::LoadTexture("uvChecker","./Resource/uvChecker.png");
-	Loader::LoadTexture("monsterBall", "./Resource/monsterBall.png");
-
-	// モデルの読み込み
-	Loader::LoadModel("GlTF", ModelFileType::GLTF); // GLTFファイルを読み込むときはModelFileTypeで選択しなければいけない
-	Loader::LoadModel("MonsterBall");
-	Loader::LoadModel("terrain");
-	Loader::LoadModel("axis");
-	Loader::LoadModel("plane");
-	Loader::LoadModel("Particle");
-#pragma endregion
-
 	/// ===スプライトの初期化=== ///
 #pragma region Spriteの初期化
 	sprite_ = std::make_unique<Sprite>();
@@ -69,6 +43,7 @@ void DebugScene::Initialize() {
 	sprite->SetAnchorPoint(Vector2(0.0f, 0.0f));        // アンカーポイントの設定(初期値は0,0)
 	sprite->SetTextureSize(Vector2(64.0f, 64.0f));      // テクスチャサイズの設定(初期値は100.0f, 100.0f)
 	*/
+	sprite_->Update();
 #pragma endregion
 
 	/// ===モデルの初期化=== ///
@@ -91,6 +66,10 @@ void DebugScene::Initialize() {
 	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
+
+	model_->Update();
+	model2_->Update();
+	modelLight_->Update();
 #pragma endregion
 
 	/// ===カメラの初期化=== ///
@@ -373,12 +352,12 @@ void DebugScene::Update() {
 	/// ===Audioのセット=== ///
 #pragma region Audioのセット
 	if (playAudio) {
-		audio_->PlayeSound("fanfare", false);
-		audio_->VolumeSound("fanfare", volume);
-		audio_->PitchSound("fanfare", pitch);
+		Audio::PlayeSound("fanfare", false);
+		Audio::VolumeSound("fanfare", volume);
+		Audio::PitchSound("fanfare", pitch);
 	} else {
-		audio_->StopSound("fanfare");
-		audio_->StopSound("fanfare");
+		Audio::StopSound("fanfare");
+		Audio::StopSound("fanfare");
 	}
 #pragma endregion
 

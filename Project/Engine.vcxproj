@@ -108,7 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="application\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Service\Audio.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
     <ClCompile Include="application\Particle\ConfettiEmitter.cpp" />
     <ClCompile Include="Engine\Input\Controller.cpp" />
@@ -186,7 +186,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Input\Mouse.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application\Audio\Audio.h" />
+    <ClInclude Include="Engine\Service\Audio.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
     <ClInclude Include="application\Particle\ConfettiEmitter.h" />
     <ClInclude Include="Engine\DataInfo\InputData.h" />

@@ -51,6 +51,8 @@ public:/// ===関数=== ///
 	void Play(const std::string& key, bool loop = false);
 	// サウンドの停止
 	void Stop(const std::string& key);
+	// 全てのサウンドを停止
+	void StopAll();
 	// 音量の設定
 	void SetVolume(const std::string& key, float volume);
 	// 再生速度の設定

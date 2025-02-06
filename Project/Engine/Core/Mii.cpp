@@ -123,7 +123,8 @@ void Mii::Update() {
 /// システム全体の終了
 ///=====================================================///
 void Mii::Finalize() {
-	// 読み込んだ音声データの一括解放
+	// 読み込んだ音声データの一括停止・解放
+	audioManager_->StopAll();
 	audioManager_->UnloadAll();
 	// ImGuiの終了処理
 	imGuiManager_->Finalize();

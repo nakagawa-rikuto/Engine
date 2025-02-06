@@ -1,6 +1,7 @@
 #include "MyGame.h"
 // シーンファクトリー
 #include "Engine/Scene/SceneFactory.h"
+#include "Engine/Service/Loader.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -15,6 +16,25 @@ void MyGame::Initialize(const wchar_t* title) {
 	// 基底クラスの初期化
 	Framework::Initialize(title);
 
+	/// ===読み込み処理=== ///
+	// 音声データの読み込み
+	Loader::LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
+	// MP3を読み込むとものすごく重い
+	Loader::LoadMP3("clear", "./Resource/BGM/clear.mp3");
+
+	// テクスチャの読み込み
+	Loader::LoadTexture("uvChecker", "./Resource/uvChecker.png");
+	Loader::LoadTexture("monsterBall", "./Resource/monsterBall.png");
+
+	// モデルの読み込み
+	Loader::LoadModel("GlTF", ModelFileType::GLTF); // GLTFファイルを読み込むときはModelFileTypeで選択しなければいけない
+	Loader::LoadModel("MonsterBall");
+	Loader::LoadModel("terrain");
+	Loader::LoadModel("axis");
+	Loader::LoadModel("plane");
+	Loader::LoadModel("Particle");
+
+	/// ===シーンの作成=== ///
 	// シーンファクトリーの生成
 	sceneFactory_ = std::make_unique<SceneFactory>();
 	// シーンマネージャの初期化

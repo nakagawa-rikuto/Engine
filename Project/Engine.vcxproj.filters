@@ -11,7 +11,7 @@
     <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="application\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Service\Audio.cpp" />
     <ClCompile Include="application\Game\Scene\DebugScene.cpp" />
     <ClCompile Include="Engine\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\3d\Camera3D.cpp" />
@@ -89,7 +89,7 @@
     <ClCompile Include="Engine\Input\Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application\Audio\Audio.h" />
+    <ClInclude Include="Engine\Service\Audio.h" />
     <ClInclude Include="application\Game\Scene\DebugScene.h" />
     <ClInclude Include="Engine\Managers\CSVManager.h" />
     <ClInclude Include="Engine\3d\Camera3D.h" />

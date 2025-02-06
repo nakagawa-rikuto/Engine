@@ -1,7 +1,6 @@
 #pragma once
 /// ===Include=== ///
 #include "application/Manager/CameraManager.h"
-#include "application/Audio/Audio.h"
 
 /// ===前方宣言=== ///
 class SceneManager;
@@ -29,7 +28,5 @@ protected:
 	// Camera
 	std::unique_ptr<Camera> defaultCamera_;
 	std::unique_ptr<CameraManager> cameraManager_;
-	// Audio
-	std::unique_ptr<Audio> audio_;
 };
 

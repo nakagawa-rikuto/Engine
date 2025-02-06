@@ -13,10 +13,6 @@ void IScene::Initialize() {
 	/// ===カメラマネージャの生成=== ///
 	cameraManager_ = std::make_unique<CameraManager>();
 	cameraManager_->Initialize();
-
-	/// ===Audio=== ///
-	audio_ = std::make_unique<Audio>();
-	audio_->Initialze(Mii::GetAudioManager());
 }
 
 ///-------------------------------------------/// 

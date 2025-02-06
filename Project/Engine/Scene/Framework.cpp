@@ -4,6 +4,7 @@
 // Service
 #include "Engine/Service/Loader.h"
 #include "Engine/Service/Input.h"
+#include "Engine/Service/Audio.h"
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -15,15 +16,16 @@ void Framework::Initialize(const wchar_t* title) {
 	Loader::Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager());
 	// Inputの初期化
 	Input::Initialize(Mii::GetKeyboard(), Mii::GetMouse(), Mii::GetController());
+	// Audioの初期化
+	Audio::Initialze(Mii::GetAudioManager());
 }
 
 ///-------------------------------------------/// 
 /// 終了
 ///-------------------------------------------///
 void Framework::Finalize() {
-	// 音声データの一括開放
-	Loader::AllUnloadSound();
 	// 終了処理
+	Audio::Finalize();
 	Input::Finalize();
 	Loader::Finalize();
 	Mii::Finalize();

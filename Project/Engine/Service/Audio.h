@@ -15,19 +15,22 @@ public:
 	Audio() = default;
 	~Audio() = default;
 
-	void Initialze(AudioManager* audio);
+	// 初期化
+	static void Initialze(AudioManager* audio);
+	// 終了処理
+	static void Finalize();
 
 	// サウンドの再生
-	void PlayeSound(const std::string& key, bool loop);
+	static void PlayeSound(const std::string& key, bool loop);
 	// サウンドの停止
-	void StopSound(const std::string& key);
+	static void StopSound(const std::string& key);
 	// 音量の設定
-	void VolumeSound(const std::string& key, float volume);
+	static void VolumeSound(const std::string& key, float volume);
 	// 再生速度の設定
-	void PitchSound(const std::string& key, float pitch);
+	static void PitchSound(const std::string& key, float pitch);
 
 private:
 	// AudioManager
-	AudioManager* audioManager_;
+	static AudioManager* audioManager_;
 };
 

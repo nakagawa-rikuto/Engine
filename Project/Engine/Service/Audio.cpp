@@ -1,6 +1,9 @@
 #include "Audio.h"
 #include "Engine/Managers/AudioManager.h"
 
+/// ===宣言=== ///
+AudioManager* Audio::audioManager_ = nullptr;
+
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
@@ -9,7 +12,14 @@ void Audio::Initialze(AudioManager* audio) {
 }
 
 ///-------------------------------------------/// 
-/// 
+/// 終了処理
+///-------------------------------------------///
+void Audio::Finalize() {
+	audioManager_ = nullptr;
+}
+
+///-------------------------------------------/// 
+/// Audioの処理
 ///-------------------------------------------///
 // 音声の再生
 void Audio::PlayeSound(const std::string& key, bool loop) { audioManager_->Play(key, loop); }
