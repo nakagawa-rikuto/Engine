@@ -3,17 +3,17 @@
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
 // Input
-#include "Engine/Input/Keyboard.h"
-#include "Engine/Input/Mouse.h"
-#include "Engine/Input/Controller.h"
+#include "Engine/System/Input/Keyboard.h"
+#include "Engine/System/Input/Mouse.h"
+#include "Engine/System/Input/Controller.h"
 // Manager
-#include "Engine/Managers/SRVManager.h"
-#include "Engine/Managers/PiplineManager.h"
-#include "Engine/Managers/TextureManager.h"
-#include "Engine/Managers/ModelManager.h"
-#include "Engine/Managers/ImGuiManager.h"
-#include "Engine/Managers/AudioManager.h"
-#include "Engine/Managers/CSVManager.h"
+#include "Engine/System/Managers/SRVManager.h"
+#include "Engine/System/Managers/PiplineManager.h"
+#include "Engine/System/Managers/TextureManager.h"
+#include "Engine/System/Managers/ModelManager.h"
+#include "Engine/System/Managers/ImGuiManager.h"
+#include "Engine/System/Managers/AudioManager.h"
+#include "Engine/System/Managers/CSVManager.h"
 // Math
 #include "Math/sMath.h"
 

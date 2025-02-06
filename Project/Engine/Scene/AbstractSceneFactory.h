@@ -1,6 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "application/Game/Scene/IScene.h"
+#include "application/Scene/IScene.h"
 #include "Engine/Scene/SceneType.h"
 #include <memory>
 #include <string>

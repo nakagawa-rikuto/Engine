@@ -1,6 +1,7 @@
 /// ===include=== ///
 #include "Engine/Scene/Framework.h"
-#include "application/Game/Scene/MyGame.h"
+#include "Engine/System/Managers/SceneManager.h"
+#include "application/Scene/MyGame.h"
 
 /// ===ゲームタイトル=== ///
 const wchar_t kWindowTitle[] = L"MiiEngine";

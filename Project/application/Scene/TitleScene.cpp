@@ -1,0 +1,41 @@
+#include "TitleScene.h"
+// SceneManager
+#include "Engine/System/Managers/SceneManager.h"
+
+///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+TitleScene::~TitleScene() {}
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void TitleScene::Initialize() {
+	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
+	IScene::Initialize();
+}
+
+///-------------------------------------------/// 
+/// 更新
+///-------------------------------------------///
+void TitleScene::Update() {
+	/// ===デバック用ImGui=== ///
+#ifdef USE_IMGUI
+	ImGui::Begin("TitleScene");
+	ImGui::End();
+#endif // USE_IMGUI
+}
+
+///-------------------------------------------/// 
+/// 描画
+///-------------------------------------------///
+void TitleScene::Draw() {
+#pragma region 背景スプライト描画
+#pragma endregion
+
+#pragma region モデル描画
+#pragma endregion
+
+#pragma region 前景スプライト描画
+#pragma endregion
+}
