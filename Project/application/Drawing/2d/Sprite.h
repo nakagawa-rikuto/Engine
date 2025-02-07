@@ -5,7 +5,7 @@
 #include "Engine/Graphics/2d/VertexBuffer2D.h"
 #include "Engine/Graphics/2d/IndexBuffer2D.h"
 // Pipline
-#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
+#include "Engine/DataInfo/PipelineStateObjectType.h"
 
 enum class GroundType {
 	Front,

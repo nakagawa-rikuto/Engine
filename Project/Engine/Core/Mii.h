@@ -4,7 +4,7 @@
 #include "Engine/DataInfo/CData.h"
 #include "Engine/System/Input/InputCommon.h"
 // Game 
-#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
+#include "Engine/DataInfo/PipelineStateObjectType.h"
 // DirectXTex
 #include "DirectXTex.h"
 // C++

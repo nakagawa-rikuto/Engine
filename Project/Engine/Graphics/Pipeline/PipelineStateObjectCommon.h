@@ -6,20 +6,18 @@
 #include "Engine/Graphics/Pipeline/BlendState.h"
 #include "Engine/Graphics/Pipeline/DepthStencil.h"
 #include "Engine/Graphics/Pipeline/RasterizerState.h"
-
 // PipelineType
-#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
-
+#include "Engine/DataInfo/PipelineStateObjectType.h"
+// c++
+#include <memory>
+#include <array>
+#include <cassert>
 // directX
 #include <d3d12.h>
 #include <dxgidebug.h>
 #include <dxgi1_6.h>
 #include <dxcapi.h>
 
-// c++
-#include <memory>
-#include <array>
-#include <cassert>
 
 /// ===前方宣言=== ///
 class DXCommon;

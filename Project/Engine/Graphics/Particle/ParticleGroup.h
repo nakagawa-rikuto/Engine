@@ -4,7 +4,7 @@
 #include "Engine/Graphics/3d/VertexBuffer3D.h"
 #include "ParticleSetUp.h"
 // Pipleine
-#include "Engine/Graphics/Pipeline/PipelineStateObjectType.h"
+#include "Engine/DataInfo/PipelineStateObjectType.h"
 // c++
 #include <memory>
 

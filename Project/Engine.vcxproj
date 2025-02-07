@@ -193,7 +193,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Input\Controller.h" />
     <ClInclude Include="Engine\System\Managers\CSVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Camera3D.h" />
-    <ClInclude Include="Engine\Graphics\Particle\ParticleData.h" />
+    <ClInclude Include="Engine\DataInfo\ParticleData.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="application\Scene\ClearScene.h" />
     <ClInclude Include="Engine\Scene\Framework.h" />
@@ -208,7 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\3d\Material3D.h" />
     <ClInclude Include="Engine\System\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Scene\IScene.h" />
-    <ClInclude Include="Engine\Scene\SceneType.h" />
+    <ClInclude Include="Engine\DataInfo\SceneType.h" />
     <ClInclude Include="Engine\DataInfo\FileTypeData.h" />
     <ClInclude Include="Engine\System\Service\Loader.h" />
     <ClInclude Include="application\Drawing\Particle\ExplosionEmitter.h" />
@@ -226,7 +226,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Pipeline\Compiler.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\InputLayout.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectCommon.h" />
-    <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectType.h" />
+    <ClInclude Include="Engine\DataInfo\PipelineStateObjectType.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RasterizerState.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RootSignature.h" />
     <ClInclude Include="Engine\Core\Mii.h" />

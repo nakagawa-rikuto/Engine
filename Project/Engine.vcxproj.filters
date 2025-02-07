@@ -93,7 +93,7 @@
     <ClInclude Include="application\Scene\DebugScene.h" />
     <ClInclude Include="Engine\System\Managers\CSVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Camera3D.h" />
-    <ClInclude Include="Engine\Graphics\Particle\ParticleData.h" />
+    <ClInclude Include="Engine\DataInfo\ParticleData.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="application\Scene\ClearScene.h" />
     <ClInclude Include="Engine\Scene\Framework.h" />
@@ -121,7 +121,7 @@
     <ClInclude Include="Engine\Graphics\Pipeline\Compiler.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\InputLayout.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectCommon.h" />
-    <ClInclude Include="Engine\Graphics\Pipeline\PipelineStateObjectType.h" />
+    <ClInclude Include="Engine\DataInfo\PipelineStateObjectType.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RasterizerState.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RootSignature.h" />
     <ClInclude Include="Engine\Core\Mii.h" />
@@ -166,7 +166,7 @@
     <ClInclude Include="application\Drawing\Particle\WindEmitter.h" />
     <ClInclude Include="application\Drawing\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Drawing\Particle\ConfettiEmitter.h" />
-    <ClInclude Include="Engine\Scene\SceneType.h" />
+    <ClInclude Include="Engine\DataInfo\SceneType.h" />
     <ClInclude Include="Engine\DataInfo\FileTypeData.h" />
     <ClInclude Include="Engine\System\Input\InputCommon.h" />
     <ClInclude Include="Engine\System\Input\Keyboard.h" />
