@@ -87,6 +87,7 @@
     <ClCompile Include="Engine\System\Input\Keyboard.cpp" />
     <ClCompile Include="Engine\System\Input\Mouse.cpp" />
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -173,6 +174,8 @@
     <ClInclude Include="Engine\System\Input\Mouse.h" />
     <ClInclude Include="Engine\System\Input\Controller.h" />
     <ClInclude Include="Engine\DataInfo\InputData.h" />
+    <ClInclude Include="Engine\DataInfo\AnimationData.h" />
+    <ClInclude Include="Math\Quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

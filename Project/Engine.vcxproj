@@ -184,8 +184,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Particle\ParticleSetUp.cpp" />
     <ClCompile Include="application\Drawing\Particle\WindEmitter.cpp" />
     <ClCompile Include="Engine\System\Input\Mouse.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\DataInfo\AnimationData.h" />
     <ClInclude Include="Engine\System\Service\Audio.h" />
     <ClInclude Include="application\Scene\DebugScene.h" />
     <ClInclude Include="application\Drawing\Particle\ConfettiEmitter.h" />
@@ -270,6 +272,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Particle\ParticleSetUp.h" />
     <ClInclude Include="application\Drawing\Particle\WindEmitter.h" />
     <ClInclude Include="Engine\System\Input\Mouse.h" />
+    <ClInclude Include="Math\Quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
