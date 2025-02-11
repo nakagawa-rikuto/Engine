@@ -108,7 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="application\Drawing\3d\Animation.cpp" />
+    <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -190,7 +190,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Math\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application\Drawing\3d\Animation.h" />
+    <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />

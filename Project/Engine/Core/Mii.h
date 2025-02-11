@@ -2,6 +2,7 @@
 /// ===include=== ///
 // Engine
 #include "Engine/DataInfo/CData.h"
+#include "Engine/DataInfo/AnimationData.h"
 #include "Engine/System/Input/InputCommon.h"
 // Game 
 #include "Engine/DataInfo/PipelineStateObjectType.h"

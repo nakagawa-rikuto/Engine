@@ -1,4 +1,4 @@
-#include "Animation.h"
+#include "AnimationModel.h"
 // Engine
 #include "Engine/Core/Mii.h"
 #include "Engine/Core/WinApp.h"
@@ -231,6 +231,31 @@ void AnimationModel::CameraDataWrite() {
 /// 任意の時刻の値を取得する関数
 ///-------------------------------------------///
 Vector3 AnimationModel::CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time) {
+	/// ===任意の時刻の値を取得する=== ///
+	assert(!keyframes.empty()); // キーがない物は返す値がわからないのでだめ
+	if (keyframes.size() == 1 || time <= keyframes[0].time) { // キーが一つか、時刻がキーフレーム前なら最初の値とする
+		return keyframes[0].value;
+	}
+
+	/// ===任意の自国の値を取得する2=== ///
+	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
+		size_t nextIndex = index + 1;
+		// indexとnextIndexの2つのkeyframeを取得して範囲内に時刻があるかを判定
+		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+			// 範囲内を補間する
+			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
+			return Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
+		}
+	}
+	// ここまでできた場合は一番後の時刻よりも後ろなので最後の値を返すことにする
+	return (*keyframes.rbegin()).value;
+}
+
+
+///-------------------------------------------/// 
+/// 任意の時刻の値を取得する関数(Quateri)
+///-------------------------------------------///
+Quaternion AnimationModel::CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time) {
 	/// ===任意の時刻の値を取得する=== ///
 	assert(!keyframes.empty()); // キーがない物は返す値がわからないのでだめ
 	if (keyframes.size() == 1 || time <= keyframes[0].time) { // キーが一つか、時刻がキーフレーム前なら最初の値とする

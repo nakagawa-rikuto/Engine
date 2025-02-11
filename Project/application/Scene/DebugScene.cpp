@@ -72,6 +72,12 @@ void DebugScene::Initialize() {
 	modelLight_->Update();
 #pragma endregion
 
+	/// ===アニメーションモデルの初期化=== ///
+#pragma region AnimationModelの初期化
+	animationModel_ = std::make_unique<AnimationModel>();
+	animationModel_->Initialize("AnimatedCube");
+#pragma endregion
+
 	/// ===カメラの初期化=== ///
 #pragma region Cameraの初期化
 	// カメラ1
@@ -394,6 +400,12 @@ void DebugScene::Update() {
 	modelLight_->Update();
 #pragma endregion
 
+	/// ===AnimaitonModelの更新=== ///
+#pragma region Animationモデルの更新
+	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+	animationModel_->Update();
+#pragma endregion
+
 	/// ===Particle=== ///
 #pragma region Particle
 	windParticle_->Update();
@@ -424,10 +436,12 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+	
+	animationModel_->Draw();
+
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
-		
+		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
 		modelLight_->Draw();
 	}

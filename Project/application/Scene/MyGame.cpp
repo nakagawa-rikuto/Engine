@@ -33,6 +33,7 @@ void MyGame::Initialize(const wchar_t* title) {
 	Loader::LoadModel("axis");
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
+	Loader::LoadModel("AnimatedCube", ModelFileType::GLTF);
 
 	// アニメーションの読み込み
 	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");

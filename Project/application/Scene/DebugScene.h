@@ -4,10 +4,15 @@
 // Game
 #include "application/Drawing/2d/Sprite.h"
 #include "application/Drawing/3d/Model.h"
+#include "application/Drawing/3d/AnimationModel.h"
 #include "application/Drawing/3d/Camera.h"
+
 #include "application/Drawing/Particle/WindEmitter.h"
 #include "application/Drawing/Particle/ExplosionEmitter.h"
 #include "application/Drawing/Particle/ConfettiEmitter.h"
+
+// Math
+#include "Math/sMath.h"
 
 #include <numbers>
 
@@ -67,6 +72,7 @@ private:/// ===メンバ変数=== ///
 	// モデル
 	std::unique_ptr<Model> model_;
 	std::unique_ptr<Model> model2_;
+	std::unique_ptr<AnimationModel> animationModel_;
 	// モデルライト
 	std::unique_ptr<Model> modelLight_;
 	// Particle
@@ -93,7 +99,7 @@ private:/// ===メンバ変数=== ///
 	// point
 	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 2.0f, 0.0f } , 1.0f, 10.0f, 1.0f };
 	// spotLight
-	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize({ -1.0f, -1.0f, 0.0f }) , 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f) };
+	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize(Vector3{ -1.0f, -1.0f, 0.0f }), 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f) };
 	// カメラ
 	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };  
 	Vector3 cameraRotate = { 0.1f, 0.0f, 0.0f };
