@@ -18,21 +18,25 @@ void MyGame::Initialize(const wchar_t* title) {
 
 	/// ===読み込み処理=== ///
 	// 音声データの読み込み
-	Loader::LoadWave("fanfare", "./Resource/BGM/fanfare.wav");
+	Loader::LoadWave("fanfare", "fanfare.wav");
 	// MP3を読み込むとものすごく重い
-	Loader::LoadMP3("clear", "./Resource/BGM/clear.mp3");
+	Loader::LoadMP3("clear", "clear.mp3");
 
 	// テクスチャの読み込み
-	Loader::LoadTexture("uvChecker", "./Resource/uvChecker.png");
-	Loader::LoadTexture("monsterBall", "./Resource/monsterBall.png");
+	Loader::LoadTexture("uvChecker", "./Resource/Textures/uvChecker.png");
+	Loader::LoadTexture("monsterBall", "./Resource/Textures/monsterBall.png");
 
 	// モデルの読み込み
-	Loader::LoadModel("GlTF", ModelFileType::GLTF); // GLTFファイルを読み込むときはModelFileTypeで選択しなければいけない
-	Loader::LoadModel("MonsterBall");
-	Loader::LoadModel("terrain");
-	Loader::LoadModel("axis");
-	Loader::LoadModel("plane");
-	Loader::LoadModel("Particle");
+	Loader::LoadModel("GlTF", "GlTF.gltf");
+	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
+	Loader::LoadModel("terrain", "terrain.obj");
+	Loader::LoadModel("axis", "axis.obj");
+	Loader::LoadModel("plane", "plane.obj");
+	Loader::LoadModel("Particle", "Particle.obj");
+	Loader::LoadModel("AnimatedCube", "AnimatedCube.gltf");
+
+	// アニメーションの読み込み
+	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
 
 	/// ===シーンの作成=== ///
 	// シーンファクトリーの生成

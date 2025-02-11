@@ -59,14 +59,16 @@ public:/// ===Setter=== ///
 	void SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform);
 	// ワールドトランスフォーム
 	void SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World, const Matrix4x4& WorldInverseTranspose);
+	// Light
+	void SetLightType(LightType type);
 	// DirectionalLight
 	void SetDirectionLight(const Vector4& color, const Vector3& direction, const float& intensity);
-	// CameraForGPU
-	void SetCameraForGPU(const Vector3& translate);
 	// PointLight
 	void SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay);
 	// SpotLight
 	void SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle);
+	// CameraForGPU
+	void SetCameraForGPU(const Vector3& translate);
 
 private:/// ===Variables(変数)=== ///
 

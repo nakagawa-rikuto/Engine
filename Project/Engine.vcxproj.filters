@@ -87,6 +87,10 @@
     <ClCompile Include="Engine\System\Input\Keyboard.cpp" />
     <ClCompile Include="Engine\System\Input\Mouse.cpp" />
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
+    <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
+    <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
+    <ClCompile Include="Math\EasingMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -167,12 +171,16 @@
     <ClInclude Include="application\Drawing\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Drawing\Particle\ConfettiEmitter.h" />
     <ClInclude Include="Engine\DataInfo\SceneType.h" />
-    <ClInclude Include="Engine\DataInfo\FileTypeData.h" />
     <ClInclude Include="Engine\System\Input\InputCommon.h" />
     <ClInclude Include="Engine\System\Input\Keyboard.h" />
     <ClInclude Include="Engine\System\Input\Mouse.h" />
     <ClInclude Include="Engine\System\Input\Controller.h" />
     <ClInclude Include="Engine\DataInfo\InputData.h" />
+    <ClInclude Include="Engine\DataInfo\AnimationData.h" />
+    <ClInclude Include="Math\Quaternion.h" />
+    <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
+    <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
+    <ClInclude Include="Math\EasingMath.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

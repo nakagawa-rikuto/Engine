@@ -13,7 +13,7 @@ void Framework::Initialize(const wchar_t* title) {
 	// Miiの初期化
 	Mii::Initialize(title, 1280, 720);
 	// Loaderの初期化
-	Loader::Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager());
+	Loader::Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager(), Mii::GetAnimationManager());
 	// Inputの初期化
 	Input::Initialize(Mii::GetKeyboard(), Mii::GetMouse(), Mii::GetController());
 	// Audioの初期化

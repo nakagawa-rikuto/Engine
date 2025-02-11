@@ -2,6 +2,7 @@
 /// ===include=== ///
 // Engine
 #include "Engine/DataInfo/CData.h"
+#include "Engine/DataInfo/AnimationData.h"
 #include "Engine/System/Input/InputCommon.h"
 // Game 
 #include "Engine/DataInfo/PipelineStateObjectType.h"
@@ -34,6 +35,7 @@ class TextureManager;
 class ModelManager;
 class AudioManager;
 class CSVManager;
+class AnimationManager;
 
 ///=====================================================///
 /// システム
@@ -67,7 +69,7 @@ public:/// ===開発者用関数(その他)=== ///
 	static void SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode);
 
 	///-------------------------------------------/// 
-	/// テクスチャ関連
+	/// テクスチャ
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
 	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key);
@@ -75,9 +77,14 @@ public:/// ===開発者用関数(その他)=== ///
 	static const DirectX::TexMetadata& GetMetaData(const std::string& key);
 
 	///-------------------------------------------/// 
-	/// モデル関連
+	/// モデル
 	///-------------------------------------------///
-	static ModelData GetModelData(const std::string& filename);
+	static ModelData GetModelData(const std::string& directorPath);
+
+	///-------------------------------------------/// 
+	/// アニメーション
+	///-------------------------------------------///
+	static Animation GetAnimationData(const std::string& directorPath);
 
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
@@ -102,21 +109,24 @@ public:/// ===開発者用関数(Getter)=== ///
 	static AudioManager* GetAudioManager();
 	// CSVManager* 
 	static CSVManager* GetCSVManager();
+	// AnimationManager
+	static AnimationManager* GetAnimationManager();
 
 private:/// ===Variables(変数)=== ///
-	static std::unique_ptr<WinApp> winApp_;                   // WinApp
-	static std::unique_ptr<DXCommon> dXCommon_;               // DirectXCommon
+	static std::unique_ptr<WinApp> winApp_;                     // WinApp
+	static std::unique_ptr<DXCommon> dXCommon_;                 // DirectXCommon
 	
-	static std::unique_ptr<InputCommon> inputCommon_;         // inputCommon
-	static std::unique_ptr<Keyboard> keyboard_;               // Keyboard
-	static std::unique_ptr<Mouse> mouse_;                     // Mouse
-	static std::unique_ptr<Controller> controller_;           // Controller
+	static std::unique_ptr<InputCommon> inputCommon_;           // inputCommon
+	static std::unique_ptr<Keyboard> keyboard_;                 // Keyboard
+	static std::unique_ptr<Mouse> mouse_;                       // Mouse
+	static std::unique_ptr<Controller> controller_;             // Controller
 
-	static std::unique_ptr<SRVManager> srvManager_;           // SRVManager
-	static std::unique_ptr<PipelineManager> pipelineManager_; // PipelineManager
-	static std::unique_ptr<TextureManager> textureManager_;   // TextureManager
-	static std::unique_ptr<ModelManager> modelManager_;       // ModelManager
-	static std::unique_ptr<ImGuiManager> imGuiManager_;       // ImGuiManager
-	static std::unique_ptr<AudioManager> audioManager_;       // AudioMangaer
-	static std::unique_ptr<CSVManager> csvManager_;           // CSVManager
+	static std::unique_ptr<SRVManager> srvManager_;             // SRVManager
+	static std::unique_ptr<PipelineManager> pipelineManager_;   // PipelineManager
+	static std::unique_ptr<TextureManager> textureManager_;     // TextureManager
+	static std::unique_ptr<ModelManager> modelManager_;         // ModelManager
+	static std::unique_ptr<ImGuiManager> imGuiManager_;         // ImGuiManager
+	static std::unique_ptr<AudioManager> audioManager_;         // AudioMangaer
+	static std::unique_ptr<CSVManager> csvManager_;             // CSVManager
+	static std::unique_ptr<AnimationManager> animationManager_; // AnimationManager
 };
