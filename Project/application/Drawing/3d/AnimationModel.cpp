@@ -242,7 +242,7 @@ Vector3 AnimationModel::CalculateValue(const std::vector<KeyframeVector3>& keyfr
 		size_t nextIndex = index + 1;
 		// indexとnextIndexの2つのkeyframeを取得して範囲内に時刻があるかを判定
 		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
-			// 範囲内を補間する
+			// 範囲内を線形補間する(Lerp)
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
 			return Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
 		}
@@ -267,9 +267,9 @@ Quaternion AnimationModel::CalculateValue(const std::vector<KeyframeQuaternion>&
 		size_t nextIndex = index + 1;
 		// indexとnextIndexの2つのkeyframeを取得して範囲内に時刻があるかを判定
 		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
-			// 範囲内を補間する
+			// 範囲内を球面線形補間する(SLerp)
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
+			return SLerp(keyframes[index].value, keyframes[nextIndex].value, t);
 		}
 	}
 	// ここまでできた場合は一番後の時刻よりも後ろなので最後の値を返すことにする
