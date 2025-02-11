@@ -34,6 +34,9 @@ void MyGame::Initialize(const wchar_t* title) {
 	Loader::LoadModel("plane");
 	Loader::LoadModel("Particle");
 
+	// アニメーションの読み込み
+	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
+
 	/// ===シーンの作成=== ///
 	// シーンファクトリーの生成
 	sceneFactory_ = std::make_unique<SceneFactory>();

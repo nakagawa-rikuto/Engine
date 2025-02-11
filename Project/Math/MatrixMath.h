@@ -1,5 +1,6 @@
 #pragma once
 #include "MathData.h"
+#include "Quaternion.h"
 
 /// <summary>
 /// 平行移動行列
@@ -37,6 +38,13 @@ Matrix4x4 MakeRotateYMatrix(float radian);
 Matrix4x4 MakeRotateZMatrix(float radian);
 
 /// <summary>
+/// Quaternionの回転行列
+/// </summary>
+/// <param name="q"></param>
+/// <returns></returns>
+Matrix4x4 MakeRotateQuaternionMatrix(const Quaternion q);
+
+/// <summary>
 /// 三次元アフィン変換
 /// </summary>
 /// <param name="scale"></param>
@@ -44,6 +52,15 @@ Matrix4x4 MakeRotateZMatrix(float radian);
 /// <param name="translate"></param>
 /// <returns></returns>
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+
+/// <summary>
+/// 三次元アフィン変換(Quaternion)
+/// </summary>
+/// <param name="scale"></param>
+/// <param name="rotate"></param>
+/// <param name="translate"></param>
+/// <returns></returns>
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
 /// <summary>
 /// 単位行列

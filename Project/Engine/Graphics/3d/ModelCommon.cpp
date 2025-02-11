@@ -29,6 +29,20 @@ void ModelCommon::SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World,
 	wvpMatrixData_->World = World;
 	wvpMatrixData_->WorldInverseTranspose = WorldInverseTranspose;
 }
+// LightType
+void ModelCommon::SetLightType(LightType type) {
+	if (type == LightType::Lambert) {
+		materialData_->enableLighting = 1;
+	} else if (type == LightType::HalfLambert) {
+		materialData_->enableLighting = 2;
+	} else if (type == LightType::PointLight) {
+		materialData_->enableLighting = 3;
+	} else if (type == LightType::SpotLight) {
+		materialData_->enableLighting = 4;
+	} else {
+		materialData_->enableLighting = 0;
+	}
+}
 // DirectionlLight
 void ModelCommon::SetDirectionLight(const Vector4& color, const Vector3& direction, const float& intensity) {
 	directionalLightData_->color = color;

@@ -88,6 +88,9 @@
     <ClCompile Include="Engine\System\Input\Mouse.cpp" />
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
+    <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
+    <ClCompile Include="application\Drawing\3d\Animation.cpp" />
+    <ClCompile Include="Math\EasingMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -176,6 +179,9 @@
     <ClInclude Include="Engine\DataInfo\InputData.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
     <ClInclude Include="Math\Quaternion.h" />
+    <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
+    <ClInclude Include="application\Drawing\3d\Animation.h" />
+    <ClInclude Include="Math\EasingMath.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

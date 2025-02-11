@@ -1,20 +1,11 @@
 #include "ModelManager.h"
 // Engine
-#include "Engine/Core/Mii.h"
 #include "Engine/System/Service/Loader.h"
 // c++
 #include <fstream>
 
 ///-------------------------------------------/// 
-/// 初期化
-///-------------------------------------------///
-void ModelManager::Initialize(DXCommon* dxCommon) {
-
-	dxCommon_ = dxCommon;
-}
-
-///-------------------------------------------/// 
-/// .objファイルの読み込み
+/// ファイルの読み込み
 ///-------------------------------------------///
 void ModelManager::LoadModel(const std::string& directorPath, const std::string& filename, ModelFileType type) {
 	// 読み込み済みモデルを検索
@@ -23,8 +14,10 @@ void ModelManager::LoadModel(const std::string& directorPath, const std::string&
 		return;
 	}
 
+	// Dataの宣言
 	ModelData modeldata;
 
+	// ファイルの種類によって変更
 	if (type == ModelFileType::OBJ) {
 		modeldata = LoadObjFile(directorPath + "/" + filename, filename + ".obj");
 	} else if (type == ModelFileType::GLTF) {
@@ -43,10 +36,9 @@ void ModelManager::LoadModel(const std::string& directorPath, const std::string&
 }
 
 ///-------------------------------------------/// 
-/// モデルデータの取得
+/// Getter
 ///-------------------------------------------///
 ModelData ModelManager::GetModelData(const std::string& filename) {
-	//
 	assert(modelDatas_.contains(filename));
 	return modelDatas_.at(filename);
 }

@@ -14,6 +14,7 @@
 #include "Engine/System/Managers/ImGuiManager.h"
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
+#include "Engine/System/Managers/AnimationManager.h"
 // Math
 #include "Math/sMath.h"
 
@@ -34,6 +35,7 @@ std::unique_ptr<ModelManager> Mii::modelManager_ = nullptr;
 std::unique_ptr<ImGuiManager> Mii::imGuiManager_ = nullptr;
 std::unique_ptr<AudioManager> Mii::audioManager_ = nullptr;
 std::unique_ptr<CSVManager> Mii::csvManager_ = nullptr;
+std::unique_ptr<AnimationManager> Mii::animationManager_ = nullptr;
 
 ///=====================================================/// 
 /// ReportLiveObjects()
@@ -98,7 +100,6 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// ModelManagerの生成	
 	modelManager_ = std::make_unique<ModelManager>();
-	modelManager_->Initialize(dXCommon_.get());
 
 	// ImGuiManagerの生成
 	imGuiManager_ = std::make_unique<ImGuiManager>();
@@ -110,6 +111,9 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// CSVManagerの生成
 	csvManager_ = std::make_unique<CSVManager>();
+
+	// AnimationManagerの生成
+	animationManager_ = std::make_unique<AnimationManager>();
 }
 
 ///=====================================================/// 
@@ -144,7 +148,8 @@ void Mii::Finalize() {
 	modelManager_.reset();
 	imGuiManager_.reset();
 	audioManager_.reset();
-
+	csvManager_.reset();
+	animationManager_.reset();
 	// COMの終了
 	CoUninitialize();
 }
@@ -177,19 +182,23 @@ int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 ///-------------------------------------------/// 
 /// 開発者用関数
 ///-------------------------------------------///
-#pragma region Pipeline関連
+#pragma region Pipeline
 // PSOの取得
 void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
 #pragma endregion
-#pragma region Texture関連
+#pragma region Texture
 // SRVインデックス開始番号の取得
 void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, key); }
 // メタデータの取得
 const DirectX::TexMetadata& Mii::GetMetaData(const std::string& key) { return textureManager_->GetMetaData(key); }
 #pragma endregion
-#pragma region Model関連
+#pragma region Model
 // モデルデータの取得
 ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
+#pragma endregion
+#pragma region Animation
+// アニメーションの取得
+Animation Mii::GetAnimationData(const std::string& filename) { return animationManager_->GetAnimation(filename); }
 #pragma endregion
 
 
@@ -219,4 +228,6 @@ ModelManager* Mii::GetModelManager() { return modelManager_.get(); }
 AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 // CSVManager
 CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
+// AnimationManager
+AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
 #pragma endregion

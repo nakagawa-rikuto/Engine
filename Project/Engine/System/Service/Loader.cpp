@@ -4,8 +4,7 @@
 #include "Engine/System/Managers/ModelManager.h"
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
-
-#include "Engine/Core/Mii.h"
+#include "Engine/System/Managers/AnimationManager.h"
 
 #include <cassert>
 
@@ -14,21 +13,25 @@ TextureManager* Loader::textureManager_ = nullptr;
 ModelManager* Loader::modelManager_ = nullptr;
 AudioManager* Loader::audioManager_ = nullptr;
 CSVManager* Loader::csvManager_ = nullptr;
+AnimationManager* Loader::animationManager_ = nullptr;
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Loader::Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio, CSVManager* csv) {
+void Loader::Inititalze(
+	TextureManager* texture, ModelManager* model, AudioManager* audio, CSVManager* csv, AnimationManager* animation) {
 	assert(texture);
 	assert(model);
 	assert(audio);
 	assert(csv);
+	assert(animation);
 	
 	// 生成
 	textureManager_ = texture;
 	modelManager_ = model;
 	audioManager_ = audio;
 	csvManager_ = csv;
+	animationManager_ = animation;
 }
 
 ///-------------------------------------------/// 
@@ -39,6 +42,7 @@ void Loader::Finalize() {
 	modelManager_ = nullptr;
 	audioManager_ = nullptr;
 	csvManager_ = nullptr;
+	animationManager_ = nullptr;
 }
 
 ///-------------------------------------------/// 
@@ -60,6 +64,13 @@ void Loader::LoadModel(const std::string& filename, ModelFileType type) {
 ///-------------------------------------------///
 void Loader::LoadCSV(const std::string& filename) {
 	csvManager_->Load(filename);
+}
+
+///-------------------------------------------/// 
+/// Animation
+///-------------------------------------------///
+void Loader::LoadAnimation(const std::string& directorPath, const std::string& filename) {
+	animationManager_->Load(directorPath, filename);
 }
 
 ///-------------------------------------------/// 
