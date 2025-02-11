@@ -217,7 +217,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Scene\IScene.h" />
     <ClInclude Include="Engine\DataInfo\SceneType.h" />
-    <ClInclude Include="Engine\DataInfo\FileTypeData.h" />
     <ClInclude Include="Engine\System\Service\Loader.h" />
     <ClInclude Include="application\Drawing\Particle\ExplosionEmitter.h" />
     <ClInclude Include="Engine\System\Input\InputCommon.h" />

@@ -3,7 +3,6 @@
 // Engine
 #include "Engine/Core/ComPtr.h"
 #include "Engine/DataInfo/CData.h"
-#include "Engine/DataInfo/FileTypeData.h"
 // DirectXTex
 #include "DirectXTex.h"
 // C++
@@ -25,7 +24,7 @@ public:/// ===基本的な関数=== ///
 
 public:/// ===Functions(関数)=== ///
 	// ファイルの読み込み
-	void LoadModel(const std::string& directorPath, const std::string& filename, ModelFileType type);
+	void Load(const std::string& directorPath, const std::string& filename);
 
 	// モデルデータの取得
 	ModelData GetModelData(const std::string& filename);

@@ -171,7 +171,6 @@
     <ClInclude Include="application\Drawing\Particle\ExplosionEmitter.h" />
     <ClInclude Include="application\Drawing\Particle\ConfettiEmitter.h" />
     <ClInclude Include="Engine\DataInfo\SceneType.h" />
-    <ClInclude Include="Engine\DataInfo\FileTypeData.h" />
     <ClInclude Include="Engine\System\Input\InputCommon.h" />
     <ClInclude Include="Engine\System\Input\Keyboard.h" />
     <ClInclude Include="Engine\System\Input\Mouse.h" />

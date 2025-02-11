@@ -79,12 +79,12 @@ public:/// ===開発者用関数(その他)=== ///
 	///-------------------------------------------/// 
 	/// モデル
 	///-------------------------------------------///
-	static ModelData GetModelData(const std::string& filename);
+	static ModelData GetModelData(const std::string& directorPath);
 
 	///-------------------------------------------/// 
 	/// アニメーション
 	///-------------------------------------------///
-	static Animation GetAnimationData(const std::string& filename);
+	static Animation GetAnimationData(const std::string& directorPath);
 
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得

@@ -7,7 +7,7 @@
 ///-------------------------------------------/// 
 /// ファイルの読み込み
 ///-------------------------------------------///
-void ModelManager::LoadModel(const std::string& directorPath, const std::string& filename, ModelFileType type) {
+void ModelManager::Load(const std::string& directorPath, const std::string& filename) {
 	// 読み込み済みモデルを検索
 	if (modelDatas_.contains(filename)) {
 		// 読み込み済みなら早期return
@@ -16,15 +16,11 @@ void ModelManager::LoadModel(const std::string& directorPath, const std::string&
 
 	// Dataの宣言
 	ModelData modeldata;
-
-	// ファイルの種類によって変更
-	if (type == ModelFileType::OBJ) {
-		modeldata = LoadObjFile(directorPath + "/" + filename, filename + ".obj");
-	} else if (type == ModelFileType::GLTF) {
-		modeldata = LoadObjFile(directorPath + "/" + filename, filename + ".gltf");
-	}
+	// ベースのディレクトリパス
+	const std::string& baseDirectorPath = "./Resource/Models";
+	// モデル読み込み
+	modeldata = LoadObjFile(baseDirectorPath + "/" + directorPath, filename);
 	
-
 	// テクスチャの読み込みとインデックス設定
 	if (!modeldata.material.textureFilePath.empty()) { // 空でなければ
 		// TextureManager からテクスチャを読み込み、インデックスを取得
@@ -32,15 +28,15 @@ void ModelManager::LoadModel(const std::string& directorPath, const std::string&
 	}
 
 	// モデルをMapコンテナに格納
-	modelDatas_[filename] = modeldata;
+	modelDatas_[directorPath] = modeldata;
 }
 
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
-ModelData ModelManager::GetModelData(const std::string& filename) {
-	assert(modelDatas_.contains(filename));
-	return modelDatas_.at(filename);
+ModelData ModelManager::GetModelData(const std::string& directorPath) {
+	assert(modelDatas_.contains(directorPath));
+	return modelDatas_.at(directorPath);
 }
 
 ///-------------------------------------------/// 

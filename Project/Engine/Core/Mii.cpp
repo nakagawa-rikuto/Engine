@@ -194,11 +194,11 @@ const DirectX::TexMetadata& Mii::GetMetaData(const std::string& key) { return te
 #pragma endregion
 #pragma region Model
 // モデルデータの取得
-ModelData Mii::GetModelData(const std::string& filename) { return modelManager_->GetModelData(filename); }
+ModelData Mii::GetModelData(const std::string& directorPath) { return modelManager_->GetModelData(directorPath); }
 #pragma endregion
 #pragma region Animation
 // アニメーションの取得
-Animation Mii::GetAnimationData(const std::string& filename) { return animationManager_->GetAnimation(filename); }
+Animation Mii::GetAnimationData(const std::string& directorPath) { return animationManager_->GetAnimation(directorPath); }
 #pragma endregion
 
 

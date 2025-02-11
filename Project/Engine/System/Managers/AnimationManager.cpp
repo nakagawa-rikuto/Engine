@@ -17,7 +17,7 @@ void AnimationManager::Load(const std::string& directorPath, const std::string& 
 	// Dataの宣言
 	Animation animationData;
 	// ベースのディレクトリパス
-	const std::string& baseDirectorPath = "Resource/Animations";
+	const std::string& baseDirectorPath = "./Resource/Models";
 	// アニメーションの読み込み
 	animationData = LoadAnimation(baseDirectorPath + "/" + directorPath, filename);
 

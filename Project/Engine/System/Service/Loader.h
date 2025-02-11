@@ -1,6 +1,5 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/DataInfo/FileTypeData.h"
 // C++
 #include <string>
 
@@ -27,7 +26,7 @@ public:
 	// テクスチャの読み込み
 	static void LoadTexture(const std::string& key, const std::string& filePath);
 	// モデルの読み込み
-	static void LoadModel(const std::string& filename, ModelFileType type = ModelFileType::OBJ);
+	static void LoadModel(const std::string& directorPath, const std::string& filename);
 	// CSVの読み込み
 	static void LoadCSV(const std::string& filename);
 	// Animationの読み込み

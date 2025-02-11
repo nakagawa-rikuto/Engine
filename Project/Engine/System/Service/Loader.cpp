@@ -55,8 +55,8 @@ void Loader::LoadTexture(const std::string& key, const std::string& filePath) {
 ///-------------------------------------------/// 
 /// モデル
 ///-------------------------------------------///
-void Loader::LoadModel(const std::string& filename, ModelFileType type) {
-	modelManager_->LoadModel("Resource", filename, type);
+void Loader::LoadModel(const std::string& directorPath, const std::string& filename) {
+	modelManager_->Load(directorPath, filename);
 }
 
 ///-------------------------------------------/// 
@@ -77,14 +77,16 @@ void Loader::LoadAnimation(const std::string& directorPath, const std::string& f
 /// WAVE
 ///-------------------------------------------///
 void Loader::LoadWave(const std::string& key, const std::string& filename) {
-	audioManager_->Load(key, filename, false); 
+	const std::string& directorPath = "./Resource/BGM";
+	audioManager_->Load(key, directorPath + "/" + filename, false);
 }
 
 ///-------------------------------------------/// 
 /// MP3
 ///-------------------------------------------///
-void Loader::LoadMP3(const std::string & key, const std::string & filename) {
-	audioManager_->Load(key, filename, true); 
+void Loader::LoadMP3(const std::string & key, const std::string& filename) {
+	const std::string& directorPath = "./Resource/BGM";
+	audioManager_->Load(key, directorPath + "/" + filename, true);
 }
 
 ///-------------------------------------------/// 
