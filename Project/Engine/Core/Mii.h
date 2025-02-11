@@ -68,7 +68,7 @@ public:/// ===開発者用関数(その他)=== ///
 	static void SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode);
 
 	///-------------------------------------------/// 
-	/// テクスチャ関連
+	/// テクスチャ
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
 	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key);
@@ -76,9 +76,13 @@ public:/// ===開発者用関数(その他)=== ///
 	static const DirectX::TexMetadata& GetMetaData(const std::string& key);
 
 	///-------------------------------------------/// 
-	/// モデル関連
+	/// モデル
 	///-------------------------------------------///
 	static ModelData GetModelData(const std::string& filename);
+
+	///-------------------------------------------/// 
+	/// アニメーション
+	///-------------------------------------------///
 	static Animation GetAnimationData(const std::string& filename);
 
 public:/// ===開発者用関数(Getter)=== ///
