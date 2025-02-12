@@ -2,6 +2,11 @@
 // シーンファクトリー
 #include "Engine/Scene/SceneFactory.h"
 #include "Engine/System/Service/Loader.h"
+#include "Engine/Core/Logger.h"
+// c++
+#include <iostream>
+#include <thread>
+#include <chrono>
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -15,28 +20,29 @@ MyGame::~MyGame() {}
 void MyGame::Initialize(const wchar_t* title) {
 	// 基底クラスの初期化
 	Framework::Initialize(title);
+	
+	/// ===時間計測=== ///
+	auto start = std::chrono::high_resolution_clock::now();
 
 	/// ===読み込み処理=== ///
-	// 音声データの読み込み
-	Loader::LoadWave("fanfare", "fanfare.wav");
-	// MP3を読み込むとものすごく重い
-	Loader::LoadMP3("clear", "clear.mp3");
+	std::vector<std::thread> threads;
 
-	// テクスチャの読み込み
-	Loader::LoadTexture("uvChecker", "./Resource/Textures/uvChecker.png");
-	Loader::LoadTexture("monsterBall", "./Resource/Textures/monsterBall.png");
+	threads.emplace_back([this] { LoadAudio(); });
+	threads.emplace_back([this] { LoadTexture(); });
+	threads.emplace_back([this] { LoadModel(); });
+	threads.emplace_back([this] { LoadAnimation(); });
 
-	// モデルの読み込み
-	Loader::LoadModel("GlTF", "GlTF.gltf");
-	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
-	Loader::LoadModel("terrain", "terrain.obj");
-	Loader::LoadModel("axis", "axis.obj");
-	Loader::LoadModel("plane", "plane.obj");
-	Loader::LoadModel("Particle", "Particle.obj");
-	Loader::LoadModel("AnimatedCube", "AnimatedCube.gltf");
+	// 全スレッドの終了を待機
+	for (auto& thread : threads) {
+		thread.join();
+	}
 
-	// アニメーションの読み込み
-	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
+	// 処理時間を計測（end）
+	auto end = std::chrono::high_resolution_clock::now();
+
+	// 経過時間をミリ秒単位で出力
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	Log("time: " + std::to_string(duration.count()) + " ms\n");
 
 	/// ===シーンの作成=== ///
 	// シーンファクトリーの生成
@@ -78,4 +84,34 @@ void MyGame::Draw() {
 	sceneManager_->Draw();
 	// 描画後処理
 	Framework::PostDraw();
+}
+
+///-------------------------------------------/// 
+/// 読み込み関数
+///-------------------------------------------///
+// 音
+void MyGame::LoadAudio() {
+	// Wave
+	Loader::LoadWave("fanfare", "fanfare.wav");
+	// MP3
+	Loader::LoadMP3("clear", "clear.mp3");
+}
+// テクスチャ
+void MyGame::LoadTexture() {
+	Loader::LoadTexture("uvChecker", "./Resource/Textures/uvChecker.png");
+	Loader::LoadTexture("monsterBall", "./Resource/Textures/monsterBall.png");
+}
+// モデル
+void MyGame::LoadModel() {
+	Loader::LoadModel("GlTF", "GlTF.gltf");
+	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
+	Loader::LoadModel("terrain", "terrain.obj");
+	Loader::LoadModel("axis", "axis.obj");
+	Loader::LoadModel("plane", "plane.obj");
+	Loader::LoadModel("Particle", "Particle.obj");
+}
+// アニメーション
+void MyGame::LoadAnimation() {
+	Loader::LoadModel("AnimatedCube", "AnimatedCube.gltf");
+	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
 }

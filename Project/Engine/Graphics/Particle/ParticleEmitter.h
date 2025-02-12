@@ -30,7 +30,7 @@ public: /// ===Setter=== ///
 protected:
 	/// ===Emitter=== ///
 	struct Emitter {
-		WorldTransform transform;
+		EulerTransform transform;
 		uint32_t count;
 		float frequency;
 		float frequencyTime;
@@ -44,8 +44,8 @@ protected:
 	// ParticleをListで管理する
 	std::list<ParticleData> particles_;
 	// WorldTransform
-	WorldTransform transform_;
-	WorldTransform cameraTransform_;
+	EulerTransform transform_;
+	EulerTransform cameraTransform_;
 	// エミッタ
 	Emitter emitter_{};
 	// 時間の進む速度

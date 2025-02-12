@@ -1,6 +1,8 @@
 #include "ModelManager.h"
 // Engine
 #include "Engine/System/Service/Loader.h"
+// Math
+#include "Math/sMath.h"
 // c++
 #include <fstream>
 
@@ -20,7 +22,7 @@ void ModelManager::Load(const std::string& directorPath, const std::string& file
 	const std::string& baseDirectorPath = "./Resource/Models";
 	// モデル読み込み
 	modeldata = LoadObjFile(baseDirectorPath + "/" + directorPath, filename);
-	
+
 	// テクスチャの読み込みとインデックス設定
 	if (!modeldata.material.textureFilePath.empty()) { // 空でなければ
 		// TextureManager からテクスチャを読み込み、インデックスを取得
@@ -72,7 +74,7 @@ MaterialData ModelManager::LoadMaterialTemplateFile(const std::string& directorP
 
 ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData; // 構築するModelData
-	
+
 	/// ===assimpでobjを読む=== ///
 	Assimp::Importer importer;
 	std::string filePath = directoryPath + "/" + filename;
@@ -125,8 +127,16 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 Node ModelManager::ReadNode(aiNode* node) {
 	Node result;
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation; // nodeのlocalMatrixを取得
+	aiVector3D scale;
+	aiVector3D	translate;
+	aiQuaternion rotate;
 	aiLocalMatrix.Transpose(); // 列ベクトル形式を行ベクトル形式に転置
 	std::memcpy(result.localMatrix.m, &aiLocalMatrix, sizeof(aiMatrix4x4)); // aiMatrix4x4 のデータを result.localMatrix にコピー (memcpy を使用)
+	node->mTransformation.Decompose(scale, rotate, translate); // assimpの行列からSRTを抽出する関数を利用
+	result.transform.scale = { scale.x, scale.y, scale.z }; // Scaleはそのまま
+	result.transform.rotate = { rotate.z, -rotate.y, -rotate.z, rotate.w }; //ｘ軸反転、さらに回転方向が逆なので軸を反転させる
+	result.transform.translate = { -translate.x, translate.y, translate.z }; // ｘ軸を反転
+	result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
 	result.name = node->mName.C_Str(); // Node名を格納
 	result.children.resize(node->mNumChildren); // 子供の数だけ確保
 	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {

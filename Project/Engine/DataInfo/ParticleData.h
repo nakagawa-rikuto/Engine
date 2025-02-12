@@ -3,7 +3,7 @@
 
 /// ===Particleの構造体=== ///
 struct ParticleData {
-	WorldTransform transform;
+	EulerTransform transform;
 	Vector3 velocity;
 	Vector4 color;
 	float lifeTime;

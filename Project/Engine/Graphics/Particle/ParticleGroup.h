@@ -55,15 +55,15 @@ private:
 	
 	/// ===モデルデータ=== ///
 	ModelData modelData_;
-	WorldTransform uvTransform_;
+	EulerTransform uvTransform_;
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
-	WorldTransform cameraTransform_;
+	EulerTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
 	uint32_t kNumMaxInstance_;
-	WorldTransform worldTransform_;
+	EulerTransform worldTransform_;
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 
