@@ -87,8 +87,10 @@ private: /// ===Variables(変数)=== ///
 	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f };
 
 	/// ===Animation=== ///
-	float animationTime_ = 0.0f;
 	Animation animation_;
+	Skeleton skeleton_;
+	float animationTime_ = 0.0f;
+	Matrix4x4 skeletonSpaceMatrix_; // skeletonSpaceでの変換行列
 
 private: /// ===Functions(関数)=== ///
 
@@ -104,5 +106,13 @@ private: /// ===Functions(関数)=== ///
 	Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
 	// 任意の時刻を取得する関数(Quaternion)
 	Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
+	// Nodeの階層構造からSkeletonを作る関数
+	Skeleton CreateSkeleton(const Node& rootNode);
+	// NodeからJointを作る関数
+	int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
+	// Skeletonに対してAnimationの適用を行う関数
+	void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
+	// Skeletonの更新関数
+	void SkeletonUpdate(Skeleton& skeleton);
 };
 
