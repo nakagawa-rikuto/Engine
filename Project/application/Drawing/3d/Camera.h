@@ -52,7 +52,7 @@ public:/// ===Setter=== ///
 private:/// ===変数=== ///
 
 	/// ===ビュー行列関連データ=== ///
-	WorldTransform transform_;
+	EulerTransform transform_;
 	Matrix4x4 worldMatrix_;
 	Matrix4x4 viewMatrix_;
 

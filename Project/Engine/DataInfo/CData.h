@@ -15,6 +15,7 @@
 #include "Math/Vector4.h"
 #include "Math/Matrix3x3.h"
 #include "Math/Matrix4x4.h"
+#include "Math/Quaternion.h"
 
 #pragma region Buffer関連
 /// ===VertexData(2D)=== ///
@@ -53,11 +54,17 @@ struct TransformationMatrix3D {
 	Matrix4x4 WorldInverseTranspose;
 };
 #pragma endregion
-#pragma region WorldTransform
-/// ===WorldTransform=== ///
-struct WorldTransform {
+#pragma region Transform
+/// ===EulerTransform=== ///
+struct EulerTransform {
 	Vector3 scale;
-	Vector3 rotate;
+	Vector3 rotate; // Eulerでの回転
+	Vector3 translate;
+};
+/// ===QuaternionTransform=== ///
+struct QuaternionTransform {
+	Vector3 scale;
+	Quaternion rotate;
 	Vector3 translate;
 };
 #pragma endregion
@@ -68,6 +75,7 @@ struct  MaterialData {
 };
 /// ===ノード=== ///
 struct Node {
+	QuaternionTransform transform;
 	Matrix4x4 localMatrix;
 	std::string name;
 	std::vector<Node> children;

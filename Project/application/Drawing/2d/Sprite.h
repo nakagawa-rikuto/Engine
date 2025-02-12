@@ -88,7 +88,7 @@ private:/// ===Variables(変数)=== ///
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
 	// WorldTransform
-	WorldTransform worldTransform_; // Transform(scale, rotate, transform)
+	EulerTransform worldTransform_; // Transform(scale, rotate, transform)
 
 	/// ===スプライト情報=== ///
 	std::string filePath_;                       // テクスチャファイルパス

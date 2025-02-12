@@ -30,5 +30,11 @@ private:/// ====== ///
 	/// ===シーン=== ///
 	// シーンマネージャ
 	std::unique_ptr<SceneManager> sceneManager_;
+private:
+	/// ===Load=== ///
+	void LoadAudio();
+	void LoadTexture();
+	void LoadModel();
+	void LoadAnimation();
 };
 
