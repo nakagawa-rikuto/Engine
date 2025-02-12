@@ -75,7 +75,7 @@ void DebugScene::Initialize() {
 	/// ===アニメーションモデルの初期化=== ///
 #pragma region AnimationModelの初期化
 	animationModel_ = std::make_unique<AnimationModel>();
-	animationModel_->Initialize("AnimatedCube");
+	animationModel_->Initialize("human");
 #pragma endregion
 
 	/// ===カメラの初期化=== ///

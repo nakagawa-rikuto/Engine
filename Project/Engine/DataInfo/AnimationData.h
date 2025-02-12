@@ -1,11 +1,16 @@
 #pragma once
 /// ===Include=== ///
+// Engine
+#include "CData.h"
+// Math
 #include "Math/Quaternion.h"
 #include "Math/Vector3.h"
+#include "Math/Matrix4x4.h"
 // c++
 #include <vector>
 #include <map>
 #include <string>
+#include <optional>
 
 /// <summary>
 /// テンプレート(Keyframe)
@@ -62,7 +67,7 @@ struct Joint {
 	std::string name; // 名前
 	std::vector<int32_t> children; // 子JointのIndexのリスト。いなければ空
 	int32_t index; // 自身のIndex
-	std::optional<int32_t> parent; // 親JointのIndex。いなければnull;
+	std::optional<int32_t> parent; // 親JointのIndex。いなければnull
 };
 
 struct Skeleton {

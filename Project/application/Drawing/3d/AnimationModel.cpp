@@ -84,6 +84,9 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	/// ===Animationの読み込み=== ///
 	animation_ = Mii::GetAnimationData(filename); // ファイルパス
 
+	/// ===Skeletonの作成=== ///
+	skeleton_ = CreateSkeleton(modelData_.rootNode);
+
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
 	common_ = std::make_unique<ModelCommon>();
@@ -166,11 +169,10 @@ void AnimationModel::TransformDataWrite() {
 	animationTime_ += 1.0f / 60.0f; // 時刻を進める。1/60で固定してあるが、計測した時間を使って可変フレーム対応する方が望ましい
 	// 後々ここにif分でリピートするかしないかを選択できるようにする
 	animationTime_ = std::fmod(animationTime_, animation_.duration); // 最後までいったら最初からリピート再生。リピートしなくても別にいい
-	NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
-	Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime_); // 指定自国の値を取得。
-	Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime_);
-	Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime_);
-	Matrix4x4 localMatrix = MakeAffineMatrix(scale, rotate, translate);
+	// SkeletonにAnimationを適用
+	ApplyAnimation(skeleton_, animation_, animationTime_);
+	// Skeletonの更新
+	SkeletonUpdate(skeleton_);
 
 	/// ===Matrixの作成=== ///
 	if (camera_) {
@@ -183,8 +185,8 @@ void AnimationModel::TransformDataWrite() {
 	}
 	/// ===値の代入=== ///
 	common_->SetTransformData(
-		Multiply(localMatrix, worldViewProjectionMatrix),
-		Multiply(localMatrix, worldMatrix),
+		Multiply(skeletonSpaceMatrix_, worldViewProjectionMatrix),
+		Multiply(skeletonSpaceMatrix_, worldMatrix),
 		Inverse4x4(worldMatrix)
 	);
 }
@@ -284,12 +286,62 @@ Skeleton AnimationModel::CreateSkeleton(const Node& rootNode) {
 	skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
 	
 	// 名前とIndexのマッピング
+	for (const Joint& joint : skeleton.joints) {
+		skeleton.jointMap.emplace(joint.name, joint.index);
+	}
+
+	return skeleton;
 }
 
 ///-------------------------------------------/// 
 /// NodeからJointを作る関数
 ///-------------------------------------------///
-int32_t AnimationModel::CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints)
-{
-	return 0;
+int32_t AnimationModel::CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints) {
+	Joint joint;
+	joint.name = node.name;
+	joint.localMatrix = node.localMatrix;
+	joint.skeletonSpaceMatrix = MakeIdentity4x4();
+	joint.transform = node.transform;
+	joint.index = int32_t(joints.size()); // 現在登録されている数をIndexに
+	joint.parent = parent;
+	joints.push_back(joint); // SkeletonのJoint列に追加
+	for (const Node& child : node.children) {
+		// 子Jointを作成し、そのIndexを登録
+		int32_t childIndex = CreateJoint(child, joint.index, joints);
+		joints[joint.index].children.push_back(childIndex);
+	}
+	// 自信のIndexを返す
+	return joint.index;
+}
+
+///-------------------------------------------/// 
+/// Skeletonに対してAnimationの適用を行う関数
+///-------------------------------------------///
+void AnimationModel::ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime) {
+	for (Joint& joint : skeleton.joints) {
+		// 対象のJointのAnimationがあれば、値の適用を行う。下記のif分はc++17から可能になった初期化付きif分
+		if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
+			const NodeAnimation& rootNodeAnimation = (*it).second;
+			joint.transform.translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime);
+			joint.transform.rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime);
+			joint.transform.scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime);
+		}
+	}
+}
+
+///-------------------------------------------/// 
+/// Skeletonの更新関数
+///-------------------------------------------///
+void AnimationModel::SkeletonUpdate(Skeleton& skeleton) {
+	// 全てのJointを更新。親が若いので通常ループで処理を可能にしている。
+	for (Joint& joint : skeleton.joints) {
+		joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+		if (joint.parent) { // 親がいなければ親の行列を掛ける
+			joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, skeleton.joints[*joint.parent].skeletonSpaceMatrix);
+			skeletonSpaceMatrix_ = joint.skeletonSpaceMatrix;
+		} else { // 親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
+			joint.skeletonSpaceMatrix = joint.localMatrix;
+			skeletonSpaceMatrix_ = joint.skeletonSpaceMatrix;
+		}
+	}
 }

@@ -87,8 +87,10 @@ private: /// ===Variables(変数)=== ///
 	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f };
 
 	/// ===Animation=== ///
-	float animationTime_ = 0.0f;
 	Animation animation_;
+	Skeleton skeleton_;
+	float animationTime_ = 0.0f;
+	Matrix4x4 skeletonSpaceMatrix_; // skeletonSpaceでの変換行列
 
 private: /// ===Functions(関数)=== ///
 
@@ -108,5 +110,9 @@ private: /// ===Functions(関数)=== ///
 	Skeleton CreateSkeleton(const Node& rootNode);
 	// NodeからJointを作る関数
 	int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
+	// Skeletonに対してAnimationの適用を行う関数
+	void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
+	// Skeletonの更新関数
+	void SkeletonUpdate(Skeleton& skeleton);
 };
 
