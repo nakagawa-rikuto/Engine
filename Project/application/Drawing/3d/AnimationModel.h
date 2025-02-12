@@ -104,5 +104,9 @@ private: /// ===Functions(関数)=== ///
 	Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
 	// 任意の時刻を取得する関数(Quaternion)
 	Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
+	// Nodeの階層構造からSkeletonを作る関数
+	Skeleton CreateSkeleton(const Node& rootNode);
+	// NodeからJointを作る関数
+	int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
 };
 

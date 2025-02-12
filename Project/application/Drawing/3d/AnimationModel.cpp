@@ -275,3 +275,21 @@ Quaternion AnimationModel::CalculateValue(const std::vector<KeyframeQuaternion>&
 	// ここまでできた場合は一番後の時刻よりも後ろなので最後の値を返すことにする
 	return (*keyframes.rbegin()).value;
 }
+
+///-------------------------------------------/// 
+/// Nodeの階層構造からSkeletonを作る関数
+///-------------------------------------------///
+Skeleton AnimationModel::CreateSkeleton(const Node& rootNode) {
+	Skeleton skeleton;
+	skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
+	
+	// 名前とIndexのマッピング
+}
+
+///-------------------------------------------/// 
+/// NodeからJointを作る関数
+///-------------------------------------------///
+int32_t AnimationModel::CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints)
+{
+	return 0;
+}
