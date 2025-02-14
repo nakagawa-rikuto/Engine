@@ -2,6 +2,7 @@
 /// ===include=== ///
 // buffer
 #include "Engine/Graphics/3d/VertexBuffer3D.h"
+#include "Engine/Graphics/3d/IndexBuffer3D.h"
 #include "Engine/Graphics/3d/ModelCommon.h"
 // Pipeline
 #include "Engine/DataInfo/PipelineStateObjectType.h"
@@ -59,13 +60,16 @@ private: /// ===Variables(変数)=== ///
 
 	/// ===バッファリソース=== ///
 	std::unique_ptr<VertexBuffer3D> vertex_;
+	std::unique_ptr<IndexBuffer3D> index_;
 	std::unique_ptr<ModelCommon> common_;
 
 	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;
+	uint32_t* indexData_ = nullptr;
 
 	/// ===バッファビュー=== ///
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
 	/// ===モデルデータ=== ///
 	ModelData modelData_;

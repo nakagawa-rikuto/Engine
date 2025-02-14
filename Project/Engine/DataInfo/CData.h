@@ -83,6 +83,7 @@ struct Node {
 /// ===モデルデータ=== ///
 struct ModelData {
 	std::vector<VertexData3D> vertices;
+	std::vector<uint32_t> indices;
 	MaterialData material;
 	Node rootNode;
 };

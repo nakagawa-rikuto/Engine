@@ -77,6 +77,7 @@ void Model::Initialize(const std::string& filename, LightType type) {
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
+	index_ = std::make_unique<IndexBuffer3D>();
 	common_ = std::make_unique<ModelCommon>();
 
 	/// ===worldTransform=== ///
@@ -94,6 +95,16 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
 	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
 	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
+
+	/// ===index=== ///
+	index_->Create(device, sizeof(uint32_t) * modelData_.indices.size());
+	index_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	// メモリコピー
+	std::memcpy(indexData_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	// view
+	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress();
+	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
+	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
 	/// ===Common=== ///
 	common_->Initialize(device, type);
@@ -121,14 +132,15 @@ void Model::Draw(BlendMode mode) {
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
 	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
-	// VertexBufferViewの設定
+	// Viewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	commandList->IASetIndexBuffer(&indexBufferView_);
 	// 共通部の設定
 	common_->Bind(commandList);
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
-	commandList->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
 
 ///-------------------------------------------/// 
