@@ -183,10 +183,11 @@ void AnimationModel::TransformDataWrite() {
 		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
 		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	}
+
 	/// ===値の代入=== ///
 	common_->SetTransformData(
-		Multiply(skeletonSpaceMatrix_, worldViewProjectionMatrix),
-		Multiply(skeletonSpaceMatrix_, worldMatrix),
+		worldViewProjectionMatrix,
+		worldMatrix,
 		Inverse4x4(worldMatrix)
 	);
 }
@@ -338,10 +339,10 @@ void AnimationModel::SkeletonUpdate(Skeleton& skeleton) {
 		joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
 		if (joint.parent) { // 親がいなければ親の行列を掛ける
 			joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, skeleton.joints[*joint.parent].skeletonSpaceMatrix);
-			skeletonSpaceMatrix_ = joint.skeletonSpaceMatrix;
+			//skeletonSpaceMatrix_ = joint.skeletonSpaceMatrix;
 		} else { // 親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
 			joint.skeletonSpaceMatrix = joint.localMatrix;
-			skeletonSpaceMatrix_ = joint.skeletonSpaceMatrix;
+			//skeletonSpaceMatrix_ = joint.skeletonSpaceMatrix;
 		}
 	}
 }
