@@ -38,22 +38,7 @@ void VertexBuffer3D::Create(ID3D12Device* device, size_t sizeInBytes) {
 }
 
 ///-------------------------------------------/// 
-/// データの書き込み
-///-------------------------------------------///
-void VertexBuffer3D::WriteData(VertexData3D* data) {
-	// 書き込むためのアドレスを取得
-	buffer_->Map(0, nullptr, reinterpret_cast<void**>(&data_));
-
-	data_ = data;
-}
-
-///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
 ID3D12Resource* VertexBuffer3D::GetBuffer() { return buffer_.Get(); }
 VertexData3D* VertexBuffer3D::GetData() { return data_; }
-
-///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-void VertexBuffer3D::SetData(VertexData3D* data) { data_ = data; }

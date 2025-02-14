@@ -20,12 +20,6 @@ public:
 	void Create(ID3D12Device* device, size_t sizeInBytes);
 
 	/// <summary>
-	/// データの書き込み
-	/// </summary>
-	/// <param name="transform"></param>
-	void WriteData(VertexData3D* data);
-
-	/// <summary>
 	/// リソースの取得
 	/// </summary>
 	/// <returns></returns>
@@ -36,11 +30,6 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	VertexData3D* GetData();
-
-	/// <summary>
-	/// データのセット
-	/// </summary>
-	void SetData(VertexData3D* data);
 
 private:
 
