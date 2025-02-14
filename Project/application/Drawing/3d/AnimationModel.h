@@ -90,7 +90,6 @@ private: /// ===Variables(変数)=== ///
 	Animation animation_;
 	Skeleton skeleton_;
 	float animationTime_ = 0.0f;
-	Matrix4x4 skeletonSpaceMatrix_; // skeletonSpaceでの変換行列
 
 private: /// ===Functions(関数)=== ///
 
