@@ -45,14 +45,12 @@ public: /// ===Setter=== ///
 	void SetScale(const Vector3& scale);
 	// モデルカラー
 	void SetColor(const Vector4& color);
-	// Lightの光沢度
-	void SetShininess(LightInfo info);
-	// DirectionalLight
-	void SetDirctionalLightData(DirectionalLightInfo info);
-	// pointLight
-	void SetPointLightData(PointLightInfo info);
-	// SpotLight
-	void SetSpotLightData(SpotLightInfo info);
+	// Light
+	void SetLight(LightType type);
+	// LightData
+	void SetDirectionalLight(LightInfo shiniss, DirectionalLightInfo info);
+	void SetPointLight(LightInfo shiniss, PointLightInfo info);
+	void SetSpotLight(LightInfo shiniss, SpotLightInfo info);
 	// カメラ
 	void SetCamera(Camera* camera);
 

@@ -37,21 +37,27 @@ void Model::SetPosition(const Vector3& position) { worldTransform_.translate = p
 void Model::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
 void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void Model::SetColor(const Vector4& color) { color_ = color; }
-/// ===ライト=== ///
-void Model::SetShininess(LightInfo info) { light_.shininess = info.shininess; }
-void Model::SetDirctionalLightData(DirectionalLightInfo info) { 
-	directional_.direction = info.direction; 
+/// ===Light=== ///
+void Model::SetLight(LightType type) { common_->SetLightType(type); }
+// DirectioanlLight
+void Model::SetDirectionalLight(LightInfo light, DirectionalLightInfo info) {
+	light_.shininess = light.shininess;
+	directional_.direction = info.direction;
 	directional_.intensity = info.intensity;
 	directional_.color = info.color;
 }
-void Model::SetPointLightData(PointLightInfo info) {
-	point_.position= info.position;
+// PointLight
+void Model::SetPointLight(LightInfo light, PointLightInfo info) {
+	light_.shininess = light.shininess;
+	point_.position = info.position;
 	point_.intensity = info.intensity;
 	point_.color = info.color;
 	point_.radius = info.radius;
 	point_.decay = info.decay;
 }
-void Model::SetSpotLightData(SpotLightInfo info) {
+// SpotLight
+void Model::SetSpotLight(LightInfo light, SpotLightInfo info) {
+	light_.shininess = light.shininess;
 	spot_.color = info.color;
 	spot_.position = info.position;
 	spot_.direction = info.direction;

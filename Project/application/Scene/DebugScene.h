@@ -59,9 +59,17 @@ private:/// ===メンバ変数=== ///
 		bool Particle2;
 		bool Particle3;
 	};
+	struct LightTypeInfo {
+		bool Lambert;
+		bool HalfLambert;
+		bool PointLight;
+		bool SpotLight;
+		bool None;
+	};
 	Setting isSetting_ = {false};
 	Display isDisplay_ = {false};
 	Imgui isImgui_ = {false};
+	LightTypeInfo lightType_ = { false };
 
 	/// ===クラス=== ///
 	// スプライト

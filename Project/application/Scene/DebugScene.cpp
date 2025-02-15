@@ -75,7 +75,7 @@ void DebugScene::Initialize() {
 	/// ===アニメーションモデルの初期化=== ///
 #pragma region AnimationModelの初期化
 	animationModel_ = std::make_unique<AnimationModel>();
-	animationModel_->Initialize("human");
+	animationModel_->Initialize("human", LightType::PointLight);
 #pragma endregion
 
 	/// ===カメラの初期化=== ///
@@ -193,29 +193,90 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Rotate", &modelRotate_.x, 0.1f);
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
-			// Shiniess
-			ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
-			// DirectionalLight
-			ImGui::Text("DirectionalLight");
-			ImGui::ColorEdit4("LigthColor", &directional_.color.x);
-			ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
-			ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
-			// PointLight
-			ImGui::Text("PointLight");
-			ImGui::ColorEdit4("pointLightColor", &point_.color.x);
-			ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
-			ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
-			ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
-			ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
-			// SpotLight
-			ImGui::Text("SpotLight");
-			ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
-			ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
-			ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
-			ImGui::DragFloat3("SpotLightDirection", &spot_.direction.x, 0.01f);
-			ImGui::DragFloat("SpotLightDistance", &spot_.distance, 0.01f);
-			ImGui::DragFloat("SpotLightDecay", &spot_.decay, 0.01f);
-			ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);
+			if (!lightType_.Lambert && ImGui::Button("Lambert")) {
+				model_->SetLight(LightType::Lambert);
+				model2_->SetLight(LightType::Lambert);
+				lightType_.Lambert = true;
+				lightType_.HalfLambert = false;
+				lightType_.PointLight = false;
+				lightType_.SpotLight = false;
+				lightType_.None = false;
+			}
+			if (!lightType_.HalfLambert && ImGui::Button("HalfLambert")) {
+				model_->SetLight(LightType::HalfLambert);
+				model2_->SetLight(LightType::HalfLambert);
+				lightType_.Lambert = false;
+				lightType_.HalfLambert = true;
+				lightType_.PointLight = false;
+				lightType_.SpotLight = false;
+				lightType_.None = false;
+			}
+			if (!lightType_.PointLight && ImGui::Button("PointLight")) {
+				model_->SetLight(LightType::PointLight);
+				model2_->SetLight(LightType::PointLight);
+				lightType_.Lambert = false;
+				lightType_.HalfLambert = false;
+				lightType_.PointLight = true;
+				lightType_.SpotLight = false;
+				lightType_.None = false;
+			}
+			if (!lightType_.SpotLight && ImGui::Button("SpotLight")) {
+				model_->SetLight(LightType::SpotLight);
+				model2_->SetLight(LightType::SpotLight);
+				lightType_.Lambert = false;
+				lightType_.HalfLambert = false;
+				lightType_.PointLight = false;
+				lightType_.SpotLight = true;
+				lightType_.None = false;
+			}
+			if (!lightType_.None && ImGui::Button("None")) {
+				model_->SetLight(LightType::None);
+				model2_->SetLight(LightType::None);
+				lightType_.Lambert = false;
+				lightType_.HalfLambert = false;
+				lightType_.PointLight = false;
+				lightType_.SpotLight = false;
+				lightType_.None = true;
+			}
+			if (lightType_.Lambert) {
+				// Shiniess
+				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
+				// DirectionalLight
+				ImGui::Text("DirectionalLight");
+				ImGui::ColorEdit4("LigthColor", &directional_.color.x);
+				ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
+				ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
+			} else if (lightType_.HalfLambert) {
+				// Shiniess
+				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
+				// DirectionalLight
+				ImGui::Text("DirectionalLight");
+				ImGui::ColorEdit4("LigthColor", &directional_.color.x);
+				ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
+				ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
+			} else if (lightType_.PointLight) {
+				// Shiniess
+				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
+				// PointLight
+				ImGui::Text("PointLight");
+				ImGui::ColorEdit4("pointLightColor", &point_.color.x);
+				ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
+				ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
+				ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
+				ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
+			} else if (lightType_.SpotLight) {
+				// Shiniess
+				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
+				// SpotLight
+				ImGui::Text("SpotLight");
+				ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
+				ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
+				ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
+				ImGui::DragFloat3("SpotLightDirection", &spot_.direction.x, 0.01f);
+				ImGui::DragFloat("SpotLightDistance", &spot_.distance, 0.01f);
+				ImGui::DragFloat("SpotLightDecay", &spot_.decay, 0.01f);
+				ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);
+			}
 		}
 	}
 	/// ===Particle1=== ///
@@ -278,7 +339,6 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
 		}
 	}
-
 	ImGui::End();
 
 	/// ===Camera=== ///
@@ -382,16 +442,15 @@ void DebugScene::Update() {
 	model_->SetRotate(modelRotate_);
 	model_->SetScale(modelScale_);
 	model_->SetColor(modelColor_);
-	model_->SetShininess(light_);
-	model_->SetDirctionalLightData(directional_);
-	model_->SetPointLightData(point_);
-	model_->SetSpotLightData(spot_);
+	model_->SetDirectionalLight(light_,directional_);
+	model_->SetPointLight(light_, point_);
+	model_->SetSpotLight(light_, spot_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
 	
-	model2_->SetDirctionalLightData(directional_);
-	model2_->SetPointLightData(point_);
-	model2_->SetSpotLightData(spot_);
+	model2_->SetDirectionalLight(light_, directional_);
+	model2_->SetPointLight(light_, point_);
+	model2_->SetSpotLight(light_, spot_);
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
 
@@ -402,6 +461,7 @@ void DebugScene::Update() {
 
 	/// ===AnimaitonModelの更新=== ///
 #pragma region Animationモデルの更新
+	animationModel_->SetPointLight(light_, point_);
 	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
 	animationModel_->Update();
 #pragma endregion
