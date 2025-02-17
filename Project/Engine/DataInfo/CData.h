@@ -69,6 +69,16 @@ struct QuaternionTransform {
 };
 #pragma endregion
 #pragma region モデル
+/// ===VertexWeightData=== ///
+struct VertexWeightData {
+	float weight;
+	uint32_t vertexIndex;
+};
+/// ===JointWeightData=== ///
+struct jointWeightData {
+	Matrix4x4 inverseBindPosematrix;
+	std::vector<VertexWeightData> vertexWeights;
+};
 /// ===マテリアルデータ=== ///
 struct  MaterialData {
 	std::string textureFilePath;
@@ -82,6 +92,7 @@ struct Node {
 };
 /// ===モデルデータ=== ///
 struct ModelData {
+	std::map<std::string, jointWeightData> skinClusterData;
 	std::vector<VertexData3D> vertices;
 	std::vector<uint32_t> indices;
 	MaterialData material;

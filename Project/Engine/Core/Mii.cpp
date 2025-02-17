@@ -178,10 +178,20 @@ void Mii::EndFrame() {
 ///=====================================================///
 int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-
 ///-------------------------------------------/// 
 /// 開発者用関数
 ///-------------------------------------------///
+#pragma region GetDescriptorHandle
+// RTV
+D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetRTVCPUDescriptorHandle(uint32_t index) { return dXCommon_->GetRTVCPUDescriptorHandle(index); }
+D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetRTVGPUDescriptorHandle(uint32_t index) { return dXCommon_->GetRTVGPUDescriptorHandle(index); }
+// DSV
+D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetDSVCPUDescriptorHandle(uint32_t index) { return dXCommon_->GetDSVCPUDescriptorHandle(index); }
+D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetDSVGPUDescriptorHandle(uint32_t index) { return dXCommon_->GetDSVGPUDescriptorHandle(index); }
+// SRV
+D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetSRVCPUDescriptorHandle(uint32_t index) { return srvManager_->GetCPUDescriptorHandle(index); }
+D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetSRVGPUDescriptorHandle(uint32_t index) { return srvManager_->GetGPUDescriptorHandle(index); }
+#pragma endregion
 #pragma region Pipeline
 // PSOの取得
 void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }

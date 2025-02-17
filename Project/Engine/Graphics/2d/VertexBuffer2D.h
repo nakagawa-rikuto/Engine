@@ -1,7 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Core/ComPtr.h"
-#include "Engine/DataInfo/CData.h"
+#include "Engine/DataInfo/FunctionData.h"
 
 ///=====================================================/// 
 /// VertexBuffer2D

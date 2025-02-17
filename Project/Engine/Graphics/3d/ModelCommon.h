@@ -1,10 +1,6 @@
 #pragma once
 /// ===include=== ///
-// Engine
-#include "Engine/Core/ComPtr.h"
-#include "Engine/DataInfo/CData.h"
 // Buffer
-#include "IndexBuffer3D.h"
 #include "Material3D.h"
 #include "Transform3D.h"
 #include "Light.h"

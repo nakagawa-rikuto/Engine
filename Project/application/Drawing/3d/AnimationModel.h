@@ -11,6 +11,7 @@
 
 /// ===前方宣言=== ///
 class Camera;
+class SRVManager;
 
 ///=====================================================/// 
 /// アニメーションモデル
@@ -56,6 +57,8 @@ public: /// ===Setter=== ///
 
 private: /// ===Variables(変数)=== ///
 
+	SRVManager* srvManager_ = nullptr;
+
 	/// ===バッファリソース=== ///
 	std::unique_ptr<VertexBuffer3D> vertex_;
 	std::unique_ptr<IndexBuffer3D> index_;
@@ -91,9 +94,10 @@ private: /// ===Variables(変数)=== ///
 	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f };
 
 	/// ===Animation=== ///
+	float animationTime_ = 0.0f;
 	Animation animation_;
 	Skeleton skeleton_;
-	float animationTime_ = 0.0f;
+	SkinCluster skinCluster_;
 
 private: /// ===Functions(関数)=== ///
 
@@ -117,5 +121,9 @@ private: /// ===Functions(関数)=== ///
 	void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
 	// Skeletonの更新関数
 	void SkeletonUpdate(Skeleton& skeleton);
+	// SkinClusterの生成関数
+	SkinCluster CreateSkinCluster(const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData, const ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, SRVManager* srvManager);
+	// SkinClusterの更新関数
+	void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
 };
 

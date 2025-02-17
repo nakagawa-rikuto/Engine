@@ -1,6 +1,5 @@
 #include "SpriteCommon.h"
-
-#include "Engine/Core/Mii.h"
+// Math
 #include "Math/sMath.h"
 
 ///-------------------------------------------/// 

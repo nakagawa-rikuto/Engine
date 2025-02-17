@@ -1,8 +1,6 @@
 #pragma once
 /// ===include=== ///
-// Engine
-#include "Engine/Core/ComPtr.h"
-#include "Engine/DataInfo/CData.h"
+#include "Engine/DataInfo/FunctionData.h"
 
 ///=====================================================/// 
 /// Material2D
@@ -17,12 +15,6 @@ public:
 	///　リソースの生成
 	/// </summary>
 	void Create(ID3D12Device* device, size_t sizeInBytes);
-
-	/// <summary>
-	/// マテリアルデータの書き込み
-	/// </summary>
-	/// <param name="material"></param>
-	void WriteData(MaterialData2D* material);
 
 	/// <summary>
 	/// リソースの取得

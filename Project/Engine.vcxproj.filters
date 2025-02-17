@@ -91,6 +91,7 @@
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
+    <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
     <ClInclude Include="Math\EasingMath.h" />
+    <ClInclude Include="Engine\DataInfo\FunctionData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

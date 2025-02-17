@@ -63,6 +63,22 @@ public:/// ===開発者用関数(システム)=== ///
 
 public:/// ===開発者用関数(その他)=== ///
 	///-------------------------------------------/// 
+	/// GetDescriptorHandle
+	///-------------------------------------------///
+	// RTVの指定番号のCPUでスクリプタハンドルを取得する
+	static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
+	// RTVの指定番号のGPUでスクリプタハンドルを取得する
+	static D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
+	// DSVの指定番号のCPUでスクリプタハンドルを取得する
+	static D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
+	// DSVの指定番号のGPUでスクリプタハンドルを取得する
+	static D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
+	// SRVの指定番号のCPUでスクリプタハンドルを取得する
+	static D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
+	// SRVの指定番号のGPUでスクリプタハンドルを取得する
+	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
+
+	///-------------------------------------------/// 
 	/// Pipeline
 	///-------------------------------------------///
 	// PSOをセット
