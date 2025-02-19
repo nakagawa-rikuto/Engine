@@ -60,16 +60,14 @@ Matrix4x4 Subject(const Matrix4x4& m1, const Matrix4x4& m2) {
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 
 	Matrix4x4 answer = {};
-	for (int x = 0; x < 4; ++x) {
-		for (int y = 0; y < 4; ++y) {
+	for (int y = 0; y < 4; ++y) {  // 正しく「行」を固定する
+		for (int x = 0; x < 4; ++x) {  // 「列」を回す
 
-			answer.m[x][y] = 0;
+			answer.m[y][x] = 0;  // ← ここで y, x の順番を合わせる
 			for (int z = 0; z < 4; ++z) {
-
-				answer.m[x][y] += m1.m[x][z] * m2.m[z][y];
+				answer.m[y][x] += m1.m[y][z] * m2.m[z][x];  // 正しい掛け算の順番
 			}
 		}
 	}
-
 	return answer;
 }
