@@ -88,6 +88,9 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	/// ===Skeletonの作成=== ///
 	skeleton_ = CreateSkeleton(modelData_.rootNode);
 
+	/// ===SkinClusterの作成=== ///
+	skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, Mii::GetSRVManager());
+
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
 	index_ = std::make_unique<IndexBuffer3D>();
@@ -153,14 +156,23 @@ void AnimationModel::Draw(BlendMode mode) {
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
 
+	/// ===VBVの設定=== ///
+	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+		vertexBufferView_, // VertexDataのVBV
+		skinCluster_.influenceBufferView // InfluenceのVBV
+	};
+
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
+	Mii::SetPSO(commandList, PipelineType::Skinning3D, mode);
 	// Viewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	commandList->IASetVertexBuffers(0, 2, vbvs);
 	commandList->IASetIndexBuffer(&indexBufferView_);
 	// 共通部の設定
 	common_->Bind(commandList);
+	// GPUを登録
+	commandList->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
 	// テクスチャの設定
 	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
@@ -365,8 +377,7 @@ void AnimationModel::SkeletonUpdate(Skeleton& skeleton) {
 /// SkinClusterの生成
 ///-------------------------------------------///
 SkinCluster AnimationModel::CreateSkinCluster(
-	const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData, 
-	const ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, SRVManager* srvManager) {
+	const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData, SRVManager* srvManager) {
 
 	SkinCluster skinCluster;
 	/// ===paletter用のResourceを確保=== ///
@@ -404,7 +415,7 @@ SkinCluster AnimationModel::CreateSkinCluster(
 	skinCluster.inverseBindPoseMatrices.resize(skeleton.joints.size());
 	std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), MakeIdentity4x4);
 
-	/// ===ModeDataを解析してInfluenceを埋める=== ///
+	/// ===ModelDataを解析してInfluenceを埋める=== ///
 	for (const auto& jointWeight : modelData.skinClusterData) { // ModelのSkinClusterの情報を解析
 		auto it = skeleton.jointMap.find(jointWeight.first); // jointWeight.firstはjoint名なので、skeletonに対象となるjointが含まれているか判断
 		if (it == skeleton.jointMap.end()) { // そんな名前のJointは存在しない。なので次に回す
@@ -432,7 +443,7 @@ SkinCluster AnimationModel::CreateSkinCluster(
 ///-------------------------------------------///
 void AnimationModel::SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton) {
 	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
-		assert(jointIndex < skinCluster.inverseBindPoseMatrices.size());
+		assert(jointIndex < skinCluster.inverseBindPoseMatrices.size()); // ここで止まる
 		skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix =
 			Multiply(skinCluster.inverseBindPoseMatrices[jointIndex], skeleton.joints[jointIndex].skeletonSpaceMatrix);
 		skinCluster.mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =

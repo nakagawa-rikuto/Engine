@@ -122,7 +122,7 @@ private: /// ===Functions(関数)=== ///
 	// Skeletonの更新関数
 	void SkeletonUpdate(Skeleton& skeleton);
 	// SkinClusterの生成関数
-	SkinCluster CreateSkinCluster(const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData, const ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, SRVManager* srvManager);
+	SkinCluster CreateSkinCluster(const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData, SRVManager* srvManager);
 	// SkinClusterの更新関数
 	void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
 };

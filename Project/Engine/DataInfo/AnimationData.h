@@ -1,6 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // Engine
+#include "Engine/Core/ComPtr.h"
 #include "CData.h"
 // Math
 #include "Math/Quaternion.h"
@@ -12,6 +13,7 @@
 #include <string>
 #include <optional>
 #include <span>
+#include <array>
 
 /// <summary>
 /// テンプレート(Keyframe)
@@ -86,7 +88,7 @@ struct Skeleton {
 const uint32_t kNumMaxInfluene = 4;
 struct VertexInfluence {
 	std::array<float, kNumMaxInfluene> weights;
-	std::array<uint32_t, kNumMaxInfluene> jointIndices;
+	std::array<int32_t, kNumMaxInfluene> jointIndices;
 };
 
 /// <summary>

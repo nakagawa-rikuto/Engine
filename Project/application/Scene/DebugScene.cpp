@@ -74,8 +74,8 @@ void DebugScene::Initialize() {
 
 	/// ===アニメーションモデルの初期化=== ///
 #pragma region AnimationModelの初期化
-	animationModel_ = std::make_unique<AnimationModel>();
-	animationModel_->Initialize("human", LightType::PointLight);
+	/*animationModel_ = std::make_unique<AnimationModel>();
+	animationModel_->Initialize("human");*/
 #pragma endregion
 
 	/// ===カメラの初期化=== ///
@@ -461,9 +461,9 @@ void DebugScene::Update() {
 
 	/// ===AnimaitonModelの更新=== ///
 #pragma region Animationモデルの更新
-	animationModel_->SetPointLight(light_, point_);
+	/*animationModel_->SetPointLight(light_, point_);
 	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
-	animationModel_->Update();
+	animationModel_->Update();*/
 #pragma endregion
 
 	/// ===Particle=== ///
@@ -497,7 +497,7 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 	
-	animationModel_->Draw();
+	//animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {

@@ -109,7 +109,7 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 				/// ===Jointごとの格納領域を作成=== ///
 				aiBone* bone = mesh->mBones[boneIndex];
 				std::string jointName = bone->mName.C_Str();
-				jointWeightData& jointWeightData = modelData.skinClusterDatas[jointName];
+				jointWeightData& jointWeightData = modelData.skinClusterData[jointName];
 				/// ===InverseBindPoseMatrixの抽出=== ///
 				aiMatrix4x4 bindPoseMatrixAsimp = bone->mOffsetMatrix.Inverse(); // BindePoseMatrxに戻す
 				aiVector3D scale, translate;

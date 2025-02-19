@@ -17,6 +17,10 @@ void RasterizerState::Create(PipelineType Type) {
 
 		// カリングしない（裏面も描画させる）
 		rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE;
+	} else if (Type == PipelineType::Skinning3D) {
+
+		// 裏面(時計回り)を表示しない
+		rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
 	} else {
 
 		// カリングしない（裏面も描画させる）
