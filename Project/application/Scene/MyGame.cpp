@@ -116,6 +116,6 @@ void MyGame::LoadAnimation() {
 	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
 	Loader::LoadModel("simpleSkin", "simpleSkin.gltf");
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
-	Loader::LoadModel("human", "walk.gltf");
-	Loader::LoadAnimation("human", "walk.gltf");
+	Loader::LoadModel("human", "sneakWalk.gltf");
+	Loader::LoadAnimation("human", "sneakWalk.gltf");
 }
