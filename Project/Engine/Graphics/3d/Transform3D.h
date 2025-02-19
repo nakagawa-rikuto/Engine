@@ -1,7 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Core/ComPtr.h"
-#include "Engine/DataInfo/CData.h"
+#include "Engine/DataInfo/FunctionData.h"
 
 ///=====================================================/// 
 /// Transform3D
@@ -18,12 +17,6 @@ public:
 	void Create(ID3D12Device* device, size_t sizeInBytes);
 
 	/// <summary>
-	/// データの書き込み
-	/// </summary>
-	/// <param name="transform"></param>
-	void WriteData(TransformationMatrix3D* data);
-
-	/// <summary>
 	/// リソースの取得
 	/// </summary>
 	/// <returns></returns>
@@ -34,11 +27,6 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	TransformationMatrix3D* GetData();
-
-	/// <summary>
-	/// データのセット
-	/// </summary>
-	void SetData(TransformationMatrix3D* data);
 	
 private:
 

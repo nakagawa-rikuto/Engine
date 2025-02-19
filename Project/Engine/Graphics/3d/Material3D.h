@@ -1,8 +1,7 @@
 #pragma once
 /// ===include=== ///
 // Engine
-#include "Engine/Core/ComPtr.h"
-#include "Engine/DataInfo/CData.h"
+#include "Engine/DataInfo/FunctionData.h"
 
 ///=====================================================/// 
 /// マテリアル3D

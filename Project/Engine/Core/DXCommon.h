@@ -75,12 +75,12 @@ public:/// ===Getter=== ///
 	int32_t GetBackBufferHeight()const;
 	// バックバッファの数を取得
 	size_t GetBackBufferCount()const;
-
-	/// <summary>
-	/// レンダーターゲットをセットする
-	/// </summary>
-	/// <param name="sRGB"></param>
-	//void SetRenderTargets(bool sRGB);
+	// CPUのディスクリプターハンドルの取得
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
+		const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	// GPUのディスクリプターハンドルの取得
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(
+		const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 public:/// ===定数=== ///
 
@@ -181,12 +181,4 @@ private:/// ===関数=== ///
 	void InitializeFixFPS();
 	// FPS固定の更新
 	void UpdateFixFPS();
-
-private:/// ===Getter=== ///
-	// CPUのディスクリプターハンドルの取得
-	static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
-		const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
-	// GPUのディスクリプターハンドルの取得
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(
-		const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
 };

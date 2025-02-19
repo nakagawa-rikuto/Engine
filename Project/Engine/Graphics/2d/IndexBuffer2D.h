@@ -1,7 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Core/ComPtr.h"
-#include "Engine/DataInfo/CData.h"
+#include "Engine/DataInfo/FunctionData.h"
 
 ///=====================================================/// 
 /// IndexBuffer2D
@@ -20,12 +19,6 @@ public:
 	void Create(ID3D12Device* device, size_t sizeInBytes);
 
 	/// <summary>
-	/// データの書き込み
-	/// </summary>
-	/// <param name="transform"></param>
-	void WriteData(uint32_t* data);
-
-	/// <summary>
 	/// リソースの取得
 	/// </summary>
 	/// <returns></returns>
@@ -36,11 +29,6 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	uint32_t* GetData();
-
-	/// <summary>
-	/// データのセット
-	/// </summary>
-	void SetData(uint32_t* data);
 
 private:
 

@@ -106,6 +106,27 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 				modelData.indices.push_back(vertexIndex);
 			}
 		}
+		/// ====== ///
+		for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
+			/// ===Jointごとの格納領域を作成=== ///
+			aiBone* bone = mesh->mBones[boneIndex];
+			std::string jointName = bone->mName.C_Str();
+			jointWeightData& jointWeightData = modelData.skinClusterData[jointName];
+			/// ===InverseBindPoseMatrixの抽出=== ///
+			aiMatrix4x4 bindPoseMatrixAsimp = bone->mOffsetMatrix.Inverse(); // BindePoseMatrxに戻す
+			aiVector3D scale, translate;
+			aiQuaternion rotate;
+			bindPoseMatrixAsimp.Decompose(scale, rotate, translate); // 成分を抽出
+			// 左手系のBindPoseMatrixを作成
+			Matrix4x4 bindPoseMatrix = MakeAffineMatrix(
+				{ scale.x, scale.y, scale.z }, { rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x, translate.y, translate.z });
+			// InverseBindMatrixにする
+			jointWeightData.inverseBindPosematrix = Inverse4x4(bindPoseMatrix);
+			/// ===Weight情報を取り出す=== ///
+			for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
+				jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
+			}
+		}
 		/// ===materialを解析する=== ///
 		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
 			aiMaterial* material = scene->mMaterials[materialIndex];
@@ -135,7 +156,7 @@ Node ModelManager::ReadNode(aiNode* node) {
 	std::memcpy(result.localMatrix.m, &aiLocalMatrix, sizeof(aiMatrix4x4)); // aiMatrix4x4 のデータを result.localMatrix にコピー (memcpy を使用)
 	node->mTransformation.Decompose(scale, rotate, translate); // assimpの行列からSRTを抽出する関数を利用
 	result.transform.scale = { scale.x, scale.y, scale.z }; // Scaleはそのまま
-	result.transform.rotate = { rotate.z, -rotate.y, -rotate.z, rotate.w }; //ｘ軸反転、さらに回転方向が逆なので軸を反転させる
+	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w }; //ｘ軸反転、さらに回転方向が逆なので軸を反転させる
 	result.transform.translate = { -translate.x, translate.y, translate.z }; // ｘ軸を反転
 	result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
 	result.name = node->mName.C_Str(); // Node名を格納

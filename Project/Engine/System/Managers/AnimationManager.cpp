@@ -64,7 +64,7 @@ Animation AnimationManager::LoadAnimation(const std::string& directorPath, const
 			aiQuatKey& keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
 			KeyframeQuaternion keyframe;
 			keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond);
-			keyframe.value = { keyAssimp.mValue.w, keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z }; // y, z 反転
+			keyframe.value = { keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z, keyAssimp.mValue.w }; // y, z 反転
 			nodeAnimation.rotate.keyframes.push_back(keyframe);
 		}
 		// Scale (キーフレーム) 

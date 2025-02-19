@@ -111,5 +111,4 @@ void SRVManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource*
 
 	// SRVを作成
 	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
-
 }

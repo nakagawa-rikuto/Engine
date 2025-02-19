@@ -9,6 +9,8 @@
     <FxCompile Include="Resource\Shaders\Obj2D.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\Obj3D.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\SkinningObj3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\SkinningObj3D.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -91,6 +93,7 @@
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
+    <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -181,11 +184,13 @@
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
     <ClInclude Include="Math\EasingMath.h" />
+    <ClInclude Include="Engine\DataInfo\FunctionData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />
     <None Include="Resource\Shaders\Obj.hlsli" />
     <None Include="Resource\Shaders\Obj3D.hlsli" />
+    <None Include="Resource\Shaders\SkinningObj3D.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
