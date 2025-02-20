@@ -112,10 +112,7 @@ void MyGame::LoadModel() {
 }
 // アニメーション
 void MyGame::LoadAnimation() {
-	Loader::LoadModel("AnimatedCube", "AnimatedCube.gltf");
 	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
-	Loader::LoadModel("simpleSkin", "simpleSkin.gltf");
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
-	Loader::LoadModel("human", "sneakWalk.gltf");
 	Loader::LoadAnimation("human", "sneakWalk.gltf");
 }

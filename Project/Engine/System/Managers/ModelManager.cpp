@@ -9,7 +9,7 @@
 ///-------------------------------------------/// 
 /// ファイルの読み込み
 ///-------------------------------------------///
-void ModelManager::Load(const std::string& directorPath, const std::string& filename) {
+void ModelManager::Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename) {
 	// 読み込み済みモデルを検索
 	if (modelDatas_.contains(filename)) {
 		// 読み込み済みなら早期return
@@ -18,10 +18,8 @@ void ModelManager::Load(const std::string& directorPath, const std::string& file
 
 	// Dataの宣言
 	ModelData modeldata;
-	// ベースのディレクトリパス
-	const std::string& baseDirectorPath = "./Resource/Models";
 	// モデル読み込み
-	modeldata = LoadObjFile(baseDirectorPath + "/" + directorPath, filename);
+	modeldata = LoadObjFile(baseDirectoryPath + "/" + directorPath, filename);
 
 	// テクスチャの読み込みとインデックス設定
 	if (!modeldata.material.textureFilePath.empty()) { // 空でなければ

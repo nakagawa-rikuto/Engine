@@ -7,7 +7,7 @@
 ///-------------------------------------------/// 
 /// ファイル読み込み
 ///-------------------------------------------///
-void AnimationManager::Load(const std::string& directorPath, const std::string& filename) {
+void AnimationManager::Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename) {
 	// 読み込み済みアニメーションを検索
 	if (animationDatas_.contains(filename)) {
 		// 読み込み済みなら早期return
@@ -16,10 +16,8 @@ void AnimationManager::Load(const std::string& directorPath, const std::string& 
 
 	// Dataの宣言
 	Animation animationData;
-	// ベースのディレクトリパス
-	const std::string& baseDirectorPath = "./Resource/Models";
 	// アニメーションの読み込み
-	animationData = LoadAnimation(baseDirectorPath + "/" + directorPath, filename);
+	animationData = LoadAnimation(baseDirectoryPath + "/" + directorPath, filename);
 
 	// アニメーションをMapコンテナに格納
 	animationDatas_[directorPath] = animationData;
