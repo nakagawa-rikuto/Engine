@@ -1,8 +1,7 @@
 #include "Sprite.h"
 // Engine
-#include "Engine/Core/Mii.h"
-#include "Engine/Core/WinApp.h"
-#include "Engine/Core/DXCommon.h"
+#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/Render.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -59,7 +58,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 void Sprite::Initialize(const std::string textureFilePath) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Mii::GetDXDevice();
+	ID3D12Device* device = Getter::GetDXDevice();
 
 	/// ===テクスチャ=== ///
 	filePath_ = textureFilePath;
@@ -121,14 +120,14 @@ void Sprite::Update() {
 void Sprite::Draw(GroundType type, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
 	if (type == GroundType::Front) {
-		Mii::SetPSO(commandList, PipelineType::ForGround2D, mode);
+		Render::SetPSO(commandList, PipelineType::ForGround2D, mode);
 	} else if (type == GroundType::Back) {
-		Mii::SetPSO(commandList, PipelineType::BackGround2D, mode);
+		Render::SetPSO(commandList, PipelineType::BackGround2D, mode);
 	}
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
@@ -137,7 +136,7 @@ void Sprite::Draw(GroundType type, BlendMode mode) {
 	// Matrial・WVPの設定
 	common_->Bind(commandList);
 	// テクスチャの設定
-	Mii::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
 	// 描画(ドローコール)
 	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
@@ -201,7 +200,7 @@ void Sprite::TransformDataWrite() {
 	// ViewMatrix
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
 	// ProjectionMatrix
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(WinApp::GetWindowWidth()), static_cast<float>(WinApp::GetWindowHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(Getter::GetWindowWidth()), static_cast<float>(Getter::GetWindowHeight()), 0.0f, 100.0f);
 
 	// データの書き込み
 	common_->SetWVPData(Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix)));
@@ -245,7 +244,7 @@ void Sprite::UpdateVertexDataWrite() {
 /// テクスチャ範囲指定
 ///-------------------------------------------///
 void Sprite::SpecifyRange() {
-	const DirectX::TexMetadata& metadata =Mii::GetMetaData(filePath_);
+	const DirectX::TexMetadata& metadata = Getter::GetMetaData(filePath_);
 	float tex_left = textureLeftTop_.x / metadata.width;
 	float tex_right = (textureLeftTop_.x + textureSize_.x) / metadata.width;
 	float tex_top = textureLeftTop_.y / metadata.height;
@@ -264,7 +263,7 @@ void Sprite::SpecifyRange() {
 ///-------------------------------------------///
 void Sprite::AdjustTextureSize(const std::string& filePath) {
 	// テクスチャメタデータを取得
-	const DirectX::TexMetadata& metadata = Mii::GetMetaData(filePath);
+	const DirectX::TexMetadata& metadata = Getter::GetMetaData(filePath);
 
 	textureSize_.x = static_cast<float>(metadata.width);
 	textureSize_.y = static_cast<float>(metadata.height);

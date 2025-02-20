@@ -1,5 +1,7 @@
 #pragma once
 /// ===Include=== ///
+// MiiEngine
+#include "Engine/Core/Mii.h"
 // SceneFactory
 #include "Engine/Scene/AbstractSceneFactory.h"
 // ｃ++
@@ -32,6 +34,10 @@ public:/// ===メンバ関数=== ///
 	void PreDraw();
 	// 描画後処理
 	void PostDraw();
+
+private:
+	// MiiEngine
+	std::unique_ptr<Mii> MiiEngine_;
 
 protected:
 	// ゲーム終了フラグ

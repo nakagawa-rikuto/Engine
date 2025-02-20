@@ -15,6 +15,7 @@ AudioManager* Loader::audioManager_ = nullptr;
 CSVManager* Loader::csvManager_ = nullptr;
 AnimationManager* Loader::animationManager_ = nullptr;
 
+
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///

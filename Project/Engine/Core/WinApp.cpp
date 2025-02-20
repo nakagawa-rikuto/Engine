@@ -20,15 +20,6 @@ const int WinApp::GetWindowWidth() { return kWindowWidth; }
 const int WinApp::GetWindowHeight() { return kWindowHeight; }
 
 ///-------------------------------------------/// 
-/// シングルトン
-///-------------------------------------------///
-WinApp* WinApp::GetInstance() {
-
-	static WinApp instance;
-	return &instance;
-}
-
-///-------------------------------------------/// 
 /// ウィンドウプロージャ
 ///-------------------------------------------///
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {

@@ -1,16 +1,17 @@
 #include "ParticleGroup.h"
-// Engine
-#include "Engine/Core/Mii.h"
-#include "Engine/Core/WinApp.h"
-#include "Engine/Core/DXCommon.h"
+// c++
+#include <cassert>
+#include <fstream>
+// Service
+#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/Render.h"
+// Managers
 #include "Engine/System/Managers/SRVManager.h"
 // camera
 #include "application/Drawing/3d/Camera.h"
 // Math
 #include "Math/sMath.h"
-// c++
-#include <cassert>
-#include <fstream>
+
 
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
@@ -40,13 +41,13 @@ void ParticleGroup::SetInstancingData(size_t index, const Vector4& color, const 
 void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMaxInstance) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Mii::GetDXDevice();
+	ID3D12Device* device = Getter::GetDXDevice();
 
 	// 引数の値を代入
 	kNumMaxInstance_ = kNumMaxInstance;
 
 	/// ===モデル読み込み=== ///
-	modelData_ = Mii::GetModelData(filename); // ファイルパス
+	modelData_ = Getter::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
@@ -72,7 +73,7 @@ void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMa
 	setUp_->Initlize(device, kNumMaxInstance_);
 
 	/// ===SRV=== ///
-	srvData_.srvManager_ = Mii::GetSRVManager(); // SRVManagerの取得
+	srvData_.srvManager_ = Getter::GetSRVManager(); // SRVManagerの取得
 	// SRVを作成するDescriptorHeapの場所設定
 	srvData_.srvIndex = srvData_.srvManager_->Allocate();
 	srvData_.srvHandleCPU = srvData_.srvManager_->GetCPUDescriptorHandle(srvData_.srvIndex);
@@ -88,11 +89,11 @@ void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMa
 void ParticleGroup::Darw(const uint32_t instance, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Particle, mode);
+	Render::SetPSO(commandList, PipelineType::Particle, mode);
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// materialの設定
@@ -100,7 +101,7 @@ void ParticleGroup::Darw(const uint32_t instance, BlendMode mode) {
 	// Instancingの設定
 	commandList->SetGraphicsRootDescriptorTable(1, srvData_.srvHandleGPU);
 	// テクスチャの設定
-	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawInstanced(UINT(modelData_.vertices.size()), instance, 0, 0);
 

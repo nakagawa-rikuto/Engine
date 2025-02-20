@@ -1,8 +1,7 @@
 #include "Model.h"
 // Engine
-#include "Engine/Core/Mii.h"
-#include "Engine/Core/WinApp.h"
-#include "Engine/Core/DXCommon.h"
+#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/Render.h"
 // camera
 #include "application/Drawing/3d/Camera.h"
 // Math
@@ -76,10 +75,10 @@ void Model::SetCamera(Camera* camera) { camera_ = camera; }
 void Model::Initialize(const std::string& filename, LightType type) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Mii::GetDXDevice();
+	ID3D12Device* device = Getter::GetDXDevice();
 
 	/// ===モデル読み込み=== ///
-	modelData_ = Mii::GetModelData(filename); // ファイルパス
+	modelData_ = Getter::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
@@ -133,18 +132,18 @@ void Model::Update() {
 void Model::Draw(BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
+	Render::SetPSO(commandList, PipelineType::Obj3D, mode);
 	// Viewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	commandList->IASetIndexBuffer(&indexBufferView_);
 	// 共通部の設定
 	common_->Bind(commandList);
 	// テクスチャの設定
-	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
@@ -179,7 +178,7 @@ void Model::TransformDataWrite() {
 		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
 	} else {
 		Matrix4x4 viewMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
+		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
 		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	}
 	/// ===値の代入=== ///

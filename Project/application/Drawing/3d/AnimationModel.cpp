@@ -1,18 +1,19 @@
 #include "AnimationModel.h"
-// Engine
-#include "Engine/Core/Mii.h"
-#include "Engine/Core/WinApp.h"
-#include "Engine/Core/DXCommon.h"
+// c++
+#include <cassert>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+// Service
+#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/Render.h"
+// Manager
 #include "Engine/System/Managers/SRVManager.h"
 // camera
 #include "application/Drawing/3d/Camera.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/EasingMath.h"
-// c++
-#include <cassert>
-#include <fstream>
-#include <vector>
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -77,19 +78,19 @@ void AnimationModel::SetCamera(Camera* camera) { camera_ = camera; }
 ///-------------------------------------------///
 void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Mii::GetDXDevice();
+	ID3D12Device* device = Getter::GetDXDevice();
 
 	/// ===モデル読み込み=== ///
-	modelData_ = Mii::GetModelData(filename); // ファイルパス
+	modelData_ = Getter::GetModelData(filename); // ファイルパス
 
 	/// ===Animationの読み込み=== ///
-	animation_ = Mii::GetAnimationData(filename); // ファイルパス
+	animation_ = Getter::GetAnimationData(filename); // ファイルパス
 
 	/// ===Skeletonの作成=== ///
 	skeleton_ = CreateSkeleton(modelData_.rootNode);
 
 	/// ===SkinClusterの作成=== ///
-	skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, Mii::GetSRVManager());
+	skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, Getter::GetSRVManager());
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
@@ -154,7 +155,7 @@ void AnimationModel::Update() {
 ///-------------------------------------------///
 void AnimationModel::Draw(BlendMode mode) {
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
 
 	/// ===VBVの設定=== ///
 	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
@@ -164,7 +165,7 @@ void AnimationModel::Draw(BlendMode mode) {
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Skinning3D, mode);
+	Render::SetPSO(commandList, PipelineType::Skinning3D, mode);
 	// Viewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	commandList->IASetVertexBuffers(0, 2, vbvs);
@@ -174,7 +175,7 @@ void AnimationModel::Draw(BlendMode mode) {
 	// GPUを登録
 	commandList->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
 	// テクスチャの設定
-	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
@@ -208,7 +209,7 @@ void AnimationModel::TransformDataWrite() {
 		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
 	} else {
 		Matrix4x4 viewMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
+		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
 		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	}
 

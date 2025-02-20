@@ -1,66 +1,9 @@
 #include "Mii.h"
-// Engine
-#include "Engine/Core/WinApp.h"
-#include "Engine/Core/DXCommon.h"
-// Input
-#include "Engine/System/Input/Keyboard.h"
-#include "Engine/System/Input/Mouse.h"
-#include "Engine/System/Input/Controller.h"
-// Manager
-#include "Engine/System/Managers/SRVManager.h"
-#include "Engine/System/Managers/PiplineManager.h"
-#include "Engine/System/Managers/TextureManager.h"
-#include "Engine/System/Managers/ModelManager.h"
-#include "Engine/System/Managers/ImGuiManager.h"
-#include "Engine/System/Managers/AudioManager.h"
-#include "Engine/System/Managers/CSVManager.h"
-#include "Engine/System/Managers/AnimationManager.h"
-// Math
-#include "Math/sMath.h"
-
-/// ===宣言=== ///
-// Engine
-std::unique_ptr<WinApp> Mii::winApp_ = nullptr;
-std::unique_ptr<DXCommon> Mii::dXCommon_ = nullptr;
-// Input
-std::unique_ptr<InputCommon> Mii::inputCommon_ = nullptr;
-std::unique_ptr<Keyboard> Mii::keyboard_ = nullptr;
-std::unique_ptr<Mouse> Mii::mouse_ = nullptr;
-std::unique_ptr<Controller> Mii::controller_ = nullptr;
-// Manager
-std::unique_ptr<SRVManager> Mii::srvManager_ = nullptr;
-std::unique_ptr<PipelineManager> Mii::pipelineManager_ = nullptr;
-std::unique_ptr<TextureManager> Mii::textureManager_ = nullptr;
-std::unique_ptr<ModelManager> Mii::modelManager_ = nullptr;
-std::unique_ptr<ImGuiManager> Mii::imGuiManager_ = nullptr;
-std::unique_ptr<AudioManager> Mii::audioManager_ = nullptr;
-std::unique_ptr<CSVManager> Mii::csvManager_ = nullptr;
-std::unique_ptr<AnimationManager> Mii::animationManager_ = nullptr;
-
-///=====================================================/// 
-/// ReportLiveObjects()
-///=====================================================///
-struct D3DResourceLeakChecker {
-
-	~D3DResourceLeakChecker() {
-
-		// リソースリークチェック
-		ComPtr<IDXGIDebug1> debug;
-		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
-			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-			debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-			debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-		}
-	}
-};
 
 ///=====================================================/// 
 /// システム全体の初期化
 ///=====================================================///
 void Mii::Initialize(const wchar_t* title, int width, int height) {
-
-	// ReportLiveObjects
-	static D3DResourceLeakChecker leakCheck;
 
 	// ゲームウィンドウの作成
 	winApp_ = std::make_unique<WinApp>();
@@ -178,39 +121,6 @@ void Mii::EndFrame() {
 ///=====================================================///
 int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-///-------------------------------------------/// 
-/// 開発者用関数
-///-------------------------------------------///
-#pragma region GetDescriptorHandle
-// RTV
-D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetRTVCPUDescriptorHandle(uint32_t index) { return dXCommon_->GetRTVCPUDescriptorHandle(index); }
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetRTVGPUDescriptorHandle(uint32_t index) { return dXCommon_->GetRTVGPUDescriptorHandle(index); }
-// DSV
-D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetDSVCPUDescriptorHandle(uint32_t index) { return dXCommon_->GetDSVCPUDescriptorHandle(index); }
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetDSVGPUDescriptorHandle(uint32_t index) { return dXCommon_->GetDSVGPUDescriptorHandle(index); }
-// SRV
-D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetSRVCPUDescriptorHandle(uint32_t index) { return srvManager_->GetCPUDescriptorHandle(index); }
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetSRVGPUDescriptorHandle(uint32_t index) { return srvManager_->GetGPUDescriptorHandle(index); }
-#pragma endregion
-#pragma region Pipeline
-// PSOの取得
-void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
-#pragma endregion
-#pragma region Texture
-// SRVインデックス開始番号の取得
-void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, key); }
-// メタデータの取得
-const DirectX::TexMetadata& Mii::GetMetaData(const std::string& key) { return textureManager_->GetMetaData(key); }
-#pragma endregion
-#pragma region Model
-// モデルデータの取得
-ModelData Mii::GetModelData(const std::string& directorPath) { return modelManager_->GetModelData(directorPath); }
-#pragma endregion
-#pragma region Animation
-// アニメーションの取得
-Animation Mii::GetAnimationData(const std::string& directorPath) { return animationManager_->GetAnimation(directorPath); }
-#pragma endregion
-
 
 ///-------------------------------------------/// 
 /// Getter
@@ -218,10 +128,8 @@ Animation Mii::GetAnimationData(const std::string& directorPath) { return animat
 #pragma region 開発者用
 // DXCommon
 DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
-// device
-ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
-// CommandList
-ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
+// WinApp
+WinApp* Mii::GetWinApp() { return winApp_.get(); }
 // Keyboard
 Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse
@@ -230,6 +138,8 @@ Mouse* Mii::GetMouse() { return mouse_.get(); }
 Controller* Mii::GetController() { return controller_.get(); }
 // SRVManager
 SRVManager* Mii::GetSRVManager() {return srvManager_.get();}
+// PiplelineManager
+PipelineManager* Mii::GetPipelineManager() { return pipelineManager_.get(); }
 // TextureManager
 TextureManager* Mii::GetTextureManager() { return textureManager_.get(); }
 // ModelManager

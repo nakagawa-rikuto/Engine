@@ -21,19 +21,13 @@ public:
 	/// ウィンドウの横幅の取得
 	/// </summary>
 	/// <returns></returns>
-	static const int GetWindowWidth();
+	const int GetWindowWidth();
 	
 	/// <summary>
 	/// ウィンドウの縦幅の取得
 	/// </summary>
 	/// <returns></returns>
-	static const int GetWindowHeight();
-
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns></returns>
-	static WinApp* GetInstance();
+	const int GetWindowHeight();
 
 	/// <summary>
 	/// ウィンドウプロージャ
