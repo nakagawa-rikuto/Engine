@@ -56,7 +56,9 @@ void Loader::LoadTexture(const std::string& key, const std::string& filePath) {
 /// モデル
 ///-------------------------------------------///
 void Loader::LoadModel(const std::string& directorPath, const std::string& filename) {
-	modelManager_->Load(directorPath, filename);
+	// ベースのディレクトリパス
+	const std::string& baseDirectorPath = "./Resource/Models";
+	modelManager_->Load(baseDirectorPath, directorPath, filename);
 }
 
 ///-------------------------------------------/// 
@@ -70,7 +72,10 @@ void Loader::LoadCSV(const std::string& filename) {
 /// Animation
 ///-------------------------------------------///
 void Loader::LoadAnimation(const std::string& directorPath, const std::string& filename) {
-	animationManager_->Load(directorPath, filename);
+	// ベースのディレクトリパス
+	const std::string& baseDirectorPath = "./Resource/Animations";
+	modelManager_->Load(baseDirectorPath, directorPath, filename);
+	animationManager_->Load(baseDirectorPath, directorPath, filename);
 }
 
 ///-------------------------------------------/// 

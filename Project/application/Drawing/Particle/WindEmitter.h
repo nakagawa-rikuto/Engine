@@ -19,8 +19,10 @@ public:
 	/// ===Override=== ///
 	// 初期化
 	void Initialze(const std::string& filename = "plane")override;
+	// 更新（override）
+	void InstancingUpdate(std::list<ParticleData>::iterator it)override;
 	// 更新
-	void Update()override;
+	void Update();
 	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal)override;
 
@@ -35,8 +37,6 @@ private:
 
 	// 乱数生成器の初期化
 	std::mt19937 randomEngine_;
-
-	
 
 private:
 

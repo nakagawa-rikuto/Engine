@@ -28,6 +28,8 @@ public:
 
 public: /// ===Setter=== ///
 
+	// テクスチャ
+	void SetTexture(const std::string& fileName);
 	// Material
 	void SetMatiarlData(const Vector4& color, const Matrix4x4& uvTransform);
 	// Instancing

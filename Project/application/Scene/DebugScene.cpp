@@ -18,6 +18,8 @@ DebugScene::~DebugScene() {
 	model_.reset();
 	model2_.reset();
 	modelLight_.reset();
+	// animationModel
+	animationModel_.reset();
 	// Particle
 	windParticle_.reset();
 	explosionParticle_.reset();

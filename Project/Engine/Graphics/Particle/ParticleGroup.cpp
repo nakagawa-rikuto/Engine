@@ -21,9 +21,13 @@ ParticleGroup::~ParticleGroup() {
 	setUp_.reset();
 }
 
+
+
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
+// Texture
+void ParticleGroup::SetTexture(const std::string& fileName) { modelData_.material.textureFilePath = fileName; }
 // material
 void ParticleGroup::SetMatiarlData(const Vector4& color, const Matrix4x4& uvTransform) { setUp_->SetMatiarlData(color, uvTransform); }
 // instancing

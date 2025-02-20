@@ -11,7 +11,7 @@
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
 WindEmitter::WindEmitter() = default;
-WindEmitter::~WindEmitter() { particle_.reset(); }
+WindEmitter::~WindEmitter() { emitter_.particle.reset(); }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -22,40 +22,39 @@ void WindEmitter::Initialze(const std::string & filename) {
 	std::random_device seedGenerator;
 	randomEngine_.seed(seedGenerator());
 
-	/// ===最大数の初期化=== ///
-	MaxInstance_ = 100;
-	numInstance_ = 0;
+	/// ===最大数の設定=== ///
+	emitter_.maxInstance = 100;
+	emitter_.numInstance = 0;
 
-	/// ===WorldTransform=== ///
-	transform_ = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-	cameraTransform_ = {
+	/// ===発生頻度の設定=== ///
+	emitter_.frequencyCount = 3; // 3個ずつ発生
+	emitter_.frequency = 0.5f; // 0.5秒毎に発生
+	emitter_.frequencyTime = 0.0f; // 発生頻度ようの時刻。0で初期化
+
+	/// ===Transformの設定=== ///
+	emitter_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0} };
+	emitter_.cameraTransform = {
 		{1.0f,1.0f,1.0f},
 		{std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
 		{0.0f, 23.0f, 10.0f}
 	};
 
-	/// ===Emitter=== ///
-	emitter_.count = 3;
-	emitter_.frequency = 0.5f; // 0.5秒毎に発生
-	emitter_.frequencyTime = 0.0f; // 発生頻度ようの時刻。0で初期化
-	emitter_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0} };
-
-	/// ===Fild=== ///
+	/// ===Fildの設定=== ///
 	accelerationFild_.acceleration = { 15.0f, 0.0f, 0.0f };
 	accelerationFild_.area.min = { -1.0f, -1.0f, -1.0f };
 	accelerationFild_.area.max = { 1.0f, 1.0f, 1.0f };
 
-	/// ===Particlet=== ///
-	particle_ = std::make_unique<ParticleGroup>();
-	particle_->Initialze(filename, MaxInstance_);
+	/// ===Emitterの初期化=== ///
+	ParticleEmitter::Initialze(filename);
 }
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
+void WindEmitter::InstancingUpdate(std::list<ParticleData>::iterator it) {}
 void WindEmitter::Update() {
 	// 
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(emitter_.cameraTransform.scale, emitter_.cameraTransform.rotate, emitter_.cameraTransform.translate);
 	Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 	// カメラ
@@ -65,27 +64,27 @@ void WindEmitter::Update() {
 	billboardMatrix.m[3][2] = 0.0f;
 
 	// Martixの作成
-	Matrix4x4 worldMatrix = Multiply(MakeScaleMatrix(transform_.scale), Multiply(MakeTranslateMatrix(transform_.translate), billboardMatrix));
+	Matrix4x4 worldMatrix = Multiply(MakeScaleMatrix(emitter_.transform.scale), Multiply(MakeTranslateMatrix(emitter_.transform.translate), billboardMatrix));
 	Matrix4x4 viewMatrix = Inverse4x4(cameraMatrix);
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
 
 	// インスタンス数を0にする
-	numInstance_ = 0;
+	emitter_.numInstance = 0;
 
 	// 頻度によって発生させる
 	emitter_.frequencyTime += kDeltaTime_; // 時刻を進める
 	if (emitter_.frequency <= emitter_.frequencyTime) { // 頻度より大きいなら発生
-		particles_.splice(particles_.end(), Emit(emitter_, randomEngine_)); // 発生処理
+		emitter_.particles.splice(emitter_.particles.end(), Emit(emitter_, randomEngine_)); // 発生処理
 		emitter_.frequencyTime -= emitter_.frequency; // 余計に過ぎたら時間も加味して頻度計算する
 	}
 
 	// Particleの処理
-	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
+	for (std::list<ParticleData>::iterator particleIterator = emitter_.particles.begin(); particleIterator != emitter_.particles.end();) {
 
-		if (numInstance_ < MaxInstance_) {
+		if (emitter_.numInstance < emitter_.maxInstance) {
 
 			if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
-				particleIterator = particles_.erase(particleIterator); // 生存帰還が過ぎたParticleはListから消す。戻り値が次のイテレータとなる
+				particleIterator = emitter_.particles.erase(particleIterator); // 生存帰還が過ぎたParticleはListから消す。戻り値が次のイテレータとなる
 				continue;
 			}
 
@@ -107,8 +106,8 @@ void WindEmitter::Update() {
 			Matrix4x4 wvpMatrixs = Multiply(worldMatrixs, Multiply(viewMatrix, projectionMatrix));
 
 			// 値を入力
-			particle_->SetInstancingData(numInstance_, particleIterator->color, wvpMatrixs, worldMatrixs);
-			++numInstance_;
+			emitter_.particle->SetInstancingData(emitter_.numInstance, particleIterator->color, wvpMatrixs, worldMatrixs);
+			++emitter_.numInstance;
 		}
 		++particleIterator; // 次のイテレータに進める
 	}
@@ -118,7 +117,7 @@ void WindEmitter::Update() {
 /// 描画
 ///-------------------------------------------///
 void WindEmitter::Draw(BlendMode mode) {
-	particle_->Darw(numInstance_, mode);
+	ParticleEmitter::Draw(mode);
 }
 
 ///-------------------------------------------/// 
@@ -147,7 +146,7 @@ ParticleData WindEmitter::MakeNewParticle(std::mt19937& randomEngine, const Vect
 ///-------------------------------------------///
 std::list<ParticleData> WindEmitter::Emit(const Emitter& emitter, std::mt19937& randomEngine) {
 	std::list<ParticleData> particles;
-	for (uint32_t count = 0; count < emitter.count; ++count) {
+	for (uint32_t count = 0; count < emitter.frequencyCount; ++count) {
 		particles.push_back(MakeNewParticle(randomEngine, emitter.transform.translate));
 	}
 	return particles;
