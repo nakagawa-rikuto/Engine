@@ -13,39 +13,36 @@ public:
 	virtual ~ParticleEmitter() = default;
 
 	// 初期化
-	virtual void Initialze(const std::string& filename) = 0;
+	virtual void Initialze(const std::string& filename);
 	// 更新
-	virtual void Update() = 0;
+	virtual void InstancingUpdate(std::list<ParticleData>::iterator it);
 	// 描画
-	virtual void Draw(BlendMode mode) = 0;
+	virtual void Draw(BlendMode mode);
 
 public: /// ===Setter=== ///
 	// Translate
-	virtual void SetTranslate(const Vector3& translate);
+	void SetTranslate(const Vector3& translate);
 	// Rotate
-	virtual void SetRotate(const Vector3& rotate);
+	void SetRotate(const Vector3& rotate);
 	// Scale
-	virtual void SetScale(const Vector3& scale);
+	void SetScale(const Vector3& scale);
+	// Texture
+	void SetTexture(const std::string& fileName);
 
 protected:
 	/// ===Emitter=== ///
 	struct Emitter {
-		EulerTransform transform;
-		uint32_t count;
-		float frequency;
-		float frequencyTime;
+		std::unique_ptr<ParticleGroup> particle; // パーティクルグループ
+		std::list<ParticleData> particles; // パーティクルのリスト
+		EulerTransform transform; // エミッタのTransform
+		EulerTransform cameraTransform; // カメラのTransform
+		uint32_t maxInstance; // パーティクルの最大数
+		uint32_t numInstance; // インスタンス数
+		uint32_t frequencyCount; // パーティクルの発生頻度のカウント
+		float frequency; // パーティクルの発生頻度
+		float frequencyTime; // パーティクルの発生頻度の時間
 	};
 
-	// パーティクルの最大数
-	uint32_t MaxInstance_;
-	uint32_t numInstance_;
-	// パーティクル
-	std::unique_ptr<ParticleGroup> particle_;
-	// ParticleをListで管理する
-	std::list<ParticleData> particles_;
-	// WorldTransform
-	EulerTransform transform_;
-	EulerTransform cameraTransform_;
 	// エミッタ
 	Emitter emitter_{};
 	// 時間の進む速度

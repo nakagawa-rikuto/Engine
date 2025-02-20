@@ -1,7 +1,4 @@
 #include "ExplosionEmitter.h"
-// Engine
-#include "Engine/Core/Mii.h"
-#include "Engine/Core/WinApp.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -10,7 +7,7 @@
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-ExplosionEmitter::~ExplosionEmitter() { particle_.reset(); }
+ExplosionEmitter::~ExplosionEmitter() { emitter_.particle.reset(); }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -21,44 +18,48 @@ void ExplosionEmitter::Initialze(const std::string& filename) {
     randomEngine_.seed(seedGenerator());
 
     /// ===最大パーティクル数の設定=== ///
-    MaxInstance_ = 150; // パーティクル数を増加
-    numInstance_ = 0;
-
-    /// ===フラグと設定の初期化=== ///
-    hasExploded_ = false;
-    explosionRadius_ = 2.0f; // 飛び散る範囲を狭める
-    maxLifetime_ = 2.0f;
+    emitter_.maxInstance = 150; // パーティクル数を増加
+    emitter_.numInstance = 0;
 
     /// ===トランスフォームの初期化=== ///
-    transform_ = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-    cameraTransform_ = {
+    emitter_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+    emitter_.cameraTransform = {
         {1.0f,1.0f,1.0f},
         {std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
         {0.0f, 23.0f, 10.0f}
     };
 
     /// ===パーティクルグループの初期化=== ///
-    particle_ = std::make_unique<ParticleGroup>();
-    particle_->Initialze(filename, MaxInstance_);
+	ParticleEmitter::Initialze(filename);
+
+    /// ===フラグと設定の初期化=== ///
+    hasExploded_ = false;
+    explosionRadius_ = 2.0f; // 飛び散る範囲を狭める
+    maxLifetime_ = 2.0f;
 }
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
+// override
+void ExplosionEmitter::InstancingUpdate(std::list<ParticleData>::iterator it) {
+    ParticleEmitter::InstancingUpdate(it);
+}
+//
 void ExplosionEmitter::Update() {
     if (!hasExploded_) {
         // 爆発のパーティクルを生成
-        for (uint32_t i = 0; i < MaxInstance_; ++i) {
-            particles_.push_back(MakeExplosionParticle(randomEngine_, transform_.translate));
+        for (uint32_t i = 0; i < emitter_.maxInstance; ++i) {
+            emitter_.particles.push_back(MakeExplosionParticle(randomEngine_, emitter_.transform.translate));
         }
         hasExploded_ = true;
     }
 
     // パーティクルの更新
-    numInstance_ = 0; // インスタンス数をリセット
-    for (auto it = particles_.begin(); it != particles_.end();) {
+    emitter_.numInstance = 0; // インスタンス数をリセット
+    for (auto it = emitter_.particles.begin(); it != emitter_.particles.end();) {
         if (it->currentTime >= it->lifeTime) {
-            it = particles_.erase(it); // 寿命が尽きたパーティクルを削除
+            it = emitter_.particles.erase(it); // 寿命が尽きたパーティクルを削除
             continue;
         }
 
@@ -75,15 +76,8 @@ void ExplosionEmitter::Update() {
         float alpha = 1.0f - (it->currentTime / it->lifeTime);
         it->color.w = alpha;
 
-        // WVPマトリクス
-        Matrix4x4 worldMatrix = MakeAffineMatrix(it->transform.scale, it->transform.rotate, it->transform.translate);
-        Matrix4x4 cameraMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-        Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
-        Matrix4x4 wvpMatrix = Multiply(worldMatrix, Multiply(cameraMatrix, projectionMatrix));
-
-        // インスタンシングデータを設定
-        particle_->SetInstancingData(numInstance_, it->color, wvpMatrix, worldMatrix);
-        ++numInstance_;
+        /// ===ParticleEmitterの更新=== ///
+        ParticleEmitter::InstancingUpdate(it);
         ++it;
     }
 }
@@ -92,8 +86,8 @@ void ExplosionEmitter::Update() {
 /// 描画
 ///-------------------------------------------///
 void ExplosionEmitter::Draw(BlendMode mode) {
-    if (numInstance_ > 0) {
-        particle_->Darw(numInstance_, mode);
+    if (emitter_.numInstance > 0) {
+		ParticleEmitter::Draw(mode);
     }
 }
 
