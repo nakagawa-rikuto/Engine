@@ -1,8 +1,6 @@
 #include "Sprite.h"
 // Engine
 #include "Engine/Core/Mii.h"
-#include "Engine/Core/WinApp.h"
-#include "Engine/Core/DXCommon.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -201,7 +199,7 @@ void Sprite::TransformDataWrite() {
 	// ViewMatrix
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
 	// ProjectionMatrix
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(WinApp::GetWindowWidth()), static_cast<float>(WinApp::GetWindowHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(Mii::GetWindowWidth()), static_cast<float>(Mii::GetWindowHeight()), 0.0f, 100.0f);
 
 	// データの書き込み
 	common_->SetWVPData(Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix)));

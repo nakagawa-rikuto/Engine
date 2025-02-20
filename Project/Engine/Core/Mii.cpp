@@ -192,6 +192,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetDSVGPUDescriptorHandle(uint32_t index) { ret
 D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetSRVCPUDescriptorHandle(uint32_t index) { return srvManager_->GetCPUDescriptorHandle(index); }
 D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetSRVGPUDescriptorHandle(uint32_t index) { return srvManager_->GetGPUDescriptorHandle(index); }
 #pragma endregion
+#pragma region GetScreenSize
+///-------------------------------------------/// 
+/// スクリーンサイズ
+///-------------------------------------------///
+const int Mii::GetWindowWidth() { return winApp_->GetWindowWidth(); }
+const int Mii::GetWindowHeight() { return winApp_->GetWindowHeight(); }
+#pragma endregion
 #pragma region Pipeline
 // PSOの取得
 void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }

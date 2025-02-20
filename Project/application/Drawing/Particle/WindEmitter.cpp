@@ -1,7 +1,6 @@
 #include "WindEmitter.h"
 // Engine
 #include "Engine/Core/Mii.h"
-#include "Engine/Core/WinApp.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -66,7 +65,7 @@ void WindEmitter::Update() {
 	// Martixの作成
 	Matrix4x4 worldMatrix = Multiply(MakeScaleMatrix(emitter_.transform.scale), Multiply(MakeTranslateMatrix(emitter_.transform.translate), billboardMatrix));
 	Matrix4x4 viewMatrix = Inverse4x4(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::GetWindowWidth()) / static_cast<float>(WinApp::GetWindowHeight()), 0.1f, 100.0f);
+	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Mii::GetWindowWidth()) / static_cast<float>(Mii::GetWindowHeight()), 0.1f, 100.0f);
 
 	// インスタンス数を0にする
 	emitter_.numInstance = 0;

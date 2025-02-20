@@ -79,6 +79,12 @@ public:/// ===開発者用関数(その他)=== ///
 	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
 
 	///-------------------------------------------/// 
+	/// スクリーンサイズ 
+	///-------------------------------------------///
+	static const int GetWindowWidth();
+	static const int GetWindowHeight();	
+
+	///-------------------------------------------/// 
 	/// Pipeline
 	///-------------------------------------------///
 	// PSOをセット
