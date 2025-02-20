@@ -1,66 +1,9 @@
 #include "Mii.h"
-// Engine
-#include "Engine/Core/WinApp.h"
-#include "Engine/Core/DXCommon.h"
-// Input
-#include "Engine/System/Input/Keyboard.h"
-#include "Engine/System/Input/Mouse.h"
-#include "Engine/System/Input/Controller.h"
-// Manager
-#include "Engine/System/Managers/SRVManager.h"
-#include "Engine/System/Managers/PiplineManager.h"
-#include "Engine/System/Managers/TextureManager.h"
-#include "Engine/System/Managers/ModelManager.h"
-#include "Engine/System/Managers/ImGuiManager.h"
-#include "Engine/System/Managers/AudioManager.h"
-#include "Engine/System/Managers/CSVManager.h"
-#include "Engine/System/Managers/AnimationManager.h"
-// Math
-#include "Math/sMath.h"
-
-/// ===宣言=== ///
-// Engine
-std::unique_ptr<WinApp> Mii::winApp_ = nullptr;
-std::unique_ptr<DXCommon> Mii::dXCommon_ = nullptr;
-// Input
-std::unique_ptr<InputCommon> Mii::inputCommon_ = nullptr;
-std::unique_ptr<Keyboard> Mii::keyboard_ = nullptr;
-std::unique_ptr<Mouse> Mii::mouse_ = nullptr;
-std::unique_ptr<Controller> Mii::controller_ = nullptr;
-// Manager
-std::unique_ptr<SRVManager> Mii::srvManager_ = nullptr;
-std::unique_ptr<PipelineManager> Mii::pipelineManager_ = nullptr;
-std::unique_ptr<TextureManager> Mii::textureManager_ = nullptr;
-std::unique_ptr<ModelManager> Mii::modelManager_ = nullptr;
-std::unique_ptr<ImGuiManager> Mii::imGuiManager_ = nullptr;
-std::unique_ptr<AudioManager> Mii::audioManager_ = nullptr;
-std::unique_ptr<CSVManager> Mii::csvManager_ = nullptr;
-std::unique_ptr<AnimationManager> Mii::animationManager_ = nullptr;
-
-///=====================================================/// 
-/// ReportLiveObjects()
-///=====================================================///
-struct D3DResourceLeakChecker {
-
-	~D3DResourceLeakChecker() {
-
-		// リソースリークチェック
-		ComPtr<IDXGIDebug1> debug;
-		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
-			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-			debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-			debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-		}
-	}
-};
 
 ///=====================================================/// 
 /// システム全体の初期化
 ///=====================================================///
 void Mii::Initialize(const wchar_t* title, int width, int height) {
-
-	// ReportLiveObjects
-	static D3DResourceLeakChecker leakCheck;
 
 	// ゲームウィンドウの作成
 	winApp_ = std::make_unique<WinApp>();

@@ -1,6 +1,5 @@
 #include "Framework.h"
-// Mii
-#include "Engine/Core/Mii.h"
+
 // Service
 #include "Engine/System/Service/Loader.h"
 #include "Engine/System/Service/Input.h"
@@ -12,19 +11,19 @@
 /// 初期化
 ///-------------------------------------------///
 void Framework::Initialize(const wchar_t* title) {
-	// Miiの初期化
-	Mii::Initialize(title, 1280, 720);
+	// Miiの生成
+	MiiEngine_ = std::make_unique<Mii>();
+	MiiEngine_->Initialize(title, 1280, 720);
 	// Getterの初期化
-	Getter::Initialize(Mii::GetDXCommon(), Mii::GetWinApp(), Mii::GetSRVManager(), Mii::GetModelManager(), Mii::GetTextureManager(), Mii::GetAnimationManager());
+	Getter::Initialize(MiiEngine_->GetDXCommon(), MiiEngine_->GetWinApp(), MiiEngine_->GetSRVManager(), MiiEngine_->GetModelManager(), MiiEngine_->GetTextureManager(), MiiEngine_->GetAnimationManager());
 	// Loaderの初期化
-	Loader::Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager(), Mii::GetAnimationManager());
+	Loader::Inititalze(MiiEngine_->GetTextureManager(), MiiEngine_->GetModelManager(), MiiEngine_->GetAudioManager(), MiiEngine_->GetCSVManager(), MiiEngine_->GetAnimationManager());
 	// Rendererの初期化
-	Render::Initialize(Mii::GetPipelineManager(), Mii::GetTextureManager());
+	Render::Initialize(MiiEngine_->GetPipelineManager(), MiiEngine_->GetTextureManager());
 	// Inputの初期化
-	Input::Initialize(Mii::GetKeyboard(), Mii::GetMouse(), Mii::GetController());
+	Input::Initialize(MiiEngine_->GetKeyboard(), MiiEngine_->GetMouse(), MiiEngine_->GetController());
 	// Audioの初期化
-	Audio::Initialze(Mii::GetAudioManager());
-	
+	Audio::Initialze(MiiEngine_->GetAudioManager());
 }
 
 ///-------------------------------------------/// 
@@ -37,7 +36,7 @@ void Framework::Finalize() {
 	Render::Finalize();
 	Loader::Finalize();
 	Getter::Finalize();
-	Mii::Finalize();
+	MiiEngine_->Finalize();
 }
 
 ///-------------------------------------------/// 
@@ -46,7 +45,7 @@ void Framework::Finalize() {
 void Framework::Update() {
 	// システムの更新処理
 	Input::Update();
-	Mii::Update();
+	MiiEngine_->Update();
 }
 
 ///-------------------------------------------/// 
@@ -61,7 +60,7 @@ void Framework::Run(const wchar_t* title) {
 	/// ===ゲームの初期化=== ///
 	Initialize(title);
 	// ウィンドウのxボタンが押されるまでループ
-	while (Mii::ProcessMessage() == 0) {
+	while (MiiEngine_->ProcessMessage() == 0) {
 		/// ===毎フレーム更新=== ///
 		Update();
 		/// ===終了リクエストが来たら抜ける=== ///
@@ -78,7 +77,7 @@ void Framework::Run(const wchar_t* title) {
 ///-------------------------------------------///
 void Framework::PreDraw() {
 	// フレームの開始
-	Mii::BeginFrame();
+	MiiEngine_->BeginFrame();
 }
 
 ///-------------------------------------------/// 
@@ -86,5 +85,5 @@ void Framework::PreDraw() {
 ///-------------------------------------------///
 void Framework::PostDraw() {
 	// フレームの終了
-	Mii::EndFrame();
+	MiiEngine_->EndFrame();
 }
