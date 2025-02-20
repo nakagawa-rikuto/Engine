@@ -76,7 +76,7 @@ void AnimationModel::SetCamera(Camera* camera) { camera_ = camera; }
 ///-------------------------------------------///
 void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Mii::GetDXDevice();
+	ID3D12Device* device = Getter::GetDXDevice();
 
 	/// ===モデル読み込み=== ///
 	modelData_ = Getter::GetModelData(filename); // ファイルパス

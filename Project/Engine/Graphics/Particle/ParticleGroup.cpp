@@ -41,7 +41,7 @@ void ParticleGroup::SetInstancingData(size_t index, const Vector4& color, const 
 void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMaxInstance) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Mii::GetDXDevice();
+	ID3D12Device* device = Getter::GetDXDevice();
 
 	// 引数の値を代入
 	kNumMaxInstance_ = kNumMaxInstance;

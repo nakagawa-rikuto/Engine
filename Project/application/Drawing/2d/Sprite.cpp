@@ -58,7 +58,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 void Sprite::Initialize(const std::string textureFilePath) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Mii::GetDXDevice();
+	ID3D12Device* device = Getter::GetDXDevice();
 
 	/// ===テクスチャ=== ///
 	filePath_ = textureFilePath;

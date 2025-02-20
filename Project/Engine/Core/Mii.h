@@ -80,8 +80,6 @@ public:/// ===開発者用関数(Getter)=== ///
 	static DXCommon* GetDXCommon();
 	// WinAppの取得
 	static WinApp* GetWinApp();
-	// deviceの取得
-	static ID3D12Device* GetDXDevice();
 	// CommandListの取得
 	static ID3D12GraphicsCommandList* GetDXCommandList();
 	// Keyboardの取得

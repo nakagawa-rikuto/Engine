@@ -196,8 +196,6 @@ void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList,
 DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
 // WinApp
 WinApp* Mii::GetWinApp() { return winApp_.get(); }
-// device
-ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList
 ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
 // Keyboard
