@@ -37,6 +37,7 @@ void Framework::Finalize() {
 	Loader::Finalize();
 	Getter::Finalize();
 	MiiEngine_->Finalize();
+	MiiEngine_.reset();
 }
 
 ///-------------------------------------------/// 
