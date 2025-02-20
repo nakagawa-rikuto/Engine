@@ -38,8 +38,10 @@ void ImGuiManager::Initialize(WinApp* winApp, DXCommon* dxCommon, SRVManager* sr
 		srvManager_->GetDescriptorHeap(),
 		srvManager_->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(),
 		srvManager_->GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-#endif // USE_IMGUI
 
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // ドッキングを有効にする
+#endif // USE_IMGUI
 }
 
 
