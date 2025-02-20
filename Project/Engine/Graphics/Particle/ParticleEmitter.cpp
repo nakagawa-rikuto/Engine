@@ -1,6 +1,5 @@
 #include "ParticleEmitter.h"
-// Engine
-#include "Engine/Core/Mii.h"
+// Service
 #include "Engine/System/Service/Getter.h"
 // Math
 #include "Math/sMath.h"

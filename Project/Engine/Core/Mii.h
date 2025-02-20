@@ -61,27 +61,11 @@ public:/// ===開発者用関数(システム)=== ///
 	// Windowsのメッセージを処理
 	static int ProcessMessage();
 
-public:/// ===開発者用関数(その他)=== ///
-
-	///-------------------------------------------/// 
-	/// Pipeline
-	///-------------------------------------------///
-	// PSOをセット
-	static void SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode);
-
-	///-------------------------------------------/// 
-	/// テクスチャ
-	///-------------------------------------------///
-	// SRVインデックス開始番号の取得
-	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key);
-
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
 	static DXCommon* GetDXCommon();
 	// WinAppの取得
 	static WinApp* GetWinApp();
-	// CommandListの取得
-	static ID3D12GraphicsCommandList* GetDXCommandList();
 	// Keyboardの取得
 	static Keyboard* GetKeyboard();
 	// Mouseの取得
@@ -90,6 +74,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	static Controller* GetController();
 	// SRVManagerの取得
 	static SRVManager* GetSRVManager();
+	// PiplelineManagerの取得
+	static PipelineManager* GetPipelineManager();
 	// TextureManager
 	static TextureManager* GetTextureManager();
 	// ModelManager

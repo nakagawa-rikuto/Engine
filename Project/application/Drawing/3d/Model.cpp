@@ -1,7 +1,7 @@
 #include "Model.h"
 // Engine
-#include "Engine/Core/Mii.h"
 #include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/Render.h"
 // camera
 #include "application/Drawing/3d/Camera.h"
 // Math
@@ -132,18 +132,18 @@ void Model::Update() {
 void Model::Draw(BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Mii::SetPSO(commandList, PipelineType::Obj3D, mode);
+	Render::SetPSO(commandList, PipelineType::Obj3D, mode);
 	// Viewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	commandList->IASetIndexBuffer(&indexBufferView_);
 	// 共通部の設定
 	common_->Bind(commandList);
 	// テクスチャの設定
-	Mii::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }

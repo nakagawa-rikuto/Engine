@@ -30,8 +30,6 @@ public:
 	static void Initialize(DXCommon* dxCommon, WinApp* winApp, SRVManager* srvManager, ModelManager* modelManager, TextureManager* textureManager, AnimationManager* animationManager);
 	// 終了処理
 	static void Finalize();
-	// Deviceの取得
-	static ID3D12Device* GetDXDevice();
 	// RTVの指定番号のCPUでスクリプタハンドルを取得する
 	static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
 	// RTVの指定番号のGPUでスクリプタハンドルを取得する
@@ -54,6 +52,16 @@ public:
 	static ModelData GetModelData(const std::string& directorPath);
 	// AnimationDataの取得
 	static Animation GetAnimationData(const std::string& directorPath);
+	
+public:
+
+	// Deviceの取得
+	static ID3D12Device* GetDXDevice();
+	static ID3D12GraphicsCommandList* GetDXCommandList();
+
+public:
+	// SRVManagerの取得
+	static SRVManager* GetSRVManager();
 
 private:
 

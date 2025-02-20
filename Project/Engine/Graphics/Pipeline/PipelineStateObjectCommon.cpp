@@ -2,7 +2,6 @@
 // Compiler
 #include "Engine/Graphics/Pipeline/Compiler.h"
 // Engine
-#include "Engine/Core/Mii.h"
 #include "Engine/Core/DXCommon.h"
 // c++
 #include <cassert>

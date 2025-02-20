@@ -178,15 +178,6 @@ void Mii::EndFrame() {
 ///=====================================================///
 int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-#pragma region Pipeline
-// PSOの取得
-void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
-#pragma endregion
-#pragma region Texture
-// SRVインデックス開始番号の取得
-void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, key); }
-#pragma endregion
-
 
 ///-------------------------------------------/// 
 /// Getter
@@ -196,8 +187,6 @@ void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList,
 DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
 // WinApp
 WinApp* Mii::GetWinApp() { return winApp_.get(); }
-// CommandList
-ID3D12GraphicsCommandList* Mii::GetDXCommandList() { return dXCommon_->GetCommandList(); }
 // Keyboard
 Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse
@@ -206,6 +195,8 @@ Mouse* Mii::GetMouse() { return mouse_.get(); }
 Controller* Mii::GetController() { return controller_.get(); }
 // SRVManager
 SRVManager* Mii::GetSRVManager() {return srvManager_.get();}
+// PiplelineManager
+PipelineManager* Mii::GetPipelineManager() { return pipelineManager_.get(); }
 // TextureManager
 TextureManager* Mii::GetTextureManager() { return textureManager_.get(); }
 // ModelManager

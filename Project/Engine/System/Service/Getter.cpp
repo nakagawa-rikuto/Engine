@@ -56,9 +56,6 @@ void Getter::Finalize() {
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
-#pragma region Device
-ID3D12Device* Getter::GetDXDevice() { return dXCommon_->GetDevice(); }
-#pragma endregion
 #pragma region GetDescriptorHandle
 // RTV
 D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetRTVCPUDescriptorHandle(uint32_t index) { return dXCommon_->GetRTVCPUDescriptorHandle(index); }
@@ -89,3 +86,17 @@ ModelData Getter::GetModelData(const std::string& directorPath) { return modelMa
 // アニメーションの取得
 Animation Getter::GetAnimationData(const std::string& directorPath) { return animationManager_->GetAnimation(directorPath); }
 #pragma endregion
+
+///-------------------------------------------/// 
+/// DXCommon
+///-------------------------------------------///
+// Deviceの取得
+ID3D12Device* Getter::GetDXDevice() { return dXCommon_->GetDevice(); }
+// CommandListの取得
+ID3D12GraphicsCommandList* Getter::GetDXCommandList() { return dXCommon_->GetCommandList(); }
+
+///-------------------------------------------/// 
+/// クラスの取得
+///-------------------------------------------///
+// SRVManagerの取得
+SRVManager* Getter::GetSRVManager() { return srvManager_; }

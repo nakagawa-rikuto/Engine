@@ -1,11 +1,11 @@
 #include "WindEmitter.h"
-// Engine
-#include "Engine/Core/Mii.h"
+// c++
+#include <numbers>
+// Service
 #include "Engine/System/Service/Getter.h"
 // Math
 #include "Math/sMath.h"
-// c++
-#include <numbers>
+
 
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ

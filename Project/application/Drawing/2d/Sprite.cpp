@@ -1,7 +1,7 @@
 #include "Sprite.h"
 // Engine
-#include "Engine/Core/Mii.h"
 #include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/Render.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -120,14 +120,14 @@ void Sprite::Update() {
 void Sprite::Draw(GroundType type, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Mii::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
 	if (type == GroundType::Front) {
-		Mii::SetPSO(commandList, PipelineType::ForGround2D, mode);
+		Render::SetPSO(commandList, PipelineType::ForGround2D, mode);
 	} else if (type == GroundType::Back) {
-		Mii::SetPSO(commandList, PipelineType::BackGround2D, mode);
+		Render::SetPSO(commandList, PipelineType::BackGround2D, mode);
 	}
 	// VertexBufferViewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
@@ -136,7 +136,7 @@ void Sprite::Draw(GroundType type, BlendMode mode) {
 	// Matrial・WVPの設定
 	common_->Bind(commandList);
 	// テクスチャの設定
-	Mii::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, filePath_);
 	// 描画(ドローコール)
 	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
