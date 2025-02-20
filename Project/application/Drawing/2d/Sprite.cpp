@@ -1,6 +1,7 @@
 #include "Sprite.h"
 // Engine
 #include "Engine/Core/Mii.h"
+#include "Engine/System/Service/Getter.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -199,7 +200,7 @@ void Sprite::TransformDataWrite() {
 	// ViewMatrix
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
 	// ProjectionMatrix
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(Mii::GetWindowWidth()), static_cast<float>(Mii::GetWindowHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(Getter::GetWindowWidth()), static_cast<float>(Getter::GetWindowHeight()), 0.0f, 100.0f);
 
 	// データの書き込み
 	common_->SetWVPData(Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix)));
@@ -243,7 +244,7 @@ void Sprite::UpdateVertexDataWrite() {
 /// テクスチャ範囲指定
 ///-------------------------------------------///
 void Sprite::SpecifyRange() {
-	const DirectX::TexMetadata& metadata =Mii::GetMetaData(filePath_);
+	const DirectX::TexMetadata& metadata = Getter::GetMetaData(filePath_);
 	float tex_left = textureLeftTop_.x / metadata.width;
 	float tex_right = (textureLeftTop_.x + textureSize_.x) / metadata.width;
 	float tex_top = textureLeftTop_.y / metadata.height;
@@ -262,7 +263,7 @@ void Sprite::SpecifyRange() {
 ///-------------------------------------------///
 void Sprite::AdjustTextureSize(const std::string& filePath) {
 	// テクスチャメタデータを取得
-	const DirectX::TexMetadata& metadata = Mii::GetMetaData(filePath);
+	const DirectX::TexMetadata& metadata = Getter::GetMetaData(filePath);
 
 	textureSize_.x = static_cast<float>(metadata.width);
 	textureSize_.y = static_cast<float>(metadata.height);

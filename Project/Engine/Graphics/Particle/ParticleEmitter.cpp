@@ -1,6 +1,7 @@
 #include "ParticleEmitter.h"
 // Engine
 #include "Engine/Core/Mii.h"
+#include "Engine/System/Service/Getter.h"
 // Math
 #include "Math/sMath.h"
 
@@ -21,7 +22,7 @@ void ParticleEmitter::InstancingUpdate(std::list<ParticleData>::iterator it) {
     // WVPマトリクス
     Matrix4x4 worldMatrix = MakeAffineMatrix(it->transform.scale, it->transform.rotate, it->transform.translate);
     Matrix4x4 cameraMatrix = Inverse4x4(MakeAffineMatrix(emitter_.cameraTransform.scale, emitter_.cameraTransform.rotate, emitter_.cameraTransform.translate));
-    Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Mii::GetWindowWidth()) / static_cast<float>(Mii::GetWindowHeight()), 0.1f, 100.0f);
+    Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
     Matrix4x4 wvpMatrix = Multiply(worldMatrix, Multiply(cameraMatrix, projectionMatrix));
 
     // インスタンシングデータを設定

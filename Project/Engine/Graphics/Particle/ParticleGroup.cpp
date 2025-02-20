@@ -4,6 +4,7 @@
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
 #include "Engine/System/Managers/SRVManager.h"
+#include "Engine/System/Service/Getter.h"
 // camera
 #include "application/Drawing/3d/Camera.h"
 // Math
@@ -46,7 +47,7 @@ void ParticleGroup::Initialze(const std::string& filename, const uint32_t kNumMa
 	kNumMaxInstance_ = kNumMaxInstance;
 
 	/// ===モデル読み込み=== ///
-	modelData_ = Mii::GetModelData(filename); // ファイルパス
+	modelData_ = Getter::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();

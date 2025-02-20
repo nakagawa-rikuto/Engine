@@ -94,6 +94,8 @@
     <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
+    <ClCompile Include="Engine\System\Service\Render.cpp" />
+    <ClCompile Include="Engine\System\Service\Getter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -185,6 +187,8 @@
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
+    <ClInclude Include="Engine\System\Service\Render.h" />
+    <ClInclude Include="Engine\System\Service\Getter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

@@ -5,6 +5,7 @@
 #include "Engine/System/Service/Loader.h"
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
+#include "Engine/System/Service/Getter.h"
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -12,6 +13,8 @@
 void Framework::Initialize(const wchar_t* title) {
 	// Miiの初期化
 	Mii::Initialize(title, 1280, 720);
+	// Getterの初期化
+	Getter::Initialize(Mii::GetDXCommon(), Mii::GetWinApp(), Mii::GetSRVManager(), Mii::GetModelManager(), Mii::GetTextureManager(), Mii::GetAnimationManager());
 	// Loaderの初期化
 	Loader::Inititalze(Mii::GetTextureManager(), Mii::GetModelManager(), Mii::GetAudioManager(), Mii::GetCSVManager(), Mii::GetAnimationManager());
 	// Inputの初期化
@@ -28,6 +31,7 @@ void Framework::Finalize() {
 	Audio::Finalize();
 	Input::Finalize();
 	Loader::Finalize();
+	Getter::Finalize();
 	Mii::Finalize();
 }
 

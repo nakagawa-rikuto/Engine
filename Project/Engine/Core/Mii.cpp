@@ -178,27 +178,6 @@ void Mii::EndFrame() {
 ///=====================================================///
 int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 
-///-------------------------------------------/// 
-/// 開発者用関数
-///-------------------------------------------///
-#pragma region GetDescriptorHandle
-// RTV
-D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetRTVCPUDescriptorHandle(uint32_t index) { return dXCommon_->GetRTVCPUDescriptorHandle(index); }
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetRTVGPUDescriptorHandle(uint32_t index) { return dXCommon_->GetRTVGPUDescriptorHandle(index); }
-// DSV
-D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetDSVCPUDescriptorHandle(uint32_t index) { return dXCommon_->GetDSVCPUDescriptorHandle(index); }
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetDSVGPUDescriptorHandle(uint32_t index) { return dXCommon_->GetDSVGPUDescriptorHandle(index); }
-// SRV
-D3D12_CPU_DESCRIPTOR_HANDLE Mii::GetSRVCPUDescriptorHandle(uint32_t index) { return srvManager_->GetCPUDescriptorHandle(index); }
-D3D12_GPU_DESCRIPTOR_HANDLE Mii::GetSRVGPUDescriptorHandle(uint32_t index) { return srvManager_->GetGPUDescriptorHandle(index); }
-#pragma endregion
-#pragma region GetScreenSize
-///-------------------------------------------/// 
-/// スクリーンサイズ
-///-------------------------------------------///
-const int Mii::GetWindowWidth() { return winApp_->GetWindowWidth(); }
-const int Mii::GetWindowHeight() { return winApp_->GetWindowHeight(); }
-#pragma endregion
 #pragma region Pipeline
 // PSOの取得
 void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { pipelineManager_->SetPipeline(commandList, type, mode); }
@@ -206,16 +185,6 @@ void Mii::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, Blen
 #pragma region Texture
 // SRVインデックス開始番号の取得
 void Mii::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key) { textureManager_->SetGraphicsRootDescriptorTable(commandList, RootParameterIndex, key); }
-// メタデータの取得
-const DirectX::TexMetadata& Mii::GetMetaData(const std::string& key) { return textureManager_->GetMetaData(key); }
-#pragma endregion
-#pragma region Model
-// モデルデータの取得
-ModelData Mii::GetModelData(const std::string& directorPath) { return modelManager_->GetModelData(directorPath); }
-#pragma endregion
-#pragma region Animation
-// アニメーションの取得
-Animation Mii::GetAnimationData(const std::string& directorPath) { return animationManager_->GetAnimation(directorPath); }
 #pragma endregion
 
 
@@ -225,6 +194,8 @@ Animation Mii::GetAnimationData(const std::string& directorPath) { return animat
 #pragma region 開発者用
 // DXCommon
 DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
+// WinApp
+WinApp* Mii::GetWinApp() { return winApp_.get(); }
 // device
 ID3D12Device* Mii::GetDXDevice() { return dXCommon_->GetDevice(); }
 // CommandList

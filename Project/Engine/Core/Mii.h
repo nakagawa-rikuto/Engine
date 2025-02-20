@@ -62,27 +62,6 @@ public:/// ===開発者用関数(システム)=== ///
 	static int ProcessMessage();
 
 public:/// ===開発者用関数(その他)=== ///
-	///-------------------------------------------/// 
-	/// GetDescriptorHandle
-	///-------------------------------------------///
-	// RTVの指定番号のCPUでスクリプタハンドルを取得する
-	static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
-	// RTVの指定番号のGPUでスクリプタハンドルを取得する
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
-	// DSVの指定番号のCPUでスクリプタハンドルを取得する
-	static D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
-	// DSVの指定番号のGPUでスクリプタハンドルを取得する
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
-	// SRVの指定番号のCPUでスクリプタハンドルを取得する
-	static D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
-	// SRVの指定番号のGPUでスクリプタハンドルを取得する
-	static D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
-
-	///-------------------------------------------/// 
-	/// スクリーンサイズ 
-	///-------------------------------------------///
-	static const int GetWindowWidth();
-	static const int GetWindowHeight();	
 
 	///-------------------------------------------/// 
 	/// Pipeline
@@ -95,22 +74,12 @@ public:/// ===開発者用関数(その他)=== ///
 	///-------------------------------------------///
 	// SRVインデックス開始番号の取得
 	static void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT RootParameterIndex, std::string key);
-	// メタデータの取得
-	static const DirectX::TexMetadata& GetMetaData(const std::string& key);
-
-	///-------------------------------------------/// 
-	/// モデル
-	///-------------------------------------------///
-	static ModelData GetModelData(const std::string& directorPath);
-
-	///-------------------------------------------/// 
-	/// アニメーション
-	///-------------------------------------------///
-	static Animation GetAnimationData(const std::string& directorPath);
 
 public:/// ===開発者用関数(Getter)=== ///
 	// DXCommonの取得
 	static DXCommon* GetDXCommon();
+	// WinAppの取得
+	static WinApp* GetWinApp();
 	// deviceの取得
 	static ID3D12Device* GetDXDevice();
 	// CommandListの取得
