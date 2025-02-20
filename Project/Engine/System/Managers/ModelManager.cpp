@@ -106,7 +106,7 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 				modelData.indices.push_back(vertexIndex);
 			}
 		}
-		/// ====== ///
+		/// ===Boneの解析=== ///
 		for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
 			/// ===Jointごとの格納領域を作成=== ///
 			aiBone* bone = mesh->mBones[boneIndex];
