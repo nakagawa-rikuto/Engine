@@ -128,6 +128,8 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 					jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
 				}
 			}
+		} else {
+			modelData.haveBone = false;
 		}
 		/// ===materialを解析する=== ///
 		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
