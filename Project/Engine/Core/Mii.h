@@ -59,15 +59,15 @@ public:/// ===開発者用関数(Getter)=== ///
 	SRVManager* GetSRVManager();
 	// PiplelineManagerの取得
 	PipelineManager* GetPipelineManager();
-	// TextureManager
+	// TextureManagerの取得
 	TextureManager* GetTextureManager();
-	// ModelManager
+	// ModelManagerの取得
 	ModelManager* GetModelManager();
-	// AudioManager
+	// AudioManagerの取得
 	AudioManager* GetAudioManager();
-	// CSVManager* 
+	// CSVManagerの取得
 	CSVManager* GetCSVManager();
-	// AnimationManager
+	// AnimationManagerの取得
 	AnimationManager* GetAnimationManager();
 
 private:/// ===Variables(変数)=== ///

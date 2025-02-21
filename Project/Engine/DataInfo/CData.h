@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <map>
 
-//
+// DirectX
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <dxcapi.h>
@@ -20,7 +20,7 @@
 #include "Math/Matrix4x4.h"
 #include "Math/Quaternion.h"
 
-#pragma region Buffer関連
+#pragma region Buffer情報
 /// ===VertexData(2D)=== ///
 struct VertexData2D {
 	Vector4 position;
@@ -57,7 +57,7 @@ struct TransformationMatrix3D {
 	Matrix4x4 WorldInverseTranspose;
 };
 #pragma endregion
-#pragma region Transform
+#pragma region Transform情報
 /// ===EulerTransform=== ///
 struct EulerTransform {
 	Vector3 scale;
@@ -71,7 +71,7 @@ struct QuaternionTransform {
 	Vector3 translate;
 };
 #pragma endregion
-#pragma region モデル
+#pragma region モデル情報
 /// ===VertexWeightData=== ///
 struct VertexWeightData {
 	float weight;
@@ -103,7 +103,7 @@ struct ModelData {
 	bool haveBone;
 };
 #pragma endregion
-#pragma region ライト
+#pragma region ライト情報
 /// ===平行光源の拡張=== ///
 struct DirectionalLight {
 	Vector4 color;     // ライトの色
