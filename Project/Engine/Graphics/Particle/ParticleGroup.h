@@ -1,73 +1,51 @@
 #pragma once
-/// ===Icnlde=== ///
-// Buffer
-#include "Engine/Graphics/3d/VertexBuffer3D.h"
+/// ===incled=== ///
 #include "ParticleSetUp.h"
-// Pipleine
-#include "Engine/DataInfo/PipelineStateObjectType.h"
-// c++
-#include <memory>
-
-/// ===前方宣言=== ///
-class Camera;
-class SRVManager;
+#include <list>
 
 ///=====================================================/// 
-/// Particle共通描画設定
+/// パーティクルのグループ
 ///=====================================================///
 class ParticleGroup {
 public:
 
-	ParticleGroup();
-	~ParticleGroup();
+	ParticleGroup() = default;
+	virtual ~ParticleGroup() = default;
 
 	// 初期化
-	void Initialze(const std::string& filename, const uint32_t kNumMaxInstance);
+	virtual void Initialze(const std::string& filename);
+	// 更新
+	virtual void InstancingUpdate(std::list<ParticleData>::iterator it);
 	// 描画
-	void Darw(const uint32_t instance, BlendMode mode);
+	virtual void Draw(BlendMode mode);
 
 public: /// ===Setter=== ///
-
-	// テクスチャ
+	// Translate
+	void SetTranslate(const Vector3& translate);
+	// Rotate
+	void SetRotate(const Vector3& rotate);
+	// Scale
+	void SetScale(const Vector3& scale);
+	// Texture
 	void SetTexture(const std::string& fileName);
-	// Material
-	void SetMatiarlData(const Vector4& color, const Matrix4x4& uvTransform);
-	// Instancing
-	void SetInstancingData(size_t index, const Vector4& color, const Matrix4x4& WVP, const Matrix4x4& World);
 
-private:
-	/// ===SRV=== ///
-	struct ParticleSRV {
-		SRVManager* srvManager_ = nullptr;
-		uint32_t srvIndex;
-		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
-		D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+protected:
+	/// ===Emitter=== ///
+	struct Group {
+		std::unique_ptr<ParticleSetUp> particle; // パーティクルグループ
+		std::list<ParticleData> particles; // パーティクルのリスト
+		EulerTransform transform; // エミッタのTransform
+		EulerTransform cameraTransform; // カメラのTransform
+		uint32_t maxInstance; // パーティクルの最大数
+		uint32_t numInstance; // インスタンス数
+		uint32_t frequencyCount; // パーティクルの発生頻度のカウント
+		float frequency; // パーティクルの発生頻度
+		float frequencyTime; // パーティクルの発生頻度の時間
 	};
-	ParticleSRV srvData_;
 
-	/// ===バッファリソース=== ///
-	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<ParticleSetUp> setUp_;;
-
-	/// ===バッファリソース内のデータを指すポインタ=== ///
-	VertexData3D* vertexData_ = nullptr;
-
-	/// ===バッファビュー=== ///
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-	
-	/// ===モデルデータ=== ///
-	ModelData modelData_;
-	EulerTransform uvTransform_;
-
-	/// ===カメラ=== ///
-	Camera* camera_ = nullptr;
-	EulerTransform cameraTransform_;
-
-	/// ===モデル情報=== ///
-	uint32_t kNumMaxInstance_;
-	EulerTransform worldTransform_;
-	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-
+	// エミッタ
+	Group group_{};
+	// 時間の進む速度
+	const float kDeltaTime_ = 1.0f / 60.0f;
 };
 

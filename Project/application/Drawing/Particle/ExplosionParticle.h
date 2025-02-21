@@ -1,6 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Graphics/Particle/ParticleEmitter.h"
+#include "Engine/Graphics/Particle/ParticleGroup.h"
 // Math
 #include "Math/MathData.h"
 // c++
@@ -9,11 +9,11 @@
 ///=====================================================/// 
 /// 爆破エミッタ
 ///=====================================================///
-class ExplosionEmitter : public ParticleEmitter {
+class ExplosionParticle : public ParticleGroup {
 public:
 
-    ExplosionEmitter() = default; // コンストラクタでの処理は行わない
-    ~ExplosionEmitter();
+    ExplosionParticle() = default; // コンストラクタでの処理は行わない
+    ~ExplosionParticle();
 
     /// ===Override=== ///
     // 初期化

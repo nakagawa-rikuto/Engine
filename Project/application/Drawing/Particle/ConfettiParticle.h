@@ -1,20 +1,20 @@
 #pragma once
 /// ===Include=== ///
 // Engine
-#include "Engine/Graphics/Particle/ParticleEmitter.h"
+#include "Engine/Graphics/Particle/ParticleGroup.h"
 // Math
 #include "Math/MathData.h"
 // c++
 #include <random>
 
 ///=====================================================/// 
-/// コンフェッティエミッタ
+/// コンフェッティパーティクル
 ///=====================================================///
-class ConfettiEmitter : public ParticleEmitter {
+class ConfettiParticle : public ParticleGroup {
 public:
 
-    ConfettiEmitter() = default; // コンストラクタでの処理は行わない
-    ~ConfettiEmitter();
+    ConfettiParticle() = default; // コンストラクタでの処理は行わない
+    ~ConfettiParticle();
 
     /// ===Override=== ///
     // 初期化

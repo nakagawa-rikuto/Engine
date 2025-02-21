@@ -1,19 +1,19 @@
 #pragma once
-/// ===Include=== ///
-// Engine
-#include "Engine/DataInfo/CData.h"
-#include "Engine/DataInfo/ParticleData.h"
-#include "Engine/Core/ComPtr.h"
-#include "Engine/Graphics/3d/Material3D.h"
+/// ===Icnlde=== ///
+// Buffer
+#include "Engine/Graphics/3d/VertexBuffer3D.h"
+#include "ParticleCommon.h"
+// Pipleine
+#include "Engine/DataInfo/PipelineStateObjectType.h"
 // c++
 #include <memory>
-#include <list>
 
 /// ===前方宣言=== ///
+class Camera;
 class SRVManager;
 
 ///=====================================================/// 
-/// ParticleSetUp
+/// Particle共通描画設定
 ///=====================================================///
 class ParticleSetUp {
 public:
@@ -22,35 +22,52 @@ public:
 	~ParticleSetUp();
 
 	// 初期化
-	void Initlize(ID3D12Device* device, const uint32_t kNumMaxInstance);
-	// 描画準備
-	void Bind(ID3D12GraphicsCommandList* commandList);
-
-public: /// ===Geter=== ///
-
-	// Instancingの取得
-	ID3D12Resource* GetInstancing();
+	void Initialze(const std::string& filename, const uint32_t kNumMaxInstance);
+	// 描画
+	void Darw(const uint32_t instance, BlendMode mode);
 
 public: /// ===Setter=== ///
 
+	// テクスチャ
+	void SetTexture(const std::string& fileName);
 	// Material
 	void SetMatiarlData(const Vector4& color, const Matrix4x4& uvTransform);
 	// Instancing
 	void SetInstancingData(size_t index, const Vector4& color, const Matrix4x4& WVP, const Matrix4x4& World);
 
 private:
+	/// ===SRV=== ///
+	struct ParticleSRV {
+		SRVManager* srvManager_ = nullptr;
+		uint32_t srvIndex;
+		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
+		D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+	};
+	ParticleSRV srvData_;
 
 	/// ===バッファリソース=== ///
-	std::unique_ptr<Material3D> material_;
-	ComPtr<ID3D12Resource> instancing_;
-	
+	std::unique_ptr<VertexBuffer3D> vertex_;
+	std::unique_ptr<ParticleCommon> common_;
+
 	/// ===バッファリソース内のデータを指すポインタ=== ///
-	MaterialData3D* materialData_ = nullptr;
-	ParticleForGPU* instancingData_ = nullptr;
+	VertexData3D* vertexData_ = nullptr;
 
-private:
+	/// ===バッファビュー=== ///
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	
+	/// ===モデルデータ=== ///
+	ModelData modelData_;
+	EulerTransform uvTransform_;
 
-	// Bufferの生成
-	void Create(ID3D12Device* device, size_t sizeInBytes);
+	/// ===カメラ=== ///
+	Camera* camera_ = nullptr;
+	EulerTransform cameraTransform_;
+
+	/// ===モデル情報=== ///
+	uint32_t kNumMaxInstance_;
+	EulerTransform worldTransform_;
+	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+
 };
 

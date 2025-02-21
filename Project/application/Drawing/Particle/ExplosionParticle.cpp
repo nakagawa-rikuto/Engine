@@ -1,4 +1,4 @@
-#include "ExplosionEmitter.h"
+#include "ExplosionParticle.h"
 // Math
 #include "Math/sMath.h"
 // c++
@@ -7,30 +7,30 @@
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-ExplosionEmitter::~ExplosionEmitter() { emitter_.particle.reset(); }
+ExplosionParticle::~ExplosionParticle() { group_.particle.reset(); }
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ExplosionEmitter::Initialze(const std::string& filename) {
+void ExplosionParticle::Initialze(const std::string& filename) {
     /// ===乱数生成器の初期化=== ///
     std::random_device seedGenerator;
     randomEngine_.seed(seedGenerator());
 
     /// ===最大パーティクル数の設定=== ///
-    emitter_.maxInstance = 150; // パーティクル数を増加
-    emitter_.numInstance = 0;
+    group_.maxInstance = 150; // パーティクル数を増加
+    group_.numInstance = 0;
 
     /// ===トランスフォームの初期化=== ///
-    emitter_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-    emitter_.cameraTransform = {
+    group_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+    group_.cameraTransform = {
         {1.0f,1.0f,1.0f},
         {std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
         {0.0f, 23.0f, 10.0f}
     };
 
     /// ===パーティクルグループの初期化=== ///
-	ParticleEmitter::Initialze(filename);
+    ParticleGroup::Initialze(filename);
 
     /// ===フラグと設定の初期化=== ///
     hasExploded_ = false;
@@ -42,24 +42,24 @@ void ExplosionEmitter::Initialze(const std::string& filename) {
 /// 更新
 ///-------------------------------------------///
 // override
-void ExplosionEmitter::InstancingUpdate(std::list<ParticleData>::iterator it) {
-    ParticleEmitter::InstancingUpdate(it);
+void ExplosionParticle::InstancingUpdate(std::list<ParticleData>::iterator it) {
+    ParticleGroup::InstancingUpdate(it);
 }
 //
-void ExplosionEmitter::Update() {
+void ExplosionParticle::Update() {
     if (!hasExploded_) {
         // 爆発のパーティクルを生成
-        for (uint32_t i = 0; i < emitter_.maxInstance; ++i) {
-            emitter_.particles.push_back(MakeExplosionParticle(randomEngine_, emitter_.transform.translate));
+        for (uint32_t i = 0; i < group_.maxInstance; ++i) {
+            group_.particles.push_back(MakeExplosionParticle(randomEngine_, group_.transform.translate));
         }
         hasExploded_ = true;
     }
 
     // パーティクルの更新
-    emitter_.numInstance = 0; // インスタンス数をリセット
-    for (auto it = emitter_.particles.begin(); it != emitter_.particles.end();) {
+    group_.numInstance = 0; // インスタンス数をリセット
+    for (auto it = group_.particles.begin(); it != group_.particles.end();) {
         if (it->currentTime >= it->lifeTime) {
-            it = emitter_.particles.erase(it); // 寿命が尽きたパーティクルを削除
+            it = group_.particles.erase(it); // 寿命が尽きたパーティクルを削除
             continue;
         }
 
@@ -77,7 +77,7 @@ void ExplosionEmitter::Update() {
         it->color.w = alpha;
 
         /// ===ParticleEmitterの更新=== ///
-        ParticleEmitter::InstancingUpdate(it);
+        InstancingUpdate(it);
         ++it;
     }
 }
@@ -85,16 +85,16 @@ void ExplosionEmitter::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ExplosionEmitter::Draw(BlendMode mode) {
-    if (emitter_.numInstance > 0) {
-		ParticleEmitter::Draw(mode);
+void ExplosionParticle::Draw(BlendMode mode) {
+    if (group_.numInstance > 0) {
+        ParticleGroup::Draw(mode);
     }
 }
 
 ///-------------------------------------------/// 
 /// 爆発パーティクルの生成
 ///-------------------------------------------///
-ParticleData ExplosionEmitter::MakeExplosionParticle(std::mt19937& randomEngine, const Vector3& center) {
+ParticleData ExplosionParticle::MakeExplosionParticle(std::mt19937& randomEngine, const Vector3& center) {
     std::uniform_real_distribution<float> distAngle(0.0f, 2.0f * std::numbers::pi_v<float>);
     std::uniform_real_distribution<float> distRadius(0.0f, explosionRadius_ * 0.5f); // 初期位置をさらに密集
     std::uniform_real_distribution<float> distLifetime(0.1f, maxLifetime_); // 寿命をさらに短く

@@ -7,9 +7,9 @@
 #include "application/Drawing/3d/AnimationModel.h"
 #include "application/Drawing/3d/Camera.h"
 
-#include "application/Drawing/Particle/WindEmitter.h"
-#include "application/Drawing/Particle/ExplosionEmitter.h"
-#include "application/Drawing/Particle/ConfettiEmitter.h"
+#include "application/Drawing/Particle/WindParticle.h"
+#include "application/Drawing/Particle/ExplosionParticle.h"
+#include "application/Drawing/Particle/ConfettiParticle.h"
 
 // Math
 #include "Math/sMath.h"
@@ -84,9 +84,9 @@ private:/// ===メンバ変数=== ///
 	// モデルライト
 	std::unique_ptr<Model> modelLight_;
 	// Particle
-	std::shared_ptr<WindEmitter> windParticle_;
-	std::shared_ptr<ExplosionEmitter> explosionParticle_;
-	std::shared_ptr<ConfettiEmitter> confettiParticle_;
+	std::shared_ptr<WindParticle> windParticle_;
+	std::shared_ptr<ExplosionParticle> explosionParticle_;
+	std::shared_ptr<ConfettiParticle> confettiParticle_;
 
 	/// ===変数=== ///
 	// モデル
