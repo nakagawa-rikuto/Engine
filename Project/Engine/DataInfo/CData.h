@@ -100,6 +100,7 @@ struct ModelData {
 	std::vector<uint32_t> indices;
 	MaterialData material;
 	Node rootNode;
+	bool haveBone;
 };
 #pragma endregion
 #pragma region ライト
