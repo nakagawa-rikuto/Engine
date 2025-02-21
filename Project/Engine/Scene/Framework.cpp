@@ -11,7 +11,8 @@
 /// 初期化
 ///-------------------------------------------///
 void Framework::Initialize(const wchar_t* title) {
-	// Miiの生成
+	/// ===初期化=== ///
+	// MiiEnigne
 	MiiEngine_ = std::make_unique<Mii>();
 	MiiEngine_->Initialize(title, 1280, 720);
 	// Getterの初期化
@@ -30,12 +31,14 @@ void Framework::Initialize(const wchar_t* title) {
 /// 終了
 ///-------------------------------------------///
 void Framework::Finalize() {
-	// 終了処理
+	/// ===終了処理=== ///
+	// サービスロケータ
 	Audio::Finalize();
 	Input::Finalize();
 	Render::Finalize();
 	Loader::Finalize();
 	Getter::Finalize();
+	// MiiEngine
 	MiiEngine_->Finalize();
 	MiiEngine_.reset();
 }
@@ -44,8 +47,10 @@ void Framework::Finalize() {
 /// 更新
 ///-------------------------------------------///
 void Framework::Update() {
-	// システムの更新処理
+	/// ===システムの更新処理=== ///
+	// サービスロケータ
 	Input::Update();
+	// MiiEngine
 	MiiEngine_->Update();
 }
 
