@@ -108,9 +108,9 @@ void DebugScene::Initialize() {
 
 	/// ===Particle=== ///
 #pragma region Particleの生成
-	windParticle_ = std::make_shared<WindEmitter>();
-	explosionParticle_ = std::make_shared<ExplosionEmitter>();
-	confettiParticle_ = std::make_shared<ConfettiEmitter>();
+	windParticle_ = std::make_shared<WindParticle>();
+	explosionParticle_ = std::make_shared<ExplosionParticle>();
+	confettiParticle_ = std::make_shared<ConfettiParticle>();
 #pragma endregion
 }
 
@@ -326,6 +326,7 @@ void DebugScene::Update() {
 		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
 			confettiParticle_->Initialze();
 			confettiParticle_->SetTranslate(particleTranslate_);
+			confettiParticle_->SetTexture("monsterBall");
 			isDisplay_.Particle3 = true;
 		} else if (isDisplay_.Particle3 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle3 = false;

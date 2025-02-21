@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // Engien
-#include "Engine/Graphics/Particle/ParticleEmitter.h"
+#include "Engine/Graphics/Particle/ParticleGroup.h"
 // Math
 #include "Math/MathData.h"
 // c++
@@ -10,11 +10,11 @@
 ///=====================================================/// 
 /// 風エミッタ
 ///=====================================================///
-class WindEmitter : public ParticleEmitter {
+class WindParticle : public ParticleGroup {
 public:
 
-	WindEmitter();
-	~WindEmitter();
+	WindParticle();
+	~WindParticle();
 
 	/// ===Override=== ///
 	// 初期化
@@ -43,7 +43,7 @@ private:
 	// ランダムに発生させるための関数
 	ParticleData MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate);
 	// エミっと
-	std::list<ParticleData> Emit(const Emitter& emitter, std::mt19937& randomEngine);
+	std::list<ParticleData> Emit(const Group& group, std::mt19937& randomEngine);
 	// AABBの当たり判定
 	bool IsCollision(const AABB& aabb, const Vector3& point);
 
