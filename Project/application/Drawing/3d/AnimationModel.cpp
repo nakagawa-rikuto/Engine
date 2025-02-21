@@ -86,11 +86,13 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	/// ===Animationの読み込み=== ///
 	animation_ = Getter::GetAnimationData(filename); // ファイルパス
 
-	/// ===Skeletonの作成=== ///
-	skeleton_ = CreateSkeleton(modelData_.rootNode);
-
-	/// ===SkinClusterの作成=== ///
-	skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, Getter::GetSRVManager());
+	/// ===Boneがあれば=== ///
+	if (modelData_.haveBone) {
+		/// ===Skeletonの作成=== ///
+		skeleton_ = CreateSkeleton(modelData_.rootNode);
+		/// ===SkinClusterの作成=== ///
+		skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, Getter::GetSRVManager());
+	}
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
@@ -156,28 +158,42 @@ void AnimationModel::Update() {
 void AnimationModel::Draw(BlendMode mode) {
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
+	if (modelData_.haveBone) {
+		/// ===VBVの設定=== ///
+		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+			vertexBufferView_, // VertexDataのVBV
+			skinCluster_.influenceBufferView // InfluenceのVBV
+		};
 
-	/// ===VBVの設定=== ///
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-		vertexBufferView_, // VertexDataのVBV
-		skinCluster_.influenceBufferView // InfluenceのVBV
-	};
-
-	/// ===コマンドリストに設定=== ///
-	// PSOの設定
-	Render::SetPSO(commandList, PipelineType::Skinning3D, mode);
-	// Viewの設定
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
-	commandList->IASetVertexBuffers(0, 2, vbvs);
-	commandList->IASetIndexBuffer(&indexBufferView_);
-	// 共通部の設定
-	common_->Bind(commandList);
-	// GPUを登録
-	commandList->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
-	// テクスチャの設定
-	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
-	// 描画（Drawコール）
-	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+		/// ===コマンドリストに設定=== ///
+		// PSOの設定
+		Render::SetPSO(commandList, PipelineType::Skinning3D, mode);
+		// Viewの設定
+		commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+		commandList->IASetVertexBuffers(0, 2, vbvs);
+		commandList->IASetIndexBuffer(&indexBufferView_);
+		// 共通部の設定
+		common_->Bind(commandList);
+		// GPUを登録
+		commandList->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
+		// テクスチャの設定
+		Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+		// 描画（Drawコール）
+		commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	} else {
+		/// ===コマンドリストに設定=== ///
+		// PSOの設定
+		Render::SetPSO(commandList, PipelineType::Obj3D, mode);
+		// Viewの設定
+		commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+		commandList->IASetIndexBuffer(&indexBufferView_);
+		// 共通部の設定
+		common_->Bind(commandList);
+		// テクスチャの設定
+		Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+		// 描画（Drawコール）
+		commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	}
 }
 
 ///-------------------------------------------/// 
@@ -203,22 +219,47 @@ void AnimationModel::TransformDataWrite() {
 	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
-	/// ===Matrixの作成=== ///
-	if (camera_) {
-		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-	} else {
-		Matrix4x4 viewMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
-		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-	}
+	if (modelData_.haveBone) {
+		/// ===Matrixの作成=== ///
+		if (camera_) {
+			const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+			worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+		} else {
+			Matrix4x4 viewMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
+			Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+			worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+		}
 
-	/// ===値の代入=== ///
-	common_->SetTransformData(
-		worldViewProjectionMatrix,
-		worldMatrix,
-		Inverse4x4(worldMatrix)
-	);
+		/// ===値の代入=== ///
+		common_->SetTransformData(
+			worldViewProjectionMatrix,
+			worldMatrix,
+			Inverse4x4(worldMatrix)
+		);
+	} else {
+		/// ===Animationの再生=== ///
+		NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
+		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime_); // 指定自国の値を取得。
+		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime_);
+		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime_);
+		Matrix4x4 localMatrix = MakeAffineMatrix(scale, rotate, translate);
+
+		/// ===Matrixの作成=== ///
+		if (camera_) {
+			const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+			worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+		} else {
+			Matrix4x4 viewMatrix = Inverse4x4(MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
+			Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+			worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+		}
+		/// ===値の代入=== ///
+		common_->SetTransformData(
+			Multiply(localMatrix, worldViewProjectionMatrix),
+			Multiply(localMatrix, worldMatrix),
+			Inverse4x4(worldMatrix)
+		);
+	}
 }
 
 ///-------------------------------------------///  
