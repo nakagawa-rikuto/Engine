@@ -26,7 +26,7 @@ void Loader::Inititalze(
 	assert(audio);
 	assert(csv);
 	assert(animation);
-	
+
 	// 生成
 	textureManager_ = texture;
 	modelManager_ = model;
@@ -50,7 +50,9 @@ void Loader::Finalize() {
 /// テクスチャ
 ///-------------------------------------------///
 void Loader::LoadTexture(const std::string& key, const std::string& filePath) {
-	textureManager_->LoadTexture(key, filePath);
+	// ベースのディレクトリパス
+	const std::string& baseDirectorPath = "./Resource/Textures";
+	textureManager_->LoadTexture(key, baseDirectorPath + "/" + filePath);
 }
 
 ///-------------------------------------------/// 
@@ -90,7 +92,7 @@ void Loader::LoadWave(const std::string& key, const std::string& filename) {
 ///-------------------------------------------/// 
 /// MP3
 ///-------------------------------------------///
-void Loader::LoadMP3(const std::string & key, const std::string& filename) {
+void Loader::LoadMP3(const std::string& key, const std::string& filename) {
 	const std::string& directorPath = "./Resource/BGM";
 	audioManager_->Load(key, directorPath + "/" + filename, true);
 }
@@ -105,6 +107,6 @@ void Loader::UnloadSound(const std::string& key) {
 ///-------------------------------------------/// 
 /// 音声データの一括開放
 ///-------------------------------------------///
-void Loader::AllUnloadSound() { 
-	audioManager_->UnloadAll(); 
+void Loader::AllUnloadSound() {
+	audioManager_->UnloadAll();
 }
