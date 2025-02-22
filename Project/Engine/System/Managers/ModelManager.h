@@ -13,6 +13,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+/// ===前方宣言=== ///
+class TextureManager;
+
 ///=====================================================///  
 /// モデルマネージャ
 ///=====================================================///
@@ -23,6 +26,10 @@ public:/// ===基本的な関数=== ///
 	~ModelManager() = default;
 
 public:/// ===Functions(関数)=== ///
+
+	// 初期化
+	void Initialize(TextureManager* texture);
+
 	// ファイルの読み込み
 	void Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename);
 
@@ -30,6 +37,9 @@ public:/// ===Functions(関数)=== ///
 	ModelData GetModelData(const std::string& filename);
 
 private:/// ===Variables(変数)=== ///
+
+	// テクスチャマネージャ
+	TextureManager* textureManager_ = nullptr;
 
 	// モデルデータ
 	std::map<std::string, ModelData> modelDatas_;
