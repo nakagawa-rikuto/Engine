@@ -98,8 +98,8 @@ void MyGame::LoadAudio() {
 }
 // テクスチャ
 void MyGame::LoadTexture() {
-	Loader::LoadTexture("uvChecker", "./Resource/Textures/uvChecker.png");
-	Loader::LoadTexture("monsterBall", "./Resource/Textures/monsterBall.png");
+	Loader::LoadTexture("uvChecker", "uvChecker.png");
+	Loader::LoadTexture("monsterBall", "monsterBall.png");
 }
 // モデル
 void MyGame::LoadModel() {
