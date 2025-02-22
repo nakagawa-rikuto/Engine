@@ -25,8 +25,10 @@ void MyGame::Initialize(const wchar_t* title) {
 	auto start = std::chrono::high_resolution_clock::now();
 
 	/// ===読み込み処理=== ///
+	// スレッドの生成
 	std::vector<std::thread> threads;
 
+	// 各読み込み処理をスレッドで実行
 	threads.emplace_back([this] { LoadAudio(); });
 	threads.emplace_back([this] { LoadTexture(); });
 	threads.emplace_back([this] { LoadModel(); });
