@@ -1,6 +1,4 @@
 #include "AnimationManager.h"
-// Engine
-#include "Engine/System/Service/Loader.h"
 // c++
 #include <fstream>
 

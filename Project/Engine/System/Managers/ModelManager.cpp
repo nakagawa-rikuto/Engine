@@ -1,10 +1,18 @@
 #include "ModelManager.h"
 // Engine
-#include "Engine/System/Service/Loader.h"
+#include "Engine/System/Managers/TextureManager.h"
 // Math
 #include "Math/sMath.h"
 // c++
 #include <fstream>
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void ModelManager::Initialize(TextureManager* texture) {
+	assert(texture);
+	textureManager_ = texture;
+}
 
 ///-------------------------------------------/// 
 /// ファイルの読み込み
@@ -24,7 +32,7 @@ void ModelManager::Load(const std::string& baseDirectoryPath, const std::string&
 	// テクスチャの読み込みとインデックス設定
 	if (!modeldata.material.textureFilePath.empty()) { // 空でなければ
 		// TextureManager からテクスチャを読み込み、インデックスを取得
-		Loader::LoadTexture(modeldata.material.textureFilePath, modeldata.material.textureFilePath);
+		textureManager_->LoadTexture(modeldata.material.textureFilePath, modeldata.material.textureFilePath);
 	}
 
 	// モデルをMapコンテナに格納

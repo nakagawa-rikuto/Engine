@@ -43,6 +43,7 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// ModelManagerの生成	
 	modelManager_ = std::make_unique<ModelManager>();
+	modelManager_->Initialize(textureManager_.get());
 
 	// ImGuiManagerの生成
 	imGuiManager_ = std::make_unique<ImGuiManager>();
