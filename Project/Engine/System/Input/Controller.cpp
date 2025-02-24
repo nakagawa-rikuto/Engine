@@ -3,9 +3,6 @@
 #include <cassert>
 #include <algorithm>
 
-// Math
-#include "Math/sMath.h"　
-
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -55,23 +52,23 @@ void Controller::Update() {
 /// コントローラースティックの取得
 ///-------------------------------------------///
 // XInput
-bool Controller::GetJoystickState(int32_t stickNo, XINPUT_STATE& out) const {
+bool Controller::GetJoystickState(int stickNo, XINPUT_STATE& out) const {
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
 	out = currentState_[stickNo];
 	return true;
 }
-bool Controller::GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out) const {
+bool Controller::GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out) const {
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
 	out = previousState_[stickNo];
 	return true;
 }
 // DirectInput
-bool Controller::GetJoystickState(int32_t stickNo, DIJOYSTATE2& out) const {
+bool Controller::GetJoystickState(int stickNo, DIJOYSTATE2& out) const {
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
 	out = currentDIState_[stickNo];
 	return true;
 }
-bool Controller::GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out) const {
+bool Controller::GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) const {
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
 	out = previousDIState_[stickNo];
 	return true;
@@ -91,7 +88,7 @@ std::pair<WORD, int> Controller::ConvertToButton(ControllerButtonType button) co
 ///-------------------------------------------/// 
 /// ボタンを押している間　対応済み
 ///-------------------------------------------///
-bool Controller::PushButton(int32_t stickNo, ControllerButtonType button) const {
+bool Controller::PushButton(int stickNo, ControllerButtonType button) const {
 	auto [xInputButton, dInputButton] = ConvertToButton(button);
 
 	// XInput の通常ボタン
@@ -122,7 +119,7 @@ bool Controller::PushButton(int32_t stickNo, ControllerButtonType button) const 
 ///-------------------------------------------/// 
 /// ボタンを押した瞬間　対応済み
 ///-------------------------------------------///
-bool Controller::TriggerButton(int32_t stickNo, ControllerButtonType button) const {
+bool Controller::TriggerButton(int stickNo, ControllerButtonType button) const {
 	auto [xInputButton, dInputButton] = ConvertToButton(button);
 
 	// XInput の通常ボタン
@@ -158,7 +155,7 @@ bool Controller::TriggerButton(int32_t stickNo, ControllerButtonType button) con
 ///-------------------------------------------/// 
 /// ボタンを離した瞬間 対応済み
 ///-------------------------------------------///
-bool Controller::ReleaseButton(int32_t stickNo, ControllerButtonType button) const {
+bool Controller::ReleaseButton(int stickNo, ControllerButtonType button) const {
 	auto [xInputButton, dInputButton] = ConvertToButton(button);
 
 	// XInput の通常ボタン
@@ -195,7 +192,7 @@ bool Controller::ReleaseButton(int32_t stickNo, ControllerButtonType button) con
 /// スティックの状況を取得 対応済み
 ///-------------------------------------------///
 // 左スティックの状況を取得
-StickState Controller::GetLeftStickState(int32_t stickNo) const {
+StickState Controller::GetLeftStickState(int stickNo) const {
 	StickState state = { 0.0f, 0.0f };
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
 
@@ -220,7 +217,7 @@ StickState Controller::GetLeftStickState(int32_t stickNo) const {
 	return state;
 }
 // 右スティックの状況を取得
-StickState Controller::GetRightStickState(int32_t stickNo) const {
+StickState Controller::GetRightStickState(int stickNo) const {
 	StickState state = { 0.0f, 0.0f };
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
 
@@ -248,7 +245,7 @@ StickState Controller::GetRightStickState(int32_t stickNo) const {
 ///-------------------------------------------/// 
 /// 指定スティックの値を取得 対応済み
 ///-------------------------------------------///
-float Controller::GetStickValue(int32_t stickNo, ControllerValueType valueType) const {
+float Controller::GetStickValue(int stickNo, ControllerValueType valueType) const {
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return 0.0f;
 
 	// XInput / DirectInput のスティック値
@@ -287,7 +284,7 @@ float Controller::GetStickValue(int32_t stickNo, ControllerValueType valueType) 
 ///-------------------------------------------/// 
 /// ボタンの押し込み量を取得　対応済み
 ///-------------------------------------------///
-float Controller::GetTriggerValue(int32_t stickNo, ControllerButtonType button) const {
+float Controller::GetTriggerValue(int stickNo, ControllerButtonType button) const {
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return 0.0f;
 
 	switch (button) {

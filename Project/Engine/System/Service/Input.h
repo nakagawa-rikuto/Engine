@@ -48,23 +48,23 @@ public: // メンバ関数
 
 	/// ===コントローラ=== ///
 	// コントローラースティックの取得
-	static bool GetJoystickState(int32_t stickNo, XINPUT_STATE& out);
-	static bool GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out);
-	static bool GetJoystickState(int32_t stickNo, DIJOYSTATE2& out);
-	static bool GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out);
+	static bool GetJoystickState(int stickNo, XINPUT_STATE& out);
+	static bool GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out);
+	static bool GetJoystickState(int stickNo, DIJOYSTATE2& out);
+	static bool GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out);
 
 	// コントローラーの押下チェック
-	static bool PushButton(int32_t stickNo, ControllerButtonType button);
-	static bool TriggerButton(int32_t stickNo, ControllerButtonType button);
-	static bool ReleaseButton(int32_t stickNo, ControllerButtonType button);
+	static bool PushButton(int stickNo, ControllerButtonType button);
+	static bool TriggerButton(int stickNo, ControllerButtonType button);
+	static bool ReleaseButton(int stickNo, ControllerButtonType button);
 
 	// ボタンの押し込み量を取得
-	static float GetTriggerValue(int32_t stickNo, ControllerButtonType button);
+	static float GetTriggerValue(int stickNo, ControllerButtonType button);
 
 	// スティックの状況を取得
-	static StickState GetLeftStickState(int32_t stickNo);
-	static StickState GetRightStickState(int32_t stickNo);
-	static float GetStickValue(int32_t stickNo, ControllerValueType valueType);
+	static StickState GetLeftStickState(int stickNo);
+	static StickState GetRightStickState(int stickNo);
+	static float GetStickValue(int stickNo, ControllerValueType valueType);
 
 private:
 	static Keyboard* keyboard_;     // keyboard

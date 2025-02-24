@@ -27,7 +27,7 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// Controllerの生成
 	controller_ = std::make_unique<Controller>();
-	controller_->Initialize(winApp_.get(), inputCommon_->GetDirectInput().Get());
+	controller_->Initialize();
 
 	// SRVManagerの生成
 	srvManager_ = std::make_unique<SRVManager>();
