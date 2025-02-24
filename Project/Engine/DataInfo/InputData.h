@@ -7,6 +7,7 @@
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "xinput.lib")
 
 /// ===マウスのキーを指定する為の列挙型=== ///
 enum class MouseButtonType {

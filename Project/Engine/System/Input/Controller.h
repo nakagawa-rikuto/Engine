@@ -24,23 +24,23 @@ public:
 	void Update();
 
     // コントローラースティックの取得
-    bool GetJoystickState(int32_t stickNo, XINPUT_STATE& out) const;
-    bool GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out) const;
-	bool GetJoystickState(int32_t stickNo, DIJOYSTATE2& out) const;
-	bool GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out) const;
+    bool GetJoystickState(int stickNo, XINPUT_STATE& out) const;
+    bool GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out) const;
+	bool GetJoystickState(int stickNo, DIJOYSTATE2& out) const;
+	bool GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) const;
 
     // コントローラーの押下チェック
-    bool PushButton(int32_t stickNo, ControllerButtonType button) const;
-    bool TriggerButton(int32_t stickNo, ControllerButtonType button) const;
-    bool ReleaseButton(int32_t stickNo, ControllerButtonType button) const;
+    bool PushButton(int stickNo, ControllerButtonType button) const;
+    bool TriggerButton(int stickNo, ControllerButtonType button) const;
+    bool ReleaseButton(int stickNo, ControllerButtonType button) const;
 
     // ボタンの押し込み量を取得
-    float GetTriggerValue(int32_t stickNo, ControllerButtonType button) const;
+    float GetTriggerValue(int stickNo, ControllerButtonType button) const;
 
     // スティックの状況を取得
-    StickState GetLeftStickState(int32_t stickNo) const;
-    StickState GetRightStickState(int32_t stickNo) const;
-    float GetStickValue(int32_t stickNo, ControllerValueType valueType) const;
+    StickState GetLeftStickState(int stickNo) const;
+    StickState GetRightStickState(int stickNo) const;
+    float GetStickValue(int stickNo, ControllerValueType valueType) const;
 
 private:
     static constexpr float NORMALIZE_RANGE = 32768.0f; // XInputのスティック最大値
