@@ -3,13 +3,11 @@
 // Engine
 #include "Engine/Core/ComPtr.h"
 #include "Engine/DataInfo/InputData.h"
-// c++
-#include <array>
-#include <vector>
-#include <wrl.h>
 
-/// ===前方宣言=== ///
-class WinApp;
+// c++
+#include <cstdint>
+#include <map>
+#include <cmath>
 
 ///=====================================================/// 
 ///	コントローラー
@@ -21,37 +19,46 @@ public:
 	~Controller();
 
 	// 初期化
-	void Initialize(WinApp* winApp, IDirectInput8* input);
+	void Initialize();
 	// 更新
 	void Update();
 
-	// コントローラーボタンの押下をチェック
-	bool PushButton(int deviceIndex, int buttonIndex);
-	// コントローラーボタンのトリガーをチェック
-	bool TriggerButton(int deviceIndex, int buttonIndex);
-	// コントローラーのスティックの取得
-	float GetStickValue(int deviceIndex, ControllerValueType stickType);
-	
-	// Setter
-	// デッドゾーン
-	void SetDeadZone(const float& deadZone);
+    // コントローラースティックの取得
+    bool GetJoystickState(int32_t stickNo, XINPUT_STATE& out) const;
+    bool GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out) const;
+	bool GetJoystickState(int32_t stickNo, DIJOYSTATE2& out) const;
+	bool GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out) const;
+
+    // コントローラーの押下チェック
+    bool PushButton(int32_t stickNo, ControllerButtonType button) const;
+    bool TriggerButton(int32_t stickNo, ControllerButtonType button) const;
+    bool ReleaseButton(int32_t stickNo, ControllerButtonType button) const;
+
+    // ボタンの押し込み量を取得
+    float GetTriggerValue(int32_t stickNo, ControllerButtonType button) const;
+
+    // スティックの状況を取得
+    StickState GetLeftStickState(int32_t stickNo) const;
+    StickState GetRightStickState(int32_t stickNo) const;
+    float GetStickValue(int32_t stickNo, ControllerValueType valueType) const;
 
 private:
-	WinApp* winApp_ = nullptr;
-	IDirectInput8* directInput_ = nullptr;
+    static constexpr float NORMALIZE_RANGE = 32768.0f; // XInputのスティック最大値
+    static constexpr float TRIGGER_THRESHOLD = 128.0f; // トリガーボタン判定のしきい値
+    static constexpr float DEADZONE = 0.15f; // スティックのデッドゾーン（15%）
 
-	struct ControllerData {
-		ComPtr<IDirectInputDevice8> device_; // コントローラー用のDirectInputデバイス
-		DIJOYSTATE state_ = {}; // 現在のコントローラーの状態
-		DIJOYSTATE preState_ = {}; // 前フレームのコントローラーの状態
-	};
-	std::vector<ControllerData> controllers_; // 接続されている全コントローラーのリスト
+	// XInput 対応用
+    XINPUT_STATE currentState_[XUSER_MAX_COUNT]{};
+    XINPUT_STATE previousState_[XUSER_MAX_COUNT]{};
 
-	// スティックのデッドゾーン処理
-	float deadZone_ = 0.2f; // デッドゾーン
+    // DirectInput 対応用
+    DIJOYSTATE2 currentDIState_[XUSER_MAX_COUNT]{};
+    DIJOYSTATE2 previousDIState_[XUSER_MAX_COUNT]{};
+
+    std::map<ControllerButtonType, std::pair<WORD, int>> buttonMapping_;
 
 private:
-	// ラムダ式の代わりのコールバック関数
-	static BOOL CALLBACK EnumDevicesCallback(const DIDEVICEINSTANCE* instance, void* context);
+    // 指定したボタンの XInput / DirectInput マッピングを取得
+    std::pair<WORD, int> ConvertToButton(ControllerButtonType button) const;
 };
 

@@ -26,13 +26,13 @@ public: // メンバ関数
 	// 終了処理
 	static void Finalize();
 
-	/// ===キーボード関連=== ///
+	/// ===キーボード=== ///
 	// キーの押下をチェック
 	static bool PushKey(BYTE keyNum);
 	// キーのトリガーをチェック
 	static bool TriggerKey(BYTE keyNum);
 
-	/// ===マウス関連=== ///
+	/// ===マウス=== ///
 	// マウスボタンの押下をチェック
 	static bool PushMouse(MouseButtonType button);
 	// マウスボタンのトリガーをチェック
@@ -46,18 +46,29 @@ public: // メンバ関数
 	// マウスのスクロール量を取得
 	static LONG GetMouseDeltaScroll();
 
-	/// ===コントローラ関連=== ///
-	// コントローラーボタンの押下をチェック
-	static bool PushButton(int deviceIndex, int buttonIndex);
-	// コントローラーボタンのトリガーをチェック
-	static bool TriggerButton(int deviceIndex, int buttonIndex);
-	// コントローラーの値を取得する	
-	//static int GetControllerValue(int deviceIndex, ControllerValueType valueType) const;
+	/// ===コントローラ=== ///
+	// コントローラースティックの取得
+	static bool GetJoystickState(int32_t stickNo, XINPUT_STATE& out);
+	static bool GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out);
+	static bool GetJoystickState(int32_t stickNo, DIJOYSTATE2& out);
+	static bool GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out);
+
+	// コントローラーの押下チェック
+	static bool PushButton(int32_t stickNo, ControllerButtonType button);
+	static bool TriggerButton(int32_t stickNo, ControllerButtonType button);
+	static bool ReleaseButton(int32_t stickNo, ControllerButtonType button);
+
+	// ボタンの押し込み量を取得
+	static float GetTriggerValue(int32_t stickNo, ControllerButtonType button);
+
+	// スティックの状況を取得
+	static StickState GetLeftStickState(int32_t stickNo);
+	static StickState GetRightStickState(int32_t stickNo);
+	static float GetStickValue(int32_t stickNo, ControllerValueType valueType);
 
 private:
 	static Keyboard* keyboard_;     // keyboard
 	static Mouse* mouse_;           // mouse
 	static Controller* controller_; // controller
-
 };
 
