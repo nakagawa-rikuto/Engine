@@ -70,14 +70,24 @@ LONG Input::GetMouseDeltaY() { return mouse_->GetMouseDeltaY(); }
 LONG Input::GetMouseDeltaScroll() { return mouse_->GetMouseDeltaScroll(); }
 #pragma endregion
 
+
+#pragma region コントローラー
 ///-------------------------------------------/// 
 /// コントローラー処理
 ///-------------------------------------------///
-#pragma region コントローラー
-// コントローラーの押下をチェック
-bool Input::PushButton(int deviceIndex, int buttonIndex) { return controller_->PushButton(deviceIndex, buttonIndex); }
-// コントローラーのトリガーをチェック
-bool Input::TriggerButton(int deviceIndex, int buttonIndex) { return controller_->TriggerButton(deviceIndex, buttonIndex); }
-// コントローラーの値を取得
-/*int Input::GetControllerValue(int deviceIndex, ControllerValueType valueType) {}*/
+// コントローラースティックの取得
+bool Input::GetJoystickState(int32_t stickNo, XINPUT_STATE& out) { return controller_->GetJoystickState(stickNo, out); }
+bool Input::GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
+bool Input::GetJoystickState(int32_t stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickState(stickNo, out); }
+bool Input::GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
+// コントローラーの押下チェック
+bool Input::PushButton(int32_t stickNo, ControllerButtonType button) { return controller_->PushButton(stickNo, button); }
+bool Input::TriggerButton(int32_t stickNo, ControllerButtonType button) { return controller_->TriggerButton(stickNo, button); }
+bool Input::ReleaseButton(int32_t stickNo, ControllerButtonType button) { return controller_->ReleaseButton(stickNo, button); }
+// ボタンの押し込み量を取得
+float Input::GetTriggerValue(int32_t stickNo, ControllerButtonType button) { return controller_->GetTriggerValue(stickNo, button); }
+// スティックの状況を取得
+StickState Input::GetLeftStickState(int32_t stickNo) { return controller_->GetLeftStickState(stickNo); }
+StickState Input::GetRightStickState(int32_t stickNo) { return controller_->GetRightStickState(stickNo); }
+float Input::GetStickValue(int32_t stickNo, ControllerValueType valueType) { return controller_->GetStickValue(stickNo, valueType); }
 #pragma endregion
