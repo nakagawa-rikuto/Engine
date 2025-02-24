@@ -76,18 +76,18 @@ LONG Input::GetMouseDeltaScroll() { return mouse_->GetMouseDeltaScroll(); }
 /// コントローラー処理
 ///-------------------------------------------///
 // コントローラースティックの取得
-bool Input::GetJoystickState(int32_t stickNo, XINPUT_STATE& out) { return controller_->GetJoystickState(stickNo, out); }
-bool Input::GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
-bool Input::GetJoystickState(int32_t stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickState(stickNo, out); }
-bool Input::GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
+bool Input::GetJoystickState(int stickNo, XINPUT_STATE& out) { return controller_->GetJoystickState(stickNo, out); }
+bool Input::GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
+bool Input::GetJoystickState(int stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickState(stickNo, out); }
+bool Input::GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
 // コントローラーの押下チェック
-bool Input::PushButton(int32_t stickNo, ControllerButtonType button) { return controller_->PushButton(stickNo, button); }
-bool Input::TriggerButton(int32_t stickNo, ControllerButtonType button) { return controller_->TriggerButton(stickNo, button); }
-bool Input::ReleaseButton(int32_t stickNo, ControllerButtonType button) { return controller_->ReleaseButton(stickNo, button); }
+bool Input::PushButton(int stickNo, ControllerButtonType button) { return controller_->PushButton(stickNo, button); }
+bool Input::TriggerButton(int stickNo, ControllerButtonType button) { return controller_->TriggerButton(stickNo, button); }
+bool Input::ReleaseButton(int stickNo, ControllerButtonType button) { return controller_->ReleaseButton(stickNo, button); }
 // ボタンの押し込み量を取得
-float Input::GetTriggerValue(int32_t stickNo, ControllerButtonType button) { return controller_->GetTriggerValue(stickNo, button); }
+float Input::GetTriggerValue(int stickNo, ControllerButtonType button) { return controller_->GetTriggerValue(stickNo, button); }
 // スティックの状況を取得
-StickState Input::GetLeftStickState(int32_t stickNo) { return controller_->GetLeftStickState(stickNo); }
-StickState Input::GetRightStickState(int32_t stickNo) { return controller_->GetRightStickState(stickNo); }
-float Input::GetStickValue(int32_t stickNo, ControllerValueType valueType) { return controller_->GetStickValue(stickNo, valueType); }
+StickState Input::GetLeftStickState(int stickNo) { return controller_->GetLeftStickState(stickNo); }
+StickState Input::GetRightStickState(int stickNo) { return controller_->GetRightStickState(stickNo); }
+float Input::GetStickValue(int stickNo, ControllerValueType valueType) { return controller_->GetStickValue(stickNo, valueType); }
 #pragma endregion
