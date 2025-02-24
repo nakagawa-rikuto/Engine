@@ -2,6 +2,7 @@
 /// ===Include=== ///
 #define DIRECTINPUT_VERSION   0x0800   // DirectInputのバージョン指定
 #include <dinput.h>
+#include <XInput.h>
 #include <Windows.h>
 
 #pragma comment(lib, "dinput8.lib")
@@ -16,15 +17,7 @@ enum class MouseButtonType {
 };
 
 /// ===コントローラーのキーを指定するための列挙型=== ///
-enum class ControllerValueType {
-	LeftStickX, // 左スティックのX軸
-	LeftStickY, // 左スティックのY軸
-	RightStickX,// 右スティックのX軸
-	RightStickY,// 右スティックのY軸
-	Top,        // 上ボタン 
-	Bottom,     // 下ボタン
-	Left,       // 左ボタン
-	Right,      // 右ボタン
+enum class ControllerButtonType {
 	A,          // Aボタン
 	B,          // Bボタン
 	X,          // Xボタン
@@ -33,6 +26,24 @@ enum class ControllerValueType {
 	RT,         // RTボタン
 	LB,         // LBボタン
 	LT,         // LTボタン
-	LeftStick,  // Lスティックの押し込み
-	RightStick, // Rスティックの押し込み
+	LeftStick,  // LeftStick押し込み
+	RightStick, // RightStick押し込み
+	DPadUP,     // 十字キー上 
+	DPadDOWN,   // 十字キー下
+	DPadLEFT,   // 十字キー左
+	DPadRIGHT,  // 十字キー右
+};
+
+/// ===コントローラーのスティックの状況をえるための列挙型=== ///
+enum class ControllerValueType {
+	LX, // 左スティックX軸
+	LY, // 左スティックY軸
+	RX, // 右スティックX軸
+	RY, // 右スティックY軸
+};
+
+/// ===コントローラーの処理を管理するための構造体=== ///
+struct StickState {
+	float x;
+	float y;
 };

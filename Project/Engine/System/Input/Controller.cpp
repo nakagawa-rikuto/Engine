@@ -1,11 +1,10 @@
 #include "Controller.h"
-// Engine
-#include "Engine/Core/WinApp.h"
-#include "InputCommon.h"
 // c++
 #include <cassert>
+#include <algorithm>
+
 // Math
-#include "Math/sMath.h"
+#include "Math/sMath.h"　
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -13,127 +12,312 @@
 Controller::~Controller() {}
 
 ///-------------------------------------------/// 
-/// 初期化
+/// 初期化　対応済み
 ///-------------------------------------------///
-void Controller::Initialize(WinApp * winApp, IDirectInput8 * input) {
-	HRESULT hr;
-	winApp_ = winApp;
-	directInput_ = input;
+void Controller::Initialize() {
+	ZeroMemory(currentState_, sizeof(currentState_));
+	ZeroMemory(previousState_, sizeof(previousState_));
+	ZeroMemory(currentDIState_, sizeof(currentDIState_));
+	ZeroMemory(previousDIState_, sizeof(previousDIState_));
 
-	// コントローラーの列挙と初期化
-	hr = input->EnumDevices(
-		DI8DEVCLASS_GAMECTRL,
-		EnumDevicesCallback,
-		this,
-		DIEDFL_ATTACHEDONLY
-	);
-	assert(SUCCEEDED(hr));
+	// XInput / DirectInput のボタンマッピング
+	buttonMapping_ = {
+		{ControllerButtonType::A, {XINPUT_GAMEPAD_A, 0}},  // Aボタン
+		{ControllerButtonType::B, {XINPUT_GAMEPAD_B, 1}},  // Bボタン
+		{ControllerButtonType::X, {XINPUT_GAMEPAD_X, 2}},  // Xボタン
+		{ControllerButtonType::Y, {XINPUT_GAMEPAD_Y, 3}},  // Yボタン
+		{ControllerButtonType::RB, {XINPUT_GAMEPAD_RIGHT_SHOULDER, 5}},  // RB
+		{ControllerButtonType::LB, {XINPUT_GAMEPAD_LEFT_SHOULDER, 4}},   // LB
+		{ControllerButtonType::DPadUP, {XINPUT_GAMEPAD_DPAD_UP, 10}},    // DPad ↑
+		{ControllerButtonType::DPadDOWN, {XINPUT_GAMEPAD_DPAD_DOWN, 12}}, // DPad ↓
+		{ControllerButtonType::DPadLEFT, {XINPUT_GAMEPAD_DPAD_LEFT, 13}}, // DPad ←
+		{ControllerButtonType::DPadRIGHT, {XINPUT_GAMEPAD_DPAD_RIGHT, 11}}, // DPad →
+		{ControllerButtonType::LeftStick, {XINPUT_GAMEPAD_LEFT_THUMB, 6}},   // Lスティック押し込み
+		{ControllerButtonType::RightStick, {XINPUT_GAMEPAD_RIGHT_THUMB, 7}}, // Rスティック押し込み
+	};
 }
 
 ///-------------------------------------------/// 
-/// 更新
+/// 更新 対応済み
 ///-------------------------------------------///
 void Controller::Update() {
-	HRESULT hr;
+	for (int i = 0; i < XUSER_MAX_COUNT; ++i) {
+		previousState_[i] = currentState_[i];
+		ZeroMemory(&currentState_[i], sizeof(XINPUT_STATE));
+		XInputGetState(i, &currentState_[i]);
 
-	// 各コントローラーの状態を取得
-	for (auto& controller : controllers_) {
-		controller.preState_ = controller.state_; // 前フレームの状態を保持
-		hr = controller.device_->Acquire();
-		if (SUCCEEDED(hr)) {
-			controller.device_->GetDeviceState(sizeof(DIJOYSTATE), &controller.state_);
-		}
+		previousDIState_[i] = currentDIState_[i];
+		ZeroMemory(&currentDIState_[i], sizeof(DIJOYSTATE2));
 	}
 }
 
 ///-------------------------------------------/// 
-/// コントローラーの押下チェック
+/// コントローラースティックの取得
 ///-------------------------------------------///
-bool Controller::PushButton(int deviceIndex, int buttonIndex) {
-	if (deviceIndex >= controllers_.size()) return false; // デバイスが範囲外
-	return (controllers_[deviceIndex].state_.rgbButtons[buttonIndex] & 0x80) != 0;
+// XInput
+bool Controller::GetJoystickState(int32_t stickNo, XINPUT_STATE& out) const {
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
+	out = currentState_[stickNo];
+	return true;
+}
+bool Controller::GetJoystickStatePrevious(int32_t stickNo, XINPUT_STATE& out) const {
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
+	out = previousState_[stickNo];
+	return true;
+}
+// DirectInput
+bool Controller::GetJoystickState(int32_t stickNo, DIJOYSTATE2& out) const {
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
+	out = currentDIState_[stickNo];
+	return true;
+}
+bool Controller::GetJoystickStatePrevious(int32_t stickNo, DIJOYSTATE2& out) const {
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return false;
+	out = previousDIState_[stickNo];
+	return true;
 }
 
 ///-------------------------------------------/// 
-/// コントローラーのトリガーチェック
+/// 指定したボタンの XInput / DirectInput マッピングを取得
 ///-------------------------------------------///
-bool Controller::TriggerButton(int deviceIndex, int buttonIndex) {
-	if (deviceIndex >= controllers_.size()) return false; // デバイスが範囲外
-	return (controllers_[deviceIndex].state_.rgbButtons[buttonIndex] & 0x80) &&
-		!(controllers_[deviceIndex].preState_.rgbButtons[buttonIndex] & 0x80);
+std::pair<WORD, int> Controller::ConvertToButton(ControllerButtonType button) const {
+	auto it = buttonMapping_.find(button);
+	if (it != buttonMapping_.end()) {
+		return it->second;
+	}
+	return { 0, -1 }; // 無効なボタン
 }
 
 ///-------------------------------------------/// 
-/// スティックの値を取得
+/// ボタンを押している間　対応済み
 ///-------------------------------------------///
-float Controller::GetStickValue(int deviceIndex, ControllerValueType stickType) {
-	if (deviceIndex < 0 || deviceIndex >= static_cast<int>(controllers_.size())) {
-		return 0.0f; // 無効なデバイスインデックス
+bool Controller::PushButton(int32_t stickNo, ControllerButtonType button) const {
+	auto [xInputButton, dInputButton] = ConvertToButton(button);
+
+	// XInput の通常ボタン
+	if ((currentState_[stickNo].Gamepad.wButtons & xInputButton)) {
+		return true;
 	}
 
-	ControllerData& controller = controllers_[deviceIndex];
-	LONG rawValue = 0;
-
-	// DirectInputのスティック値を取得
-	switch (stickType) {
-	case ControllerValueType::LeftStickX:
-		rawValue = controller.state_.lX;
-		break;
-	case ControllerValueType::LeftStickY:
-		rawValue = controller.state_.lY;
-		break;
-	case ControllerValueType::RightStickX:
-		rawValue = controller.state_.lRx;
-		break;
-	case ControllerValueType::RightStickY:
-		rawValue = controller.state_.lRy;
-		break;
-	default:
-		return 0.0f; // 無効なスティックタイプ
+	// DirectInput のボタン処理
+	if (dInputButton >= 0 && (currentDIState_[stickNo].rgbButtons[dInputButton] & 0x80)) {
+		return true;
 	}
 
-	// スティック値の範囲 (-1000 ~ 1000) を -1.0 ~ 1.0 に正規化
-	float normalizedValue = static_cast<float>(rawValue) / 1000.0f;
+	// LT（左トリガー） DirectInput 追加
+	if (button == ControllerButtonType::LT) {
+		return (currentState_[stickNo].Gamepad.bLeftTrigger > TRIGGER_THRESHOLD ||
+			currentDIState_[stickNo].lZ > 32767); // DirectInput のトリガー処理
+	}
+
+	// RT（右トリガー） DirectInput 追加
+	if (button == ControllerButtonType::RT) {
+		return (currentState_[stickNo].Gamepad.bRightTrigger > TRIGGER_THRESHOLD ||
+			currentDIState_[stickNo].lRz > 32767);
+	}
+
+	return false;
+}
+
+///-------------------------------------------/// 
+/// ボタンを押した瞬間　対応済み
+///-------------------------------------------///
+bool Controller::TriggerButton(int32_t stickNo, ControllerButtonType button) const {
+	auto [xInputButton, dInputButton] = ConvertToButton(button);
+
+	// XInput の通常ボタン
+	if ((currentState_[stickNo].Gamepad.wButtons & xInputButton) &&
+		!(previousState_[stickNo].Gamepad.wButtons & xInputButton)) {
+		return true;
+	}
+
+	// DirectInput のボタン処理
+	if (dInputButton >= 0 &&
+		(currentDIState_[stickNo].rgbButtons[dInputButton] & 0x80) &&
+		!(previousDIState_[stickNo].rgbButtons[dInputButton] & 0x80)) {
+		return true;
+	}
+
+	// LT（左トリガー
+	if (button == ControllerButtonType::LT) {
+		return (currentState_[stickNo].Gamepad.bLeftTrigger > TRIGGER_THRESHOLD &&
+			previousState_[stickNo].Gamepad.bLeftTrigger <= TRIGGER_THRESHOLD) ||
+			(currentDIState_[stickNo].lZ > 32767 && previousDIState_[stickNo].lZ <= 32767);
+	}
+
+	// RT（右トリガー）
+	if (button == ControllerButtonType::RT) {
+		return (currentState_[stickNo].Gamepad.bRightTrigger > TRIGGER_THRESHOLD &&
+			previousState_[stickNo].Gamepad.bRightTrigger <= TRIGGER_THRESHOLD) ||
+			(currentDIState_[stickNo].lRz > 32767 && previousDIState_[stickNo].lRz <= 32767);
+	}
+
+	return false;
+}
+
+///-------------------------------------------/// 
+/// ボタンを離した瞬間 対応済み
+///-------------------------------------------///
+bool Controller::ReleaseButton(int32_t stickNo, ControllerButtonType button) const {
+	auto [xInputButton, dInputButton] = ConvertToButton(button);
+
+	// XInput の通常ボタン
+	if (!(currentState_[stickNo].Gamepad.wButtons & xInputButton) &&
+		(previousState_[stickNo].Gamepad.wButtons & xInputButton)) {
+		return true;
+	}
+
+	// DirectInput のボタン処理
+	if (dInputButton >= 0 &&
+		!(currentDIState_[stickNo].rgbButtons[dInputButton] & 0x80) &&
+		(previousDIState_[stickNo].rgbButtons[dInputButton] & 0x80)) {
+		return true;
+	}
+
+	// LT（左トリガー） DirectInput 追加
+	if (button == ControllerButtonType::LT) {
+		return (currentState_[stickNo].Gamepad.bLeftTrigger <= TRIGGER_THRESHOLD &&
+			previousState_[stickNo].Gamepad.bLeftTrigger > TRIGGER_THRESHOLD) ||
+			(currentDIState_[stickNo].lZ <= 32767 && previousDIState_[stickNo].lZ > 32767);
+	}
+
+	// RT（右トリガー） DirectInput 追加
+	if (button == ControllerButtonType::RT) {
+		return (currentState_[stickNo].Gamepad.bRightTrigger <= TRIGGER_THRESHOLD &&
+			previousState_[stickNo].Gamepad.bRightTrigger > TRIGGER_THRESHOLD) ||
+			(currentDIState_[stickNo].lRz <= 32767 && previousDIState_[stickNo].lRz > 32767);
+	}
+
+	return false;
+}
+
+///-------------------------------------------/// 
+/// スティックの状況を取得 対応済み
+///-------------------------------------------///
+// 左スティックの状況を取得
+StickState Controller::GetLeftStickState(int32_t stickNo) const {
+	StickState state = { 0.0f, 0.0f };
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
+
+	// XInput のスティック値
+	float lxXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbLX) / NORMALIZE_RANGE;
+	float lyXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbLY) / NORMALIZE_RANGE;
+
+	// DirectInput のスティック値
+	float lxDInput = static_cast<float>(currentDIState_[stickNo].lX) / 32767.0f;
+	float lyDInput = static_cast<float>(currentDIState_[stickNo].lY) / 32767.0f;
 
 	// デッドゾーン処理
-	if (fabs(normalizedValue) < deadZone_) {
+	if (std::abs(lxXInput) < DEADZONE) lxXInput = 0.0f;
+	if (std::abs(lyXInput) < DEADZONE) lyXInput = 0.0f;
+	if (std::abs(lxDInput) < DEADZONE) lxDInput = 0.0f;
+	if (std::abs(lyDInput) < DEADZONE) lyDInput = 0.0f;
+
+	// XInput と DirectInput の大きい方を採用
+	state.x = std::max<float>(lxXInput, std::clamp<float>(lxDInput, -1.0f, 1.0f));
+	state.y = std::max<float>(lyXInput, std::clamp<float>(lyDInput, -1.0f, 1.0f));
+
+	return state;
+}
+// 右スティックの状況を取得
+StickState Controller::GetRightStickState(int32_t stickNo) const {
+	StickState state = { 0.0f, 0.0f };
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
+
+	// XInput のスティック値
+	float rxXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbRX) / NORMALIZE_RANGE;
+	float ryXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbRY) / NORMALIZE_RANGE;
+
+	// DirectInput のスティック値
+	float rxDInput = static_cast<float>(currentDIState_[stickNo].lRx) / 32767.0f;
+	float ryDInput = static_cast<float>(currentDIState_[stickNo].lRy) / 32767.0f;
+
+	// デッドゾーン処理
+	if (std::abs(rxXInput) < DEADZONE) rxXInput = 0.0f;
+	if (std::abs(ryXInput) < DEADZONE) ryXInput = 0.0f;
+	if (std::abs(rxDInput) < DEADZONE) rxDInput = 0.0f;
+	if (std::abs(ryDInput) < DEADZONE) ryDInput = 0.0f;
+
+	// XInput と DirectInput の大きい方を採用
+	state.x = std::max<float>(rxXInput, std::clamp<float>(rxDInput, -1.0f, 1.0f));
+	state.y = std::max<float>(ryXInput, std::clamp<float>(ryDInput, -1.0f, 1.0f));
+
+	return state;
+}
+
+///-------------------------------------------/// 
+/// 指定スティックの値を取得 対応済み
+///-------------------------------------------///
+float Controller::GetStickValue(int32_t stickNo, ControllerValueType valueType) const {
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return 0.0f;
+
+	// XInput / DirectInput のスティック値
+	float xInputValue = 0.0f;
+	float dInputValue = 0.0f;
+
+	switch (valueType) {
+	case ControllerValueType::LX:
+		xInputValue = static_cast<float>(currentState_[stickNo].Gamepad.sThumbLX) / NORMALIZE_RANGE;
+		dInputValue = static_cast<float>(currentDIState_[stickNo].lX) / 32767.0f; // DirectInput のスケール調整
+		break;
+	case ControllerValueType::LY:
+		xInputValue = static_cast<float>(currentState_[stickNo].Gamepad.sThumbLY) / NORMALIZE_RANGE;
+		dInputValue = static_cast<float>(currentDIState_[stickNo].lY) / 32767.0f;
+		break;
+	case ControllerValueType::RX:
+		xInputValue = static_cast<float>(currentState_[stickNo].Gamepad.sThumbRX) / NORMALIZE_RANGE;
+		dInputValue = static_cast<float>(currentDIState_[stickNo].lRx) / 32767.0f;
+		break;
+	case ControllerValueType::RY:
+		xInputValue = static_cast<float>(currentState_[stickNo].Gamepad.sThumbRY) / NORMALIZE_RANGE;
+		dInputValue = static_cast<float>(currentDIState_[stickNo].lRy) / 32767.0f;
+		break;
+	default:
 		return 0.0f;
 	}
 
-	return normalizedValue;
+	// デッドゾーン処理（微小な入力を無視）
+	if (std::abs(xInputValue) < DEADZONE) xInputValue = 0.0f;
+	if (std::abs(dInputValue) < DEADZONE) dInputValue = 0.0f;
+
+	// XInput と DirectInput の値のうち、大きい方を採用
+	return std::max<float>(xInputValue, std::clamp<float>(dInputValue, -1.0f, 1.0f));
 }
 
 ///-------------------------------------------/// 
-/// Setter
+/// ボタンの押し込み量を取得　対応済み
 ///-------------------------------------------///
-void Controller::SetDeadZone(const float& deadZone) { deadZone_ = deadZone; }
+float Controller::GetTriggerValue(int32_t stickNo, ControllerButtonType button) const {
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return 0.0f;
 
-///-------------------------------------------/// 
-/// ラムダ式の代わりのコールバック関数
-///-------------------------------------------///
-BOOL Controller::EnumDevicesCallback(const DIDEVICEINSTANCE* instance, void* context) {
-	// Controller クラスのインスタンスを取得
-	auto input = reinterpret_cast<Controller*>(context);
-
-	// DirectInput デバイスを作成
-	ComPtr<IDirectInputDevice8> device;
-	HRESULT hr = input->directInput_->CreateDevice(instance->guidInstance, &device, nullptr);
-
-	if (SUCCEEDED(hr)) {
-		ControllerData controller;
-		controller.device_ = device;
-
-		// データフォーマットの設定
-		hr = controller.device_->SetDataFormat(&c_dfDIJoystick);
-		if (FAILED(hr)) return DIENUM_CONTINUE;
-
-		// CooperativeLevel の設定
-		hr = controller.device_->SetCooperativeLevel(input->winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
-		if (FAILED(hr)) return DIENUM_CONTINUE;
-
-		// コントローラーリストに追加
-		input->controllers_.push_back(std::move(controller));
+	switch (button) {
+		// XInput / DirectInput の LT（左トリガー）
+	case ControllerButtonType::LT:
+	{
+		float lTriggerDI = static_cast<float>(currentDIState_[stickNo].lZ) / 65535.0f;
+		float lTriggerX = static_cast<float>(currentState_[stickNo].Gamepad.bLeftTrigger) / 255.0f;
+		return std::max<float>(lTriggerX, std::clamp<float>(lTriggerDI, 0.0f, 1.0f));
 	}
 
-	return DIENUM_CONTINUE; // 列挙を継続
+	// XInput / DirectInput の RT（右トリガー）
+	case ControllerButtonType::RT:
+	{
+		float rTriggerDI = static_cast<float>(currentDIState_[stickNo].lRz) / 65535.0f;
+		float rTriggerX = static_cast<float>(currentState_[stickNo].Gamepad.bRightTrigger) / 255.0f;
+		return std::max<float>(rTriggerX, std::clamp<float>(rTriggerDI, 0.0f, 1.0f));
+	}
+
+	// XInput / DirectInput の LB（左バンパー）
+	case ControllerButtonType::LB:
+		return ((currentState_[stickNo].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) ||
+			(currentDIState_[stickNo].rgbButtons[4] & 0x80)) ? 1.0f : 0.0f;
+
+		// XInput / DirectInput の RB（右バンパー）
+	case ControllerButtonType::RB:
+		return ((currentState_[stickNo].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
+			(currentDIState_[stickNo].rgbButtons[5] & 0x80)) ? 1.0f : 0.0f;
+
+	default:
+		return 0.0f;
+	}
 }
