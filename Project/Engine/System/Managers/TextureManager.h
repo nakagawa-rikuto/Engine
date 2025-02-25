@@ -21,7 +21,7 @@ class TextureManager {
 public:/// ===基本的な関数=== ///
 	
 	TextureManager() = default;
-	~TextureManager() = default;
+	~TextureManager();
 
 	// 初期化
 	void Initialize(DXCommon* dxCommon, SRVManager* srvManager);

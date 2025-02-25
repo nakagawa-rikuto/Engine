@@ -48,6 +48,12 @@ public:/// ===Setter=== ///
 	void SetNearClip(const float& nearClip);
 	// FarClip
 	void SetFarClip(const float& farClip);
+	// 追従対象の座標を設定
+	void SetTarget(Vector3* position, Vector3* rotation);
+	// 追従オフセット
+	void SetOffset(const Vector3& offset);
+	// 追従速度を設定
+	void SetFollowSpeed(float speed);
 
 private:/// ===変数=== ///
 
@@ -66,5 +72,15 @@ private:/// ===変数=== ///
 	/// ===合成行列=== ///
 	Matrix4x4 viewProjectionMatrix_;
 
+	/// ===追従=== ///
+	Vector3* targetPos_ = nullptr;  // 追従対象の座標ポインタ
+	Vector3* targetRot_ = nullptr;  // 追従対象の回転ポインタ
+	Vector3 offset_ = { 0.0f, 0.0f, -10.0f }; // カメラの初期オフセット
+	float followSpeed_ = 0.1f;      // 追従速度
+
+private:
+
+	// 追従処理
+	void FollowTarget();
 };
 

@@ -12,7 +12,7 @@ class IScene {
 public:
 
 	IScene() = default;
-	virtual ~IScene() = default;
+	virtual ~IScene();
 
 	virtual void Initialize();
 	virtual void Update() = 0;

@@ -23,7 +23,7 @@ class ModelManager {
 public:/// ===基本的な関数=== ///
 
 	ModelManager() = default;
-	~ModelManager() = default;
+	~ModelManager();
 
 public:/// ===Functions(関数)=== ///
 

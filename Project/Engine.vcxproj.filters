@@ -96,6 +96,8 @@
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
     <ClCompile Include="Engine\System\Service\Render.cpp" />
     <ClCompile Include="Engine\System\Service\Getter.cpp" />
+    <ClCompile Include="application\Game\Field\SkyDome.cpp" />
+    <ClCompile Include="application\Game\Field\Ground.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -189,6 +191,8 @@
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
     <ClInclude Include="Engine\System\Service\Render.h" />
     <ClInclude Include="Engine\System\Service\Getter.h" />
+    <ClInclude Include="application\Game\Field\SkyDome.h" />
+    <ClInclude Include="application\Game\Field\Ground.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

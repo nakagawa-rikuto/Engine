@@ -1,5 +1,10 @@
 #include "IScene.h"
 
+IScene::~IScene() {
+	defaultCamera_.reset();
+	cameraManager_.reset();
+}
+
 void IScene::Initialize() {
 
 	/// ===デフォルトカメラの生成=== ///

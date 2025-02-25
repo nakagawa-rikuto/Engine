@@ -124,5 +124,13 @@ Matrix4x4 Inverse4x4(const Matrix4x4& m);
 /// <returns></returns>
 Vector3 TransformCoordinates(const Vector3& v, const Matrix4x4& m);
 
+/// <summary>
+/// 座標変換（平行移動を加味しない）
+/// </summary>
+/// <param name="vector"></param>
+/// <param name="matrix"></param>
+/// <returns></returns>
+Vector3 TransformVector(const Vector3& vector, const Matrix4x4& matrix);
+
 
 
