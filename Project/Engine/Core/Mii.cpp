@@ -94,6 +94,13 @@ void Mii::Finalize() {
 	audioManager_.reset();
 	csvManager_.reset();
 	animationManager_.reset();
+
+	// デバッグレイヤーの有効化
+	ComPtr<ID3D12Debug> debugController;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+		debugController->EnableDebugLayer();
+	}
+
 	// COMの終了
 	CoUninitialize();
 }

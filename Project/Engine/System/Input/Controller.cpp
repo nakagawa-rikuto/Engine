@@ -196,15 +196,15 @@ StickState Controller::GetLeftStickState(int stickNo) const {
 	StickState state = { 0.0f, 0.0f };
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
 
-	// XInput のスティック値
+	// XInput のスティック値（-1.0f ～ 1.0f）
 	float lxXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbLX) / NORMALIZE_RANGE;
 	float lyXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbLY) / NORMALIZE_RANGE;
 
-	// DirectInput のスティック値
-	float lxDInput = static_cast<float>(currentDIState_[stickNo].lX) / 32767.0f;
-	float lyDInput = static_cast<float>(currentDIState_[stickNo].lY) / 32767.0f;
+	// DirectInput のスティック値（0 ～ 65535 → -1.0f ～ 1.0f に変換）
+	float lxDInput = (static_cast<float>(currentDIState_[stickNo].lX) - 32767.0f) / 32767.0f;
+	float lyDInput = (static_cast<float>(currentDIState_[stickNo].lY) - 32767.0f) / 32767.0f; // Y軸は反転
 
-	// デッドゾーン処理
+	// デッドゾーン処理（微小な入力を無視）
 	if (std::abs(lxXInput) < DEADZONE) lxXInput = 0.0f;
 	if (std::abs(lyXInput) < DEADZONE) lyXInput = 0.0f;
 	if (std::abs(lxDInput) < DEADZONE) lxDInput = 0.0f;
@@ -221,15 +221,15 @@ StickState Controller::GetRightStickState(int stickNo) const {
 	StickState state = { 0.0f, 0.0f };
 	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
 
-	// XInput のスティック値
+	// XInput のスティック値（-1.0f ～ 1.0f）
 	float rxXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbRX) / NORMALIZE_RANGE;
 	float ryXInput = static_cast<float>(currentState_[stickNo].Gamepad.sThumbRY) / NORMALIZE_RANGE;
 
-	// DirectInput のスティック値
-	float rxDInput = static_cast<float>(currentDIState_[stickNo].lRx) / 32767.0f;
-	float ryDInput = static_cast<float>(currentDIState_[stickNo].lRy) / 32767.0f;
+	// DirectInput のスティック値（0 ～ 65535 → -1.0f ～ 1.0f に変換）
+	float rxDInput = (static_cast<float>(currentDIState_[stickNo].lRx) - 32767.0f) / 32767.0f;
+	float ryDInput = (static_cast<float>(currentDIState_[stickNo].lRy) - 32767.0f) / 32767.0f; // Y軸は反転
 
-	// デッドゾーン処理
+	// デッドゾーン処理（微小な入力を無視）
 	if (std::abs(rxXInput) < DEADZONE) rxXInput = 0.0f;
 	if (std::abs(ryXInput) < DEADZONE) ryXInput = 0.0f;
 	if (std::abs(rxDInput) < DEADZONE) rxDInput = 0.0f;

@@ -418,6 +418,26 @@ void DebugScene::Update() {
 	mousePosition_.y = static_cast<float>(Input::GetMousePosition().y);
 #pragma endregion
 
+	/// ===コントローラーの処理=== ///
+#pragma region コントローラの処理
+
+	XINPUT_STATE joyState;
+	if (Input::GetJoystickState(0, joyState)) {
+
+		// スティックの入力処理を取得
+		StickState leftStick = Input::GetLeftStickState(0);
+		StickState rightStick = Input::GetRightStickState(0);
+
+		// モデルの移動処理
+		modelTranslate_.x += leftStick.x * 0.01f;
+		modelTranslate_.y += leftStick.y * 0.01f;
+
+		// カメラの移動処理
+		cameraPos.x += rightStick.x * 0.01f;
+		cameraPos.y += rightStick.y * 0.01f;
+	}
+#pragma endregion
+
 	/// ===Audioのセット=== ///
 #pragma region Audioのセット
 	if (playAudio) {
@@ -464,6 +484,7 @@ void DebugScene::Update() {
 
 	/// ===AnimaitonModelの更新=== ///
 #pragma region Animationモデルの更新
+	animationModel_->SetTranslate(modelTranslate_);
 	animationModel_->SetPointLight(light_, point_);
 	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
 	animationModel_->Update();
