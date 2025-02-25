@@ -80,8 +80,6 @@ void Mii::Finalize() {
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
-	winApp_.reset();
-	dXCommon_.reset();
 	inputCommon_.reset();
 	keyboard_.reset();
 	mouse_.reset();
@@ -94,12 +92,8 @@ void Mii::Finalize() {
 	audioManager_.reset();
 	csvManager_.reset();
 	animationManager_.reset();
-
-	// デバッグレイヤーの有効化
-	ComPtr<ID3D12Debug> debugController;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
-		debugController->EnableDebugLayer();
-	}
+	winApp_.reset();
+	dXCommon_.reset();
 
 	// COMの終了
 	CoUninitialize();

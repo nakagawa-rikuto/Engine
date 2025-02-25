@@ -14,5 +14,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	game->Run(kWindowTitle);
 	// 解放
 	delete game;
+
 	return 0;
 }
