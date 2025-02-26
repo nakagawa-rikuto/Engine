@@ -80,20 +80,20 @@ void Mii::Finalize() {
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
-	inputCommon_.reset();
-	keyboard_.reset();
-	mouse_.reset();
-	controller_.reset();
-	srvManager_.reset();
-	pipelineManager_.reset();
-	textureManager_.reset();
-	modelManager_.reset();
-	imGuiManager_.reset();
-	audioManager_.reset();
-	csvManager_.reset();
-	animationManager_.reset();
-	winApp_.reset();
-	dXCommon_.reset();
+	keyboard_.reset(); // Keyboard
+	mouse_.reset(); // Mouse
+	controller_.reset(); // Controller
+	inputCommon_.reset(); // InputCommon
+	modelManager_.reset(); // Modelmanager
+	audioManager_.reset(); // AudioManager
+	csvManager_.reset(); // CSVManager
+	animationManager_.reset(); // AnimationManager
+	textureManager_.reset(); // TextrureManager
+	pipelineManager_.reset(); // PipelineManager
+	imGuiManager_.reset(); // ImGuiManager
+	srvManager_.reset(); // SRVManager
+	winApp_.reset(); // WinApp
+	dXCommon_.reset(); // DXCommon
 
 	// COMの終了
 	CoUninitialize();

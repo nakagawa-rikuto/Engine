@@ -16,7 +16,7 @@ class AnimationManager {
 public:
 
 	AnimationManager() = default;
-	~AnimationManager() = default;
+	~AnimationManager();
 
 public:
 	// ファイル読み込み

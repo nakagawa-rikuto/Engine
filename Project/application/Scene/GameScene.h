@@ -64,8 +64,8 @@ private:/// ===メンバ変数=== ///
 	float decelerationRate_ = 10.0f;  // ブースト終了後の減速率
 
 	Vector3 cameraOffset_ = { 0.0f, 0.0f, 0.0f }; // 現在のオフセット
-	Vector3 normalOffset_ = { 0.0f, 0.3f, -7.0f }; // 通常のオフセット
-	Vector3 boostOffset_ = { 2.0f, 0.3f, -8.0f }; // ブースト時のオフセット
+	Vector3 normalOffset_ = { 0.0f, 0.5f, -10.0f }; // 通常のオフセット
+	Vector3 boostOffset_ = { 2.0f, 0.8f, -10.0f }; // ブースト時のオフセット
 	float cameraLerpSpeed_ = 4.0f; // 補間速度
 	float boostBlend_ = 0.0f; // 補間係数
 

@@ -95,7 +95,7 @@ void GameScene::Update() {
 
 #endif // USE_IMGUI
 
-	/// ===カメラの切り替え=== ///
+	 //===カメラの切り替え=== ///
 	if (Input::TriggerKey(DIK_SPACE)) {
 		if (SetFPSCamera_) {
 			cameraManager_->SetActiveCamera("fixedPointCamera");
@@ -162,8 +162,8 @@ void GameScene::PlayerMove() {
 
 	// **ブーストしていない時は視点回転 & 上昇処理**
 	if (!isBoosting_) {
-		modelRotate_.y += rightStick.x * rotationSpeed_; // 左右回転（Yaw）
-		modelRotate_.x = std::clamp(modelRotate_.x + rightStick.y * rotationSpeed_, -maxPitch_, maxPitch_); // 上下回転制限
+		modelRotate_.y += leftStick.x * rotationSpeed_; // 左右回転（Yaw）
+		//modelRotate_.x = std::clamp(modelRotate_.x + rightStick.y * rotationSpeed_, -maxPitch_, maxPitch_); // 上下回転制限
 
 		// **上昇処理（Aボタン）**
 		if (Input::PushButton(0, ControllerButtonType::A)) {

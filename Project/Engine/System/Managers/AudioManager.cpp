@@ -28,6 +28,7 @@ struct FormatChunk {
 ///-------------------------------------------///
 AudioManager::~AudioManager() {
 	sourceVoices_.clear();
+	masterVoice_ = nullptr;
 	xAudio2_.Reset();
 }
 

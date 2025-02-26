@@ -12,7 +12,10 @@
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
 MyGame::MyGame() = default;
-MyGame::~MyGame() {}
+MyGame::~MyGame() {
+	sceneFactory_.reset();
+	sceneManager_.reset();
+}
 
 ///-------------------------------------------/// 
 /// 初期化
