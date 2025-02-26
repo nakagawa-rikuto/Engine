@@ -2,29 +2,14 @@
 /// ===Includ=== ///
 #include "Engine/DataInfo/InputData.h"
 
-/// ===前方宣言=== ///
-// Input
-class Keyboard;
-class Mouse;
-class Controller;
 
 ///=====================================================/// 
 /// 入力
 ///=====================================================///
 class Input {
-
 public: // メンバ関数
-
-	// コンストラクタ・デストラクタ
-	Input() = default;
-	~Input() = default;
-
-	// 初期化
-	static void Initialize(Keyboard* keyboard, Mouse* mouse, Controller* controller);
 	// 更新
 	static void Update();
-	// 終了処理
-	static void Finalize();
 
 	/// ===キーボード=== ///
 	// キーの押下をチェック
@@ -65,10 +50,5 @@ public: // メンバ関数
 	static StickState GetLeftStickState(int stickNo);
 	static StickState GetRightStickState(int stickNo);
 	static float GetStickValue(int stickNo, ControllerValueType valueType);
-
-private:
-	static Keyboard* keyboard_;     // keyboard
-	static Mouse* mouse_;           // mouse
-	static Controller* controller_; // controller
 };
 

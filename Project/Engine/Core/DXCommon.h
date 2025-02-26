@@ -23,7 +23,7 @@ class DXCommon {
 public:
 
 	DXCommon() = default;
-	~DXCommon() = default;
+	~DXCommon();
 
 	// 初期化
 	void Initialize(

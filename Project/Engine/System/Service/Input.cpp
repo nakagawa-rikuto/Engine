@@ -1,93 +1,99 @@
 #include "Input.h"
+// c++
+#include <cassert>
 // Input
 #include "Engine/System/Input/Keyboard.h"
 #include "Engine/System/Input/Mouse.h"
 #include "Engine/System/Input/Controller.h"
-// c++
-#include <cassert>
-
-/// ===宣言=== ///
-Keyboard* Input::keyboard_ = nullptr;
-Mouse* Input::mouse_ = nullptr;
-Controller* Input::controller_ = nullptr;
-
-///-------------------------------------------/// 
-/// 初期化
-///-------------------------------------------///
-void Input::Initialize(Keyboard* keyboard, Mouse* mouse, Controller* controller) {
-	assert(keyboard);
-	assert(mouse);
-	assert(controller);
-
-	keyboard_ = keyboard;
-	mouse_ = mouse;
-	controller_ = controller;
-}
+// ServiceLocator
+#include "ServiceLocator.h"
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
 void Input::Update() {
-	keyboard_->Update();
-	mouse_->Update();
-	controller_->Update();
-}
-
-///-------------------------------------------/// 
-/// 終了処理
-///-------------------------------------------///
-void Input::Finalize() {
-	keyboard_ = nullptr;
-	mouse_ = nullptr;
-	controller_ = nullptr;
+	ServiceLocator::GetKeyboard()->Update();
+	ServiceLocator::GetMouse()->Update();
+	ServiceLocator::GetController()->Update();
 }
 
 ///-------------------------------------------/// 
 /// キーボード処理
 ///-------------------------------------------///
-#pragma region キーボード
 // キーの押下をチェック
-bool Input::PushKey(BYTE keyNum) { return keyboard_->PushKey(keyNum); }
+bool Input::PushKey(BYTE keyNum) { 
+	return ServiceLocator::GetKeyboard()->PushKey(keyNum);
+}
 // キーのトリガーをチェック
-bool Input::TriggerKey(BYTE keyNum) { return keyboard_->TriggerKey(keyNum); }
-#pragma endregion
+bool Input::TriggerKey(BYTE keyNum) { 
+	return ServiceLocator::GetKeyboard()->TriggerKey(keyNum);
+}
 
 ///-------------------------------------------/// 
 /// マウス処理
 ///-------------------------------------------///
-#pragma region マウス
 // マウスの押下をチェック
-bool Input::PushMouse(MouseButtonType button) { return mouse_->PushMaouseButton(button); }
+bool Input::PushMouse(MouseButtonType button) {
+	return ServiceLocator::GetMouse()->PushMaouseButton(button);
+}
 // マウスのトリガーをチェック
-bool Input::TriggerMouse(MouseButtonType button) { return mouse_->TriggerMouseButton(button); }
+bool Input::TriggerMouse(MouseButtonType button) { 
+	return ServiceLocator::GetMouse()->TriggerMouseButton(button);
+}
 // マウスカーソルの位置を取得（スクリーン座標系）
-POINT Input::GetMousePosition() { return mouse_->GetMouseCursorPosition(); }
+POINT Input::GetMousePosition() { 
+	return ServiceLocator::GetMouse()->GetMouseCursorPosition();
+}
 // マウスのX軸移動量を取得
-LONG Input::GetMouseDeltaX() { return mouse_->GetMouseDeltaX(); }
+LONG Input::GetMouseDeltaX() { 
+	return ServiceLocator::GetMouse()->GetMouseDeltaX();
+}
 // マウスのY軸移動量を取得
-LONG Input::GetMouseDeltaY() { return mouse_->GetMouseDeltaY(); }
+LONG Input::GetMouseDeltaY() { 
+	return ServiceLocator::GetMouse()->GetMouseDeltaY();
+}
 // マウスのスクロール量を取得
-LONG Input::GetMouseDeltaScroll() { return mouse_->GetMouseDeltaScroll(); }
-#pragma endregion
+LONG Input::GetMouseDeltaScroll() { 
+	return ServiceLocator::GetMouse()->GetMouseDeltaScroll();
+}
 
-
-#pragma region コントローラー
 ///-------------------------------------------/// 
 /// コントローラー処理
 ///-------------------------------------------///
 // コントローラースティックの取得
-bool Input::GetJoystickState(int stickNo, XINPUT_STATE& out) { return controller_->GetJoystickState(stickNo, out); }
-bool Input::GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
-bool Input::GetJoystickState(int stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickState(stickNo, out); }
-bool Input::GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) { return controller_->GetJoystickStatePrevious(stickNo, out); }
+bool Input::GetJoystickState(int stickNo, XINPUT_STATE& out) { 
+	return ServiceLocator::GetController()->GetJoystickState(stickNo, out);
+}
+bool Input::GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out) { 
+	return ServiceLocator::GetController()->GetJoystickStatePrevious(stickNo, out);
+}
+bool Input::GetJoystickState(int stickNo, DIJOYSTATE2& out) { 
+	return ServiceLocator::GetController()->GetJoystickState(stickNo, out);
+}
+bool Input::GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) { 
+	return ServiceLocator::GetController()->GetJoystickStatePrevious(stickNo, out);
+}
 // コントローラーの押下チェック
-bool Input::PushButton(int stickNo, ControllerButtonType button) { return controller_->PushButton(stickNo, button); }
-bool Input::TriggerButton(int stickNo, ControllerButtonType button) { return controller_->TriggerButton(stickNo, button); }
-bool Input::ReleaseButton(int stickNo, ControllerButtonType button) { return controller_->ReleaseButton(stickNo, button); }
+bool Input::PushButton(int stickNo, ControllerButtonType button) { 
+	return ServiceLocator::GetController()->PushButton(stickNo, button);
+}
+bool Input::TriggerButton(int stickNo, ControllerButtonType button) { 
+	return ServiceLocator::GetController()->TriggerButton(stickNo, button);
+}
+bool Input::ReleaseButton(int stickNo, ControllerButtonType button) { 
+	return ServiceLocator::GetController()->ReleaseButton(stickNo, button);
+}
 // ボタンの押し込み量を取得
-float Input::GetTriggerValue(int stickNo, ControllerButtonType button) { return controller_->GetTriggerValue(stickNo, button); }
+float Input::GetTriggerValue(int stickNo, ControllerButtonType button) { 
+	return ServiceLocator::GetController()->GetTriggerValue(stickNo, button);
+}
 // スティックの状況を取得
-StickState Input::GetLeftStickState(int stickNo) { return controller_->GetLeftStickState(stickNo); }
-StickState Input::GetRightStickState(int stickNo) { return controller_->GetRightStickState(stickNo); }
-float Input::GetStickValue(int stickNo, ControllerValueType valueType) { return controller_->GetStickValue(stickNo, valueType); }
-#pragma endregion
+StickState Input::GetLeftStickState(int stickNo) { 
+	return ServiceLocator::GetController()->GetLeftStickState(stickNo);
+}
+StickState Input::GetRightStickState(int stickNo) { 
+	return ServiceLocator::GetController()->GetRightStickState(stickNo);
+}
+float Input::GetStickValue(int stickNo, ControllerValueType valueType) { 
+	return ServiceLocator::GetController()->GetStickValue(stickNo, valueType);
+}

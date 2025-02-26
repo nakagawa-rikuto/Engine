@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 // Service
+#include "Engine/System/Service/ServiceLocator.h"
 #include "Engine/System/Service/Getter.h"
 #include "Engine/System/Service/Render.h"
 // Manager
@@ -92,7 +93,7 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 		/// ===Skeletonの作成=== ///
 		skeleton_ = CreateSkeleton(modelData_.rootNode);
 		/// ===SkinClusterの作成=== ///
-		skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, Getter::GetSRVManager());
+		skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, ServiceLocator::GetSRVManager());
 	}
 
 	/// ===生成=== ///
@@ -425,7 +426,7 @@ SkinCluster AnimationModel::CreateSkinCluster(
 	SkinCluster skinCluster;
 	/// ===paletter用のResourceを確保=== ///
 	uint32_t paletteIndex = srvManager->Allocate();
-	skinCluster.paletteResource = CreateBufferResource(device, sizeof(WellForGPU) * skeleton.joints.size());
+	skinCluster.paletteResource = CreateBufferResource(device.Get(), sizeof(WellForGPU) * skeleton.joints.size());
 	WellForGPU* mappedPalette = nullptr;
 	skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
 	skinCluster.mappedPalette = { mappedPalette, skeleton.joints.size() }; // spanを使ってアクセスするようにする
@@ -445,7 +446,7 @@ SkinCluster AnimationModel::CreateSkinCluster(
 
 	/// ===Influence用Resourceの作成=== ///
 	//uint32_t influenceIndex = srvManager->Allocate();
-	skinCluster.influenceResource = CreateBufferResource(device, sizeof(VertexInfluence) * modelData.vertices.size());
+	skinCluster.influenceResource = CreateBufferResource(device.Get(), sizeof(VertexInfluence) * modelData.vertices.size());
 	VertexInfluence* mappedInfluence = nullptr;
 	skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
 	std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size()); // 0埋め。weightを0にしておく。

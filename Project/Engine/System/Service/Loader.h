@@ -3,26 +3,11 @@
 // C++
 #include <string>
 
-/// ===前方宣言=== ///
-class TextureManager;
-class ModelManager;
-class AudioManager;
-class CSVManager;
-class AnimationManager;
-
 ///=====================================================/// 
 /// Load関数
 ///=====================================================///
 class Loader {
 public:
-
-	Loader() = default;
-	~Loader() = default;
-
-	// 初期化
-	static void Inititalze(TextureManager* texture, ModelManager* model, AudioManager* audio, CSVManager* csv, AnimationManager* animation);
-	// 終了処理
-	static void Finalize();
 	// テクスチャの読み込み
 	static void LoadTexture(const std::string& key, const std::string& filePath);
 	// モデルの読み込み
@@ -38,13 +23,5 @@ public:
 	static void UnloadSound(const std::string& key);
 	// 音声データの一括開放
 	static void AllUnloadSound();
-
-private:
-	
-	static TextureManager* textureManager_;     // TextureManager
-	static ModelManager* modelManager_;         // ModelManager
-	static AudioManager* audioManager_;         // AudioMangaer
-	static CSVManager* csvManager_;             // CSVManager
-	static AnimationManager* animationManager_; // AnimationManager
 };
 
