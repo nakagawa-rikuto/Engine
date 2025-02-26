@@ -111,7 +111,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
     <ClCompile Include="Engine\System\Service\Getter.cpp" />
-    <ClCompile Include="application\Game\Field\Ground.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -192,14 +191,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Input\Mouse.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Engine\System\Service\Render.cpp" />
-    <ClCompile Include="application\Game\Field\SkyDome.cpp" />
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
     <ClInclude Include="Engine\System\Service\Getter.h" />
-    <ClInclude Include="application\Game\Field\Ground.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
@@ -288,7 +285,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Input\Mouse.h" />
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Engine\System\Service\Render.h" />
-    <ClInclude Include="application\Game\Field\SkyDome.h" />
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
   </ItemGroup>
   <ItemGroup>
