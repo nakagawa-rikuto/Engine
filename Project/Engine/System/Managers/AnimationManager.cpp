@@ -3,6 +3,13 @@
 #include <fstream>
 
 ///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+AnimationManager::~AnimationManager() {
+	animationDatas_.clear();
+}
+
+///-------------------------------------------/// 
 /// ファイル読み込み
 ///-------------------------------------------///
 void AnimationManager::Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename) {

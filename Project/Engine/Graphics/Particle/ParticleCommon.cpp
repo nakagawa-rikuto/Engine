@@ -8,7 +8,10 @@
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
 ParticleCommon::ParticleCommon() = default;
-ParticleCommon::~ParticleCommon() { material_.reset(); }
+ParticleCommon::~ParticleCommon() { 
+	material_.reset(); 
+	instancing_.Reset();
+}
 
 ///-------------------------------------------/// 
 /// 初期化

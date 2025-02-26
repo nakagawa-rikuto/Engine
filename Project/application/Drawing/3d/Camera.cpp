@@ -2,6 +2,7 @@
 
 #include "Engine/Core/WinApp.h"
 #include "Math/sMath.h"
+#include "Math/EasingMath.h"
 
 ///-------------------------------------------/// 
 /// Getter
@@ -34,6 +35,15 @@ void Camera::SetAspectRatio(const float& aspect) { aspect_ = aspect; }
 void Camera::SetNearClip(const float& nearClip) { nearClip_ = nearClip; }
 // FarClip
 void Camera::SetFarClip(const float& farClip) { farClip_ = farClip; }
+// 追従対象の座標を設定
+void Camera::SetTarget(Vector3* position, Vector3* rotation) {
+	targetPos_ = position;
+	targetRot_ = rotation;
+}
+// 追従のオフセット
+void Camera::SetOffset(const Vector3& offset) { offset_ = offset; }
+// 追従速度を設定
+void Camera::SetFollowSpeed(float speed) { followSpeed_ = speed; }
 
 
 ///-------------------------------------------/// 
@@ -56,6 +66,9 @@ void Camera::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void Camera::Update() {
+	// 追従処理
+	FollowTarget();
+
 	// 行列の計算
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	viewMatrix_ = Inverse4x4(worldMatrix_);
@@ -67,3 +80,22 @@ void Camera::Update() {
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
 }
 
+///-------------------------------------------/// 
+/// 追従処理
+///-------------------------------------------///
+void Camera::FollowTarget() {
+	if (targetPos_ && targetRot_) {
+		// プレイヤーの回転に基づいてオフセットを回転
+		Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
+		Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
+
+		// 目標のカメラ位置を計算
+		Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
+
+		// 線形補間 (Lerp) を使って滑らかに追従
+		transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+
+		// カメラの向きをプレイヤーの位置に向ける
+		transform_.rotate.y = targetRot_->y;
+	}
+}

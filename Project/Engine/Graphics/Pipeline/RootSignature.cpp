@@ -10,6 +10,15 @@
 #include <vector>
 #include <format>
 
+///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+RootSignature::~RootSignature() {
+	rootSignature_.Reset();
+	signatureBlob_.Reset();
+	errorBlob_.Reset();
+}
+
 /// <summary>
 /// ルートシグネイチャの生成
 /// </summary>

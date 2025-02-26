@@ -26,6 +26,23 @@ const uint32_t DXCommon::kNumDSVDescriptor = 1;
 const uint32_t DXCommon::kMaxSRVCount = 512;
 
 ///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+DXCommon::~DXCommon() {
+	commandQueue_.Reset();
+	swapChain_.Reset();
+	commandList_.Reset();
+	commandAllocator_.Reset();
+	rtvHeap_.Reset();
+	dsvHeap_.Reset();
+	depthStencilResource_.Reset();
+	fence_.Reset();
+	swapChainResource_->Reset();
+	backBuffers_.clear();
+	device_.Reset();
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void DXCommon::Initialize(

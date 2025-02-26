@@ -17,7 +17,7 @@ enum class LightType {
 class Light {
 public:
 	Light() = default;
-	~Light() = default;
+	~Light();
 
 	/// <summary>
 	/// 生成

@@ -1,11 +1,7 @@
 #include "Framework.h"
 
 // Service
-#include "Engine/System/Service/Loader.h"
-#include "Engine/System/Service/Input.h"
-#include "Engine/System/Service/Audio.h"
-#include "Engine/System/Service/Getter.h"
-#include "Engine/System/Service/Render.h"
+#include "Engine/System/Service/ServiceLocator.h"
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -15,16 +11,21 @@ void Framework::Initialize(const wchar_t* title) {
 	// MiiEnigne
 	MiiEngine_ = std::make_unique<Mii>();
 	MiiEngine_->Initialize(title, 1280, 720);
-	// Getterの初期化
-	Getter::Initialize(MiiEngine_->GetDXCommon(), MiiEngine_->GetWinApp(), MiiEngine_->GetSRVManager(), MiiEngine_->GetModelManager(), MiiEngine_->GetTextureManager(), MiiEngine_->GetAnimationManager());
-	// Loaderの初期化
-	Loader::Inititalze(MiiEngine_->GetTextureManager(), MiiEngine_->GetModelManager(), MiiEngine_->GetAudioManager(), MiiEngine_->GetCSVManager(), MiiEngine_->GetAnimationManager());
-	// Rendererの初期化
-	Render::Initialize(MiiEngine_->GetPipelineManager(), MiiEngine_->GetTextureManager());
-	// Inputの初期化
-	Input::Initialize(MiiEngine_->GetKeyboard(), MiiEngine_->GetMouse(), MiiEngine_->GetController());
-	// Audioの初期化
-	Audio::Initialze(MiiEngine_->GetAudioManager());
+	// ServiceLocator
+	ServiceLocator::ProvideAll(
+		{ MiiEngine_->GetSRVManager(),
+		MiiEngine_->GetAudioManager(),
+		MiiEngine_->GetTextureManager(),
+		MiiEngine_->GetModelManager(),
+		MiiEngine_->GetPipelineManager(),
+		MiiEngine_->GetAnimationManager(),
+		MiiEngine_->GetCSVManager(),
+		MiiEngine_->GetDXCommon(),
+		MiiEngine_->GetWinApp(),
+		MiiEngine_->GetKeyboard(),
+		MiiEngine_->GetMouse(),
+		MiiEngine_->GetController() }
+	);
 }
 
 ///-------------------------------------------/// 
@@ -33,11 +34,6 @@ void Framework::Initialize(const wchar_t* title) {
 void Framework::Finalize() {
 	/// ===終了処理=== ///
 	// サービスロケータ
-	Audio::Finalize();
-	Input::Finalize();
-	Render::Finalize();
-	Loader::Finalize();
-	Getter::Finalize();
 	// MiiEngine
 	MiiEngine_->Finalize();
 	MiiEngine_.reset();
@@ -48,8 +44,6 @@ void Framework::Finalize() {
 ///-------------------------------------------///
 void Framework::Update() {
 	/// ===システムの更新処理=== ///
-	// サービスロケータ
-	Input::Update();
 	// MiiEngine
 	MiiEngine_->Update();
 }

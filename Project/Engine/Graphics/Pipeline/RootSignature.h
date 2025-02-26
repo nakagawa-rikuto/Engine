@@ -18,7 +18,7 @@ class RootSignature {
 public:
 
 	RootSignature() = default;
-	~RootSignature() = default;
+	~RootSignature();
 
 	/// <summary> 
 	/// ルートシグネイチャの生成

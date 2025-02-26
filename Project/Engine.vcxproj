@@ -191,6 +191,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Input\Mouse.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Engine\System\Service\Render.cpp" />
+    <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
@@ -284,6 +285,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Input\Mouse.h" />
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Engine\System\Service\Render.h" />
+    <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

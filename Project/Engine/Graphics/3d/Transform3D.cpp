@@ -6,7 +6,7 @@
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
 Transform3D::Transform3D() {}
-Transform3D::~Transform3D() {}
+Transform3D::~Transform3D() { buffer_.Reset(); }
 
 ///-------------------------------------------/// 
 ///

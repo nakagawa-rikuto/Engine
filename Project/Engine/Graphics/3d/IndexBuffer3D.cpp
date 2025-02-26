@@ -3,7 +3,7 @@
 #include <cassert>
 
 IndexBuffer3D::IndexBuffer3D() {}
-IndexBuffer3D::~IndexBuffer3D() {}
+IndexBuffer3D::~IndexBuffer3D() { buffer_.Reset(); }
 
 ///-------------------------------------------/// 
 ///リソースの作成

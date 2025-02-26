@@ -3,6 +3,7 @@
 #include <cassert>
 #include <fstream>
 // Service
+#include "Engine/System/Service/ServiceLocator.h"
 #include "Engine/System/Service/Getter.h"
 #include "Engine/System/Service/Render.h"
 // Managers
@@ -73,7 +74,7 @@ void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMa
 	common_->Initlize(device, kNumMaxInstance_);
 
 	/// ===SRV=== ///
-	srvData_.srvManager_ = Getter::GetSRVManager(); // SRVManagerの取得
+	srvData_.srvManager_ = ServiceLocator::GetSRVManager(); // SRVManagerの取得
 	// SRVを作成するDescriptorHeapの場所設定
 	srvData_.srvIndex = srvData_.srvManager_->Allocate();
 	srvData_.srvHandleCPU = srvData_.srvManager_->GetCPUDescriptorHandle(srvData_.srvIndex);

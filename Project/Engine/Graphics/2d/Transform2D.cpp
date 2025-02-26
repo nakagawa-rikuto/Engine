@@ -3,7 +3,7 @@
 #include <cassert>
 
 Transform2D::Transform2D() {}
-Transform2D::~Transform2D() {}
+Transform2D::~Transform2D() { buffer_.Reset(); }
 
 ///-------------------------------------------/// 
 /// リソースの作成

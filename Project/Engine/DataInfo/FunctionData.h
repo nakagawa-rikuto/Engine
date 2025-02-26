@@ -7,5 +7,5 @@
 /// </summary>
 /// <param name="device"></param>
 /// <param name="sizeInBytes"></param>
-ComPtr<ID3D12Resource> CreateBufferResource(ComPtr<ID3D12Device> device, size_t sizeInBytes);
+ComPtr<ID3D12Resource> CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 

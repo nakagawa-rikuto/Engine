@@ -18,8 +18,10 @@ PipelineStateObjectCommon::~PipelineStateObjectCommon() {
 
 	rootSignature_.reset();
 	inputLayout_.reset();
+	blendState_.reset();
 	rasterizerState_.reset();
 	depthStencil_.reset();
+	graphicsPipelineState_.Reset();
 }
 
 ///-------------------------------------------/// 

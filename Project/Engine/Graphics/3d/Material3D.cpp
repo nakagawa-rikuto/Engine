@@ -3,7 +3,7 @@
 #include <cassert>
 
 Material3D::Material3D() {}
-Material3D::~Material3D() {}
+Material3D::~Material3D() { buffer_.Reset(); }
 
 ///-------------------------------------------/// 
 /// リソースの生成

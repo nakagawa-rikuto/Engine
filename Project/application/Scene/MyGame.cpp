@@ -7,12 +7,17 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+// ServiceLocator
+#include "Engine/System/Service/Input.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
 MyGame::MyGame() = default;
-MyGame::~MyGame() {}
+MyGame::~MyGame() {
+	sceneFactory_.reset();
+	sceneManager_.reset();
+}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -72,6 +77,8 @@ void MyGame::Finalize() {
 void MyGame::Update() {
 	// 基底クラスの更新処理
 	Framework::Update();
+	// Inputの更新
+	Input::Update();
 	// シーンの更新
 	sceneManager_->Update();
 }
@@ -111,6 +118,10 @@ void MyGame::LoadModel() {
 	Loader::LoadModel("axis", "axis.obj");
 	Loader::LoadModel("plane", "plane.obj");
 	Loader::LoadModel("Particle", "Particle.obj");
+
+	// Game
+	Loader::LoadModel("Ground", "Ground.obj");
+	Loader::LoadModel("skydome", "skydome.obj");
 }
 // アニメーション
 void MyGame::LoadAnimation() {

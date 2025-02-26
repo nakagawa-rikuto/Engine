@@ -6,6 +6,14 @@
 #include <cassert>
 
 ///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+Compiler::~Compiler() {
+	objVSBlob_.Reset();
+	objPSBlob_.Reset();
+}
+
+///-------------------------------------------/// 
 /// shaderをコンパイルする
 ///-------------------------------------------///
 void Compiler::Initialize(DXCommon* dxCommon, PipelineType Type) {

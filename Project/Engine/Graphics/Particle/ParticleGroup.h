@@ -10,7 +10,7 @@ class ParticleGroup {
 public:
 
 	ParticleGroup() = default;
-	virtual ~ParticleGroup() = default;
+	virtual ~ParticleGroup();
 
 	// 初期化
 	virtual void Initialze(const std::string& filename);

@@ -9,6 +9,9 @@
 /// デストラクタ
 ///-------------------------------------------///
 DebugScene::~DebugScene() {
+	// ISceneのデストラクタ
+	IScene::~IScene();
+
 	// sprite
 	sprite_.reset();
 	// camera
@@ -93,8 +96,8 @@ void DebugScene::Initialize() {
 	camera2_->SetTranslate({ 0.0f, 0.0f, -30.0f });
 	camera2_->SetRotate({ 0.0f, 0.0f, 0.0f });
 	// カメラマネージャにカメラを追加
-	cameraManager_->Add("Main", camera_);
-	cameraManager_->Add("Main2", camera2_);
+	cameraManager_->Add("Debug", camera_);
+	cameraManager_->Add("Debug2", camera2_);
 #pragma endregion
 
 	/// ===ライト=== ///
@@ -375,9 +378,9 @@ void DebugScene::Update() {
 	/// ===カメラの変更=== ///
 #pragma region カメラの変更
 	if (SetCamera) {
-		cameraManager_->SetActiveCamera("Main2");
+		cameraManager_->SetActiveCamera("Debug2");
 	} else {
-		cameraManager_->SetActiveCamera("Main");
+		cameraManager_->SetActiveCamera("Debug");
 	}
 #pragma endregion
 
