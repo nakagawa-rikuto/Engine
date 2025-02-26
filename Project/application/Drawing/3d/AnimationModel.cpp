@@ -21,6 +21,7 @@
 AnimationModel::AnimationModel() = default;
 AnimationModel::~AnimationModel() {
 	vertex_.reset();
+	index_.reset();
 	common_.reset();
 }
 

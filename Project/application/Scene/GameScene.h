@@ -42,9 +42,6 @@ private:/// ===メンバ変数=== ///
 	Vector3 modelRotate_ = { 0.0f, 0.0f, 0.0f };
 	Vector3 modelScale_ = { 1.0f, 1.0f, 1.0f };
 	Vector4 modelColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float speed_ = 0.1f;           // 通常移動速度
-	float boostMultiplier_ = 10.0f; // ブースト時の移動倍率
-	float boostDirection_ = 0.0f;  // ブースト開始時の角度
 	float verticalSpeed_ = 3.0f;   // 上昇・下降速度
 	float gravity_ = -9.8f;         // 重力加速度
 	float verticalVelocity_ = 0.0f;// 現在のY軸速度
@@ -52,6 +49,25 @@ private:/// ===メンバ変数=== ///
 	float rotationSpeed_ = 0.05f; // 視点回転速度
 	float maxPitch_ = 1.2f;       // 上下回転の制限角度
 	float deltaTime_ = 1.0f / 60.0f; // フレーム時間
+
+	bool isBoosting_ = false;  // ブースト管理フラグ
+	float boostDirection_ = 0.0f;     // ブースト時の向き
+	float boostSpeed_ = 0.0f;         // 現在の速度
+	float boostEnergy_ = 100.0f;      // 現在のエネルギー
+	float maxBoostEnergy_ = 100.0f;   // 最大エネルギー
+	float boostEnergyDrain_ = 20.0f;  // 毎秒エネルギー消費量
+	float boostEnergyRegen_ = 10.0f;  // 毎秒エネルギー回復量
+	float boostCooldown_ = 0.0f;      // ブーストのクールタイム
+	float maxBoostCooldown_ = 3.0f;   // クールタイム最大値
+	float normalSpeed_ = 3.0f;        // 通常時の移動速度
+	float maxBoostSpeed_ = 20.0f;     // ブースト時の最高速度
+	float decelerationRate_ = 10.0f;  // ブースト終了後の減速率
+
+	Vector3 cameraOffset_ = { 0.0f, 0.0f, 0.0f }; // 現在のオフセット
+	Vector3 normalOffset_ = { 0.0f, 0.3f, -7.0f }; // 通常のオフセット
+	Vector3 boostOffset_ = { 2.0f, 0.3f, -8.0f }; // ブースト時のオフセット
+	float cameraLerpSpeed_ = 4.0f; // 補間速度
+	float boostBlend_ = 0.0f; // 補間係数
 
 	bool SetFPSCamera_ = true;
 

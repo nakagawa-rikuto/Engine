@@ -16,6 +16,7 @@
 Model::Model() = default;
 Model::~Model() {
 	vertex_.reset();
+	index_.reset();
 	common_.reset();
 }
 

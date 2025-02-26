@@ -3,27 +3,33 @@
 #include <cmath>
 
 
+
+
 ///-------------------------------------------/// 
 /// Lerp関数
 ///-------------------------------------------///
+// float
+float Lerp(float start, float end, float t) {
+    return start * (1.0f - t) + end * t;
+}
 // Vector3
-Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
+Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
 	Vector3 result;
 
-	result.x = (1.0f - t) * v1.x + t * v2.x;
-	result.y = (1.0f - t) * v1.y + t * v2.y;
-	result.z = (1.0f - t) * v1.z + t * v2.z;
+	result.x = (1.0f - t) * start.x + t * end.x;
+	result.y = (1.0f - t) * start.y + t * end.y;
+	result.z = (1.0f - t) * start.z + t * end.z;
 
 	return result;
 }
 // Quaternion
-Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, float t) {
+Quaternion Lerp(const Quaternion& start, const Quaternion& end, float t) {
 	Quaternion result;
 
-	result.x = (1.0f - t) * q1.x + t * q2.x;
-	result.y = (1.0f - t) * q1.y + t * q2.y;
-	result.z = (1.0f - t) * q1.z + t * q2.z;
-	result.w = (1.0f - t) * q1.w + t * q2.w;
+	result.x = (1.0f - t) * start.x + t * end.x;
+	result.y = (1.0f - t) * start.y + t * end.y;
+	result.z = (1.0f - t) * start.z + t * end.z;
+	result.w = (1.0f - t) * start.w + t * end.w;
 
 	return result;
 }
@@ -32,35 +38,35 @@ Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, float t) {
 /// SLerp関数
 ///-------------------------------------------///
 // Vector3
-Vector3 SLerp(const Vector3& v1, const Vector3& v2, float t) {
+Vector3 SLerp(const Vector3& start, const Vector3& end, float t) {
 	// なす角の計算
-	float angle = std::cosf(Dot(v1, v2));
+	float angle = std::cosf(Dot(start, end));
 
 	// 線形補間を計算する
-	float scaleV1 = std::sinf((1.0f - t) * angle) / std::sinf(angle);
+	float scalestart = std::sinf((1.0f - t) * angle) / std::sinf(angle);
 
-	float scaleV2 = std::sinf(t * angle) / std::sinf(angle);
+	float scaleend = std::sinf(t * angle) / std::sinf(angle);
 
 	Vector3 result;
 
-	result.x = scaleV1 * v1.x + scaleV2 * v2.x;
-	result.y = scaleV1 * v1.y + scaleV2 * v2.y;
-	result.z = scaleV1 * v1.z + scaleV2 * v2.z;
+	result.x = scalestart * start.x + scaleend * end.x;
+	result.y = scalestart * start.y + scaleend * end.y;
+	result.z = scalestart * start.z + scaleend * end.z;
 
 	return result;
 }
 // Quaternion
-Quaternion SLerp(const Quaternion& q1, const Quaternion& q2, float t) {
-    // q1 と q2 の内積を計算
-    float dot = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+Quaternion SLerp(const Quaternion& start, const Quaternion& end, float t) {
+    // start と end の内積を計算
+    float dot = start.x * end.x + start.y * end.y + start.z * end.z + start.w * end.w;
 
     // 内積が負の場合、補間経路を反転させる
-    Quaternion q2Corrected = q2;
+    Quaternion endCorrected = end;
     if (dot < 0.0f) {
-        q2Corrected.x = -q2.x;
-        q2Corrected.y = -q2.y;
-        q2Corrected.z = -q2.z;
-        q2Corrected.w = -q2.w;
+        endCorrected.x = -end.x;
+        endCorrected.y = -end.y;
+        endCorrected.z = -end.z;
+        endCorrected.w = -end.w;
         dot = -dot;
     }
 
@@ -68,10 +74,10 @@ Quaternion SLerp(const Quaternion& q1, const Quaternion& q2, float t) {
     const float THRESHOLD = 0.9995f;
     if (dot > THRESHOLD) {
         Quaternion result = {
-            (1.0f - t) * q1.x + t * q2Corrected.x,
-            (1.0f - t) * q1.y + t * q2Corrected.y,
-            (1.0f - t) * q1.z + t * q2Corrected.z,
-            (1.0f - t) * q1.w + t * q2Corrected.w
+            (1.0f - t) * start.x + t * endCorrected.x,
+            (1.0f - t) * start.y + t * endCorrected.y,
+            (1.0f - t) * start.z + t * endCorrected.z,
+            (1.0f - t) * start.w + t * endCorrected.w
         };
         return Normalize(result);
     }
@@ -86,10 +92,10 @@ Quaternion SLerp(const Quaternion& q1, const Quaternion& q2, float t) {
 
     // Slerp による補間
     Quaternion result = {
-        w1 * q1.x + w2 * q2Corrected.x,
-        w1 * q1.y + w2 * q2Corrected.y,
-        w1 * q1.z + w2 * q2Corrected.z,
-        w1 * q1.w + w2 * q2Corrected.w
+        w1 * start.x + w2 * endCorrected.x,
+        w1 * start.y + w2 * endCorrected.y,
+        w1 * start.z + w2 * endCorrected.z,
+        w1 * start.w + w2 * endCorrected.w
     };
 
     return result;
