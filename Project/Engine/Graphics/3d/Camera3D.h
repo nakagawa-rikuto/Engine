@@ -8,7 +8,7 @@
 class Camera3D {
 public:
 	Camera3D() = default;
-	~Camera3D() = default;
+	~Camera3D();
 
 	/// <summary>
 	/// 生成

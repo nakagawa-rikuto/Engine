@@ -7,7 +7,7 @@
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-ExplosionParticle::~ExplosionParticle() { group_.particle.reset(); }
+ExplosionParticle::~ExplosionParticle() { ParticleGroup::~ParticleGroup(); }
 
 ///-------------------------------------------/// 
 /// 初期化

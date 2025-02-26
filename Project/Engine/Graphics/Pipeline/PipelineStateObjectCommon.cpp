@@ -21,6 +21,7 @@ PipelineStateObjectCommon::~PipelineStateObjectCommon() {
 	blendState_.reset();
 	rasterizerState_.reset();
 	depthStencil_.reset();
+	graphicsPipelineState_.Reset();
 }
 
 ///-------------------------------------------/// 

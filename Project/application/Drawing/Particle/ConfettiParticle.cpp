@@ -7,7 +7,7 @@
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-ConfettiParticle::~ConfettiParticle() { group_.particle.reset(); }
+ConfettiParticle::~ConfettiParticle() { ParticleGroup::~ParticleGroup();}
 
 ///-------------------------------------------/// 
 /// 初期化

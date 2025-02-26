@@ -3,7 +3,7 @@
 #include <cassert>
 
 VertexBuffer2D::VertexBuffer2D() {}
-VertexBuffer2D::~VertexBuffer2D() {}
+VertexBuffer2D::~VertexBuffer2D() { buffer_.Reset(); }
 
 ///-------------------------------------------/// 
 /// リソースの生成

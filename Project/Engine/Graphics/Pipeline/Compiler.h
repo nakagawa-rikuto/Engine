@@ -23,7 +23,7 @@ class Compiler {
 public:
 
 	Compiler() = default;
-	~Compiler() = default;
+	~Compiler();
 
 	/// <summary>
 	/// shaderをコンパイルする
