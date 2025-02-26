@@ -11,7 +11,7 @@
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
 WindParticle::WindParticle() = default;
-WindParticle::~WindParticle() { ParticleGroup::~ParticleGroup(); }
+WindParticle::~WindParticle() { group_.particle.reset(); }
 
 ///-------------------------------------------/// 
 /// 初期化
