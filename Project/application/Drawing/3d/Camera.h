@@ -54,11 +54,14 @@ public:/// ===Setter=== ///
 	void SetOffset(const Vector3& offset);
 	// 追従速度を設定
 	void SetFollowSpeed(float speed);
+	// 回転補間速度を設定
+	void SetLerpSpeed(float speed);
 
 private:/// ===変数=== ///
 
 	/// ===ビュー行列関連データ=== ///
 	EulerTransform transform_;
+	EulerTransform addTransform_;
 	Matrix4x4 worldMatrix_;
 	Matrix4x4 viewMatrix_;
 
@@ -77,10 +80,13 @@ private:/// ===変数=== ///
 	Vector3* targetRot_ = nullptr;  // 追従対象の回転ポインタ
 	Vector3 offset_ = { 0.0f, 0.0f, -10.0f }; // カメラの初期オフセット
 	float followSpeed_ = 0.1f;      // 追従速度
+	float rotationLerpSpeed_ = 0.1f; // 回転補間速度
 
 private:
 
 	// 追従処理
 	void FollowTarget();
+
+	void PreFollowTarget();
 };
 

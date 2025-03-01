@@ -20,18 +20,36 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
     assert(registry.mouse);
     assert(registry.controller);
 
-    srvManager_ = registry.srvManager;
-    audioManager_ = registry.audioManager;
-    textureManager_ = registry.textureManager;
-    modelManager_ = registry.modelManager;
-    pipelineManager_ = registry.pipelineManager;
-    animationManager_ = registry.animationManager;
-    csvManager_ = registry.csvManager;
     dxCommon_ = registry.dxCommon;
     winApp_ = registry.winApp;
+    srvManager_ = registry.srvManager;
+    pipelineManager_ = registry.pipelineManager;
+    textureManager_ = registry.textureManager;
+    modelManager_ = registry.modelManager;
+    animationManager_ = registry.animationManager;
+    audioManager_ = registry.audioManager;
+    csvManager_ = registry.csvManager;
     keyboard_ = registry.keyboard;
     mouse_ = registry.mouse;
     controller_ = registry.controller;
+}
+
+///-------------------------------------------/// 
+/// 全てのサービスを終了
+///-------------------------------------------///
+void ServiceLocator::Finalize() {
+    controller_ = nullptr;
+    mouse_ = nullptr;
+    keyboard_ = nullptr;
+    csvManager_ = nullptr;
+    audioManager_ = nullptr;
+    animationManager_ = nullptr;
+    modelManager_ = nullptr;
+    textureManager_ = nullptr;
+    pipelineManager_ = nullptr;
+    srvManager_ = nullptr;
+    winApp_ = nullptr;
+    dxCommon_ = nullptr;
 }
 
 ///-------------------------------------------/// 

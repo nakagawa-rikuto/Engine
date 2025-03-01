@@ -16,17 +16,17 @@ const Matrix4x4& Camera::GetProjectionMatrix() const { return projectionMatrix_;
 // ViewProjectionMatrix
 const Matrix4x4& Camera::GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
 // Translate
-const Vector3& Camera::GetTranslate() const { return transform_.translate; }
+const Vector3& Camera::GetTranslate() const { return addTransform_.translate; }
 // Rotate
-const Vector3& Camera::GetRotate() const { return transform_.rotate; }
+const Vector3& Camera::GetRotate() const { return addTransform_.rotate; }
 
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
 // Translate
-void Camera::SetTranslate(const Vector3& translate) { transform_.translate = translate; }
+void Camera::SetTranslate(const Vector3& translate) { addTransform_.translate = translate; }
 // Rotate
-void Camera::SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
+void Camera::SetRotate(const Vector3& rotate) { addTransform_.rotate = rotate; }
 // ForY
 void Camera::SetForY(const float& forY) { horizontalView_ = forY; }
 // AspectRatio
@@ -44,7 +44,8 @@ void Camera::SetTarget(Vector3* position, Vector3* rotation) {
 void Camera::SetOffset(const Vector3& offset) { offset_ = offset; }
 // 追従速度を設定
 void Camera::SetFollowSpeed(float speed) { followSpeed_ = speed; }
-
+// 回転補間速度
+void Camera::SetLerpSpeed(float speed) { rotationLerpSpeed_ = speed; }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -66,8 +67,14 @@ void Camera::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void Camera::Update() {
-	// 追従処理
-	FollowTarget();
+
+	if (targetPos_ && targetRot_) {
+		// 追従処理
+		//FollowTarget();
+		PreFollowTarget();
+	} else {
+		transform_ = addTransform_;
+	}
 
 	// 行列の計算
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
@@ -84,6 +91,25 @@ void Camera::Update() {
 /// 追従処理
 ///-------------------------------------------///
 void Camera::FollowTarget() {
+	/// ===プレイヤーの回転とカメラの回転を組み合わせる=== ///
+	Vector3 combinedRotation = *targetRot_ + addTransform_.rotate;
+
+	/// ===プレイヤーの回転に基づいてオフセットを回転=== ///
+	Matrix4x4 rotationMatrix = MakeRotateYMatrix(combinedRotation.y);
+	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
+
+	/// ===目標のカメラ位置を計算=== ///
+	Vector3 targetCameraPos = *targetPos_ + rotatedOffset + addTransform_.translate;
+
+	/// ===線形補間 (Lerp) を使って滑らかに追従=== ///
+	transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+
+	/// ===カメラの向きをプレイヤーの回転に合わせる=== ///
+	transform_.rotate = Lerp(transform_.rotate, combinedRotation, rotationLerpSpeed_);
+}
+
+/// ===追従処理=== ///
+void Camera::PreFollowTarget() {
 	if (targetPos_ && targetRot_) {
 		// プレイヤーの回転に基づいてオフセットを回転
 		Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
