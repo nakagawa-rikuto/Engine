@@ -194,7 +194,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\Render.cpp" />
     <ClCompile Include="application\Game\Field\SkyDome.cpp" />
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
-    <ClCompile Include="application\Game\Entity\Player.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
@@ -291,7 +291,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\Render.h" />
     <ClInclude Include="application\Game\Field\SkyDome.h" />
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
-    <ClInclude Include="application\Game\Entity\Player.h" />
+    <ClInclude Include="application\Game\Entity\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

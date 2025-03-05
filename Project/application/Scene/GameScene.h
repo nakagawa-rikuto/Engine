@@ -4,7 +4,7 @@
 // application
 #include "application/Drawing/3d/Camera.h"
 // Game
-#include "application/Game/Entity/Player.h"
+#include "application/Game/Entity/Player/Player.h"
 #include "application/Game/Field/Ground.h"
 #include "application/Game/Field/SkyDome.h"
 

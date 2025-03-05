@@ -36,6 +36,9 @@ void Player::Initialize(const std::string& modelName, Camera* camera) {
 	camera_->SetFollowCamera(FollowCameraType::Orbiting);
 	InitializeRoot();
 	camera_->SetFollowSpeed(1.0f);
+
+	// エネルギーの設定
+	energyInfo_.rest = energyInfo_.max;
 }
 
 ///-------------------------------------------/// 
@@ -76,7 +79,7 @@ void Player::Update() {
 	case Player::Behavior::kRoot:
 		UpdateRoot();
 		UpdateAir();
-		camera_->SetRotate(cameraRotate_);
+		camera_->SetRotate(cameraInfo_.rotate);
 		break;
 	case Player::Behavior::kMove:
 		UpdateMove();
@@ -91,7 +94,7 @@ void Player::Update() {
 
 	// Cameraの更新
 	camera_->SetTarget(&translate_, &rotate_);
-	camera_->SetOffset(cameraOffset_);
+	camera_->SetOffset(cameraInfo_.offset);
 
 	// モデルの更新
 	model_->SetPosition(translate_);
@@ -112,29 +115,43 @@ void Player::Draw() {
 /// 更新(ImGUi)
 ///-------------------------------------------///
 void Player::ImGuiUpdate() {
-	ImGui::Begin("PlayerInfo");
-	ImGui::Checkbox("isCollisionGround", &isCollisionGround_);
-	ImGui::DragFloat("verticalSpeed", &verticalSpeed_, 0.01f);
-	ImGui::DragFloat("gravity", &gravity_, 0.01f);
-	ImGui::DragFloat("rotationSpeed", &rotationSpeed_, 0.01f);
-	ImGui::DragFloat("maxPitch", &maxPitch_, 0.01f);
+	ImGui::Begin("Jump");
+	ImGui::DragFloat("VerticalSpeed", &jumpInfo_.verticalSpeed, 0.01f);
+	ImGui::DragFloat("Gravity", &jumpInfo_.gravity, 0.01f);
+	ImGui::DragFloat("VerticalVelocity", &jumpInfo_.verticalVelocity, 0.01f);
+	ImGui::End();
+
+	ImGui::Begin("Move");
+	ImGui::DragFloat("Speed", &moveInfo_.speed, 0.01f);
+	ImGui::DragFloat("RotationSpeed", &moveInfo_.rotationSpeed, 0.01f);
+	ImGui::DragFloat("MaxPicth", &moveInfo_.maxPitch, 0.01f);
 	ImGui::End();
 
 	ImGui::Begin("Boost");
-	ImGui::Checkbox("isBoosting", &isBoosting_);
-	ImGui::DragFloat("BoostDirection", &boostDirection_, 0.01f);
-	ImGui::DragFloat("BoostSpeed", &boostSpeed_, 0.01f);
-	ImGui::DragFloat("BoostEnergy", &boostEnergy_, 1.0f);
-	ImGui::DragFloat("boostEnergyDrain", &boostEnergyDrain_, 0.01f);
-	ImGui::DragFloat("boostEnergyRegen", &boostEnergyRegen_, 0.01f);
-	ImGui::DragFloat("BoostCoolTime", &boostCooldown_, 0.01f);
-	ImGui::DragFloat("normalSpeed", &normalSpeed_, 0.01f);
-	ImGui::DragFloat("decelerationRate", &decelerationRate_, 0.01f);
-
-	ImGui::DragFloat("MaxBoostEnergy", &maxBoostEnergy_, 1.0f);
-	ImGui::DragFloat("MaxBoostCoolTime", &maxBoostCooldown_, 1.0f);
-	ImGui::DragFloat("MaxBoostSpeed", &maxBoostSpeed_, 1.0f);
+	ImGui::DragFloat("Speed", &boostInfo_.speed, 0.01f);
+	ImGui::DragFloat("CoolTime", &boostInfo_.coolDown, 0.01f);
+	ImGui::DragFloat("DecelerationRate", &boostInfo_.deccelerationRate, 0.01f);
+	ImGui::DragFloat("MaxBoostCoolTime", &boostInfo_.maxCoolDown, 1.0f);
+	ImGui::DragFloat("MaxBoostSpeed", &boostInfo_.maxSpeed, 1.0f);
+	ImGui::DragFloat("RotationSpeed", &boostInfo_.rotationSpeed, 0.01f);
+	ImGui::DragFloat("MaxPicth", &boostInfo_.maxPitch, 0.01f);
 	ImGui::End();
+
+	ImGui::Begin("Energy");
+	ImGui::DragFloat("Energy", &energyInfo_.rest, 1.0f);
+	ImGui::DragFloat("EnergyDrain", &energyInfo_.drain, 0.01f);
+	ImGui::DragFloat("EnergyRegen", &energyInfo_.regen, 0.01f);
+	ImGui::DragFloat("MaxBoostEnergy", &energyInfo_.max, 1.0f);
+	ImGui::End();
+
+	ImGui::Begin("Camera");
+	ImGui::DragFloat3("Rotate", &cameraInfo_.rotate.x, 0.01f);
+	ImGui::DragFloat3("MoveOffset", &cameraInfo_.moveOffset.x, 0.01f);
+	ImGui::DragFloat3("BoostOffset", &cameraInfo_.boostOffset.x, 0.01f);
+	ImGui::DragFloat("LerpSpeed", &cameraInfo_.lerpSpeed, 0.1f);
+	ImGui::DragFloat("Blend", &cameraInfo_.blend, 0.01f);
+	ImGui::End();
+
 }
 
 ///-------------------------------------------/// 
@@ -142,15 +159,16 @@ void Player::ImGuiUpdate() {
 ///-------------------------------------------///
 // 通常
 void Player::InitializeRoot() {
-	cameraRotate_ = rotate_;
+	rotate_ = cameraInfo_.rotate;
 }
 // 移動
-void Player::InitializeMove() {}
+void Player::InitializeMove() {
+	rotate_ = cameraInfo_.rotate;
+}
 // ブースト
 void Player::InitializeBoost() {
-	isBoosting_ = true;
-	boostDirection_ = rotate_.y;
-	boostSpeed_ = maxBoostSpeed_;
+	boostInfo_.speed = boostInfo_.maxSpeed;
+	rotate_ = cameraInfo_.rotate;
 }
 
 ///-------------------------------------------/// 
@@ -165,11 +183,11 @@ void Player::UpdateRoot() {
 	StickState rightStick = Input::GetRightStickState(0);
 
 	/// === カメラ回転 === ///
-	cameraRotate_.y += rightStick.x * rotationSpeed_;
-	cameraRotate_.x = std::clamp(cameraRotate_.x + rightStick.y * rotationSpeed_, -maxPitch_, maxPitch_);
+	cameraInfo_.rotate.y += rightStick.x * moveInfo_.rotationSpeed;
+	cameraInfo_.rotate.x = std::clamp(cameraInfo_.rotate.x + rightStick.y * moveInfo_.rotationSpeed, -moveInfo_.maxPitch, moveInfo_.maxPitch);
 
 	/// === 左スティック押し込みでブースト開始 === ///
-	if (Input::PushButton(0, ControllerButtonType::LeftStick)) {
+	if (Input::TriggerButton(0, ControllerButtonType::LeftStick)) {
 		behaviorRequest_ = Behavior::kBoost;
 	}
 
@@ -185,8 +203,8 @@ void Player::UpdateMove() {
 
 	/// === 右スティックで進行方向調整 === ///
 	StickState rightStick = Input::GetRightStickState(0);
-	rotate_.y += rightStick.x * rotationSpeed_;
-	cameraRotate_.x = std::clamp(rotate_.x + rightStick.y * rotationSpeed_, -maxPitch_, maxPitch_);
+	rotate_.y += rightStick.x * moveInfo_.rotationSpeed;
+	cameraInfo_.rotate.x = std::clamp(rotate_.x + rightStick.y * moveInfo_.rotationSpeed, -moveInfo_.maxPitch, moveInfo_.maxPitch);
 
 	/// === 移動方向の計算 === ///
 	Vector3 forward(std::sin(rotate_.y), 0.0f, std::cos(rotate_.y));
@@ -199,12 +217,12 @@ void Player::UpdateMove() {
 	}
 
 	/// === エネルギー未満なら少し加速 === ///
-	float speed = (boostEnergy_ < maxBoostEnergy_) ? normalSpeed_ * 1.2f : normalSpeed_;
+	float speed = (energyInfo_.rest < energyInfo_.max) ? moveInfo_.speed * 1.2f : moveInfo_.speed;
 
 	translate_ += moveDirection * speed * deltaTime_;
 
 	/// === 左スティック押し込みでブースト開始 === ///
-	if (Input::PushButton(0, ControllerButtonType::LeftStick)) {
+	if (Input::TriggerButton(0, ControllerButtonType::LeftStick)) {
 		behaviorRequest_ = Behavior::kBoost;
 		return;
 	}
@@ -219,17 +237,17 @@ void Player::UpdateMove() {
 void Player::UpdateBoost() {
 	/// === ブースト中の方向変更 === ///
 	StickState rightStick = Input::GetRightStickState(0);
-	rotate_.y += rightStick.x * rotationSpeed_;
-	rotate_.x = std::clamp(rotate_.x + -rightStick.y * rotationSpeed_, -maxPitch_, maxPitch_);
+	rotate_.y += rightStick.x * boostInfo_.rotationSpeed;
+	rotate_.x = std::clamp(rotate_.x + rightStick.y * boostInfo_.rotationSpeed, -boostInfo_.maxPitch, boostInfo_.maxPitch);
 
 	/// ===左スティックの取得=== ///
 	StickState leftStick = Input::GetLeftStickState(0);
 
 	/// === エネルギー消費 === ///
-	boostEnergy_ -= boostEnergyDrain_ * deltaTime_;
+	energyInfo_.rest -= energyInfo_.drain * deltaTime_;
 
 	/// === ブースト解除条件 === ///
-	if (leftStick.y < -0.5f || Input::PushButton(0, ControllerButtonType::A) || boostEnergy_ <= 0.0f) {
+	if (leftStick.y < -0.5f || Input::TriggerButton (0, ControllerButtonType::A) || energyInfo_.rest <= 0.0f) {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 
@@ -242,32 +260,31 @@ void Player::UpdateBoost() {
 	Normalize(forward); // 速度を一定にするため正規化
 
 	/// === ブースト移動（`rotate_` に基づく方向に進む） === ///
-	translate_ += forward * boostSpeed_ * deltaTime_;
+	translate_ += forward * boostInfo_.speed * deltaTime_;
 }
 // カメラ
 void Player::UpdateCamera() {
 	/// === カメラオフセットの補間 === ///
 	float targetBlend = (behavior_ == Behavior::kBoost) ? 1.0f : 0.0f;
-	boostBlend_ = Lerp(boostBlend_, targetBlend, cameraLerpSpeed_ * deltaTime_);
+	cameraInfo_.blend = Lerp(cameraInfo_.blend, targetBlend, cameraInfo_.lerpSpeed * deltaTime_);
 
 	/// === オフセットの適用 === ///
-	cameraOffset_ = Lerp(normalOffset_, boostOffset_, boostBlend_);
+	cameraInfo_.offset = Lerp(cameraInfo_.moveOffset, cameraInfo_.boostOffset, cameraInfo_.blend);
 }
 // ジャンプ
 void Player::UpdateAir() {
 	/// === Aボタンで上昇 === ///
-	if (Input::PushButton(0, ControllerButtonType::A) && boostEnergy_ > 0.0f) {
-		verticalVelocity_ = verticalSpeed_;
-		boostEnergy_ -= boostEnergyDrain_ * deltaTime_;
+	if (Input::PushButton(0, ControllerButtonType::A)) {
+		jumpInfo_.verticalVelocity = jumpInfo_.verticalSpeed;
 	} else {
-		verticalVelocity_ += gravity_ * deltaTime_; // 自然落下
+		jumpInfo_.verticalVelocity += jumpInfo_.gravity * deltaTime_;
 	}
 
 	/// === 地面との衝突 === ///
-	if (translate_.y + verticalVelocity_ * deltaTime_ < groundLevel_) {
-		translate_.y = groundLevel_;
-		verticalVelocity_ = 0.0f;
+	if (translate_.y + jumpInfo_.verticalVelocity * deltaTime_ < jumpInfo_.groundLevel) {
+		translate_.y = jumpInfo_.groundLevel;
+		jumpInfo_.verticalVelocity = 0.0f;
 	} else {
-		translate_.y += verticalVelocity_ * deltaTime_;
+		translate_.y += jumpInfo_.verticalVelocity * deltaTime_;
 	}
 }
