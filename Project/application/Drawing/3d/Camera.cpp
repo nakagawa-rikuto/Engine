@@ -5,6 +5,13 @@
 #include "Math/EasingMath.h"
 
 ///-------------------------------------------/// 
+/// FollowCameraの設定
+///-------------------------------------------///
+void Camera::SetFollowCamera(FollowCameraType type) {
+	cameraType_ = type;
+}
+
+///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
 // WorldMatrix
@@ -71,7 +78,8 @@ void Camera::Update() {
 	if (targetPos_ && targetRot_) {
 		// 追従処理
 		//FollowTarget();
-		PreFollowTarget();
+		//PreFollowTarget();
+		UpdateFollowCamera();
 	} else {
 		transform_ = addTransform_;
 	}
@@ -124,4 +132,108 @@ void Camera::PreFollowTarget() {
 		// カメラの向きをプレイヤーの位置に向ける
 		transform_.rotate.y = targetRot_->y;
 	}
+}
+
+///-------------------------------------------/// 
+///
+///-------------------------------------------///
+void Camera::UpdateFollowCamera() {
+	switch (cameraType_) {
+	case FollowCameraType::FixedOffset:
+		FollowFixedOffset();
+		break;
+	case FollowCameraType::Interpolated:
+		FollowInterpolated();
+		break;
+	case FollowCameraType::Orbiting:
+		FollowOrbiting();
+		break;
+	case FollowCameraType::CollisionAvoidance:
+		FollowCollisionAvoidance();
+		break;
+	}
+}
+
+///-------------------------------------------/// 
+///
+///-------------------------------------------///
+void Camera::FollowFixedOffset() {
+	// プレイヤーの回転を基にY軸回転行列を作成
+	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
+
+	// オフセットを回転行列で変換し、適切な位置に調整
+	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
+
+	// 目標位置にオフセットを適用
+	transform_.translate = *targetPos_ + rotatedOffset;
+
+	// プレイヤーの回転と同じ向きを維持
+	transform_.rotate = *targetRot_;
+}
+
+///-------------------------------------------/// 
+///
+///-------------------------------------------///
+void Camera::FollowInterpolated() {
+	// プレイヤーの回転を基にY軸回転行列を作成
+	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
+
+	// オフセットを回転行列で変換し、適切な位置に調整
+	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
+
+	// 目標位置を算出
+	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
+
+	// カメラの位置を補間（Lerp）で滑らかに移動
+	transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+
+	// カメラの回転もプレイヤーの回転に向かって補間
+	transform_.rotate = Lerp(transform_.rotate, *targetRot_, rotationLerpSpeed_);
+}
+
+///-------------------------------------------/// 
+///
+///-------------------------------------------///
+void Camera::FollowOrbiting() {
+	float orbitAngleY = addTransform_.rotate.y;
+
+	// プレイヤーの周囲を円軌道で回る
+	float radius = 10.0f; // カメラの回転半径
+	float camX = targetPos_->x + radius * cosf(orbitAngleY);
+	float camZ = targetPos_->z + radius * sinf(orbitAngleY);
+	float camY = targetPos_->y + offset_.y; // 高さは維持
+
+	// カメラの位置を更新
+	transform_.translate = { camX, camY, camZ };
+
+	// カメラの向きをプレイヤーに向ける
+	Vector3 lookDirection = *targetPos_ - transform_.translate;
+	transform_.rotate.y = atan2f(lookDirection.x, lookDirection.z);
+}
+
+///-------------------------------------------/// 
+///
+///-------------------------------------------///
+void Camera::FollowCollisionAvoidance() {
+	// プレイヤーの回転を基にY軸回転行列を作成
+	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
+
+	// オフセットを回転行列で変換し、適切な位置に調整
+	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
+
+	// 目標位置を算出
+	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
+
+	// 障害物の有無をチェック（レイキャストを使用予定）
+	bool hitWall = false; // ここにレイキャストを実装する（仮）
+
+	// 壁がある場合はターゲットに寄る
+	if (hitWall) {
+		transform_.translate = Lerp(transform_.translate, *targetPos_, followSpeed_);
+	} else {
+		transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+	}
+
+	// カメラの向きをプレイヤーの回転に合わせる
+	transform_.rotate = *targetRot_;
 }

@@ -48,7 +48,7 @@ void GameScene::Initialize() {
 
 	// Player
 	player_ = std::make_unique<Player>();
-	player_->Initialize("MonsterBall");
+	player_->Initialize("MonsterBall", cameraManager_->GetActiveCamera().get());
 	// Ground
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize("Ground");
@@ -87,7 +87,7 @@ void GameScene::Update() {
 	skyDome_->Update(cameraManager_->GetActiveCamera().get());
 
 	// player
-	player_->Update(cameraManager_->GetActiveCamera().get());
+	player_->Update();
 
 	// fixedPointCamera
 	fixedPointCamera_->SetTranslate({0.0f, 5.0f, -40.0f});

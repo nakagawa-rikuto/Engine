@@ -17,8 +17,8 @@ public:
 	Player() = default;
 	~Player();
 
-	void Initialize(const std::string& modelName);
-	void Update(Camera* camera);
+	void Initialize(const std::string& modelName, Camera* camera);
+	void Update();
 	void Draw();
 
 	void ImGuiUpdate();
@@ -36,6 +36,9 @@ private:
 
 	// モデル
 	std::unique_ptr<Model> model_;
+
+	// Camera
+	Camera* camera_ = nullptr;
 
 	/// ===変数=== ///
 	Vector3 translate_ = { 0.0f, 0.0f, 0.0f };

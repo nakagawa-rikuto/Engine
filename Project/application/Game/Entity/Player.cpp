@@ -25,17 +25,23 @@ Player::~Player() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Player::Initialize(const std::string& modelName) {
+void Player::Initialize(const std::string& modelName, Camera* camera) {
 	// model
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelName);  // 初期化(const std::string& modelNameが必須)
 	model_->Update();
+
+	// Cameraの設定
+	camera_ = camera;
+	camera_->SetFollowCamera(FollowCameraType::Orbiting);
+	InitializeRoot();
+	camera_->SetFollowSpeed(1.0f);
 }
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void Player::Update(Camera* camera) {
+void Player::Update() {
 
 	/// ===Behavior遷移の実装=== ///
 	if (behaviorRequest_) {
@@ -45,13 +51,19 @@ void Player::Update(Camera* camera) {
 		// 各振る舞いの初期化
 		switch (behavior_) {
 		case Player::Behavior::kRoot:
+			camera_->SetFollowCamera(FollowCameraType::Orbiting);
 			InitializeRoot();
+			camera_->SetFollowSpeed(1.0f);
 			break;
 		case Player::Behavior::kMove:
+			camera_->SetFollowCamera(FollowCameraType::FixedOffset);
 			InitializeMove();
+			camera_->SetFollowSpeed(0.8f);
 			break;
 		case Player::Behavior::kBoost:
+			camera_->SetFollowCamera(FollowCameraType::Interpolated);
 			InitializeBoost();
+			camera_->SetFollowSpeed(1.0f);
 			break;
 		}
 
@@ -64,6 +76,7 @@ void Player::Update(Camera* camera) {
 	case Player::Behavior::kRoot:
 		UpdateRoot();
 		UpdateAir();
+		camera_->SetRotate(cameraRotate_);
 		break;
 	case Player::Behavior::kMove:
 		UpdateMove();
@@ -77,16 +90,14 @@ void Player::Update(Camera* camera) {
 	UpdateCamera();
 
 	// Cameraの更新
-	camera->SetTarget(&translate_, &rotate_);
-	camera->SetOffset(cameraOffset_);
-	camera->SetFollowSpeed(0.8f);
-	camera->SetRotate(cameraRotate_);
+	camera_->SetTarget(&translate_, &rotate_);
+	camera_->SetOffset(cameraOffset_);
 
 	// モデルの更新
 	model_->SetPosition(translate_);
 	model_->SetRotate(rotate_);
 	model_->SetScale(scale_);
-	model_->SetCamera(camera);
+	model_->SetCamera(camera_);
 	model_->Update();
 }
 
@@ -130,7 +141,9 @@ void Player::ImGuiUpdate() {
 /// 初期化(Behavior)
 ///-------------------------------------------///
 // 通常
-void Player::InitializeRoot() {}
+void Player::InitializeRoot() {
+	cameraRotate_ = rotate_;
+}
 // 移動
 void Player::InitializeMove() {}
 // ブースト

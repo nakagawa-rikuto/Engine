@@ -2,6 +2,14 @@
 /// ===Include=== ///
 #include "Engine/DataInfo/CData.h"
 
+/// === カメラの種類を表す列挙型 === ///
+enum class FollowCameraType {
+	FixedOffset,        // 固定オフセット型（一定のオフセット距離で追従）
+	Interpolated,       // スムージング追従型（補間で滑らかに追従）
+	Orbiting,           // 回転可能型（対象の周りを回るカメラ）
+	CollisionAvoidance  // 衝突回避型（障害物を避ける）
+};
+
 ///=====================================================/// 
 /// カメラ
 ///=====================================================///
@@ -20,6 +28,11 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// FollowTypeの設定
+	/// </summary>
+	void SetFollowCamera(FollowCameraType type);
 
 public:/// ===Getter=== ///
 	// WorldMatrix
@@ -82,11 +95,28 @@ private:/// ===変数=== ///
 	float followSpeed_ = 0.1f;      // 追従速度
 	float rotationLerpSpeed_ = 0.1f; // 回転補間速度
 
+	FollowCameraType cameraType_ = FollowCameraType::FixedOffset; // デフォルトカメラタイプ
+
 private:
 
 	// 追従処理
 	void FollowTarget();
 
 	void PreFollowTarget();
+
+	// カメラの種類に応じた更新処理
+	void UpdateFollowCamera();
+
+	// 固定オフセット型カメラの処理 
+	void FollowFixedOffset();
+
+	// スムージング追従型カメラの処理 
+	void FollowInterpolated();
+
+	// 回転可能型カメラの処理 
+	void FollowOrbiting();
+
+	// 衝突回避型カメラの処理 
+	void FollowCollisionAvoidance();
 };
 
