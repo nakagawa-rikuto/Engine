@@ -165,7 +165,9 @@ void Player::InitializeRoot() {
 	camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
 }
 // 移動
-void Player::InitializeMove() {}
+void Player::InitializeMove() {
+
+}
 // ブースト
 void Player::InitializeBoost() {
 	boostInfo_.speed = boostInfo_.maxSpeed;

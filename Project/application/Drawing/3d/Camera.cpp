@@ -119,7 +119,7 @@ void Camera::UpdateFollowCamera() {
 		break;
 	}
 }
-// 
+// 回転軸がY座標だけの追従処理
 void Camera::FollowFixedOffset() {
 	// プレイヤーの回転を基にY軸回転行列を作成
 	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
@@ -133,7 +133,7 @@ void Camera::FollowFixedOffset() {
 	// プレイヤーの回転と同じ向きを維持
 	transform_.rotate = *targetRot_;
 }
-//
+// 回転軸がXとY座標の追従処理
 void Camera::FollowInterpolated() {
 	// プレイヤーの回転を基にY軸回転行列を作成
 	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
@@ -150,7 +150,7 @@ void Camera::FollowInterpolated() {
 	// カメラの回転もプレイヤーの回転に向かって補間
 	transform_.rotate = Lerp(transform_.rotate, *targetRot_, rotationLerpSpeed_);
 }
-// 
+// 自分の周りをまわるカメラの追従処理
 void Camera::FollowOrbiting() {
 	// クォータニオンで回転を管理
 	Quaternion rotationDelta = IdentityQuaternion();
@@ -189,7 +189,7 @@ void Camera::FollowOrbiting() {
 
 	transform_.rotate = Normalize(transform_.rotate); // クォータニオンを正規化して数値誤差を防ぐ
 }
-// 
+// 障害物を避ける追従処理
 void Camera::FollowCollisionAvoidance() {
 	// プレイヤーの回転を基にY軸回転行列を作成
 	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
