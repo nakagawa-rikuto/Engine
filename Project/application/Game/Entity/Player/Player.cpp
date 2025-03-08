@@ -14,7 +14,6 @@
 #endif // USE_IMGUI
 
 
-
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -79,7 +78,6 @@ void Player::Update() {
 	case Player::Behavior::kRoot:
 		UpdateRoot();
 		UpdateAir();
-		camera_->SetRotate(cameraInfo_.rotate);
 		break;
 	case Player::Behavior::kMove:
 		UpdateMove();
@@ -98,7 +96,7 @@ void Player::Update() {
 
 	// モデルの更新
 	model_->SetPosition(translate_);
-	model_->SetRotate(rotate_);
+	model_->SetRotate({rotate_.x, rotate_.y, rotate_.z});
 	model_->SetScale(scale_);
 	model_->SetCamera(camera_);
 	model_->Update();
@@ -115,6 +113,11 @@ void Player::Draw() {
 /// 更新(ImGUi)
 ///-------------------------------------------///
 void Player::ImGuiUpdate() {
+	ImGui::Begin("Player");
+	ImGui::DragFloat3("Translate", &translate_.x, 0.01f);
+	ImGui::DragFloat3("Rotate", &rotate_.x, 0.01f);
+	ImGui::End();
+
 	ImGui::Begin("Jump");
 	ImGui::DragFloat("VerticalSpeed", &jumpInfo_.verticalSpeed, 0.01f);
 	ImGui::DragFloat("Gravity", &jumpInfo_.gravity, 0.01f);
@@ -159,16 +162,13 @@ void Player::ImGuiUpdate() {
 ///-------------------------------------------///
 // 通常
 void Player::InitializeRoot() {
-	rotate_ = cameraInfo_.rotate;
+	camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
 }
 // 移動
-void Player::InitializeMove() {
-	rotate_ = cameraInfo_.rotate;
-}
+void Player::InitializeMove() {}
 // ブースト
 void Player::InitializeBoost() {
 	boostInfo_.speed = boostInfo_.maxSpeed;
-	rotate_ = cameraInfo_.rotate;
 }
 
 ///-------------------------------------------/// 
@@ -183,12 +183,12 @@ void Player::UpdateRoot() {
 	StickState rightStick = Input::GetRightStickState(0);
 
 	/// === カメラ回転 === ///
-	cameraInfo_.rotate.y += rightStick.x * moveInfo_.rotationSpeed;
-	cameraInfo_.rotate.x = std::clamp(cameraInfo_.rotate.x + rightStick.y * moveInfo_.rotationSpeed, -moveInfo_.maxPitch, moveInfo_.maxPitch);
+	camera_->SetStick({ rightStick.x, rightStick.y });
 
 	/// === 左スティック押し込みでブースト開始 === ///
 	if (Input::TriggerButton(0, ControllerButtonType::LeftStick)) {
 		behaviorRequest_ = Behavior::kBoost;
+		// ここで現在のカメラの向いている方向にプレイヤーを向かせる処理を追加
 	}
 
 	/// === 移動があれば移動状態へ === ///

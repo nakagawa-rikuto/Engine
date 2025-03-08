@@ -24,15 +24,6 @@ public:
 	void ImGuiUpdate();
 
 private:
-	// 振る舞い（Behavior）
-	enum class Behavior {
-		kRoot, // 通常状態
-		kMove, // 移動
-		kBoost // ブースト
-	};
-	Behavior behavior_ = Behavior::kRoot;
-	// 次の振る舞いリクエスト
-	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
 	// モデル
 	std::unique_ptr<Model> model_;
@@ -42,9 +33,19 @@ private:
 
 	/// ===変数=== ///
 	Vector3 translate_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 rotate_ = { 0.0f, 0.0f, 0.0f };
+	Quaternion rotate_ = { 0.0f, 0.0f, 0.0f, 0.0f };
 	Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	// 振る舞い（Behavior）
+	enum class Behavior {
+		kRoot, // 通常状態
+		kMove, // 移動
+		kBoost // ブースト
+	};
+	Behavior behavior_ = Behavior::kRoot;
+	// 次の振る舞いリクエスト
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
 	/// ===Energy情報=== ///
 	struct EnergyInfo {
@@ -79,10 +80,10 @@ private:
 	/// ===Camera情報=== ///
 	struct CameraInfo {
 		Vector3 offset = { 0.0f, 0.0f, 0.0f };        // 現在のオフセット
-		Vector3 moveOffset = { 0.0f, 0.5f, -10.0f };  // 通常のオフセット
+		Vector3 moveOffset = { 0.0f, 0.5f, -20.0f };  // 通常のオフセット
 		Vector3 boostOffset = { 2.0f, 0.8f, -10.0f }; // ブースト時のオフセット
 		Vector3 translate = { 0.0f, 0.0f, 0.0f };     // カメラの位置
-		Vector3 rotate = { 0.0f, 0.0f, 0.0f };        // カメラの位置
+		Quaternion rotate = { 0.0f, 0.0f, 0.0f, 0.0f };        // カメラの位置
 		float lerpSpeed = 4.0f;                       // 補間速度
 		float blend = 0.0f;                           // 補間係数
 	};

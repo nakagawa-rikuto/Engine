@@ -1,8 +1,8 @@
 #include "Camera.h"
 
-#include "Engine/Core/WinApp.h"
 #include "Math/sMath.h"
 #include "Math/EasingMath.h"
+#include "Engine/System/Service/Getter.h"
 
 ///-------------------------------------------/// 
 /// FollowCameraの設定
@@ -23,9 +23,9 @@ const Matrix4x4& Camera::GetProjectionMatrix() const { return projectionMatrix_;
 // ViewProjectionMatrix
 const Matrix4x4& Camera::GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
 // Translate
-const Vector3& Camera::GetTranslate() const { return addTransform_.translate; }
+const Vector3& Camera::GetTranslate() const { return transform_.translate; }
 // Rotate
-const Vector3& Camera::GetRotate() const { return addTransform_.rotate; }
+const Quaternion& Camera::GetRotate() const { return transform_.rotate; }
 
 ///-------------------------------------------/// 
 /// Setter
@@ -33,7 +33,7 @@ const Vector3& Camera::GetRotate() const { return addTransform_.rotate; }
 // Translate
 void Camera::SetTranslate(const Vector3& translate) { addTransform_.translate = translate; }
 // Rotate
-void Camera::SetRotate(const Vector3& rotate) { addTransform_.rotate = rotate; }
+void Camera::SetRotate(const Vector3& rotate) { addTransform_.rotate = {rotate.x, rotate.y, rotate.z, 1.0f}; }
 // ForY
 void Camera::SetForY(const float& forY) { horizontalView_ = forY; }
 // AspectRatio
@@ -43,24 +43,28 @@ void Camera::SetNearClip(const float& nearClip) { nearClip_ = nearClip; }
 // FarClip
 void Camera::SetFarClip(const float& farClip) { farClip_ = farClip; }
 // 追従対象の座標を設定
-void Camera::SetTarget(Vector3* position, Vector3* rotation) {
+void Camera::SetTarget(Vector3* position, Quaternion* rotation) {
 	targetPos_ = position;
 	targetRot_ = rotation;
 }
 // 追従のオフセット
 void Camera::SetOffset(const Vector3& offset) { offset_ = offset; }
+void Camera::SetOrbitingOffset(const Vector3& offset) { OrbitingOffset_ = offset; }
 // 追従速度を設定
 void Camera::SetFollowSpeed(float speed) { followSpeed_ = speed; }
 // 回転補間速度
 void Camera::SetLerpSpeed(float speed) { rotationLerpSpeed_ = speed; }
+// 回転の量
+void Camera::SetStick(const Vector2& stickValue) { stickValue_ = stickValue; }
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void Camera::Initialize() {
 	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.f} };
+	addTransform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.f} };
 	horizontalView_ = 0.45f;
-	aspect_ = static_cast<float>(WinApp::kWindowWidth) / static_cast<float>(WinApp::kWindowHeight);
+	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());
 	nearClip_ = 0.1f;
 	farClip_ = 100.0f;
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
@@ -98,45 +102,7 @@ void Camera::Update() {
 ///-------------------------------------------/// 
 /// 追従処理
 ///-------------------------------------------///
-void Camera::FollowTarget() {
-	/// ===プレイヤーの回転とカメラの回転を組み合わせる=== ///
-	Vector3 combinedRotation = *targetRot_ + addTransform_.rotate;
-
-	/// ===プレイヤーの回転に基づいてオフセットを回転=== ///
-	Matrix4x4 rotationMatrix = MakeRotateYMatrix(combinedRotation.y);
-	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
-
-	/// ===目標のカメラ位置を計算=== ///
-	Vector3 targetCameraPos = *targetPos_ + rotatedOffset + addTransform_.translate;
-
-	/// ===線形補間 (Lerp) を使って滑らかに追従=== ///
-	transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
-
-	/// ===カメラの向きをプレイヤーの回転に合わせる=== ///
-	transform_.rotate = Lerp(transform_.rotate, combinedRotation, rotationLerpSpeed_);
-}
-
-/// ===追従処理=== ///
-void Camera::PreFollowTarget() {
-	if (targetPos_ && targetRot_) {
-		// プレイヤーの回転に基づいてオフセットを回転
-		Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
-		Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
-
-		// 目標のカメラ位置を計算
-		Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
-
-		// 線形補間 (Lerp) を使って滑らかに追従
-		transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
-
-		// カメラの向きをプレイヤーの位置に向ける
-		transform_.rotate.y = targetRot_->y;
-	}
-}
-
-///-------------------------------------------/// 
-///
-///-------------------------------------------///
+// 
 void Camera::UpdateFollowCamera() {
 	switch (cameraType_) {
 	case FollowCameraType::FixedOffset:
@@ -153,10 +119,7 @@ void Camera::UpdateFollowCamera() {
 		break;
 	}
 }
-
-///-------------------------------------------/// 
-///
-///-------------------------------------------///
+// 
 void Camera::FollowFixedOffset() {
 	// プレイヤーの回転を基にY軸回転行列を作成
 	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
@@ -170,10 +133,7 @@ void Camera::FollowFixedOffset() {
 	// プレイヤーの回転と同じ向きを維持
 	transform_.rotate = *targetRot_;
 }
-
-///-------------------------------------------/// 
-///
-///-------------------------------------------///
+//
 void Camera::FollowInterpolated() {
 	// プレイヤーの回転を基にY軸回転行列を作成
 	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
@@ -190,30 +150,46 @@ void Camera::FollowInterpolated() {
 	// カメラの回転もプレイヤーの回転に向かって補間
 	transform_.rotate = Lerp(transform_.rotate, *targetRot_, rotationLerpSpeed_);
 }
-
-///-------------------------------------------/// 
-///
-///-------------------------------------------///
+// 
 void Camera::FollowOrbiting() {
-	float orbitAngleY = addTransform_.rotate.y;
+	// クォータニオンで回転を管理
+	Quaternion rotationDelta = IdentityQuaternion();
 
-	// プレイヤーの周囲を円軌道で回る
-	float radius = 10.0f; // カメラの回転半径
-	float camX = targetPos_->x + radius * cosf(orbitAngleY);
-	float camZ = targetPos_->z + radius * sinf(orbitAngleY);
-	float camY = targetPos_->y + offset_.y; // 高さは維持
+	// 右スティックのX・Y軸の値を取得 (-32768 ～ 32767)
+	float rightStickX = stickValue_.x; // Yaw（左右回転）
+	float rightStickY = stickValue_.y; // Pitch（上下回転）
 
-	// カメラの位置を更新
-	transform_.translate = { camX, camY, camZ };
+	// デッドゾーン処理（スティックがわずかに傾いたときの無効化）
+	const float DEADZONE = 0.2f;
+	if (fabs(rightStickX) < DEADZONE) rightStickX = 0.0f;
+	if (fabs(rightStickY) < DEADZONE) rightStickY = 0.0f;
 
-	// カメラの向きをプレイヤーに向ける
-	Vector3 lookDirection = *targetPos_ - transform_.translate;
-	transform_.rotate.y = atan2f(lookDirection.x, lookDirection.z);
+	// スティックの入力を回転量に変換
+	float deltaYaw = rightStickX * 0.05f;  // 感度調整
+	float deltaPitch = rightStickY * 0.05f;
+
+	// クォータニオンを用いた回転計算
+	Quaternion yawRotation = MakeRotateAxisAngle(
+		Vector3(0, 1, 0), deltaYaw);
+	Quaternion pitchRotation = MakeRotateAxisAngle(
+		RotateVector(Vector3(1, 0, 0), yawRotation * transform_.rotate), deltaPitch);
+
+	// 回転の補間
+	rotationDelta = pitchRotation * yawRotation;
+
+
+	// 累積回転を更新
+	transform_.rotate = rotationDelta * transform_.rotate;
+
+	offset_ = OrbitingOffset_;
+
+	// 回転を適用
+	offset_ = RotateVector(offset_, transform_.rotate);
+	transform_.translate = offset_ + *targetPos_;
+
+	transform_.rotate = Normalize(transform_.rotate); // クォータニオンを正規化して数値誤差を防ぐ
 }
-
-///-------------------------------------------/// 
-///
-///-------------------------------------------///
+// 
 void Camera::FollowCollisionAvoidance() {
 	// プレイヤーの回転を基にY軸回転行列を作成
 	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
