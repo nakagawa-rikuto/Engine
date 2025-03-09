@@ -17,7 +17,7 @@ class Camera {
 public:
 
 	Camera() = default;
-	~Camera() = default;
+	~Camera();
 
 	/// <summary>
 	/// 初期化
@@ -109,16 +109,12 @@ private:
 
 	// カメラの種類に応じた更新処理
 	void UpdateFollowCamera();
-
 	// 固定オフセット型カメラの処理 
 	void FollowFixedOffset();
-
 	// スムージング追従型カメラの処理 
 	void FollowInterpolated();
-
 	// 回転可能型カメラの処理 
 	void FollowOrbiting();
-
 	// 衝突回避型カメラの処理 
 	void FollowCollisionAvoidance();
 };

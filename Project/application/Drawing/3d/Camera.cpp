@@ -5,6 +5,14 @@
 #include "Engine/System/Service/Getter.h"
 
 ///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+Camera::~Camera() {
+	targetPos_ = nullptr;
+	targetRot_ = nullptr;
+}
+
+///-------------------------------------------/// 
 /// FollowCameraの設定
 ///-------------------------------------------///
 void Camera::SetFollowCamera(FollowCameraType type) {
@@ -61,8 +69,8 @@ void Camera::SetStick(const Vector2& stickValue) { stickValue_ = stickValue; }
 /// 初期化
 ///-------------------------------------------///
 void Camera::Initialize() {
-	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.f} };
-	addTransform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.f} };
+	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
+	addTransform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
 	horizontalView_ = 0.45f;
 	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());
 	nearClip_ = 0.1f;
@@ -121,25 +129,12 @@ void Camera::UpdateFollowCamera() {
 }
 // 回転軸がY座標だけの追従処理
 void Camera::FollowFixedOffset() {
-	// プレイヤーの回転を基にY軸回転行列を作成
-	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
+	// 目標の回転（Quaternion）の Yaw 成分のみを取得
+	float targetYaw = GetYAngle(*targetRot_);
+	Quaternion targetYawRotation = MakeRotateAxisAngle(Vector3(0, 1, 0), targetYaw);
 
-	// オフセットを回転行列で変換し、適切な位置に調整
-	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
-
-	// 目標位置にオフセットを適用
-	transform_.translate = *targetPos_ + rotatedOffset;
-
-	// プレイヤーの回転と同じ向きを維持
-	transform_.rotate = *targetRot_;
-}
-// 回転軸がXとY座標の追従処理
-void Camera::FollowInterpolated() {
-	// プレイヤーの回転を基にY軸回転行列を作成
-	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
-
-	// オフセットを回転行列で変換し、適切な位置に調整
-	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
+	// オフセットをターゲットの Y 軸回転に基づいて回転
+	Vector3 rotatedOffset = RotateVector(offset_, targetYawRotation);
 
 	// 目標位置を算出
 	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
@@ -147,8 +142,25 @@ void Camera::FollowInterpolated() {
 	// カメラの位置を補間（Lerp）で滑らかに移動
 	transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
 
-	// カメラの回転もプレイヤーの回転に向かって補間
-	transform_.rotate = Lerp(transform_.rotate, *targetRot_, rotationLerpSpeed_);
+	// カメラの回転を Yaw のみに制限して補間
+	transform_.rotate = SLerp(transform_.rotate, targetYawRotation, rotationLerpSpeed_);
+}
+// 回転軸がXとY座標の追従処理
+void Camera::FollowInterpolated() {
+	// 目標の回転（Quaternion）を取得
+	Quaternion targetRotation = *targetRot_;
+
+	// オフセットをターゲットの回転に基づいて回転
+	Vector3 rotatedOffset = RotateVector(offset_, targetRotation);
+
+	// 目標位置を算出
+	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
+
+	// カメラの位置を補間（Lerp）で滑らかに移動
+	transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+
+	// カメラの回転をスムーズに補間（Slerp を使用）
+	transform_.rotate = SLerp(transform_.rotate, targetRotation, rotationLerpSpeed_);
 }
 // 自分の周りをまわるカメラの追従処理
 void Camera::FollowOrbiting() {

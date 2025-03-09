@@ -68,3 +68,7 @@ Quaternion Inverse(const Quaternion& quaternion);
 Quaternion MakeRotateAxisAngle(const Vector3& axis, float angle);
 /// ===Quaternionの回転結果をベクトルで返す=== ///
 Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
+/// ===QuaternionからX軸の角度を取る関数=== ///
+float GetXAngle(const Quaternion& quaternion);
+/// ===QuaternionからY軸の角度を取る関数=== ///
+float GetYAngle(const Quaternion& quaternion);

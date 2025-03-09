@@ -64,7 +64,7 @@ private:
 	struct BoostInfo {
 		float speed = 0.0f;             // 現在のスビード	
 		float maxSpeed = 20.0f;          // 最大スピード
-		float rotationSpeed = 0.05f;     // 視点回転速度
+		float rotationSpeed = 0.005f;     // 視点回転速度
 		float maxPitch = 1.2f;           // 上下回転速度
 		float coolDown = 0.0f;           // 現在のクールタイム
 		float maxCoolDown = 3.0f;        // クールタイムの最大値

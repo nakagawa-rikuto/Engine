@@ -108,6 +108,24 @@ Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
 	return result;
 }
 
+///-------------------------------------------/// 
+/// Quaternionから角度を取得する関数
+///-------------------------------------------///
+// X
+float GetXAngle(const Quaternion& quaternion) {
+	// 単位ベクトル (0,0,1) をクォータニオンで回転させる
+	Vector3 forward = RotateVector(Vector3(0.0f, 0.0f, 1.0f), quaternion);
+	// forward.y がピッチ角度（上向きか下向きか）を示す
+	return std::asin(forward.y); // ラジアン角
+}
+// Y
+float GetYAngle(const Quaternion& quaternion) {
+	// 単位ベクトル (0,0,1) をクォータニオンで回転させる
+	Vector3 forward = RotateVector(Vector3(0.0f, 0.0f, 1.0f), quaternion);
+	// atan2(forward.x, forward.z) で Yaw（水平回転） を取得。
+	return std::atan2(forward.x, forward.z); // Yaw 角度（ラジアン）
+}
+
 
 
 ///-------------------------------------------/// 

@@ -73,13 +73,7 @@ Quaternion SLerp(const Quaternion& start, const Quaternion& end, float t) {
     // 内積が 1 に近い場合（角度が小さい）、Lerp で近似
     const float THRESHOLD = 0.9995f;
     if (dot > THRESHOLD) {
-        Quaternion result = {
-            (1.0f - t) * start.x + t * endCorrected.x,
-            (1.0f - t) * start.y + t * endCorrected.y,
-            (1.0f - t) * start.z + t * endCorrected.z,
-            (1.0f - t) * start.w + t * endCorrected.w
-        };
-        return Normalize(result);
+        return Normalize(Lerp(start, end, t));
     }
 
     // 角度を計算

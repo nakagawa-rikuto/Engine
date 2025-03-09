@@ -60,12 +60,14 @@ void Player::Update() {
 		case Player::Behavior::kMove:
 			camera_->SetFollowCamera(FollowCameraType::FixedOffset);
 			InitializeMove();
-			camera_->SetFollowSpeed(0.8f);
+			camera_->SetFollowSpeed(1.0f);
+			camera_->SetOffset(cameraInfo_.offset);
 			break;
 		case Player::Behavior::kBoost:
 			camera_->SetFollowCamera(FollowCameraType::Interpolated);
 			InitializeBoost();
 			camera_->SetFollowSpeed(1.0f);
+			camera_->SetOffset(cameraInfo_.offset);
 			break;
 		}
 
@@ -92,7 +94,7 @@ void Player::Update() {
 
 	// Cameraの更新
 	camera_->SetTarget(&translate_, &rotate_);
-	camera_->SetOffset(cameraInfo_.offset);
+	
 
 	// モデルの更新
 	model_->SetPosition(translate_);
@@ -166,7 +168,6 @@ void Player::InitializeRoot() {
 }
 // 移動
 void Player::InitializeMove() {
-
 }
 // ブースト
 void Player::InitializeBoost() {
@@ -205,12 +206,22 @@ void Player::UpdateMove() {
 
 	/// === 右スティックで進行方向調整 === ///
 	StickState rightStick = Input::GetRightStickState(0);
-	rotate_.y += rightStick.x * moveInfo_.rotationSpeed;
-	cameraInfo_.rotate.x = std::clamp(rotate_.x + rightStick.y * moveInfo_.rotationSpeed, -moveInfo_.maxPitch, moveInfo_.maxPitch);
 
-	/// === 移動方向の計算 === ///
-	Vector3 forward(std::sin(rotate_.y), 0.0f, std::cos(rotate_.y));
-	Vector3 right(forward.z, 0.0f, -forward.x);
+	// Yaw（左右回転）を適用
+	Quaternion yawRotation = MakeRotateAxisAngle(Vector3(0, 1, 0), rightStick.x * moveInfo_.rotationSpeed);
+
+	// Pitch（上下回転）を適用
+	float pitchAngle = std::clamp(GetXAngle(rotate_) + rightStick.y * moveInfo_.rotationSpeed,
+		-moveInfo_.maxPitch, moveInfo_.maxPitch);
+	Quaternion pitchRotation = MakeRotateAxisAngle(Vector3(1, 0, 0), pitchAngle);
+
+	// 新しい回転を適用（Yaw → Pitch の順）
+	rotate_ = Normalize(pitchRotation * yawRotation * rotate_);
+	cameraInfo_.rotate = rotate_;
+
+	/// === 移動方向の計算（Quaternion を使用） === ///
+	Vector3 forward = RotateVector(Vector3(0, 0, 1), rotate_);
+	Vector3 right = RotateVector(Vector3(1, 0, 0), rotate_);
 	Vector3 moveDirection = forward * leftStick.y + right * leftStick.x;
 
 	/// === 移動入力があるなら正規化 === ///
@@ -219,7 +230,8 @@ void Player::UpdateMove() {
 	}
 
 	/// === エネルギー未満なら少し加速 === ///
-	float speed = (energyInfo_.rest < energyInfo_.max) ? moveInfo_.speed * 1.2f : moveInfo_.speed;
+	// エネルギーがあれば速度を上げる
+	float speed = (energyInfo_.rest > 0.0f) ? moveInfo_.speed * 2.0f : moveInfo_.speed;
 
 	translate_ += moveDirection * speed * deltaTime_;
 
@@ -239,26 +251,32 @@ void Player::UpdateMove() {
 void Player::UpdateBoost() {
 	/// === ブースト中の方向変更 === ///
 	StickState rightStick = Input::GetRightStickState(0);
-	rotate_.y += rightStick.x * boostInfo_.rotationSpeed;
-	rotate_.x = std::clamp(rotate_.x + rightStick.y * boostInfo_.rotationSpeed, -boostInfo_.maxPitch, boostInfo_.maxPitch);
 
-	/// ===左スティックの取得=== ///
+	// Yaw（左右回転）を適用
+	Quaternion yawRotation = MakeRotateAxisAngle(Vector3(0, 1, 0), rightStick.x * boostInfo_.rotationSpeed);
+
+	// Pitch（上下回転）を適用
+	float pitchAngle = std::clamp(GetXAngle(rotate_) + rightStick.y * boostInfo_.rotationSpeed,
+		-boostInfo_.maxPitch, boostInfo_.maxPitch);
+	Quaternion pitchRotation = MakeRotateAxisAngle(Vector3(1, 0, 0), pitchAngle);
+
+	// 新しい回転を適用（Yaw → Pitch の順）
+	rotate_ = Normalize(pitchRotation * yawRotation * rotate_);
+
+	/// === 左スティックの取得 === ///
 	StickState leftStick = Input::GetLeftStickState(0);
 
 	/// === エネルギー消費 === ///
 	energyInfo_.rest -= energyInfo_.drain * deltaTime_;
 
 	/// === ブースト解除条件 === ///
-	if (leftStick.y < -0.5f || Input::TriggerButton (0, ControllerButtonType::A) || energyInfo_.rest <= 0.0f) {
+	if (leftStick.y < -0.5f || Input::TriggerButton(0, ControllerButtonType::A) || energyInfo_.rest <= 0.0f) {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 
-	/// === `rotate_` に基づいて移動ベクトルを計算 (X, Y 軸を考慮) === ///
-	Vector3 forward;
-	forward.x = std::cos(rotate_.x) * std::sin(rotate_.y); // X軸の傾きも考慮
-	forward.y = std::sin(-rotate_.x);                      // 上下移動も考慮
-	forward.z = std::cos(rotate_.x) * std::cos(rotate_.y); // Z軸
-
+	/// === `rotate_` に基づいて移動ベクトルを計算 (Quaternion を使用) === ///
+	Vector3 forward = RotateVector(Vector3(0, 0, 1), rotate_);
+	
 	Normalize(forward); // 速度を一定にするため正規化
 
 	/// === ブースト移動（`rotate_` に基づく方向に進む） === ///
