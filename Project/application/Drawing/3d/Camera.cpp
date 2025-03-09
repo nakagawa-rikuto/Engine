@@ -130,11 +130,11 @@ void Camera::UpdateFollowCamera() {
 // 回転軸がY座標だけの追従処理
 void Camera::FollowFixedOffset() {
 	// 目標の回転（Quaternion）の Yaw 成分のみを取得
-	float targetYaw = GetYAngle(*targetRot_);
-	Quaternion targetYawRotation = MakeRotateAxisAngle(Vector3(0, 1, 0), targetYaw);
+	float targetYaw = QuatMath::GetYAngle(*targetRot_);
+	Quaternion targetYawRotation = QuatMath::MakeRotateAxisAngle(Vector3(0, 1, 0), targetYaw);
 
 	// オフセットをターゲットの Y 軸回転に基づいて回転
-	Vector3 rotatedOffset = RotateVector(offset_, targetYawRotation);
+	Vector3 rotatedOffset = QuatMath::RotateVector(offset_, targetYawRotation);
 
 	// 目標位置を算出
 	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
@@ -151,7 +151,7 @@ void Camera::FollowInterpolated() {
 	Quaternion targetRotation = *targetRot_;
 
 	// オフセットをターゲットの回転に基づいて回転
-	Vector3 rotatedOffset = RotateVector(offset_, targetRotation);
+	Vector3 rotatedOffset = QuatMath::RotateVector(offset_, targetRotation);
 
 	// 目標位置を算出
 	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
@@ -165,7 +165,7 @@ void Camera::FollowInterpolated() {
 // 自分の周りをまわるカメラの追従処理
 void Camera::FollowOrbiting() {
 	// クォータニオンで回転を管理
-	Quaternion rotationDelta = IdentityQuaternion();
+	Quaternion rotationDelta = QuatMath::IdentityQuaternion();
 
 	// 右スティックのX・Y軸の値を取得 (-32768 ～ 32767)
 	float rightStickX = stickValue_.x; // Yaw（左右回転）
@@ -181,10 +181,10 @@ void Camera::FollowOrbiting() {
 	float deltaPitch = rightStickY * 0.05f;
 
 	// クォータニオンを用いた回転計算
-	Quaternion yawRotation = MakeRotateAxisAngle(
+	Quaternion yawRotation = QuatMath::MakeRotateAxisAngle(
 		Vector3(0, 1, 0), deltaYaw);
-	Quaternion pitchRotation = MakeRotateAxisAngle(
-		RotateVector(Vector3(1, 0, 0), yawRotation * transform_.rotate), deltaPitch);
+	Quaternion pitchRotation = QuatMath::MakeRotateAxisAngle(
+		QuatMath::RotateVector(Vector3(1, 0, 0), yawRotation * transform_.rotate), deltaPitch);
 
 	// 回転の補間
 	rotationDelta = pitchRotation * yawRotation;
@@ -196,7 +196,7 @@ void Camera::FollowOrbiting() {
 	offset_ = OrbitingOffset_;
 
 	// 回転を適用
-	offset_ = RotateVector(offset_, transform_.rotate);
+	offset_ = QuatMath::RotateVector(offset_, transform_.rotate);
 	transform_.translate = offset_ + *targetPos_;
 
 	transform_.rotate = Normalize(transform_.rotate); // クォータニオンを正規化して数値誤差を防ぐ

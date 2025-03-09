@@ -5,7 +5,7 @@
 ///-------------------------------------------/// 
 /// Quaternionのnormを返す
 ///-------------------------------------------///
-float Norm(const Quaternion& quaternion) {
+float QuatMath::Norm(const Quaternion& quaternion) {
 	return sqrtf(quaternion.x * quaternion.x +
 		quaternion.y * quaternion.y +
 		quaternion.z * quaternion.z +
@@ -25,10 +25,10 @@ Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
 }
 
 Quaternion Normalize(const Quaternion& quaternion) {
-	float norm = Norm(quaternion);
+	float norm = QuatMath::Norm(quaternion);
 	if (norm == 0.0f) {
 		// Avoid division by zero
-		return IdentityQuaternion();
+		return QuatMath::IdentityQuaternion();
 	}
 	return {
 		quaternion.x / norm,
@@ -41,14 +41,14 @@ Quaternion Normalize(const Quaternion& quaternion) {
 ///-------------------------------------------/// 
 /// 単位Quaternionを返す
 ///-------------------------------------------///
-Quaternion IdentityQuaternion() {
+Quaternion QuatMath::IdentityQuaternion() {
 	return { 0.0f, 0.0f, 0.0f, 1.0f };
 }
 
 ///-------------------------------------------/// 
 /// 共役Quaternionを返す
 ///-------------------------------------------///
-Quaternion Conjugate(const Quaternion& quaternion) {
+Quaternion QuatMath::Conjugate(const Quaternion& quaternion) {
 	return {
 		-quaternion.x,
 		-quaternion.y,
@@ -60,7 +60,7 @@ Quaternion Conjugate(const Quaternion& quaternion) {
 ///-------------------------------------------/// 
 /// 逆Quaternionを返す
 ///-------------------------------------------///
-Quaternion Inverse(const Quaternion& quaternion) {
+Quaternion QuatMath::Inverse(const Quaternion& quaternion) {
 	float normSquared = quaternion.x * quaternion.x +
 		quaternion.y * quaternion.y +
 		quaternion.z * quaternion.z +
@@ -81,7 +81,7 @@ Quaternion Inverse(const Quaternion& quaternion) {
 ///-------------------------------------------/// 
 /// 任意軸回転Quaternionを返す
 ///-------------------------------------------///
-Quaternion MakeRotateAxisAngle(const Vector3& axis, float angle) {
+Quaternion QuatMath::MakeRotateAxisAngle(const Vector3& axis, float angle) {
 	Quaternion result;
 	float halfAngle = angle / 2.0f;
 	float sinHalfAngle = sinf(halfAngle);
@@ -95,7 +95,7 @@ Quaternion MakeRotateAxisAngle(const Vector3& axis, float angle) {
 ///-------------------------------------------/// 
 /// Quaternionの回転結果をベクトルで返す
 ///-------------------------------------------///
-Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+Vector3 QuatMath::RotateVector(const Vector3& vector, const Quaternion& quaternion) {
 	Vector3 result;
 	Quaternion q = quaternion;
 	Quaternion v = { vector.x,vector.y,vector.z,0.0f };
@@ -112,14 +112,14 @@ Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
 /// Quaternionから角度を取得する関数
 ///-------------------------------------------///
 // X
-float GetXAngle(const Quaternion& quaternion) {
+float QuatMath::GetXAngle(const Quaternion& quaternion) {
 	// 単位ベクトル (0,0,1) をクォータニオンで回転させる
 	Vector3 forward = RotateVector(Vector3(0.0f, 0.0f, 1.0f), quaternion);
 	// forward.y がピッチ角度（上向きか下向きか）を示す
 	return std::asin(forward.y); // ラジアン角
 }
 // Y
-float GetYAngle(const Quaternion& quaternion) {
+float QuatMath::GetYAngle(const Quaternion& quaternion) {
 	// 単位ベクトル (0,0,1) をクォータニオンで回転させる
 	Vector3 forward = RotateVector(Vector3(0.0f, 0.0f, 1.0f), quaternion);
 	// atan2(forward.x, forward.z) で Yaw（水平回転） を取得。
@@ -200,12 +200,12 @@ Quaternion Quaternion::operator/(const float& v) const { return Quaternion{ x / 
 
 // クォータニオンの除算（逆クォータニオンをかける）
 Quaternion Quaternion::operator/(const Quaternion& q) {
-    return (*this) * Inverse(q);
+    return (*this) * QuatMath::Inverse(q);
 }
 Quaternion& Quaternion::operator/=(const Quaternion& q) {
     *this = *this / q;
     return *this;
 }
 Quaternion Quaternion::operator/(const Quaternion& q) const {
-    return (*this) * Inverse(q);
+    return (*this) * QuatMath::Inverse(q);
 }
