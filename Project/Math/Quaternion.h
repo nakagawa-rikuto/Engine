@@ -54,6 +54,9 @@ struct Quaternion final {
 
 /// ===Quaternionのnormを返す=== ///
 float Norm(const Quaternion& quaternion);
+/// ===Quaternionの内積=== ///
+float Dot(const Quaternion& q);
+float Dot(const Quaternion& q1, const Quaternion& q2);
 /// ===Quaternionの積=== ///
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
 /// ===正規化したQuaternionを返す=== ///

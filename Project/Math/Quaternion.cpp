@@ -12,6 +12,13 @@ float Norm(const Quaternion& quaternion) {
 		quaternion.w * quaternion.w);
 }
 
+
+///-------------------------------------------/// 
+/// Quaternionの内積
+///-------------------------------------------///
+float Dot(const Quaternion& q) { return { q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w }; }
+float Dot(const Quaternion& q1, const Quaternion& q2) { return { q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w }; }
+
 ///-------------------------------------------/// 
 /// Quaternionの積
 ///-------------------------------------------///
@@ -24,6 +31,9 @@ Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
 	};
 }
 
+///-------------------------------------------/// 
+/// Quaternionの正規化
+///-------------------------------------------///
 Quaternion Normalize(const Quaternion& quaternion) {
 	float norm = Norm(quaternion);
 	if (norm == 0.0f) {
@@ -134,13 +144,13 @@ float GetYAngle(const Quaternion& quaternion) {
  /// === 加算 === ///
 Quaternion Quaternion::operator+(const float& v) { return Quaternion{ x + v, y + v, z + v, w + v }; }
 Quaternion& Quaternion::operator+=(const float& v) {
-    x += v; y += v; z += v; w += v;
-    return *this;
+	x += v; y += v; z += v; w += v;
+	return *this;
 }
 Quaternion Quaternion::operator+(const Quaternion& q) { return Quaternion{ x + q.x, y + q.y, z + q.z, w + q.w }; }
 Quaternion& Quaternion::operator+=(const Quaternion& q) {
-    x += q.x; y += q.y; z += q.z; w += q.w;
-    return *this;
+	x += q.x; y += q.y; z += q.z; w += q.w;
+	return *this;
 }
 Quaternion Quaternion::operator+(const float& v) const { return Quaternion{ x + v, y + v, z + v, w + v }; }
 Quaternion Quaternion::operator+(const Quaternion& q) const { return Quaternion{ x + q.x, y + q.y, z + q.z, w + q.w }; }
@@ -148,13 +158,13 @@ Quaternion Quaternion::operator+(const Quaternion& q) const { return Quaternion{
 /// === 減算 === ///
 Quaternion Quaternion::operator-(const float& v) { return Quaternion{ x - v, y - v, z - v, w - v }; }
 Quaternion& Quaternion::operator-=(const float& v) {
-    x -= v; y -= v; z -= v; w -= v;
-    return *this;
+	x -= v; y -= v; z -= v; w -= v;
+	return *this;
 }
 Quaternion Quaternion::operator-(const Quaternion& q) { return Quaternion{ x - q.x, y - q.y, z - q.z, w - q.w }; }
 Quaternion& Quaternion::operator-=(const Quaternion& q) {
-    x -= q.x; y -= q.y; z -= q.z; w -= q.w;
-    return *this;
+	x -= q.x; y -= q.y; z -= q.z; w -= q.w;
+	return *this;
 }
 Quaternion Quaternion::operator-(const float& v) const { return Quaternion{ x - v, y - v, z - v, w - v }; }
 Quaternion Quaternion::operator-(const Quaternion& q) const { return Quaternion{ x - q.x, y - q.y, z - q.z, w - q.w }; }
@@ -163,49 +173,49 @@ Quaternion Quaternion::operator-(const Quaternion& q) const { return Quaternion{
 // スカラー倍
 Quaternion Quaternion::operator*(const float& v) { return Quaternion{ x * v, y * v, z * v, w * v }; }
 Quaternion& Quaternion::operator*=(const float& v) {
-    x *= v; y *= v; z *= v; w *= v;
-    return *this;
+	x *= v; y *= v; z *= v; w *= v;
+	return *this;
 }
 Quaternion Quaternion::operator*(const float& v) const { return Quaternion{ x * v, y * v, z * v, w * v }; }
 
 // クォータニオン乗算
 Quaternion Quaternion::operator*(const Quaternion& q) {
-    return Quaternion{
-        w * q.x + x * q.w + y * q.z - z * q.y,
-        w * q.y - x * q.z + y * q.w + z * q.x,
-        w * q.z + x * q.y - y * q.x + z * q.w,
-        w * q.w - x * q.x - y * q.y - z * q.z
-    };
+	return Quaternion{
+		w * q.x + x * q.w + y * q.z - z * q.y,
+		w * q.y - x * q.z + y * q.w + z * q.x,
+		w * q.z + x * q.y - y * q.x + z * q.w,
+		w * q.w - x * q.x - y * q.y - z * q.z
+	};
 }
 Quaternion& Quaternion::operator*=(const Quaternion& q) {
-    *this = *this * q;
-    return *this;
+	*this = *this * q;
+	return *this;
 }
 Quaternion Quaternion::operator*(const Quaternion& q) const {
-    return Quaternion{
-        w * q.x + x * q.w + y * q.z - z * q.y,
-        w * q.y - x * q.z + y * q.w + z * q.x,
-        w * q.z + x * q.y - y * q.x + z * q.w,
-        w * q.w - x * q.x - y * q.y - z * q.z
-    };
+	return Quaternion{
+		w * q.x + x * q.w + y * q.z - z * q.y,
+		w * q.y - x * q.z + y * q.w + z * q.x,
+		w * q.z + x * q.y - y * q.x + z * q.w,
+		w * q.w - x * q.x - y * q.y - z * q.z
+	};
 }
 
 /// === 除算 === ///
 Quaternion Quaternion::operator/(const float& v) { return Quaternion{ x / v, y / v, z / v, w / v }; }
 Quaternion& Quaternion::operator/=(const float& v) {
-    x /= v; y /= v; z /= v; w /= v;
-    return *this;
+	x /= v; y /= v; z /= v; w /= v;
+	return *this;
 }
 Quaternion Quaternion::operator/(const float& v) const { return Quaternion{ x / v, y / v, z / v, w / v }; }
 
 // クォータニオンの除算（逆クォータニオンをかける）
 Quaternion Quaternion::operator/(const Quaternion& q) {
-    return (*this) * Inverse(q);
+	return (*this) * Inverse(q);
 }
 Quaternion& Quaternion::operator/=(const Quaternion& q) {
-    *this = *this / q;
-    return *this;
+	*this = *this / q;
+	return *this;
 }
 Quaternion Quaternion::operator/(const Quaternion& q) const {
-    return (*this) * Inverse(q);
+	return (*this) * Inverse(q);
 }

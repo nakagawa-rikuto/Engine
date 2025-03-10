@@ -64,7 +64,7 @@ void Player::Update() {
 			camera_->SetOffset(cameraInfo_.offset);
 			break;
 		case Player::Behavior::kBoost:
-			camera_->SetFollowCamera(FollowCameraType::Interpolated);
+			camera_->SetFollowCamera(FollowCameraType::FixedOffset);
 			InitializeBoost();
 			camera_->SetFollowSpeed(1.0f);
 			camera_->SetOffset(cameraInfo_.offset);
@@ -211,13 +211,13 @@ void Player::UpdateMove() {
 	Quaternion yawRotation = MakeRotateAxisAngle(Vector3(0, 1, 0), rightStick.x * moveInfo_.rotationSpeed);
 
 	// Pitch（上下回転）を適用
-	float pitchAngle = std::clamp(GetXAngle(rotate_) + rightStick.y * moveInfo_.rotationSpeed,
+	/*float pitchAngle = std::clamp(GetXAngle(rotate_) + rightStick.y * moveInfo_.rotationSpeed,
 		-moveInfo_.maxPitch, moveInfo_.maxPitch);
-	Quaternion pitchRotation = MakeRotateAxisAngle(Vector3(1, 0, 0), pitchAngle);
+	Quaternion pitchRotation = MakeRotateAxisAngle(Vector3(1, 0, 0), pitchAngle);*/
 
 	// 新しい回転を適用（Yaw → Pitch の順）
-	rotate_ = Normalize(pitchRotation * yawRotation * rotate_);
-	cameraInfo_.rotate = rotate_;
+	rotate_ = Normalize(yawRotation * rotate_);
+	//cameraInfo_.rotate = rotate_;
 
 	/// === 移動方向の計算（Quaternion を使用） === ///
 	Vector3 forward = RotateVector(Vector3(0, 0, 1), rotate_);
@@ -289,7 +289,7 @@ void Player::UpdateCamera() {
 	cameraInfo_.blend = Lerp(cameraInfo_.blend, targetBlend, cameraInfo_.lerpSpeed * deltaTime_);
 
 	/// === オフセットの適用 === ///
-	cameraInfo_.offset = Lerp(cameraInfo_.moveOffset, cameraInfo_.boostOffset, cameraInfo_.blend);
+	cameraInfo_.offset = SLerp(cameraInfo_.moveOffset, cameraInfo_.boostOffset, cameraInfo_.blend);
 }
 // ジャンプ
 void Player::UpdateAir() {
