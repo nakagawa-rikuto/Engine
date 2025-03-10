@@ -134,7 +134,7 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 				aiQuaternion rotate;
 				bindPoseMatrixAsimp.Decompose(scale, rotate, translate); // 成分を抽出
 				// 左手系のBindPoseMatrixを作成
-				Matrix4x4 bindPoseMatrix = MakeAffineMatrix(
+				Matrix4x4 bindPoseMatrix = MakeAffineQuaternionMatrix(
 					{ scale.x, scale.y, scale.z }, { rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x, translate.y, translate.z });
 				// InverseBindMatrixにする
 				jointWeightData.inverseBindPosematrix = Inverse4x4(bindPoseMatrix);
@@ -177,7 +177,7 @@ Node ModelManager::ReadNode(aiNode* node) {
 	result.transform.scale = { scale.x, scale.y, scale.z }; // Scaleはそのまま
 	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w }; //ｘ軸反転、さらに回転方向が逆なので軸を反転させる
 	result.transform.translate = { -translate.x, translate.y, translate.z }; // ｘ軸を反転
-	result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
+	result.localMatrix = MakeAffineQuaternionMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
 	result.name = node->mName.C_Str(); // Node名を格納
 	result.children.resize(node->mNumChildren); // 子供の数だけ確保
 	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {

@@ -5,11 +5,6 @@
 #include <numbers>
 
 ///-------------------------------------------/// 
-/// デストラクタ
-///-------------------------------------------///
-ConfettiParticle::~ConfettiParticle() { ParticleGroup::~ParticleGroup();}
-
-///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void ConfettiParticle::Initialze(const std::string& filename) {

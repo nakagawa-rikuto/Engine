@@ -9,9 +9,6 @@
 /// デストラクタ
 ///-------------------------------------------///
 DebugScene::~DebugScene() {
-	// ISceneのデストラクタ
-	IScene::~IScene();
-
 	// sprite
 	sprite_.reset();
 	// camera
@@ -27,6 +24,9 @@ DebugScene::~DebugScene() {
 	windParticle_.reset();
 	explosionParticle_.reset();
 	confettiParticle_.reset();
+
+	// ISceneのデストラクタ
+	IScene::~IScene();
 }
 
 ///-------------------------------------------/// 

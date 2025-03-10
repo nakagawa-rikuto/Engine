@@ -75,7 +75,7 @@ void Camera::Initialize() {
 	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());
 	nearClip_ = 0.1f;
 	farClip_ = 100.0f;
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	worldMatrix_ = MakeAffineQuaternionMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	viewMatrix_ = Inverse4x4(worldMatrix_);
 	projectionMatrix_ = MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
@@ -97,7 +97,7 @@ void Camera::Update() {
 	}
 
 	// 行列の計算
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	worldMatrix_ = MakeAffineQuaternionMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	viewMatrix_ = Inverse4x4(worldMatrix_);
 
 	// プロジェクション行列の更新

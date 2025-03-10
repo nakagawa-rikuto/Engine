@@ -196,7 +196,7 @@ void Sprite::TransformDataWrite() {
 	worldTransform_.scale = { size_.x, size_.y, 1.0f };
 
 	// WorldMatrix
-	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldMatrix = MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	// ViewMatrix
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
 	// ProjectionMatrix

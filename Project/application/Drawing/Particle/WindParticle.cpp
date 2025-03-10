@@ -6,13 +6,6 @@
 // Math
 #include "Math/sMath.h"
 
-
-///-------------------------------------------/// 
-/// コンストラクタ・デストラクタ
-///-------------------------------------------///
-WindParticle::WindParticle() = default;
-WindParticle::~WindParticle() { ParticleGroup::~ParticleGroup(); }
-
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
@@ -54,7 +47,7 @@ void WindParticle::Initialze(const std::string & filename) {
 void WindParticle::InstancingUpdate(std::list<ParticleData>::iterator it) {}
 void WindParticle::Update() {
 	// 
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate);
+	Matrix4x4 cameraMatrix = MakeAffineEulerMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate);
 	Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 	// カメラ
@@ -102,7 +95,7 @@ void WindParticle::Update() {
 			(*particleIterator).color.w = alpha;
 
 			// WVPMatrix
-			Matrix4x4 worldMatrixs = MakeAffineMatrix((*particleIterator).transform.scale, (*particleIterator).transform.rotate, (*particleIterator).transform.translate);
+			Matrix4x4 worldMatrixs = MakeAffineEulerMatrix((*particleIterator).transform.scale, (*particleIterator).transform.rotate, (*particleIterator).transform.translate);
 			Matrix4x4 wvpMatrixs = Multiply(worldMatrixs, Multiply(viewMatrix, projectionMatrix));
 
 			// 値を入力
