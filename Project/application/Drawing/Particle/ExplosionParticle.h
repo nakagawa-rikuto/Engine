@@ -13,7 +13,7 @@ class ExplosionParticle : public ParticleGroup {
 public:
 
     ExplosionParticle() = default; // コンストラクタでの処理は行わない
-    ~ExplosionParticle();
+    ~ExplosionParticle() override = default;
 
     /// ===Override=== ///
     // 初期化

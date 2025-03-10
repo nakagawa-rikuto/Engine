@@ -1,8 +1,9 @@
 #include "ParticleCommon.h"
-// Math
-#include "Math/sMath.h"
 // c++
 #include <cassert>
+// Math
+#include "Math/MatrixMath.h"
+
 
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
@@ -26,7 +27,7 @@ void ParticleCommon::Initlize(ID3D12Device* device, const uint32_t kNumMaxInstan
 	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	materialData_->enableLighting = false;
-	materialData_->uvTransform = MakeIdentity4x4();
+	materialData_->uvTransform = Math::MakeIdentity4x4();
 
 	/// ===Instancing=== ///
 	// 生成
@@ -36,8 +37,8 @@ void ParticleCommon::Initlize(ID3D12Device* device, const uint32_t kNumMaxInstan
 	
 	// Dataの書き込み
 	for (uint32_t index = 0; index < kNumMaxInstance; ++index) {
-		instancingData_[index].WVP = MakeIdentity4x4();
-		instancingData_[index].World = MakeIdentity4x4();
+		instancingData_[index].WVP = Math::MakeIdentity4x4();
+		instancingData_[index].World = Math::MakeIdentity4x4();
 		instancingData_[index].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	}
 }

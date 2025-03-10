@@ -77,8 +77,6 @@ void MyGame::Finalize() {
 void MyGame::Update() {
 	// 基底クラスの更新処理
 	Framework::Update();
-	// Inputの更新
-	Input::Update();
 	// シーンの更新
 	sceneManager_->Update();
 }

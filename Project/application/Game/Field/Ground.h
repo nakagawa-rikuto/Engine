@@ -19,4 +19,3 @@ public:/// ===メンバ関数=== ///
 private:/// ===メンバ変数=== ///
 	std::unique_ptr<Model> model_;
 };
-

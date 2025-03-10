@@ -13,8 +13,8 @@
 class WindParticle : public ParticleGroup {
 public:
 
-	WindParticle();
-	~WindParticle();
+	WindParticle() = default;
+	~WindParticle() override = default;
 
 	/// ===Override=== ///
 	// 初期化

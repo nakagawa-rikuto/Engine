@@ -1,10 +1,11 @@
 #include "ModelManager.h"
+// c++
+#include <fstream>
 // Engine
 #include "Engine/System/Managers/TextureManager.h"
 // Math
 #include "Math/sMath.h"
-// c++
-#include <fstream>
+#include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -134,10 +135,10 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 				aiQuaternion rotate;
 				bindPoseMatrixAsimp.Decompose(scale, rotate, translate); // 成分を抽出
 				// 左手系のBindPoseMatrixを作成
-				Matrix4x4 bindPoseMatrix = MakeAffineMatrix(
+				Matrix4x4 bindPoseMatrix = Math::MakeAffineQuaternionMatrix(
 					{ scale.x, scale.y, scale.z }, { rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x, translate.y, translate.z });
 				// InverseBindMatrixにする
-				jointWeightData.inverseBindPosematrix = Inverse4x4(bindPoseMatrix);
+				jointWeightData.inverseBindPosematrix = Math::Inverse4x4(bindPoseMatrix);
 				/// ===Weight情報を取り出す=== ///
 				for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
 					jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
@@ -177,7 +178,7 @@ Node ModelManager::ReadNode(aiNode* node) {
 	result.transform.scale = { scale.x, scale.y, scale.z }; // Scaleはそのまま
 	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z, rotate.w }; //ｘ軸反転、さらに回転方向が逆なので軸を反転させる
 	result.transform.translate = { -translate.x, translate.y, translate.z }; // ｘ軸を反転
-	result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
+	result.localMatrix = Math::MakeAffineQuaternionMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
 	result.name = node->mName.C_Str(); // Node名を格納
 	result.children.resize(node->mNumChildren); // 子供の数だけ確保
 	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {

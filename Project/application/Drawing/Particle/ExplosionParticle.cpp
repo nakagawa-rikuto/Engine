@@ -5,11 +5,6 @@
 #include <numbers>
 
 ///-------------------------------------------/// 
-/// デストラクタ
-///-------------------------------------------///
-ExplosionParticle::~ExplosionParticle() { ParticleGroup::~ParticleGroup(); }
-
-///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void ExplosionParticle::Initialze(const std::string& filename) {

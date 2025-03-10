@@ -192,7 +192,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Input\Mouse.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Engine\System\Service\Render.cpp" />
-    <ClCompile Include="application\Game\Field\SkyDome.cpp" />
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
     <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
   </ItemGroup>
@@ -289,7 +288,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Input\Mouse.h" />
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Engine\System\Service\Render.h" />
-    <ClInclude Include="application\Game\Field\SkyDome.h" />
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
     <ClInclude Include="application\Game\Entity\Player\Player.h" />
   </ItemGroup>

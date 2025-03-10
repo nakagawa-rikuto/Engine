@@ -1,6 +1,6 @@
 #include "ModelCommon.h"
 // Math
-#include "Math/sMath.h"
+#include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
@@ -104,16 +104,16 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 		materialData_->enableLighting = 0;
 	}
 	materialData_->shininess = 10.0f;
-	materialData_->uvTransform = MakeIdentity4x4();
+	materialData_->uvTransform = Math::MakeIdentity4x4();
 
 	/// ===wvp=== ///
 	// buffer
 	wvp_->Create(device, sizeof(TransformationMatrix3D));
 	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
 	// Dataの書き込み
-	wvpMatrixData_->WVP = MakeIdentity4x4();
-	wvpMatrixData_->World = MakeIdentity4x4();
-	wvpMatrixData_->WorldInverseTranspose = Inverse4x4(wvpMatrixData_->World);
+	wvpMatrixData_->WVP = Math::MakeIdentity4x4();
+	wvpMatrixData_->World = Math::MakeIdentity4x4();
+	wvpMatrixData_->WorldInverseTranspose = Math::Inverse4x4(wvpMatrixData_->World);
 
 	/// ===DirectionalLight=== ///
 	directionallight_->Create(device, sizeof(DirectionalLight));

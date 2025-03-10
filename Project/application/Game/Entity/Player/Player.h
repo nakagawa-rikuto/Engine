@@ -111,4 +111,3 @@ private:
 	// 上昇
 	void UpdateAir();
 };
-
