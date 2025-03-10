@@ -91,8 +91,6 @@ void Camera::Update() {
 
 	if (targetPos_ && targetRot_) {
 		// 追従処理
-		//FollowTarget();
-		//PreFollowTarget();
 		UpdateFollowCamera();
 	} else {
 		transform_ = addTransform_;
