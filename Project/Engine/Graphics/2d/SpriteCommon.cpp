@@ -1,6 +1,6 @@
 #include "SpriteCommon.h"
 // Math
-#include "Math/sMath.h"
+#include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -21,7 +21,7 @@ void SpriteCommon::MaterialInitialize(ID3D12Device* device, uint32_t size) {
 	material_->Create(device, sizeof(MaterialData2D) * size);
 	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	materialData_->uvTransform = MakeIdentity4x4();
+	materialData_->uvTransform = Math::MakeIdentity4x4();
 }
 
 ///-------------------------------------------/// 
@@ -33,7 +33,7 @@ void SpriteCommon::WVPMatrixInitialize(ID3D12Device* device) {
 	// buffer
 	wvp_->Create(device, sizeof(TransformationMatrix2D));
 	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
-	wvpMatrixData_->WVP = MakeIdentity4x4();
+	wvpMatrixData_->WVP = Math::MakeIdentity4x4();
 }
 
 ///-------------------------------------------/// 

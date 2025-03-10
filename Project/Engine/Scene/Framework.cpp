@@ -12,16 +12,16 @@ void Framework::Initialize(const wchar_t* title) {
 	MiiEngine_ = std::make_unique<Mii>();
 	MiiEngine_->Initialize(title, 1280, 720);
 	// ServiceLocator
-	ServiceLocator::ProvideAll(
-		{ MiiEngine_->GetSRVManager(),
-		MiiEngine_->GetAudioManager(),
-		MiiEngine_->GetTextureManager(),
-		MiiEngine_->GetModelManager(),
-		MiiEngine_->GetPipelineManager(),
-		MiiEngine_->GetAnimationManager(),
-		MiiEngine_->GetCSVManager(),
+	ServiceLocator::ProvideAll({ 
 		MiiEngine_->GetDXCommon(),
 		MiiEngine_->GetWinApp(),
+		MiiEngine_->GetSRVManager(),
+		MiiEngine_->GetPipelineManager(),
+		MiiEngine_->GetTextureManager(),
+		MiiEngine_->GetModelManager(),
+		MiiEngine_->GetAnimationManager(),
+		MiiEngine_->GetAudioManager(),
+		MiiEngine_->GetCSVManager(),
 		MiiEngine_->GetKeyboard(),
 		MiiEngine_->GetMouse(),
 		MiiEngine_->GetController() }
@@ -34,6 +34,7 @@ void Framework::Initialize(const wchar_t* title) {
 void Framework::Finalize() {
 	/// ===終了処理=== ///
 	// サービスロケータ
+	ServiceLocator::Finalize();
 	// MiiEngine
 	MiiEngine_->Finalize();
 	MiiEngine_.reset();

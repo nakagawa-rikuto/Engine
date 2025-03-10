@@ -3,11 +3,15 @@
 #include "Engine/System/Service/Getter.h"
 // Math
 #include "Math/sMath.h"
+#include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-ParticleGroup::~ParticleGroup() {}
+ParticleGroup::~ParticleGroup() { 
+    group_.particles.clear();
+    group_.particle.reset();
+}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -23,9 +27,9 @@ void ParticleGroup::Initialze(const std::string& filename) {
 ///-------------------------------------------///
 void ParticleGroup::InstancingUpdate(std::list<ParticleData>::iterator it) {
     // WVPマトリクス
-    Matrix4x4 worldMatrix = MakeAffineMatrix(it->transform.scale, it->transform.rotate, it->transform.translate);
-    Matrix4x4 cameraMatrix = Inverse4x4(MakeAffineMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate));
-    Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+    Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(it->transform.scale, it->transform.rotate, it->transform.translate);
+    Matrix4x4 cameraMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate));
+    Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
     Matrix4x4 wvpMatrix = Multiply(worldMatrix, Multiply(cameraMatrix, projectionMatrix));
 
     // インスタンシングデータを設定

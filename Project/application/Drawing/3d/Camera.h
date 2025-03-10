@@ -2,6 +2,14 @@
 /// ===Include=== ///
 #include "Engine/DataInfo/CData.h"
 
+/// === カメラの種類を表す列挙型 === ///
+enum class FollowCameraType {
+	FixedOffset,        // 固定オフセット型（一定のオフセット距離で追従）
+	Interpolated,       // スムージング追従型（補間で滑らかに追従）
+	Orbiting,           // 回転可能型（対象の周りを回るカメラ）
+	CollisionAvoidance  // 衝突回避型（障害物を避ける）
+};
+
 ///=====================================================/// 
 /// カメラ
 ///=====================================================///
@@ -9,7 +17,7 @@ class Camera {
 public:
 
 	Camera() = default;
-	~Camera() = default;
+	~Camera();
 
 	/// <summary>
 	/// 初期化
@@ -20,6 +28,11 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// FollowTypeの設定
+	/// </summary>
+	void SetFollowCamera(FollowCameraType type);
 
 public:/// ===Getter=== ///
 	// WorldMatrix
@@ -33,7 +46,7 @@ public:/// ===Getter=== ///
 	// Translate
 	const Vector3& GetTranslate()const;
 	// Rotate
-	const Vector3& GetRotate()const;
+	const Quaternion& GetRotate()const;
 
 public:/// ===Setter=== ///
 	// Translate
@@ -49,16 +62,24 @@ public:/// ===Setter=== ///
 	// FarClip
 	void SetFarClip(const float& farClip);
 	// 追従対象の座標を設定
-	void SetTarget(Vector3* position, Vector3* rotation);
+	void SetTarget(Vector3* position, Quaternion* rotation);
 	// 追従オフセット
 	void SetOffset(const Vector3& offset);
+	// 回転型追従カメラのオフセット
+	void SetOrbitingOffset(const Vector3& offset);
 	// 追従速度を設定
 	void SetFollowSpeed(float speed);
+	// 回転補間速度を設定
+	void SetLerpSpeed(float speed);
+	// スティック
+	void SetStick(const Vector2& stickValue);
+	
 
 private:/// ===変数=== ///
 
 	/// ===ビュー行列関連データ=== ///
-	EulerTransform transform_;
+	QuaternionTransform transform_;
+	QuaternionTransform addTransform_;
 	Matrix4x4 worldMatrix_;
 	Matrix4x4 viewMatrix_;
 
@@ -74,13 +95,27 @@ private:/// ===変数=== ///
 
 	/// ===追従=== ///
 	Vector3* targetPos_ = nullptr;  // 追従対象の座標ポインタ
-	Vector3* targetRot_ = nullptr;  // 追従対象の回転ポインタ
-	Vector3 offset_ = { 0.0f, 0.0f, -10.0f }; // カメラの初期オフセット
+	Quaternion* targetRot_ = nullptr;  // 追従対象の回転ポインタ
+	Vector3 offset_ = { 0.0f, 0.0f, -20.0f }; // カメラの初期オフセット
+	Vector3 OrbitingOffset_ = { 0.0f, 0.5f, -20.0f };
 	float followSpeed_ = 0.1f;      // 追従速度
+	float rotationLerpSpeed_ = 0.1f; // 回転補間速度
+
+	Vector2 stickValue_;
+
+	FollowCameraType cameraType_ = FollowCameraType::FixedOffset; // デフォルトカメラタイプ
 
 private:
 
-	// 追従処理
-	void FollowTarget();
+	// カメラの種類に応じた更新処理
+	void UpdateFollowCamera();
+	// 固定オフセット型カメラの処理 
+	void FollowFixedOffset();
+	// スムージング追従型カメラの処理 
+	void FollowInterpolated();
+	// 回転可能型カメラの処理 
+	void FollowOrbiting();
+	// 衝突回避型カメラの処理 
+	void FollowCollisionAvoidance();
 };
 

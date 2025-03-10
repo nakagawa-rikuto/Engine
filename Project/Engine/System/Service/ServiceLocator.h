@@ -17,15 +17,15 @@ class Mouse;
 class Controller;
 
 struct ServiceRegister {
-    SRVManager* srvManager = nullptr;
-    AudioManager* audioManager = nullptr;
-    TextureManager* textureManager = nullptr;
-    ModelManager* modelManager = nullptr;
-    PipelineManager* pipelineManager = nullptr;
-    AnimationManager* animationManager = nullptr;
-    CSVManager* csvManager = nullptr;
     DXCommon* dxCommon = nullptr;
     WinApp* winApp = nullptr;
+    SRVManager* srvManager = nullptr;
+    PipelineManager* pipelineManager = nullptr;
+    TextureManager* textureManager = nullptr;
+    ModelManager* modelManager = nullptr;
+    AnimationManager* animationManager = nullptr;
+    AudioManager* audioManager = nullptr;
+    CSVManager* csvManager = nullptr;
     Keyboard* keyboard = nullptr;
     Mouse* mouse = nullptr;
     Controller* controller = nullptr;
@@ -38,6 +38,8 @@ class ServiceLocator {
 public:
     // 全てのサービスを提供
     static void ProvideAll(const ServiceRegister& registry);
+    // 全てのサービスを終了
+    static void Finalize();
 
     // SRVManager
     static SRVManager* GetSRVManager();
@@ -75,7 +77,5 @@ private:
     static inline Keyboard* keyboard_ = nullptr;
     static inline Mouse* mouse_ = nullptr;
     static inline Controller* controller_ = nullptr;
-
-
 };
 
