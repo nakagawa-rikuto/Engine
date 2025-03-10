@@ -1,7 +1,9 @@
 #include "Camera.h"
-
+// Math
 #include "Math/sMath.h"
 #include "Math/EasingMath.h"
+#include "Math/MatrixMath.h"
+// Service
 #include "Engine/System/Service/Getter.h"
 
 ///-------------------------------------------/// 
@@ -75,9 +77,9 @@ void Camera::Initialize() {
 	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());
 	nearClip_ = 0.1f;
 	farClip_ = 100.0f;
-	worldMatrix_ = MakeAffineQuaternionMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	viewMatrix_ = Inverse4x4(worldMatrix_);
-	projectionMatrix_ = MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
+	worldMatrix_ = Math::MakeAffineQuaternionMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	viewMatrix_ = Math::Inverse4x4(worldMatrix_);
+	projectionMatrix_ = Math::MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
 }
 
@@ -97,11 +99,11 @@ void Camera::Update() {
 	}
 
 	// 行列の計算
-	worldMatrix_ = MakeAffineQuaternionMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	viewMatrix_ = Inverse4x4(worldMatrix_);
+	worldMatrix_ = Math::MakeAffineQuaternionMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	viewMatrix_ = Math::Inverse4x4(worldMatrix_);
 
 	// プロジェクション行列の更新
-	projectionMatrix_ = MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
+	projectionMatrix_ = Math::MakePerspectiveFovMatrix(horizontalView_, aspect_, nearClip_, farClip_);
 
 	// 合成行列
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
@@ -130,20 +132,20 @@ void Camera::UpdateFollowCamera() {
 // 回転軸がY座標だけの追従処理
 void Camera::FollowFixedOffset() {
 	// 目標の回転（Quaternion）の Yaw 成分のみを取得
-	float targetYaw = QuatMath::GetYAngle(*targetRot_);
-	Quaternion targetYawRotation = QuatMath::MakeRotateAxisAngle(Vector3(0, 1, 0), targetYaw);
+	float targetYaw = Math::GetYAngle(*targetRot_);
+	Quaternion targetYawRotation = Math::MakeRotateAxisAngle(Vector3(0, 1, 0), targetYaw);
 
 	// オフセットをターゲットの Y 軸回転に基づいて回転
-	Vector3 rotatedOffset = QuatMath::RotateVector(offset_, targetYawRotation);
+	Vector3 rotatedOffset = Math::RotateVector(offset_, targetYawRotation);
 
 	// 目標位置を算出
 	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
 
 	// カメラの位置を補間（Lerp）で滑らかに移動
-	transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+	transform_.translate = Math::Lerp(transform_.translate, targetCameraPos, followSpeed_);
 
 	// カメラの回転を Yaw のみに制限して補間
-	transform_.rotate = SLerp(transform_.rotate, targetYawRotation, rotationLerpSpeed_);
+	transform_.rotate = Math::SLerp(transform_.rotate, targetYawRotation, rotationLerpSpeed_);
 }
 // 回転軸がXとY座標の追従処理
 void Camera::FollowInterpolated() {
@@ -151,21 +153,21 @@ void Camera::FollowInterpolated() {
 	Quaternion targetRotation = *targetRot_;
 
 	// オフセットをターゲットの回転に基づいて回転
-	Vector3 rotatedOffset = QuatMath::RotateVector(offset_, targetRotation);
+	Vector3 rotatedOffset = Math::RotateVector(offset_, targetRotation);
 
 	// 目標位置を算出
 	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
 
 	// カメラの位置を補間（Lerp）で滑らかに移動
-	transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+	transform_.translate = Math::Lerp(transform_.translate, targetCameraPos, followSpeed_);
 
 	// カメラの回転をスムーズに補間（Slerp を使用）
-	transform_.rotate = SLerp(transform_.rotate, targetRotation, rotationLerpSpeed_);
+	transform_.rotate = Math::SLerp(transform_.rotate, targetRotation, rotationLerpSpeed_);
 }
 // 自分の周りをまわるカメラの追従処理
 void Camera::FollowOrbiting() {
 	// クォータニオンで回転を管理
-	Quaternion rotationDelta = QuatMath::IdentityQuaternion();
+	Quaternion rotationDelta = Math::IdentityQuaternion();
 
 	// 右スティックのX・Y軸の値を取得 (-32768 ～ 32767)
 	float rightStickX = stickValue_.x; // Yaw（左右回転）
@@ -181,10 +183,10 @@ void Camera::FollowOrbiting() {
 	float deltaPitch = rightStickY * 0.05f;
 
 	// クォータニオンを用いた回転計算
-	Quaternion yawRotation = QuatMath::MakeRotateAxisAngle(
+	Quaternion yawRotation = Math::MakeRotateAxisAngle(
 		Vector3(0, 1, 0), deltaYaw);
-	Quaternion pitchRotation = QuatMath::MakeRotateAxisAngle(
-		QuatMath::RotateVector(Vector3(1, 0, 0), yawRotation * transform_.rotate), deltaPitch);
+	Quaternion pitchRotation = Math::MakeRotateAxisAngle(
+		Math::RotateVector(Vector3(1, 0, 0), yawRotation * transform_.rotate), deltaPitch);
 
 	// 回転の補間
 	rotationDelta = pitchRotation * yawRotation;
@@ -196,7 +198,7 @@ void Camera::FollowOrbiting() {
 	offset_ = OrbitingOffset_;
 
 	// 回転を適用
-	offset_ = QuatMath::RotateVector(offset_, transform_.rotate);
+	offset_ = Math::RotateVector(offset_, transform_.rotate);
 	transform_.translate = offset_ + *targetPos_;
 
 	transform_.rotate = Normalize(transform_.rotate); // クォータニオンを正規化して数値誤差を防ぐ
@@ -204,10 +206,10 @@ void Camera::FollowOrbiting() {
 // 障害物を避ける追従処理
 void Camera::FollowCollisionAvoidance() {
 	// プレイヤーの回転を基にY軸回転行列を作成
-	Matrix4x4 rotationMatrix = MakeRotateYMatrix(targetRot_->y);
+	Matrix4x4 rotationMatrix = Math::MakeRotateYMatrix(targetRot_->y);
 
 	// オフセットを回転行列で変換し、適切な位置に調整
-	Vector3 rotatedOffset = TransformVector(offset_, rotationMatrix);
+	Vector3 rotatedOffset = Math::TransformVector(offset_, rotationMatrix);
 
 	// 目標位置を算出
 	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
@@ -217,9 +219,9 @@ void Camera::FollowCollisionAvoidance() {
 
 	// 壁がある場合はターゲットに寄る
 	if (hitWall) {
-		transform_.translate = Lerp(transform_.translate, *targetPos_, followSpeed_);
+		transform_.translate = Math::Lerp(transform_.translate, *targetPos_, followSpeed_);
 	} else {
-		transform_.translate = Lerp(transform_.translate, targetCameraPos, followSpeed_);
+		transform_.translate = Math::Lerp(transform_.translate, targetCameraPos, followSpeed_);
 	}
 
 	// カメラの向きをプレイヤーの回転に合わせる

@@ -2,18 +2,17 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-
-
+#include "sMath.h"
 
 ///-------------------------------------------/// 
 /// Lerp関数
 ///-------------------------------------------///
 // float
-float Lerp(float start, float end, float t) {
+float Math::Lerp(float start, float end, float t) {
     return start * (1.0f - t) + end * t;
 }
 // Vector3
-Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
+Vector3 Math::Lerp(const Vector3& start, const Vector3& end, float t) {
 	Vector3 result;
 
 	result.x = (1.0f - t) * start.x + t * end.x;
@@ -23,7 +22,7 @@ Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
 	return result;
 }
 // Quaternion
-Quaternion Lerp(const Quaternion& start, const Quaternion& end, float t) {
+Quaternion Math::Lerp(const Quaternion& start, const Quaternion& end, float t) {
 	Quaternion result;
 
 	result.x = (1.0f - t) * start.x + t * end.x;
@@ -38,7 +37,7 @@ Quaternion Lerp(const Quaternion& start, const Quaternion& end, float t) {
 /// SLerp関数
 ///-------------------------------------------///
 // Vector3
-Vector3 SLerp(const Vector3& start, const Vector3& end, float t) {
+Vector3 Math::SLerp(const Vector3& start, const Vector3& end, float t) {
 	// なす角の計算
 	float angle = std::cosf(Dot(start, end));
 
@@ -56,41 +55,25 @@ Vector3 SLerp(const Vector3& start, const Vector3& end, float t) {
 	return result;
 }
 // Quaternion
-Quaternion SLerp(const Quaternion& start, const Quaternion& end, float t) {
-    // start と end の内積を計算
-    float dot = start.x * end.x + start.y * end.y + start.z * end.z + start.w * end.w;
+Quaternion Math::SLerp(const Quaternion& start, const Quaternion& end, float t) {
+	Quaternion q2Modified = end;
+	float dot = Dot(start, end);
 
-    // 内積が負の場合、補間経路を反転させる
-    Quaternion endCorrected = end;
-    if (dot < 0.0f) {
-        endCorrected.x = -end.x;
-        endCorrected.y = -end.y;
-        endCorrected.z = -end.z;
-        endCorrected.w = -end.w;
-        dot = -dot;
-    }
+	// 逆方向補間を防ぐために符号を反転
+	if (dot < 0.0f) {
+		q2Modified = Conjugate(q2Modified);
+		dot = -dot;
+	}
 
-    // 内積が 1 に近い場合（角度が小さい）、Lerp で近似
-    const float THRESHOLD = 0.9995f;
-    if (dot > THRESHOLD) {
-        return Normalize(Lerp(start, end, t));
-    }
+	// クォータニオン補間
+	if (dot > 0.9995f) {
+		// 角度が小さい場合は Lerp で近似
+		return Normalize(start + (q2Modified - start) * t);
+	}
 
-    // 角度を計算
-    float theta = std::acos(dot);
-    float sinTheta = std::sin(theta);
+	float theta_0 = acosf(dot); // 初期角度
+	float theta = theta_0 * t;  // 補間後の角度
 
-    // 補間係数を計算
-    float w1 = std::sin((1.0f - t) * theta) / sinTheta;
-    float w2 = std::sin(t * theta) / sinTheta;
-
-    // Slerp による補間
-    Quaternion result = {
-        w1 * start.x + w2 * endCorrected.x,
-        w1 * start.y + w2 * endCorrected.y,
-        w1 * start.z + w2 * endCorrected.z,
-        w1 * start.w + w2 * endCorrected.w
-    };
-
-    return result;
+	Quaternion q3 = Normalize(q2Modified - start * dot); // 直交成分
+	return start * cosf(theta) + q3 * sinf(theta);
 }

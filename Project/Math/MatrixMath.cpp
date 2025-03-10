@@ -7,7 +7,7 @@
 ///=====================================================///
 /// 平行移動行列
 ///=====================================================///
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
+Matrix4x4 Math::MakeTranslateMatrix(const Vector3& translate) {
 	// 単位行列を初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -22,7 +22,7 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 ///=====================================================///
 /// 拡大縮小行列
 ///=====================================================///
-Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
+Matrix4x4 Math::MakeScaleMatrix(const Vector3& scale) {
 	// 単位行列を初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -38,7 +38,7 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 /// 回転行列
 ///=====================================================///
 // X軸
-Matrix4x4 MakeRotateXMatrix(float radian) {
+Matrix4x4 Math::MakeRotateXMatrix(float radian) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -51,7 +51,7 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 // Y軸
-Matrix4x4 MakeRotateYMatrix(float radian) {
+Matrix4x4 Math::MakeRotateYMatrix(float radian) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -64,7 +64,7 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 	return result;
 }
 // Z軸
-Matrix4x4 MakeRotateZMatrix(float radian) {
+Matrix4x4 Math::MakeRotateZMatrix(float radian) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -77,7 +77,7 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 	return result;
 }
 // Quaternion
-Matrix4x4 MakeRotateQuaternionMatrix(const Quaternion q) {
+Matrix4x4 Math::MakeRotateQuaternionMatrix(const Quaternion q) {
 	float xx = q.x * q.x;
 	float yy = q.y * q.y;
 	float zz = q.z * q.z;
@@ -117,7 +117,7 @@ Matrix4x4 MakeRotateQuaternionMatrix(const Quaternion q) {
 /// 三次元アフィン変換
 ///=====================================================///
 // EulerTransform
-Matrix4x4 MakeAffineEulerMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+Matrix4x4 Math::MakeAffineEulerMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	// 拡大縮小行列
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
 
@@ -134,7 +134,7 @@ Matrix4x4 MakeAffineEulerMatrix(const Vector3& scale, const Vector3& rotate, con
 	return Multiply(Multiply(scaleMatrix, rotateMatrix), translateMatrix);
 }
 // QuaternionTransform
-Matrix4x4 MakeAffineQuaternionMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
+Matrix4x4 Math::MakeAffineQuaternionMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
 	// 拡大縮小行列
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
 
@@ -154,7 +154,7 @@ Matrix4x4 MakeAffineQuaternionMatrix(const Vector3& scale, const Quaternion& rot
 /// 単位行列
 ///=====================================================///
 // Matrix3x3
-Matrix3x3 MakeIdentity3x3() {
+Matrix3x3 Math::MakeIdentity3x3() {
 	// ゼロ初期化
 	Matrix3x3 result = {};
 
@@ -166,7 +166,7 @@ Matrix3x3 MakeIdentity3x3() {
 	return result;
 }
 // Matrix4x4
-Matrix4x4 MakeIdentity4x4() {
+Matrix4x4 Math::MakeIdentity4x4() {
 	// ゼロ初期化
 	Matrix4x4 result = {};
 
@@ -182,7 +182,7 @@ Matrix4x4 MakeIdentity4x4() {
 ///=====================================================///
 /// 転置行列
 ///=====================================================///
-Matrix4x4 TransposeMatrix(const Matrix4x4& matrix) {
+Matrix4x4 Math::TransposeMatrix(const Matrix4x4& matrix) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -197,7 +197,7 @@ Matrix4x4 TransposeMatrix(const Matrix4x4& matrix) {
 ///=====================================================///
 /// ビューポート行列
 ///=====================================================///
-Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
+Matrix4x4 Math::MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -221,7 +221,7 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 ///=====================================================///
 /// 透視影行列
 ///=====================================================///
-Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
+Matrix4x4 Math::MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
 
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
@@ -241,7 +241,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 ///=====================================================///
 /// 正射影行列
 ///=====================================================///
-Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
+Matrix4x4 Math::MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 
@@ -262,7 +262,7 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 /// 逆行列
 ///=====================================================///
 // Matrix3x3
-Matrix3x3 Inverse3x3(const Matrix3x3& matrix) {
+Matrix3x3 Math::Inverse3x3(const Matrix3x3& matrix) {
 	Matrix3x3 result = MakeIdentity3x3();
 
 	// 行列式を計算
@@ -294,7 +294,7 @@ Matrix3x3 Inverse3x3(const Matrix3x3& matrix) {
 	return result;
 }
 // Matrix4x4
-Matrix4x4 Inverse4x4(const Matrix4x4& matrix) {
+Matrix4x4 Math::Inverse4x4(const Matrix4x4& matrix) {
 	// 単位行列で初期化
 	Matrix4x4 result = MakeIdentity4x4();
 	float det;
@@ -362,7 +362,7 @@ Matrix4x4 Inverse4x4(const Matrix4x4& matrix) {
 /// 座標変換
 ///=====================================================///
 // 座標変換（平行移動を加味する）
-Vector3 TransformCoordinates(const Vector3& vector, const Matrix4x4& matrix) {
+Vector3 Math::TransformCoordinates(const Vector3& vector, const Matrix4x4& matrix) {
 	Vector3 result;
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
 	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
@@ -378,7 +378,7 @@ Vector3 TransformCoordinates(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 }
 // ベクトル変換（平行移動を加味しない）
-Vector3 TransformVector(const Vector3& vector, const Matrix4x4& matrix) {
+Vector3 Math::TransformVector(const Vector3& vector, const Matrix4x4& matrix) {
 	Vector3 result;
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0];
 	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1];
@@ -386,7 +386,7 @@ Vector3 TransformVector(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 }
 // 法線ベクトルの変換（逆転置行列を使用）
-Vector3 TransformNormal(const Vector3& normal, const Matrix4x4& matrix) {
+Vector3 Math::TransformNormal(const Vector3& normal, const Matrix4x4& matrix) {
 	// 逆転置行列を使用
 	Matrix4x4 inverseTransposeMatrix = TransposeMatrix(Inverse4x4(matrix));
 	// ベクトル変換

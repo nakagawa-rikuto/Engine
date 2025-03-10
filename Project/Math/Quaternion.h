@@ -1,6 +1,4 @@
 #pragma once
-#include "Vector3.h"
-
 /// <summary>
 /// Quaternionの構造体
 /// </summary>
@@ -52,26 +50,16 @@ struct Quaternion final {
 	Quaternion operator/(const Quaternion& v)const;
 };
 
+/// ===内積の計算=== ///
+float Dot(const Quaternion& q);
+float Dot(const Quaternion& q1, const Quaternion& q2);
+
+/// ===長さの計算=== ///
+float Length(const Quaternion& q);
+float Length(const Quaternion& q1, const Quaternion& q2);
+
 /// ===Quaternionの積=== ///
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
+
 /// ===正規化したQuaternionを返す=== ///
 Quaternion Normalize(const Quaternion& quaternion);
-
-namespace QuatMath {
-	/// ===Quaternionのnormを返す=== ///
-	float Norm(const Quaternion& quaternion);
-	/// ===単位Quaternionを返す=== ///
-	Quaternion IdentityQuaternion();
-	/// ===共役Quaternionを返す=== ///
-	Quaternion Conjugate(const Quaternion& quaternion);
-	/// ===逆Quaternionを返す=== ///
-	Quaternion Inverse(const Quaternion& quaternion);
-	/// ===任意軸回転Quaternionを返す=== ///
-	Quaternion MakeRotateAxisAngle(const Vector3& axis, float angle);
-	/// ===Quaternionの回転結果をベクトルで返す=== ///
-	Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
-	/// ===QuaternionからX軸の角度を取る関数=== ///
-	float GetXAngle(const Quaternion& quaternion);
-	/// ===QuaternionからY軸の角度を取る関数=== ///
-	float GetYAngle(const Quaternion& quaternion);
-}

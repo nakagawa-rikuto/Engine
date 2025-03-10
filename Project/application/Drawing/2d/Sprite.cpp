@@ -1,11 +1,12 @@
 #include "Sprite.h"
+// c++
+#include <cassert>
 // Engine
 #include "Engine/System/Service/Getter.h"
 #include "Engine/System/Service/Render.h"
 // Math
-#include "Math/sMath.h"
-// c++
-#include <cassert>
+#include "Math/MatrixMath.h"
+
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -178,7 +179,7 @@ void Sprite::IndexDataWrite() {
 void Sprite::MateialDataWrite() {
 	common_->SetMateiralData(
 		color_,
-		MakeIdentity4x4()
+		Math::MakeIdentity4x4()
 	);
 }
 
@@ -196,11 +197,11 @@ void Sprite::TransformDataWrite() {
 	worldTransform_.scale = { size_.x, size_.y, 1.0f };
 
 	// WorldMatrix
-	Matrix4x4 worldMatrix = MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	// ViewMatrix
-	Matrix4x4 viewMatrix = MakeIdentity4x4();
+	Matrix4x4 viewMatrix = Math::MakeIdentity4x4();
 	// ProjectionMatrix
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(Getter::GetWindowWidth()), static_cast<float>(Getter::GetWindowHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = Math::MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(Getter::GetWindowWidth()), static_cast<float>(Getter::GetWindowHeight()), 0.0f, 100.0f);
 
 	// データの書き込み
 	common_->SetWVPData(Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix)));

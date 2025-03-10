@@ -15,6 +15,7 @@
 // Math
 #include "Math/sMath.h"
 #include "Math/EasingMath.h"
+#include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -203,9 +204,9 @@ void AnimationModel::Draw(BlendMode mode) {
 ///-------------------------------------------///
 void AnimationModel::MateialDataWrite() {
 	/// ===Matrixの作成=== ///
-	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform_.scale);
-	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform_.rotate.z));
-	uvTransformMatrixMultiply = Multiply(uvTransformMatrixMultiply, MakeTranslateMatrix(uvTransform_.translate));
+	Matrix4x4 uvTransformMatrix = Math::MakeScaleMatrix(uvTransform_.scale);
+	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, Math::MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrixMultiply = Multiply(uvTransformMatrixMultiply, Math::MakeTranslateMatrix(uvTransform_.translate));
 	/// ===値の代入=== ///
 	common_->SetMatiarlData(
 		color_,
@@ -218,7 +219,7 @@ void AnimationModel::MateialDataWrite() {
 /// Transform情報の書き込み
 ///-------------------------------------------///
 void AnimationModel::TransformDataWrite() {
-	Matrix4x4 worldMatrix = MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
 	if (modelData_.haveBone) {
@@ -227,8 +228,8 @@ void AnimationModel::TransformDataWrite() {
 			const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
 			worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
 		} else {
-			Matrix4x4 viewMatrix = Inverse4x4(MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-			Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+			Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
+			Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
 			worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		}
 
@@ -236,7 +237,7 @@ void AnimationModel::TransformDataWrite() {
 		common_->SetTransformData(
 			worldViewProjectionMatrix,
 			worldMatrix,
-			Inverse4x4(worldMatrix)
+			Math::Inverse4x4(worldMatrix)
 		);
 	} else {
 		/// ===Animationの再生=== ///
@@ -244,22 +245,22 @@ void AnimationModel::TransformDataWrite() {
 		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime_); // 指定自国の値を取得。
 		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime_);
 		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime_);
-		Matrix4x4 localMatrix = MakeAffineQuaternionMatrix(scale, rotate, translate);
+		Matrix4x4 localMatrix = Math::MakeAffineQuaternionMatrix(scale, rotate, translate);
 
 		/// ===Matrixの作成=== ///
 		if (camera_) {
 			const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
 			worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
 		} else {
-			Matrix4x4 viewMatrix = Inverse4x4(MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-			Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+			Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
+			Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
 			worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		}
 		/// ===値の代入=== ///
 		common_->SetTransformData(
 			Multiply(localMatrix, worldViewProjectionMatrix),
 			Multiply(localMatrix, worldMatrix),
-			Inverse4x4(worldMatrix)
+			Math::Inverse4x4(worldMatrix)
 		);
 	}
 }
@@ -319,7 +320,7 @@ Vector3 AnimationModel::CalculateValue(const std::vector<KeyframeVector3>& keyfr
 		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
 			// 範囲内を線形補間する(Lerp)
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
+			return Math::Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
 		}
 	}
 	// ここまでできた場合は一番後の時刻よりも後ろなので最後の値を返すことにする
@@ -344,7 +345,7 @@ Quaternion AnimationModel::CalculateValue(const std::vector<KeyframeQuaternion>&
 		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
 			// 範囲内を球面線形補間する(SLerp)
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return SLerp(keyframes[index].value, keyframes[nextIndex].value, t);
+			return Math::SLerp(keyframes[index].value, keyframes[nextIndex].value, t);
 		}
 	}
 	// ここまでできた場合は一番後の時刻よりも後ろなので最後の値を返すことにする
@@ -373,7 +374,7 @@ int32_t AnimationModel::CreateJoint(const Node& node, const std::optional<int32_
 	Joint joint;
 	joint.name = node.name;
 	joint.localMatrix = node.localMatrix;
-	joint.skeletonSpaceMatrix = MakeIdentity4x4();
+	joint.skeletonSpaceMatrix = Math::MakeIdentity4x4();
 	joint.transform = node.transform;
 	joint.index = int32_t(joints.size()); // 現在登録されている数をIndexに
 	joint.parent = parent;
@@ -408,7 +409,7 @@ void AnimationModel::ApplyAnimation(Skeleton& skeleton, const Animation& animati
 void AnimationModel::SkeletonUpdate(Skeleton& skeleton) {
 	// 全てのJointを更新。親が若いので通常ループで処理を可能にしている。
 	for (Joint& joint : skeleton.joints) {
-		joint.localMatrix = MakeAffineQuaternionMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+		joint.localMatrix = Math::MakeAffineQuaternionMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
 		if (joint.parent) { // 親がいなければ親の行列を掛ける
 			joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, skeleton.joints[*joint.parent].skeletonSpaceMatrix);
 		} else { // 親がいないのでlocalMatrixとskeletonSpaceMatrixは一致する
@@ -457,7 +458,7 @@ SkinCluster AnimationModel::CreateSkinCluster(
 	skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
 	// InverseBindPoseMatrixを格納する場所を作成して、単位行列で埋める
 	skinCluster.inverseBindPoseMatrices.resize(skeleton.joints.size());
-	std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), MakeIdentity4x4);
+	std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), Math::MakeIdentity4x4);
 
 	/// ===ModelDataを解析してInfluenceを埋める=== ///
 	for (const auto& jointWeight : modelData.skinClusterData) { // ModelのSkinClusterの情報を解析
@@ -491,6 +492,6 @@ void AnimationModel::SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton&
 		skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix =
 			Multiply(skinCluster.inverseBindPoseMatrices[jointIndex], skeleton.joints[jointIndex].skeletonSpaceMatrix);
 		skinCluster.mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
-			TransposeMatrix(Inverse4x4(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
+			Math::TransposeMatrix(Math::Inverse4x4(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
 	}
 }
