@@ -14,7 +14,7 @@ class ConfettiParticle : public ParticleGroup {
 public:
 
     ConfettiParticle() = default; // コンストラクタでの処理は行わない
-    ~ConfettiParticle();
+    ~ConfettiParticle() override = default;
 
     /// ===Override=== ///
     // 初期化

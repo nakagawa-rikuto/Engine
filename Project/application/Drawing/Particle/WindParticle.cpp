@@ -5,13 +5,7 @@
 #include "Engine/System/Service/Getter.h"
 // Math
 #include "Math/sMath.h"
-
-
-///-------------------------------------------/// 
-/// コンストラクタ・デストラクタ
-///-------------------------------------------///
-WindParticle::WindParticle() = default;
-WindParticle::~WindParticle() { group_.particle.reset(); }
+#include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -54,8 +48,8 @@ void WindParticle::Initialze(const std::string & filename) {
 void WindParticle::InstancingUpdate(std::list<ParticleData>::iterator it) {}
 void WindParticle::Update() {
 	// 
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate);
-	Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
+	Matrix4x4 cameraMatrix = Math::MakeAffineEulerMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate);
+	Matrix4x4 backToFrontMatrix = Math::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
 	// カメラ
 	Matrix4x4 billboardMatrix = Multiply(backToFrontMatrix, cameraMatrix);
@@ -64,9 +58,9 @@ void WindParticle::Update() {
 	billboardMatrix.m[3][2] = 0.0f;
 
 	// Martixの作成
-	Matrix4x4 worldMatrix = Multiply(MakeScaleMatrix(group_.transform.scale), Multiply(MakeTranslateMatrix(group_.transform.translate), billboardMatrix));
-	Matrix4x4 viewMatrix = Inverse4x4(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+	Matrix4x4 worldMatrix = Multiply(Math::MakeScaleMatrix(group_.transform.scale), Multiply(Math::MakeTranslateMatrix(group_.transform.translate), billboardMatrix));
+	Matrix4x4 viewMatrix = Math::Inverse4x4(cameraMatrix);
+	Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
 
 	// インスタンス数を0にする
 	group_.numInstance = 0;
@@ -102,7 +96,7 @@ void WindParticle::Update() {
 			(*particleIterator).color.w = alpha;
 
 			// WVPMatrix
-			Matrix4x4 worldMatrixs = MakeAffineMatrix((*particleIterator).transform.scale, (*particleIterator).transform.rotate, (*particleIterator).transform.translate);
+			Matrix4x4 worldMatrixs = Math::MakeAffineEulerMatrix((*particleIterator).transform.scale, (*particleIterator).transform.rotate, (*particleIterator).transform.translate);
 			Matrix4x4 wvpMatrixs = Multiply(worldMatrixs, Multiply(viewMatrix, projectionMatrix));
 
 			// 値を入力

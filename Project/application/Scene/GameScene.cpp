@@ -1,13 +1,6 @@
 #include "GameScene.h"
 // SceneManager
 #include "Engine/System/Managers/SceneManager.h"
-// c++
-#include <algorithm> 
-// Service
-#include "Engine/System/Service/Input.h"
-// Math
-#include "Math/sMath.h"
-#include "Math/EasingMath.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
