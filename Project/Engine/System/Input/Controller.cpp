@@ -12,10 +12,10 @@ Controller::~Controller() {}
 /// 初期化　対応済み
 ///-------------------------------------------///
 void Controller::Initialize() {
-	ZeroMemory(currentState_, sizeof(currentState_));
-	ZeroMemory(previousState_, sizeof(previousState_));
-	ZeroMemory(currentDIState_, sizeof(currentDIState_));
-	ZeroMemory(previousDIState_, sizeof(previousDIState_));
+	std::fill_n(currentState_, XUSER_MAX_COUNT, XINPUT_STATE{});
+	std::fill_n(previousState_, XUSER_MAX_COUNT, XINPUT_STATE{});
+	std::fill_n(currentDIState_, XUSER_MAX_COUNT, DIJOYSTATE2{});
+	std::fill_n(previousDIState_, XUSER_MAX_COUNT, DIJOYSTATE2{});
 
 	// XInput / DirectInput のボタンマッピング
 	buttonMapping_ = {

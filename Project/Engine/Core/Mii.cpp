@@ -65,6 +65,9 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 ///=====================================================///
 void Mii::Update() {
 	imGuiManager_->Begin();
+	keyboard_->Update();
+	mouse_->Update();
+	controller_->Update();
 }
 
 ///=====================================================/// 
