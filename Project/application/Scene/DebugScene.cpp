@@ -60,7 +60,7 @@ void DebugScene::Initialize() {
 	modelLight_ = std::make_unique<Model>();
 	modelLight_->Initialize("Particle");
 	// modelLight_->SetTransform({ spot_.position }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
-	/* // モデルの使い方                        
+	/* // モデルの使い方
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetScale(Vector3(0.0f, 0.0f, 0.0f));                 // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
@@ -424,21 +424,18 @@ void DebugScene::Update() {
 	/// ===コントローラーの処理=== ///
 #pragma region コントローラの処理
 
-	XINPUT_STATE joyState;
-	if (Input::GetJoystickState(0, joyState)) {
+	// スティックの入力処理を取得
+	StickState leftStick = Input::GetLeftStickState(0);
+	StickState rightStick = Input::GetRightStickState(0);
 
-		// スティックの入力処理を取得
-		StickState leftStick = Input::GetLeftStickState(0);
-		StickState rightStick = Input::GetRightStickState(0);
+	// モデルの移動処理
+	modelTranslate_.x += leftStick.x * 0.01f;
+	modelTranslate_.y += leftStick.y * 0.01f;
 
-		// モデルの移動処理
-		modelTranslate_.x += leftStick.x * 0.01f;
-		modelTranslate_.y += leftStick.y * 0.01f;
+	// カメラの移動処理
+	cameraPos.x += rightStick.x * 0.01f;
+	cameraPos.y += rightStick.y * 0.01f;
 
-		// カメラの移動処理
-		cameraPos.x += rightStick.x * 0.01f;
-		cameraPos.y += rightStick.y * 0.01f;
-	}
 #pragma endregion
 
 	/// ===Audioのセット=== ///
@@ -468,12 +465,12 @@ void DebugScene::Update() {
 	model_->SetRotate(modelRotate_);
 	model_->SetScale(modelScale_);
 	model_->SetColor(modelColor_);
-	model_->SetDirectionalLight(light_,directional_);
+	model_->SetDirectionalLight(light_, directional_);
 	model_->SetPointLight(light_, point_);
 	model_->SetSpotLight(light_, spot_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
-	
+
 	model2_->SetDirectionalLight(light_, directional_);
 	model2_->SetPointLight(light_, point_);
 	model2_->SetSpotLight(light_, spot_);
@@ -481,7 +478,7 @@ void DebugScene::Update() {
 	model2_->Update();
 
 	modelLight_->SetPosition(point_.position);
-	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());	
+	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());
 	modelLight_->Update();
 #pragma endregion
 
@@ -523,7 +520,7 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	
+
 	animationModel_->Draw();
 
 	/// ===Model=== ///
@@ -535,14 +532,14 @@ void DebugScene::Draw() {
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {
 		windParticle_->Draw();
-	} 
+	}
 	if (isDisplay_.Particle2) {
 		explosionParticle_->Draw();
-	} 
+	}
 	if (isDisplay_.Particle3) {
 		confettiParticle_->Draw();
 	}
-	
+
 #pragma endregion
 
 #pragma region 前景スプライト描画
