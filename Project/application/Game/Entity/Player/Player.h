@@ -57,7 +57,7 @@ private:
 	/// ===Move情報=== ///
 	struct MoveInfo {
 		float speed = 3.0f;          // 移動速度
-		float rotationSpeed = 0.05f; // 視点回転速度
+		float rotationSpeed = 0.01f; // 視点回転速度
 		float maxPitch = 1.2f;       // 上下回転速度
 	};
 	/// ===Boost情報=== ///

@@ -55,16 +55,16 @@ void Player::Update() {
 		case Player::Behavior::kRoot:
 			camera_->SetFollowCamera(FollowCameraType::Orbiting);
 			InitializeRoot();
-			camera_->SetFollowSpeed(1.0f);
+			camera_->SetFollowSpeed(0.6f);
 			break;
 		case Player::Behavior::kMove:
-			camera_->SetFollowCamera(FollowCameraType::FixedOffset);
+			camera_->SetFollowCamera(FollowCameraType::Interpolated);
 			InitializeMove();
-			camera_->SetFollowSpeed(1.0f);
+			camera_->SetFollowSpeed(0.6f);
 			camera_->SetOffset(cameraInfo_.offset);
 			break;
 		case Player::Behavior::kBoost:
-			camera_->SetFollowCamera(FollowCameraType::FixedOffset);
+			camera_->SetFollowCamera(FollowCameraType::Interpolated);
 			InitializeBoost();
 			camera_->SetFollowSpeed(1.0f);
 			camera_->SetOffset(cameraInfo_.offset);
@@ -98,7 +98,7 @@ void Player::Update() {
 
 	// モデルの更新
 	model_->SetPosition(translate_);
-	model_->SetRotate({ rotate_.x, rotate_.y, rotate_.z });
+	model_->SetRotate(Math::QuaternionToEuler(rotate_));
 	model_->SetScale(scale_);
 	model_->SetCamera(camera_);
 	model_->Update();
@@ -164,13 +164,17 @@ void Player::ImGuiUpdate() {
 ///-------------------------------------------///
 // 通常
 void Player::InitializeRoot() {
-	camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
+	rotate_ = { 0.0f, rotate_.y, rotate_.z, rotate_.w };
+	camera_->SetRotate(Math::QuaternionToEuler(rotate_));
 }
 // 移動
-void Player::InitializeMove() {}
+void Player::InitializeMove() {
+	rotate_ = camera_->GetRotate();
+}
 // ブースト
 void Player::InitializeBoost() {
 	boostInfo_.speed = boostInfo_.maxSpeed;
+	rotate_ = camera_->GetRotate();
 }
 
 ///-------------------------------------------/// 
@@ -209,14 +213,8 @@ void Player::UpdateMove() {
 	// Yaw（左右回転）を適用
 	Quaternion yawRotation = Math::MakeRotateAxisAngle(Vector3(0, 1, 0), rightStick.x * moveInfo_.rotationSpeed);
 
-	// Pitch（上下回転）を適用
-	/*float pitchAngle = std::clamp(GetXAngle(rotate_) + rightStick.y * moveInfo_.rotationSpeed,
-		-moveInfo_.maxPitch, moveInfo_.maxPitch);
-	Quaternion pitchRotation = MakeRotateAxisAngle(Vector3(1, 0, 0), pitchAngle);*/
-
 	// 新しい回転を適用（Yaw → Pitch の順）
 	rotate_ = Normalize(yawRotation * rotate_);
-	//cameraInfo_.rotate = rotate_;
 
 	/// === 移動方向の計算（Quaternion を使用） === ///
 	Vector3 forward = Math::RotateVector(Vector3(0, 0, 1), rotate_);
@@ -255,9 +253,7 @@ void Player::UpdateBoost() {
 	Quaternion yawRotation = Math::MakeRotateAxisAngle(Vector3(0, 1, 0), rightStick.x * boostInfo_.rotationSpeed);
 
 	// Pitch（上下回転）を適用
-	float pitchAngle = std::clamp(Math::GetXAngle(rotate_) + rightStick.y * boostInfo_.rotationSpeed,
-		-boostInfo_.maxPitch, boostInfo_.maxPitch);
-	Quaternion pitchRotation = Math::MakeRotateAxisAngle(Vector3(1, 0, 0), pitchAngle);
+	Quaternion pitchRotation = Math::MakeRotateAxisAngle(Vector3(1, 0, 0), -rightStick.y * boostInfo_.rotationSpeed);
 
 	// 新しい回転を適用（Yaw → Pitch の順）
 	rotate_ = Normalize(pitchRotation * yawRotation * rotate_);
