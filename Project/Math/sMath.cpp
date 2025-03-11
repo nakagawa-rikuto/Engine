@@ -96,3 +96,22 @@ float Math::GetYAngle(const Quaternion& quaternion) {
     // atan2(forward.x, forward.z) で Yaw（水平回転） を取得。
     return std::atan2(forward.x, forward.z); // Yaw 角度（ラジアン）
 }
+// QuaternionをEulerAngles(Vector3)に変換する関数
+Vector3 Math::QuaternionToEuler(const Quaternion& quaternion) {
+    Vector3 euler;
+
+    // Yaw (ヨー: Y軸回転)
+    euler.y = std::atan2(2.0f * (quaternion.w * quaternion.y + quaternion.x * quaternion.z), 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
+
+    // Pitch (ピッチ: X軸回転)
+    float sinp = 2.0f * (quaternion.w * quaternion.x - quaternion.y * quaternion.z);
+    if (std::abs(sinp) >= 1.0f)
+        euler.x = std::copysign(Pi() / 2.0f, sinp); // ±90度にクランプ
+    else
+        euler.x = std::asin(sinp);
+
+    // Roll (ロール: Z軸回転)
+    euler.z = std::atan2(2.0f * (quaternion.w * quaternion.z + quaternion.x * quaternion.y), 1.0f - 2.0f * (quaternion.x * quaternion.x + quaternion.z * quaternion.z));
+
+    return euler;
+}

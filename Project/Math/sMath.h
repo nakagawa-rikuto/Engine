@@ -29,6 +29,8 @@ namespace Math {
 	float GetXAngle(const Quaternion& quaternion);
 	// QuaternionからY軸の角度を取る関数
 	float GetYAngle(const Quaternion& quaternion);
+	// QuaternionをEulerAngles(Vector3)に変換する関数
+	Vector3 QuaternionToEuler(const Quaternion& quaternion);
 }
 
 
