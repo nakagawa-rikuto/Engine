@@ -27,6 +27,13 @@ float Math::Norm(const Quaternion& quaternion) {
         quaternion.z * quaternion.z +
         quaternion.w * quaternion.w);
 }
+// QuaternionのNormの2乗を返す
+float Math::NormSquared(const Quaternion& quaternion) {
+    return quaternion.x * quaternion.x +
+        quaternion.y * quaternion.y +
+        quaternion.z * quaternion.z +
+        quaternion.w * quaternion.w;
+}
 // 単位Quaternionを返す
 Quaternion Math::IdentityQuaternion() {
     return { 0.0f, 0.0f, 0.0f, 1.0f };
