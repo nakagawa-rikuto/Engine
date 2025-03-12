@@ -66,12 +66,12 @@ void RTVManager::CreateFinalRenderTargets() {
 
 	// まず1つ目を作る。1つ目は最初のところに作る。作る場所をコリらで指定してあげる必要がある
 	descriptorHandles_[0] = GetCPUDescriptorHandle(descriptorHeap_.Get(), rtvSize, 0);
-	device_->CreateRenderTargetView(swapChainResource_[0].Get(), &desc, rtvHandles_[0]);
+	dxCommon_->GetDevice()->CreateRenderTargetView(swapChainResource_[0].Get(), &desc, descriptorHandles_[0]);
 
 	//2つ目のディスクリプタハンドルを得る
-	rtvHandles_[1].ptr = rtvHandles_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorHandles_[1].ptr = descriptorHandles_[0].ptr + dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//2つ目を作る
-	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc_, rtvHandles_[1]);
+	dxCommon_->GetDevice()->CreateRenderTargetView(swapChainResource_[1].Get(), &desc, descriptorHandles_[1]);
 }
 
 
