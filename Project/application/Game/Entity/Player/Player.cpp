@@ -164,17 +164,17 @@ void Player::ImGuiUpdate() {
 ///-------------------------------------------///
 // 通常
 void Player::InitializeRoot() {
-	rotate_ = { 0.0f, rotate_.y, rotate_.z, rotate_.w };
+	rotate_ = { 0.0f, rotate_.y, 0.0f, rotate_.w };
 	camera_->SetRotate(Math::QuaternionToEuler(rotate_));
 }
 // 移動
 void Player::InitializeMove() {
-	rotate_ = camera_->GetRotate();
+	rotate_ = Quaternion({ 0.0f, camera_->GetRotate().y, 0.0f, camera_->GetRotate().w });
 }
 // ブースト
 void Player::InitializeBoost() {
 	boostInfo_.speed = boostInfo_.maxSpeed;
-	rotate_ = camera_->GetRotate();
+	rotate_ = Quaternion({ 0.0f, camera_->GetRotate().y, 0.0f, camera_->GetRotate().w });
 }
 
 ///-------------------------------------------/// 
@@ -194,12 +194,14 @@ void Player::UpdateRoot() {
 	/// === 左スティック押し込みでブースト開始 === ///
 	if (Input::TriggerButton(0, ControllerButtonType::LeftStick)) {
 		behaviorRequest_ = Behavior::kBoost;
+		return;
 		// ここで現在のカメラの向いている方向にプレイヤーを向かせる処理を追加
 	}
 
 	/// === 移動があれば移動状態へ === ///
 	if (std::abs(leftStick.x) > 0.1f || std::abs(leftStick.y) > 0.1f) {
 		behaviorRequest_ = Behavior::kMove;
+		return;
 	}
 }
 // 移動
@@ -265,11 +267,12 @@ void Player::UpdateBoost() {
 	energyInfo_.rest -= energyInfo_.drain * deltaTime_;
 
 	/// === ブースト解除条件 === ///
-	if (leftStick.y < -0.5f || Input::TriggerButton(0, ControllerButtonType::A) || energyInfo_.rest <= 0.0f) {
+	if (leftStick.y < -0.5f || Input::ReleaseButton(0, ControllerButtonType::A) || energyInfo_.rest <= 0.0f) {
 		behaviorRequest_ = Behavior::kRoot;
+		return;
 	}
 
-	/// === `rotate_` に基づいて移動ベクトルを計算 (Quaternion を使用) === ///
+	/// === rotate_ に基づいて移動ベクトルを計算 (Quaternion を使用) === ///
 	Vector3 forward = Math::RotateVector(Vector3(0, 0, 1), rotate_);
 
 	Normalize(forward); // 速度を一定にするため正規化

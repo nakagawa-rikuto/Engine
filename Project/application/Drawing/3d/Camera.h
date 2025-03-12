@@ -30,6 +30,11 @@ public:
 	void Update();
 
 	/// <summary>
+	/// ImGui
+	/// </summary>
+	void ImUpdate();
+
+	/// <summary>
 	/// FollowTypeの設定
 	/// </summary>
 	void SetFollowCamera(FollowCameraType type);
