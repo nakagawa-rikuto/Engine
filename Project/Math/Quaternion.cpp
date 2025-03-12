@@ -112,11 +112,14 @@ Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
 /// 正規化
 ///-------------------------------------------///
 Quaternion Normalize(const Quaternion& quaternion) {
-    float norm = Math::Norm(quaternion);
-    if (norm == 0.0f) {
-        // Avoid division by zero
+    // ノルムの二乗を取得
+    float normSquared = Math::NormSquared(quaternion);
+    if (normSquared < 1e-6f) { // 0ではなく非常に小さい値でチェック
         return Math::IdentityQuaternion();
     }
+
+    // ノルムを計算
+    float norm = sqrtf(normSquared);
     return {
         quaternion.x / norm,
         quaternion.y / norm,

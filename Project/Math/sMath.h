@@ -15,6 +15,8 @@ namespace Math {
 	/// ===Quaternion=== ///
 	// Quaternionのnormを返す
 	float Norm(const Quaternion& quaternion);
+	// Quaternionのnormの２乗を返す
+	float NormSquared(const Quaternion& quaternion);
 	// 単位Quaternionを返す
 	Quaternion IdentityQuaternion();
 	// 共役Quaternionを返す
