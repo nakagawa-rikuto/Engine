@@ -109,6 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
+    <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
     <ClCompile Include="Engine\System\Service\Getter.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
@@ -192,9 +193,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Engine\System\Service\Render.cpp" />
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
+    <ClCompile Include="Engine\System\Managers\RTVManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
+    <ClInclude Include="Engine\System\Managers\DSVManager.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
     <ClInclude Include="Engine\System\Service\Getter.h" />
     <ClInclude Include="Math\EasingMath.h" />
@@ -286,6 +289,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Engine\System\Service\Render.h" />
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
+    <ClInclude Include="Engine\System\Managers\RTVManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
