@@ -58,13 +58,13 @@ void Player::Update() {
 			camera_->SetFollowSpeed(0.6f);
 			break;
 		case Player::Behavior::kMove:
-			camera_->SetFollowCamera(FollowCameraType::Interpolated);
+			camera_->SetFollowCamera(FollowCameraType::Smoth);
 			InitializeMove();
 			camera_->SetFollowSpeed(0.6f);
 			camera_->SetOffset(cameraInfo_.offset);
 			break;
 		case Player::Behavior::kBoost:
-			camera_->SetFollowCamera(FollowCameraType::Interpolated);
+			camera_->SetFollowCamera(FollowCameraType::Smoth);
 			InitializeBoost();
 			camera_->SetFollowSpeed(1.0f);
 			camera_->SetOffset(cameraInfo_.offset);
@@ -189,7 +189,7 @@ void Player::UpdateRoot() {
 	StickState rightStick = Input::GetRightStickState(0);
 
 	/// === カメラ回転 === ///
-	camera_->SetStick({ rightStick.x, rightStick.y });
+	camera_->SetStick(rightStick.x, rightStick.y);
 
 	/// === 左スティック押し込みでブースト開始 === ///
 	if (Input::TriggerButton(0, ControllerButtonType::LeftStick)) {

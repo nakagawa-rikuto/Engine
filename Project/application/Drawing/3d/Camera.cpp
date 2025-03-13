@@ -18,7 +18,7 @@ Camera::~Camera() {
 /// FollowCameraの設定
 ///-------------------------------------------///
 void Camera::SetFollowCamera(FollowCameraType type) {
-	cameraType_ = type;
+	followType_ = type;
 }
 
 ///-------------------------------------------/// 
@@ -52,20 +52,26 @@ void Camera::SetAspectRatio(const float& aspect) { aspect_ = aspect; }
 void Camera::SetNearClip(const float& nearClip) { nearClip_ = nearClip; }
 // FarClip
 void Camera::SetFarClip(const float& farClip) { farClip_ = farClip; }
+/// ===追従=== ///
 // 追従対象の座標を設定
 void Camera::SetTarget(Vector3* position, Quaternion* rotation) {
 	targetPos_ = position;
 	targetRot_ = rotation;
 }
+// 追従対象の速度
+void Camera::SetVelocity(const Vector3& velocity) { velocity_ = velocity; }
 // 追従のオフセット
 void Camera::SetOffset(const Vector3& offset) { offset_ = offset; }
-void Camera::SetOrbitingOffset(const Vector3& offset) { OrbitingOffset_ = offset; }
+void Camera::SetOrbitingOffset(const Vector3& offset) { orvitingInfo_.offset = offset; }
 // 追従速度を設定
 void Camera::SetFollowSpeed(float speed) { followSpeed_ = speed; }
 // 回転補間速度
 void Camera::SetLerpSpeed(float speed) { rotationLerpSpeed_ = speed; }
 // 回転の量
-void Camera::SetStick(const Vector2& stickValue) { stickValue_ = stickValue; }
+void Camera::SetStick(const float& ValueX, const float& valueY) { 
+	orvitingInfo_.valueX = ValueX;
+	orvitingInfo_.valueY = valueY;
+}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -112,12 +118,12 @@ void Camera::Update() {
 ///-------------------------------------------///
 // 
 void Camera::UpdateFollowCamera() {
-	switch (cameraType_) {
+	switch (followType_) {
 	case FollowCameraType::FixedOffset:
 		FollowFixedOffset();
 		break;
-	case FollowCameraType::Interpolated:
-		FollowInterpolated();
+	case FollowCameraType::Smoth:
+		FollowSmoth();
 		break;
 	case FollowCameraType::Orbiting:
 		FollowOrbiting();
@@ -145,31 +151,33 @@ void Camera::FollowFixedOffset() {
 	// カメラの回転を Yaw のみに制限して補間
 	transform_.rotate = Math::SLerp(transform_.rotate, targetYawRotation, rotationLerpSpeed_);
 }
-// 回転軸がXとY座標の追従処理
-void Camera::FollowInterpolated() {
-	// 目標の回転（Quaternion）を取得
+// スムーズなカメラ追従　
+void Camera::FollowSmoth() {
+	// プレイヤーの向きを取得
 	Quaternion targetRotation = *targetRot_;
 
-	// オフセットをターゲットの回転に基づいて回転
+	// カメラのオフセットを回転させる
 	Vector3 rotatedOffset = Math::RotateVector(offset_, targetRotation);
 
-	// 目標位置を算出
+	// 目標位置を計算
 	Vector3 targetCameraPos = *targetPos_ + rotatedOffset;
 
-	// カメラの位置を補間（Lerp）で滑らかに移動
-	transform_.translate = Math::Lerp(transform_.translate, targetCameraPos, followSpeed_);
+	// 速度に応じてカメラの追従速度を調整（スムーズにする）
+	float adaptiveFollowSpeed = followSpeed_ * (1.0f + Length(velocity_) * 0.5f);
+	transform_.translate = Math::Lerp(transform_.translate, targetCameraPos, adaptiveFollowSpeed);
 
-	// カメラの回転をスムーズに補間（Slerp を使用）
+	// 回転の補間
 	transform_.rotate = Math::SLerp(transform_.rotate, targetRotation, rotationLerpSpeed_);
 }
+
 // 自分の周りをまわるカメラの追従処理
 void Camera::FollowOrbiting() {
 	// クォータニオンで回転を管理
 	Quaternion rotationDelta = Math::IdentityQuaternion();
 
 	// 右スティックのX・Y軸の値を取得 (-32768 ～ 32767)
-	float rightStickX = stickValue_.x; // Yaw（左右回転）
-	float rightStickY = stickValue_.y; // Pitch（上下回転）
+	float rightStickX = orvitingInfo_.valueX; // Yaw（左右回転）
+	float rightStickY = orvitingInfo_.valueY; // Pitch（上下回転）
 
 	// デッドゾーン処理（スティックがわずかに傾いたときの無効化）
 	const float DEADZONE = 0.2f;
@@ -193,7 +201,7 @@ void Camera::FollowOrbiting() {
 	// 累積回転を更新
 	transform_.rotate = rotationDelta * transform_.rotate;
 
-	offset_ = OrbitingOffset_;
+	offset_ = orvitingInfo_.offset;
 
 	// 回転を適用
 	offset_ = Math::RotateVector(offset_, transform_.rotate);
