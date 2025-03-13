@@ -9,7 +9,9 @@ const uint32_t RTVManager::kNumRTVDescriptor_ = 2;
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
 RTVManager::RTVManager() {}
-RTVManager::~RTVManager() {}
+RTVManager::~RTVManager() {
+	descriptorHeap_.Reset();
+}
 
 ///-------------------------------------------/// 
 /// Getter
@@ -30,21 +32,9 @@ D3D12_GPU_DESCRIPTOR_HANDLE RTVManager::GetGPUDescriptorHandle(uint32_t index){
 }
 
 ///-------------------------------------------/// 
-/// 初期化
-///-------------------------------------------///
-void RTVManager::Initialize(DXCommon * dxcommon) {
-	// 引数で受け取ってメンバ変数に記録する
-	dxCommon_ = dxcommon;
-	// デスクリプタヒープの生成
-	descriptorHeap_ = dxCommon_->CreateRTVHeap();
-	// デスクリプタ1個分のサイズを取得して記録
-	descriptorSize_ = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-}
-
-///-------------------------------------------/// 
 /// 生成
 ///-------------------------------------------///
-void RTVManager::CreateFinalRenderTargets() {
+void RTVManager::CreateFinalRenderTargets(DXCommon* dxcommon, ID3D12Resource* backBuffers[], uint32_t backBufferCount) {
 	HRESULT hr;
 
 	// RTVの生成(レンダーターゲットビュー)
@@ -52,12 +42,14 @@ void RTVManager::CreateFinalRenderTargets() {
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー用
 	heapDesc.NumDescriptors = kNumRTVDescriptor_; // ダブルバッファ用に2つ以上
 	heapDesc.Flags = false ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = dxCommon_->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&descriptorHeap_));
+
+	// ディスクリプタヒープを作成
+	hr = dxcommon->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&descriptorHeap_));
 	// ディスクリプターヒープが作れなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	// RTVのサイズを取得
-	const uint32_t rtvSize = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	const uint32_t rtvSize = dxcommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	// RTVの設定(レンダーターゲットビュー)
 	D3D12_RENDER_TARGET_VIEW_DESC desc{};
@@ -65,13 +57,15 @@ void RTVManager::CreateFinalRenderTargets() {
 	desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;  // 2dテクスチャとして書き込む
 
 	// まず1つ目を作る。1つ目は最初のところに作る。作る場所をコリらで指定してあげる必要がある
-	descriptorHandles_[0] = GetCPUDescriptorHandle(descriptorHeap_.Get(), rtvSize, 0);
-	dxCommon_->GetDevice()->CreateRenderTargetView(swapChainResource_[0].Get(), &desc, descriptorHandles_[0]);
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	handleCPU.ptr += (rtvSize * 0);
+	descriptorHandles_[0] = handleCPU;
+	dxcommon->GetDevice()->CreateRenderTargetView(backBuffers[0], &desc, descriptorHandles_[0]);
 
 	//2つ目のディスクリプタハンドルを得る
-	descriptorHandles_[1].ptr = descriptorHandles_[0].ptr + dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorHandles_[1].ptr = descriptorHandles_[0].ptr + dxcommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//2つ目を作る
-	dxCommon_->GetDevice()->CreateRenderTargetView(swapChainResource_[1].Get(), &desc, descriptorHandles_[1]);
+	dxcommon->GetDevice()->CreateRenderTargetView(backBuffers[1], &desc, descriptorHandles_[1]);
 }
 
 

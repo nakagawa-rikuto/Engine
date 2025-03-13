@@ -3,7 +3,6 @@
 // DirectX
 #include <d3d12.h>
 // c++
-// c++
 #include <cstdint>
 #include <cassert>
 // Engien
@@ -21,10 +20,8 @@ public:
 	RTVManager();
 	~RTVManager();
 
-	// 初期化
-	void Initialize(DXCommon* dxcommon);
 	// RTVの生成
-	void CreateFinalRenderTargets();
+	void CreateFinalRenderTargets(DXCommon* dxcommon, ID3D12Resource* backBuffers[], uint32_t backBufferCount);
 
 public: /// ===Getter=== ///
 
@@ -32,21 +29,15 @@ public: /// ===Getter=== ///
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
 
-public: /// ===定数=== ///
-
-	
-
 private:
-	DXCommon* dxCommon_ = nullptr; // DXCommon
 
 	// RTVの数
 	static const uint32_t kNumRTVDescriptor_; 
-
 	// ヒープ
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
 	// ハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandles_[2];
 	// スクリプタサイズ
-	uint32_t descriptorSize_; 
+	uint32_t descriptorSize_ = 0; 
 };
 
