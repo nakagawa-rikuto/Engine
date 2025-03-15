@@ -62,15 +62,15 @@ void Camera::SetTarget(Vector3* position, Quaternion* rotation) {
 void Camera::SetVelocity(const Vector3& velocity) { velocity_ = velocity; }
 // 追従のオフセット
 void Camera::SetOffset(const Vector3& offset) { offset_ = offset; }
-void Camera::SetOrbitingOffset(const Vector3& offset) { orvitingInfo_.offset = offset; }
+void Camera::SetOrbitingOffset(const Vector3& offset) { orbitingInfo_.offset = offset; }
 // 追従速度を設定
 void Camera::SetFollowSpeed(float speed) { followSpeed_ = speed; }
 // 回転補間速度
 void Camera::SetLerpSpeed(float speed) { rotationLerpSpeed_ = speed; }
 // 回転の量
 void Camera::SetStick(const float& ValueX, const float& valueY) { 
-	orvitingInfo_.valueX = ValueX;
-	orvitingInfo_.valueY = valueY;
+	orbitingInfo_.valueX = ValueX;
+	orbitingInfo_.valueY = valueY;
 }
 
 ///-------------------------------------------/// 
@@ -176,17 +176,12 @@ void Camera::FollowOrbiting() {
 	Quaternion rotationDelta = Math::IdentityQuaternion();
 
 	// 右スティックのX・Y軸の値を取得 (-32768 ～ 32767)
-	float rightStickX = orvitingInfo_.valueX; // Yaw（左右回転）
-	float rightStickY = orvitingInfo_.valueY; // Pitch（上下回転）
-
-	// デッドゾーン処理（スティックがわずかに傾いたときの無効化）
-	const float DEADZONE = 0.2f;
-	if (fabs(rightStickX) < DEADZONE) rightStickX = 0.0f;
-	if (fabs(rightStickY) < DEADZONE) rightStickY = 0.0f;
+	float rightStickX = orbitingInfo_.valueX; // Yaw（左右回転）
+	float rightStickY = orbitingInfo_.valueY; // Pitch（上下回転）
 
 	// スティックの入力を回転量に変換
-	float deltaYaw = rightStickX * 0.05f;  // 感度調整
-	float deltaPitch = rightStickY * 0.05f;
+	float deltaYaw = rightStickX * 0.015f;
+	float deltaPitch = rightStickY * 0.015f;
 
 	// クォータニオンを用いた回転計算
 	Quaternion yawRotation = Math::MakeRotateAxisAngle(
@@ -197,16 +192,17 @@ void Camera::FollowOrbiting() {
 	// 回転の補間
 	rotationDelta = pitchRotation * yawRotation;
 
-
 	// 累積回転を更新
 	transform_.rotate = rotationDelta * transform_.rotate;
 
-	offset_ = orvitingInfo_.offset;
+	// オフセットをセット
+	offset_ = orbitingInfo_.offset;
 
 	// 回転を適用
 	offset_ = Math::RotateVector(offset_, transform_.rotate);
 	transform_.translate = offset_ + *targetPos_;
 
+	// 正規化
 	transform_.rotate = Normalize(transform_.rotate); // クォータニオンを正規化して数値誤差を防ぐ
 }
 // 障害物を避ける追従処理

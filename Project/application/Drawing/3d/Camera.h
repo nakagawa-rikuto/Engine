@@ -103,9 +103,6 @@ private:/// ===変数=== ///
 	/// ===合成行列=== ///
 	Matrix4x4 viewProjectionMatrix_;
 
-	/// ===ロックオン対象=== ///
-	Vector3* lockOnTarget_ = nullptr;
-
 	/// ===追従=== ///
 	// 追従対象の情報
 	Vector3* targetPos_ = nullptr;
@@ -128,7 +125,7 @@ private:/// ===変数=== ///
 		float valueY = 0.0f;
 	};
 
-	OrbitingInfo orvitingInfo_;
+	OrbitingInfo orbitingInfo_;
 
 private: /// ===追従=== ///
 
