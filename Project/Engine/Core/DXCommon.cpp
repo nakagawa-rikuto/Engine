@@ -554,7 +554,10 @@ ID3D12GraphicsCommandList* DXCommon::GetCommandList() const { return commandList
 // SwapChainの取得
 UINT DXCommon::GetBackBufferIndex() const { return swapChain_->GetCurrentBackBufferIndex(); }
 // SwapChainResourceの取得
-ID3D12Resource* DXCommon::GetSwapChainResource(uint32_t index) const { return swapChainResource_[index].Get(); }
+ID3D12Resource* DXCommon::GetSwapChainResource(uint32_t index) const {
+	assert(index < 2);
+	return swapChainResource_[index].Get(); 
+}
 // CPUのディスクリプターハンドルの取得 
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
 	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {
