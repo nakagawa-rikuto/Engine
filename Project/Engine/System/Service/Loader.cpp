@@ -42,6 +42,12 @@ void Loader::LoadAnimation(const std::string& directorPath, const std::string& f
 	ServiceLocator::GetModelManager()->Load(baseDirectorPath, directorPath, filename);
 	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, directorPath, filename);
 }
+void Loader::LoadAnimationdifferentModel(const std::string& directorPath, const std::string& ModelFilename, const std::string& AnimationFilename) {
+	// ベースのディレクトリパス
+	const std::string& baseDirectorPath = "./Resource/Animations";
+	ServiceLocator::GetModelManager()->Load(baseDirectorPath, directorPath, ModelFilename);
+	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, directorPath, AnimationFilename);
+}
 
 ///-------------------------------------------/// 
 /// WAVE
