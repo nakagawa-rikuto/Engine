@@ -58,6 +58,16 @@ void ServiceLocator::Finalize() {
 SRVManager* ServiceLocator::GetSRVManager() { return srvManager_; }
 
 ///-------------------------------------------/// 
+/// RTVManager
+///-------------------------------------------///
+RTVManager* ServiceLocator::GetRTVManager() { return rtvManager_; }
+
+///-------------------------------------------/// 
+/// DSVManager
+///-------------------------------------------///
+DSVManager* ServiceLocator::GEtDSVManager() { return dsvManager_; }
+
+///-------------------------------------------/// 
 /// AudioManager
 ///-------------------------------------------///
 AudioManager* ServiceLocator::GetAudioManager() { return audioManager_; }

@@ -3,23 +3,27 @@
 #include <memory>
 
 /// ===前方宣言=== ///
+class WinApp;
+class DXCommon;
 class SRVManager;
+class RTVManager;
+class DSVManager;
 class AudioManager;
 class TextureManager;
 class ModelManager;
 class PipelineManager;
 class AnimationManager;
 class CSVManager;
-class DXCommon;
-class WinApp;
 class Keyboard;
 class Mouse;
 class Controller;
 
 struct ServiceRegister {
-    DXCommon* dxCommon = nullptr;
     WinApp* winApp = nullptr;
+    DXCommon* dxCommon = nullptr;
     SRVManager* srvManager = nullptr;
+    RTVManager* rtvManager = nullptr;
+    DSVManager* dsvManager = nullptr;
     PipelineManager* pipelineManager = nullptr;
     TextureManager* textureManager = nullptr;
     ModelManager* modelManager = nullptr;
@@ -41,10 +45,18 @@ public:
     // 全てのサービスを終了
     static void Finalize();
 
+    // WinApp
+    static WinApp* GetWinApp();
+    // DXCommon
+    static DXCommon* GetDXCommon();
     // SRVManager
     static SRVManager* GetSRVManager();
-    // AudioManager
-    static AudioManager* GetAudioManager();
+    // RTVManager 
+    static RTVManager* GetRTVManager();
+    // DSVManager
+    static DSVManager* GEtDSVManager();
+    // PipelineManager
+    static PipelineManager* GetPipelineManager();
     // TextureManager
     static TextureManager* GetTextureManager();
     // ModelManager
@@ -53,27 +65,25 @@ public:
     static AnimationManager* GetAnimationManager();
     // CSVManager
     static CSVManager* GetCSVManager();
-    // PipelineManager
-    static PipelineManager* GetPipelineManager();
-    // DXCommon
-    static DXCommon* GetDXCommon();
-    // WinApp
-    static WinApp* GetWinApp();
+    // AudioManager
+    static AudioManager* GetAudioManager();
     // Input (Keyboard, Mouse, Controller)
     static Keyboard* GetKeyboard();
     static Mouse* GetMouse();
     static Controller* GetController();
 
 private:
+    static inline WinApp* winApp_ = nullptr;
+    static inline DXCommon* dxCommon_ = nullptr;
     static inline SRVManager* srvManager_ = nullptr;
-    static inline AudioManager* audioManager_ = nullptr;
+    static inline RTVManager* rtvManager_ = nullptr;
+    static inline DSVManager* dsvManager_ = nullptr;
+    static inline PipelineManager* pipelineManager_ = nullptr;
     static inline TextureManager* textureManager_ = nullptr;
     static inline ModelManager* modelManager_ = nullptr;
     static inline AnimationManager* animationManager_ = nullptr;
     static inline CSVManager* csvManager_ = nullptr;
-    static inline PipelineManager* pipelineManager_ = nullptr;
-    static inline DXCommon* dxCommon_ = nullptr;
-    static inline WinApp* winApp_ = nullptr;
+    static inline AudioManager* audioManager_ = nullptr;
     static inline Keyboard* keyboard_ = nullptr;
     static inline Mouse* mouse_ = nullptr;
     static inline Controller* controller_ = nullptr;

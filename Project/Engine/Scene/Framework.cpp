@@ -13,9 +13,11 @@ void Framework::Initialize(const wchar_t* title) {
 	MiiEngine_->Initialize(title, 1280, 720);
 	// ServiceLocator
 	ServiceLocator::ProvideAll({ 
-		MiiEngine_->GetDXCommon(),
 		MiiEngine_->GetWinApp(),
+		MiiEngine_->GetDXCommon(),
 		MiiEngine_->GetSRVManager(),
+		MiiEngine_->GetRTVManager(),
+		MiiEngine_->GetDSVManager(),
 		MiiEngine_->GetPipelineManager(),
 		MiiEngine_->GetTextureManager(),
 		MiiEngine_->GetModelManager(),
