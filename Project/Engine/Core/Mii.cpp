@@ -13,6 +13,44 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	dXCommon_ = std::make_unique<DXCommon>();
 	dXCommon_->Initialize(winApp_.get(), width, height);
 
+	// SRVManagerの生成
+	srvManager_ = std::make_unique<SRVManager>();
+	srvManager_->Initialize(dXCommon_.get());
+
+	// RTVManagerの生成
+	rtvManager_ = std::make_unique<RTVManager>();
+	rtvManager_->Initialize(dXCommon_.get());
+
+	// DSVManagerの生成
+	dsvManager_ = std::make_unique<DSVManager>();
+	dsvManager_->Initialize(dXCommon_.get());
+
+	// ImGuiManagerの生成
+	imGuiManager_ = std::make_unique<ImGuiManager>();
+	imGuiManager_->Initialize(winApp_.get(), dXCommon_.get(), srvManager_.get());
+
+	// PipelineManagerの生成
+	pipelineManager_ = std::make_unique<PipelineManager>();
+	pipelineManager_->Initialize(dXCommon_.get());;
+
+	// TextureManagerの生成
+	textureManager_ = std::make_unique<TextureManager>();
+	textureManager_->Initialize(dXCommon_.get(), srvManager_.get());
+
+	// ModelManagerの生成	
+	modelManager_ = std::make_unique<ModelManager>();
+	modelManager_->Initialize(textureManager_.get());
+
+	// Audiomanagerの生成
+	audioManager_ = std::make_unique<AudioManager>();
+	audioManager_->Initialze();
+
+	// CSVManagerの生成
+	csvManager_ = std::make_unique<CSVManager>();
+
+	// AnimationManagerの生成
+	animationManager_ = std::make_unique<AnimationManager>();
+
 	// InputCommonの生成
 	inputCommon_ = std::make_unique<InputCommon>();
 	inputCommon_->Initialize(winApp_.get());
@@ -28,46 +66,6 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// Controllerの生成
 	controller_ = std::make_unique<Controller>();
 	controller_->Initialize();
-
-	// SRVManagerの生成
-	srvManager_ = std::make_unique<SRVManager>();
-	srvManager_->Initialize(dXCommon_.get());
-
-	// RTVManagerの生成
-	rtvManager_ = std::make_unique<RTVManager>();
-	rtvManager_->Initialize(dXCommon_.get());
-	rtvManager_->CreateFinalRenderTargets();
-
-	// DSVManagerの生成
-	dsvManager_ = std::make_unique<DSVManager>();
-	dsvManager_->Initialize(dXCommon_.get());
-	dsvManager_->CreateDepthBuffer();
-
-	// PipelineManagerの生成
-	pipelineManager_ = std::make_unique<PipelineManager>();
-	pipelineManager_->Initialize(dXCommon_.get());;
-
-	// TextureManagerの生成
-	textureManager_ = std::make_unique<TextureManager>();
-	textureManager_->Initialize(dXCommon_.get(), srvManager_.get());
-
-	// ModelManagerの生成	
-	modelManager_ = std::make_unique<ModelManager>();
-	modelManager_->Initialize(textureManager_.get());
-
-	// ImGuiManagerの生成
-	imGuiManager_ = std::make_unique<ImGuiManager>();
-	imGuiManager_->Initialize(winApp_.get(), dXCommon_.get(), srvManager_.get());
-
-	// Audiomanagerの生成
-	audioManager_ = std::make_unique<AudioManager>();
-	audioManager_->Initialze();
-
-	// CSVManagerの生成
-	csvManager_ = std::make_unique<CSVManager>();
-
-	// AnimationManagerの生成
-	animationManager_ = std::make_unique<AnimationManager>();
 }
 
 ///=====================================================/// 
@@ -95,22 +93,22 @@ void Mii::Finalize() {
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
-	keyboard_.reset(); // Keyboard
-	mouse_.reset(); // Mouse
 	controller_.reset(); // Controller
+	mouse_.reset(); // Mouse
+	keyboard_.reset(); // Keyboard
 	inputCommon_.reset(); // InputCommon
-	modelManager_.reset(); // Modelmanager
-	audioManager_.reset(); // AudioManager
-	csvManager_.reset(); // CSVManager
 	animationManager_.reset(); // AnimationManager
+	csvManager_.reset(); // CSVManager
+	audioManager_.reset(); // AudioManager
+	modelManager_.reset(); // Modelmanager
 	textureManager_.reset(); // TextrureManager
 	pipelineManager_.reset(); // PipelineManager
 	imGuiManager_.reset(); // ImGuiManager
-	srvManager_.reset(); // SRVManager
-	rtvManager_.reset(); // RTVManager
 	dsvManager_.reset(); // DSVManager
-	winApp_.reset(); // WinApp
+	rtvManager_.reset(); // RTVManager
+	srvManager_.reset(); // SRVManager
 	dXCommon_.reset(); // DXCommon
+	winApp_.reset(); // WinApp
 
 	// COMの終了
 	CoUninitialize();
@@ -121,10 +119,7 @@ void Mii::Finalize() {
 /// フレーム開始処理
 ///=====================================================///
 void Mii::BeginFrame() {
-	//dXCommon_->PreDraw();
-
-	// これから書き込むバックバッファのインデックスを取得
-	UINT backBufferIndex = dXCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
+	dXCommon_->PreDraw(rtvManager_.get(), dsvManager_.get());
 	imGuiManager_->Draw();
 }
 
@@ -152,12 +147,6 @@ int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 DXCommon* Mii::GetDXCommon() { return dXCommon_.get(); }
 // WinApp
 WinApp* Mii::GetWinApp() { return winApp_.get(); }
-// Keyboard
-Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
-// Mouse
-Mouse* Mii::GetMouse() { return mouse_.get(); }
-// Controller
-Controller* Mii::GetController() { return controller_.get(); }
 // SRVManager
 SRVManager* Mii::GetSRVManager() {return srvManager_.get();}
 // RTVManager
@@ -176,4 +165,10 @@ AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 // AnimationManager
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
+// Keyboard
+Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
+// Mouse
+Mouse* Mii::GetMouse() { return mouse_.get(); }
+// Controller
+Controller* Mii::GetController() { return controller_.get(); }
 #pragma endregion

@@ -30,24 +30,17 @@ D3D12_GPU_DESCRIPTOR_HANDLE RTVManager::GetGPUDescriptorHandle(uint32_t index) c
 ///-------------------------------------------///
 void RTVManager::Initialize(DXCommon* dxcommon) {
 	dxcommon_ = dxcommon;
-	descriptorHeap_ = dxcommon_->CreateRTVHeap(); // この関数は変更
-	descriptorSize_ = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	// RTVの作成
+	CreateFinalRenderTargets();
 }
 
 ///-------------------------------------------/// 
 /// 作成
 ///-------------------------------------------///
 void RTVManager::CreateFinalRenderTargets() {
-	HRESULT hr;
-
 	// RTVの生成(レンダーターゲットビュー)
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー用
-	heapDesc.NumDescriptors = kNumRTVDescriptor_; // ダブルバッファ用に2つ以上
-	heapDesc.Flags = false ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = dxcommon_->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&descriptorHeap_));
-	// ディスクリプターヒープが作れなかったので起動できない
-	assert(SUCCEEDED(hr));
+	descriptorHeap_ = dxcommon_->CreateRTVHeap(kNumRTVDescriptor_); // この関数は変更
+	descriptorSize_ = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	// RTVの設定(レンダーターゲットビュー)
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
@@ -56,21 +49,23 @@ void RTVManager::CreateFinalRenderTargets() {
 
 	// まず1つ目を作る。1つ目は最初のところに作る。作る場所をコリらで指定してあげる必要がある
 	descriptorHandles_[0] = dxcommon_->GetCPUDescriptorHandle(descriptorHeap_.Get(), descriptorSize_, 0);
-	dxcommon_->GetDevice()->CreateRenderTargetView(&dxcommon_->GetSwapChainResource()[0], &rtvDesc, descriptorHandles_[0]);
+	dxcommon_->GetDevice()->CreateRenderTargetView(dxcommon_->GetSwapChainResource(0), &rtvDesc, descriptorHandles_[0]);
 
 	//2つ目のディスクリプタハンドルを得る
 	descriptorHandles_[1].ptr = descriptorHandles_[0].ptr + dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//2つ目を作る
-	dxcommon_->GetDevice()->CreateRenderTargetView(&dxcommon_->GetSwapChainResource()[1], &rtvDesc, descriptorHandles_[1]);
+	dxcommon_->GetDevice()->CreateRenderTargetView(dxcommon_->GetSwapChainResource(1), &rtvDesc, descriptorHandles_[1]);
 }
 
 ///-------------------------------------------/// 
 /// クリア
 ///-------------------------------------------///
-void RTVManager::ClearRenderTarget(ID3D12GraphicsCommandList * commandList, uint32_t index) {
+void RTVManager::ClearRenderTarget(ID3D12GraphicsCommandList * commandList) {
+
+	UINT backBufferIndex = dxcommon_->GetBackBufferIndex();
 
 	// 指定した色で画面全体をクリアする
 	float cleaerColor[] = { 0.1f, 0.25f, 0.5f, 1.0f }; // 青色っっぽい色、RGBAの順
-	commandList->ClearRenderTargetView(descriptorHandles_[index], cleaerColor, 0, nullptr);
+	commandList->ClearRenderTargetView(descriptorHandles_[backBufferIndex], cleaerColor, 0, nullptr);
 }
 

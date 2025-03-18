@@ -22,8 +22,6 @@ public:
 
 	// 初期化
 	void Initialize(DXCommon* dxcommon);
-	// 深度バッファの生成(DSV)
-	void CreateDepthBuffer();
 	// クリア
 	void ClearDepthBuffer(ID3D12GraphicsCommandList* commandList);
 
@@ -53,5 +51,10 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandles_;
 	// スクリプタサイズ
 	uint32_t descriptorSize_ = 0;
+
+private:
+
+	// 深度バッファの生成(DSV)
+	void CreateDepthBuffer();
 };
 

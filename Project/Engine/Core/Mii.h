@@ -51,12 +51,6 @@ public:/// ===開発者用関数(Getter)=== ///
 	DXCommon* GetDXCommon();
 	// WinAppの取得
 	WinApp* GetWinApp();
-	// Keyboardの取得
-	Keyboard* GetKeyboard();
-	// Mouseの取得
-	Mouse* GetMouse();
-	// Controllerの取得
-	Controller* GetController();
 	// SRVManagerの取得
 	SRVManager* GetSRVManager();
 	// RTVManagerの取得
@@ -75,6 +69,12 @@ public:/// ===開発者用関数(Getter)=== ///
 	CSVManager* GetCSVManager();
 	// AnimationManagerの取得
 	AnimationManager* GetAnimationManager();
+	// Keyboardの取得
+	Keyboard* GetKeyboard();
+	// Mouseの取得
+	Mouse* GetMouse();
+	// Controllerの取得
+	Controller* GetController();
 
 private:/// ===Variables(変数)=== ///
 	std::unique_ptr<WinApp> winApp_;                     // WinApp

@@ -22,10 +22,8 @@ public:
 
 	// 初期化
 	void Initialize(DXCommon* dxcommon);
-	// RTVの生成
-	void CreateFinalRenderTargets();
 	// クリア
-	void ClearRenderTarget(ID3D12GraphicsCommandList* commandList, uint32_t index);
+	void ClearRenderTarget(ID3D12GraphicsCommandList* commandList);
 
 public: /// ===Getter=== ///
 	// Handle
@@ -51,5 +49,10 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandles_[2];
 	// スクリプタサイズ
 	uint32_t descriptorSize_ = 0; 
+
+private:
+
+	// RTVの生成
+	void CreateFinalRenderTargets();
 };
 

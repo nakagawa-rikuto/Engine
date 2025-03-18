@@ -35,9 +35,8 @@ D3D12_GPU_DESCRIPTOR_HANDLE DSVManager::GetGPUDescriptorHandle(uint32_t index) c
 ///-------------------------------------------///
 void DSVManager::Initialize(DXCommon* dxcommon){
 	dxcommon_ = dxcommon;
-	// DescriptorSizeの取得, Heapの生成
-	descriptorHeap_ = dxcommon_->CreateDSVHeap();
-	descriptorSize_ = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	// DSVの作成
+	CreateDepthBuffer();
 }
 
 ///-------------------------------------------/// 
@@ -45,6 +44,10 @@ void DSVManager::Initialize(DXCommon* dxcommon){
 ///-------------------------------------------///
 void DSVManager::CreateDepthBuffer() {
 	HRESULT hr;
+
+	// DescriptorSizeの取得, Heapの生成
+	descriptorHeap_ = dxcommon_->CreateDSVHeap(kNumDSVDescriptor_);
+	descriptorSize_ = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	// 生成するDSVの設定
 	D3D12_RESOURCE_DESC desc{};
