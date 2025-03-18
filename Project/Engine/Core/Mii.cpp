@@ -33,6 +33,16 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	srvManager_ = std::make_unique<SRVManager>();
 	srvManager_->Initialize(dXCommon_.get());
 
+	// RTVManagerの生成
+	rtvManager_ = std::make_unique<RTVManager>();
+	rtvManager_->Initialize(dXCommon_.get());
+	rtvManager_->CreateFinalRenderTargets();
+
+	// DSVManagerの生成
+	dsvManager_ = std::make_unique<DSVManager>();
+	dsvManager_->Initialize(dXCommon_.get());
+	dsvManager_->CreateDepthBuffer();
+
 	// PipelineManagerの生成
 	pipelineManager_ = std::make_unique<PipelineManager>();
 	pipelineManager_->Initialize(dXCommon_.get());;
@@ -97,6 +107,8 @@ void Mii::Finalize() {
 	pipelineManager_.reset(); // PipelineManager
 	imGuiManager_.reset(); // ImGuiManager
 	srvManager_.reset(); // SRVManager
+	rtvManager_.reset(); // RTVManager
+	dsvManager_.reset(); // DSVManager
 	winApp_.reset(); // WinApp
 	dXCommon_.reset(); // DXCommon
 
@@ -109,7 +121,10 @@ void Mii::Finalize() {
 /// フレーム開始処理
 ///=====================================================///
 void Mii::BeginFrame() {
-	dXCommon_->PreDraw();
+	//dXCommon_->PreDraw();
+
+	// これから書き込むバックバッファのインデックスを取得
+	UINT backBufferIndex = dXCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
 	imGuiManager_->Draw();
 }
 
@@ -145,6 +160,10 @@ Mouse* Mii::GetMouse() { return mouse_.get(); }
 Controller* Mii::GetController() { return controller_.get(); }
 // SRVManager
 SRVManager* Mii::GetSRVManager() {return srvManager_.get();}
+// RTVManager
+RTVManager* Mii::GetRTVManager() { return rtvManager_.get(); }
+// DSVManager
+DSVManager* Mii::GetDSVManager() { return dsvManager_.get(); }
 // PiplelineManager
 PipelineManager* Mii::GetPipelineManager() { return pipelineManager_.get(); }
 // TextureManager

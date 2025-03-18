@@ -47,7 +47,7 @@ void SRVManager::Initialize(DXCommon* dxcommon) {
 	dXCommon_ = dxcommon;
 
 	// デスクリプタヒープの生成
-	descriptorHeap_ = dXCommon_->CreateSRVHeap();
+	descriptorHeap_ = dXCommon_->CreateSRVHeap(kMaxSRVCount_);
 
 	// デスクリプタ1個分のサイズを取得して記録
 	descriptorSize_ = dXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

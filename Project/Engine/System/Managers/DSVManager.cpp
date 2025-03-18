@@ -10,36 +10,41 @@ const uint32_t DSVManager::kNumDSVDescriptor_ = 1;
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
-DSVManager::DSVManager() {}
-DSVManager::~DSVManager() {}
+DSVManager::DSVManager() = default;
+DSVManager::~DSVManager() {
+	descriptorHeap_.Reset();
+	depthStencilResource_.Reset();
+}
+
+
 
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
+// Handle
+D3D12_CPU_DESCRIPTOR_HANDLE DSVManager::GetHandle() const { return descriptorHandles_; }
 // Heap
 ID3D12DescriptorHeap* DSVManager::GetDescriptorHeap() const { return descriptorHeap_.Get(); }
-// CPUHandle
-D3D12_CPU_DESCRIPTOR_HANDLE DSVManager::GetCPUDescriptorHandle(uint32_t index) {
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize_ * index);
-	return handleCPU;
-}
-// GPUHandle
-D3D12_GPU_DESCRIPTOR_HANDLE DSVManager::GetGPUDescriptorHandle(uint32_t index) {
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize_ * index);
-	return handleGPU;
+// CPU
+D3D12_CPU_DESCRIPTOR_HANDLE DSVManager::GetCPUDescriptorHandle(uint32_t index) const { return dxcommon_->GetCPUDescriptorHandle(descriptorHeap_, descriptorSize_, index); }
+// GPU
+D3D12_GPU_DESCRIPTOR_HANDLE DSVManager::GetGPUDescriptorHandle(uint32_t index) const { return dxcommon_->GetGPUDescriptorHandle(descriptorHeap_, descriptorSize_, index); }
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void DSVManager::Initialize(DXCommon* dxcommon){
+	dxcommon_ = dxcommon;
+	// DescriptorSizeの取得, Heapの生成
+	descriptorHeap_ = dxcommon_->CreateDSVHeap();
+	descriptorSize_ = dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }
 
 ///-------------------------------------------/// 
 /// 生成
 ///-------------------------------------------///
-void DSVManager::CreateDepthBuffer(DXCommon* dxcommon, ID3D12Resource* depthStencil) {
+void DSVManager::CreateDepthBuffer() {
 	HRESULT hr;
-
-	// DescriptorSizeの取得, Heapの生成
-	descriptorHeap_ = dxcommon->CreateDSVHeap();
-	descriptorSize_ = dxcommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 	// 生成するDSVの設定
 	D3D12_RESOURCE_DESC desc{};
@@ -62,7 +67,7 @@ void DSVManager::CreateDepthBuffer(DXCommon* dxcommon, ID3D12Resource* depthSten
 	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // フォーマット。
 
 	// DepthStencilTextureをウィンドウのサイズで作成
-	hr = dxcommon->GetDevice()->CreateCommittedResource(
+	hr = dxcommon_->GetDevice()->CreateCommittedResource(
 		&heapProperties, // Heapの設定
 		D3D12_HEAP_FLAG_NONE, // HEapの特殊な設定
 		&desc, // Resourceの設定
@@ -77,10 +82,17 @@ void DSVManager::CreateDepthBuffer(DXCommon* dxcommon, ID3D12Resource* depthSten
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
 
 	// DSVHeapの先頭にDSVをつくる
-	dxcommon->GetDevice()->CreateDepthStencilView(
+	dxcommon_->GetDevice()->CreateDepthStencilView(
 		depthStencilResource_.Get(), &dsvDesc, descriptorHeap_->GetCPUDescriptorHandleForHeapStart());
 
 	// 描画先のRTVとDSVを設定する
 	descriptorHandles_ = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+}
+
+///-------------------------------------------/// 
+/// クリア
+///-------------------------------------------///
+void DSVManager::ClearDepthBuffer(ID3D12GraphicsCommandList* commandList) {
+	commandList->ClearDepthStencilView(descriptorHandles_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 

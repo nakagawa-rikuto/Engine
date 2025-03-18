@@ -23,7 +23,6 @@
 /// ===定数=== ///
 const uint32_t DXCommon::kNumRTVDescriptor = 2;
 const uint32_t DXCommon::kNumDSVDescriptor = 1;
-const uint32_t DXCommon::kMaxSRVCount = 512;
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -201,7 +200,7 @@ void DXCommon::PostDraw() {
 ///-------------------------------------------///
 ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kNumRTVDescriptor, false); }
 ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, kNumDSVDescriptor, false); }
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true); }
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap(const uint32_t maxSrvCount) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, maxSrvCount, true); }
 
 ///-------------------------------------------/// 
 /// DescriptorSizeの取得
@@ -681,6 +680,8 @@ IDxcCompiler3* DXCommon::GetDxcCompiler() const { return dxcCompiler_.Get(); }
 IDxcIncludeHandler* DXCommon::GetIncludeHandler() const { return includeHandler_.Get(); }
 // 描画コマンドリストの取得
 ID3D12GraphicsCommandList* DXCommon::GetCommandList() const { return commandList_.Get(); }
+// SwapChainの取得
+IDXGISwapChain4* DXCommon::GetSwapChain() const { return swapChain_.Get(); }
 // CPUのディスクリプターハンドルの取得 
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
 	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {

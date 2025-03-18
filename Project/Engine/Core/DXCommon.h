@@ -37,7 +37,7 @@ public:
 	/// ===Heapの生成=== ///
 	ComPtr<ID3D12DescriptorHeap> CreateRTVHeap(); // RTV
 	ComPtr<ID3D12DescriptorHeap> CreateDSVHeap(); // DSV
-	ComPtr<ID3D12DescriptorHeap> CreateSRVHeap(); // SRV
+	ComPtr<ID3D12DescriptorHeap> CreateSRVHeap(const uint32_t maxSrvCount); // SRV
 
 	/// ===DescriptorSizeの取得=== ///
 	const uint32_t GetRTVDescriptorSize(); // RTV
@@ -61,6 +61,8 @@ public:/// ===Getter=== ///
 	IDxcIncludeHandler* GetIncludeHandler()const;
 	// 描画コマンドリストの取得
 	ID3D12GraphicsCommandList* GetCommandList()const;
+	// swapChainの取得
+	IDXGISwapChain4* GetSwapChain()const;
 	// RTVの指定番号のCPUでスクリプタハンドルを取得する
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
 	// RTVの指定番号のGPUでスクリプタハンドルを取得する
@@ -88,8 +90,6 @@ public:/// ===定数=== ///
 	static const uint32_t kNumRTVDescriptor; // RTVの数
 	// DSV 
 	static const uint32_t kNumDSVDescriptor; // DSVの数
-	// SRV
-	static const uint32_t kMaxSRVCount; // 最大SRV数（最大テクスチャ枚数）	
 
 private: // メンバ変数
 
