@@ -51,11 +51,13 @@ public:/// ===Getter=== ///
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
 
-private:/// ===variable=== ///
-	DXCommon* dXCommon_ = nullptr; // DXCommon
+public:/// ===定数=== ///
 
 	// 最大SRV数（最大テクスチャ数）
 	static const uint32_t kMaxSRVCount_;
+
+private:/// ===variable=== ///
+	DXCommon* dXCommon_ = nullptr; // DXCommon
 	
 	// SRV用のでスクリプタサイズ
 	uint32_t descriptorSize_;

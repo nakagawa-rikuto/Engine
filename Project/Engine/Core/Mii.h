@@ -12,6 +12,8 @@
 #include "Engine/System/Input/Controller.h"
 // Manager
 #include "Engine/System/Managers/SRVManager.h"
+#include "Engine/System/Managers/RTVManager.h"
+#include "Engine/System/Managers/DSVManager.h"
 #include "Engine/System/Managers/PiplineManager.h"
 #include "Engine/System/Managers/TextureManager.h"
 #include "Engine/System/Managers/ModelManager.h"
@@ -49,14 +51,12 @@ public:/// ===開発者用関数(Getter)=== ///
 	DXCommon* GetDXCommon();
 	// WinAppの取得
 	WinApp* GetWinApp();
-	// Keyboardの取得
-	Keyboard* GetKeyboard();
-	// Mouseの取得
-	Mouse* GetMouse();
-	// Controllerの取得
-	Controller* GetController();
 	// SRVManagerの取得
 	SRVManager* GetSRVManager();
+	// RTVManagerの取得
+	RTVManager* GetRTVManager();
+	// DSVManagerの取得
+	DSVManager* GetDSVManager();
 	// PiplelineManagerの取得
 	PipelineManager* GetPipelineManager();
 	// TextureManagerの取得
@@ -69,6 +69,12 @@ public:/// ===開発者用関数(Getter)=== ///
 	CSVManager* GetCSVManager();
 	// AnimationManagerの取得
 	AnimationManager* GetAnimationManager();
+	// Keyboardの取得
+	Keyboard* GetKeyboard();
+	// Mouseの取得
+	Mouse* GetMouse();
+	// Controllerの取得
+	Controller* GetController();
 
 private:/// ===Variables(変数)=== ///
 	std::unique_ptr<WinApp> winApp_;                     // WinApp
@@ -80,6 +86,8 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<Controller> controller_;             // Controller
 
 	std::unique_ptr<SRVManager> srvManager_;             // SRVManager
+	std::unique_ptr<RTVManager> rtvManager_;             // RTVManager
+	std::unique_ptr<DSVManager> dsvManager_;             // DSVManager
 	std::unique_ptr<PipelineManager> pipelineManager_;   // PipelineManager
 	std::unique_ptr<TextureManager> textureManager_;     // TextureManager
 	std::unique_ptr<ModelManager> modelManager_;         // ModelManager

@@ -1,6 +1,8 @@
 #include "DXCommon.h"
 #include "Engine/Core/Logger.h"
 #include "Engine/Core/WinApp.h"
+#include "Engine/System/Managers/RTVManager.h"
+#include "Engine/System/Managers/DSVManager.h"
 
 #include <algorithm>
 #include <cassert>
@@ -20,11 +22,6 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "Winmm.lib")
 
-/// ===定数=== ///
-const uint32_t DXCommon::kNumRTVDescriptor = 2;
-const uint32_t DXCommon::kNumDSVDescriptor = 1;
-const uint32_t DXCommon::kMaxSRVCount = 512;
-
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -33,9 +30,6 @@ DXCommon::~DXCommon() {
 	swapChain_.Reset();
 	commandList_.Reset();
 	commandAllocator_.Reset();
-	rtvHeap_.Reset();
-	dsvHeap_.Reset();
-	depthStencilResource_.Reset();
 	fence_.Reset();
 	swapChainResource_->Reset();
 	backBuffers_.clear();
@@ -76,12 +70,6 @@ void DXCommon::Initialize(
 	// スワップチェーンの生成
 	CreateSwapChain();
 
-	// レンダーターゲットの生成
-	CreateFinalRenderTargets();
-
-	// 深度バッファの生成
-	CreateDepthBuffer();
-
 	// フェンスの生成
 	CreateFence();
 
@@ -98,7 +86,7 @@ void DXCommon::Initialize(
 ///-------------------------------------------/// 
 /// 描画前処理
 ///-------------------------------------------///
-void DXCommon::PreDraw() {
+void DXCommon::PreDraw(RTVManager* rtv, DSVManager* dsv) {
 
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
@@ -126,11 +114,13 @@ void DXCommon::PreDraw() {
 	commandList_->ResourceBarrier(1, &barrier_);
 
 	// 描画先のRTVを設定する
-	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, &dsvHandle_);
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv->GetHandle(backBufferIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv->GetHandle();
+	commandList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
-	ClearRenderTarget();
-	ClearDepthBuffer();
+	rtv->ClearRenderTarget(commandList_.Get());
+	dsv->ClearDepthBuffer(commandList_.Get());
 
 	// コマンドを積む
 	commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
@@ -199,9 +189,9 @@ void DXCommon::PostDraw() {
 ///-------------------------------------------/// 
 /// DescriptorHeapの生成
 ///-------------------------------------------///
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kNumRTVDescriptor, false); }
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, kNumDSVDescriptor, false); }
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap() { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true); }
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap(const uint32_t RTVDescriptor) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, RTVDescriptor, false); }
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap(const uint32_t DSVDescriptor) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, DSVDescriptor, false); }
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap(const uint32_t maxSrvCount) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, maxSrvCount, true); }
 
 ///-------------------------------------------/// 
 /// DescriptorSizeの取得
@@ -209,43 +199,6 @@ ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap() { return CreateDescriptor
 const uint32_t DXCommon::GetRTVDescriptorSize() { return device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV); }
 const uint32_t DXCommon::GetDSVDescriptorSize() { return device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV); }
 const uint32_t DXCommon::GetSRVDescriptorSize() { return device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV); }
-
-
-///-------------------------------------------/// 
-/// レンダーターゲットのクリア
-///-------------------------------------------///
-void DXCommon::ClearRenderTarget() {
-	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
-
-	// 指定した色で画面全体をクリアする
-	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f }; // 青色っぽい色。RGBAの順
-	commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex], clearColor, 0, nullptr);
-}
-
-///-------------------------------------------/// 
-/// 深度バッファのクリア
-///-------------------------------------------///
-void DXCommon::ClearDepthBuffer() {
-	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-}
-
-///-------------------------------------------/// 
-/// 各でスクリプタハンドルの取得用関数
-///-------------------------------------------///
-// RTVの指定番号のCPUでスクリプタハンドルを取得する
-D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetRTVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(rtvHeap_, descriptorSizeRTV_, index); }
-// RTVの指定番号のGPUでスクリプタハンドルを取得する
-D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetRTVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(rtvHeap_, descriptorSizeRTV_, index); }
-// DSVの指定番号のCPUでスクリプタハンドルを取得する
-D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetDSVCPUDescriptorHandle(uint32_t index) { return GetCPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
-// DSVの指定番号のGPUでスクリプタハンドルを取得する
-D3D12_GPU_DESCRIPTOR_HANDLE DXCommon::GetDSVGPUDescriptorHandle(uint32_t index) { return GetGPUDescriptorHandle(dsvHeap_, descriptorSizeDSV_, index); }
-// バックバッファの横幅の取得
-int32_t DXCommon::GetBackBufferWidth() const { return backBufferWidth_; }
-// バックバッファの縦幅の取得
-int32_t DXCommon::GetBackBufferHeight() const { return backBufferHeight_; }
-// バックバッファの数を取得
-size_t DXCommon::GetBackBufferCount() const { return swapChainDesc_.BufferCount; }
 
 ///-------------------------------------------/// 
 /// デバッグレイヤー
@@ -482,95 +435,6 @@ ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDescriptorHeap(
 }
 
 ///-------------------------------------------/// 
-/// レンダーターゲットの生成(RTV)
-///-------------------------------------------///
-void DXCommon::CreateFinalRenderTargets() {
-	HRESULT hr;
-
-	// DescriptorSizeを取得,Heapの生成
-	rtvHeap_ = CreateRTVHeap();
-	descriptorSizeRTV_ = GetRTVDescriptorSize();
-
-	// RTVの生成(レンダーターゲットビュー)
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー用
-	heapDesc.NumDescriptors = kNumRTVDescriptor; // ダブルバッファ用に2つ以上
-	heapDesc.Flags = false ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	hr = device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&rtvHeap_));
-	// ディスクリプターヒープが作れなかったので起動できない
-	assert(SUCCEEDED(hr));
-
-	// RTVのサイズを取得
-	const uint32_t rtvSize = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	// RTVの設定(レンダーターゲットビュー)
-	rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;  // 出力結果をSRGBに変換して書き込む
-	rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;  // 2dテクスチャとして書き込む
-
-	// まず1つ目を作る。1つ目は最初のところに作る。作る場所をコリらで指定してあげる必要がある
-	rtvHandles_[0] = GetCPUDescriptorHandle(rtvHeap_.Get(), rtvSize, 0);
-	device_->CreateRenderTargetView(swapChainResource_[0].Get(), &rtvDesc_, rtvHandles_[0]);
-
-	//2つ目のディスクリプタハンドルを得る
-	rtvHandles_[1].ptr = rtvHandles_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	//2つ目を作る
-	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc_, rtvHandles_[1]);
-}
-
-///-------------------------------------------/// 
-/// 深度バッファの生成(DSV)
-///-------------------------------------------///
-void DXCommon::CreateDepthBuffer() {
-	HRESULT hr;
-
-	// DescriptorSizeの取得, Heapの生成
-	dsvHeap_ = CreateDSVHeap();
-	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-	// 生成するResourceの設定
-	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = winApp_->kWindowWidth; // Textureの幅
-	resourceDesc.Height = winApp_->kWindowHeight; // Textureの高さ
-	resourceDesc.MipLevels = 1; // mipmapの数
-	resourceDesc.DepthOrArraySize = 1; // 奥行 or 配列Textureの配列数
-	resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // DepthStencilとして利用可能なフォーマット
-	resourceDesc.SampleDesc.Count = 1; // サンプリングカウント
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D; // 2次元
-	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // DepthStencilとして使う通知
-
-	// 利用するHeapの設定
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; // VRAM上に作る
-
-	// 深度値のクリア設定
-	D3D12_CLEAR_VALUE depthClearValue{};
-	depthClearValue.DepthStencil.Depth = 1.0f; // 1.0f(最大値)でクリア
-	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // フォーマット。
-
-	// DepthStencilTextureをウィンドウのサイズで作成
-	hr = device_->CreateCommittedResource(
-		&heapProperties, // Heapの設定
-		D3D12_HEAP_FLAG_NONE, // HEapの特殊な設定
-		&resourceDesc, // Resourceの設定
-		D3D12_RESOURCE_STATE_DEPTH_WRITE, // 深度値を書き込む状態にしておく
-		&depthClearValue, // Clear最適値
-		IID_PPV_ARGS(&depthStencilResource_)); // 作成するResourceポインタへのポインタ
-	assert(SUCCEEDED(hr));
-
-	// DSVの設定
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
-
-	// DSVHeapの先頭にDSVをつくる
-	device_->CreateDepthStencilView(
-		depthStencilResource_.Get(), &dsvDesc, dsvHeap_->GetCPUDescriptorHandleForHeapStart());
-
-	// 描画先のRTVとDSVを設定する
-	dsvHandle_ = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
-}
-
-///-------------------------------------------/// 
 /// フェンスの生成
 ///-------------------------------------------///
 void DXCommon::CreateFence() {
@@ -669,6 +533,12 @@ void DXCommon::UpdateFixFPS() {
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
+// バックバッファの横幅の取得
+int32_t DXCommon::GetBackBufferWidth() const { return backBufferWidth_; }
+// バックバッファの縦幅の取得
+int32_t DXCommon::GetBackBufferHeight() const { return backBufferHeight_; }
+// バックバッファの数を取得
+size_t DXCommon::GetBackBufferCount() const { return swapChainDesc_.BufferCount; }
 // DXGFactoryの取得
 IDXGIFactory7* DXCommon::GetDXGFactory() const { return dxgiFactory_.Get(); }
 // デバイスの取得
@@ -681,6 +551,13 @@ IDxcCompiler3* DXCommon::GetDxcCompiler() const { return dxcCompiler_.Get(); }
 IDxcIncludeHandler* DXCommon::GetIncludeHandler() const { return includeHandler_.Get(); }
 // 描画コマンドリストの取得
 ID3D12GraphicsCommandList* DXCommon::GetCommandList() const { return commandList_.Get(); }
+// SwapChainの取得
+UINT DXCommon::GetBackBufferIndex() const { return swapChain_->GetCurrentBackBufferIndex(); }
+// SwapChainResourceの取得
+ID3D12Resource* DXCommon::GetSwapChainResource(uint32_t index) const {
+	assert(index < 2);
+	return swapChainResource_[index].Get(); 
+}
 // CPUのディスクリプターハンドルの取得 
 D3D12_CPU_DESCRIPTOR_HANDLE DXCommon::GetCPUDescriptorHandle(
 	const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index) {

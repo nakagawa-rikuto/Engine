@@ -15,6 +15,8 @@
 
 /// ===前方宣言=== ///
 class WinApp;
+class RTVManager;
+class DSVManager;
 
 ///=====================================================/// 
 /// DirectX汎用
@@ -30,23 +32,19 @@ public:
 		WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight);
 
 	// 描画前処理
-	void PreDraw();
+	void PreDraw(RTVManager* rtv, DSVManager* dsv);
 	// 描画後処理
 	void PostDraw();
 
 	/// ===Heapの生成=== ///
-	ComPtr<ID3D12DescriptorHeap> CreateRTVHeap(); // RTV
-	ComPtr<ID3D12DescriptorHeap> CreateDSVHeap(); // DSV
-	ComPtr<ID3D12DescriptorHeap> CreateSRVHeap(); // SRV
+	ComPtr<ID3D12DescriptorHeap> CreateRTVHeap(const uint32_t RTVDescriptor); // RTV
+	ComPtr<ID3D12DescriptorHeap> CreateDSVHeap(const uint32_t DSVDescriptor); // DSV
+	ComPtr<ID3D12DescriptorHeap> CreateSRVHeap(const uint32_t maxSrvCount); // SRV
 
 	/// ===DescriptorSizeの取得=== ///
 	const uint32_t GetRTVDescriptorSize(); // RTV
 	const uint32_t GetDSVDescriptorSize(); // DSV
 	const uint32_t GetSRVDescriptorSize(); // SRV
-
-	/// ===クリア=== ///
-	void ClearRenderTarget(); // レンダーターゲット
-	void ClearDepthBuffer();  // 深度バッファ
 
 public:/// ===Getter=== ///
 	// DXGFactoryの取得
@@ -61,14 +59,10 @@ public:/// ===Getter=== ///
 	IDxcIncludeHandler* GetIncludeHandler()const;
 	// 描画コマンドリストの取得
 	ID3D12GraphicsCommandList* GetCommandList()const;
-	// RTVの指定番号のCPUでスクリプタハンドルを取得する
-	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);
-	// RTVの指定番号のGPUでスクリプタハンドルを取得する
-	D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
-	// DSVの指定番号のCPUでスクリプタハンドルを取得する
-	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
-	// DSVの指定番号のGPUでスクリプタハンドルを取得する
-	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
+	// BackVBufferIndexの取得
+	UINT GetBackBufferIndex()const;
+	// SwapChainResourceの取得
+	ID3D12Resource* GetSwapChainResource(uint32_t index)const;
 	// バックバッファの横幅の取得
 	int32_t GetBackBufferWidth()const;
 	// バックバッファの縦幅の取得
@@ -81,15 +75,6 @@ public:/// ===Getter=== ///
 	// GPUのディスクリプターハンドルの取得
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(
 		const ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-public:/// ===定数=== ///
-
-	// RTV
-	static const uint32_t kNumRTVDescriptor; // RTVの数
-	// DSV 
-	static const uint32_t kNumDSVDescriptor; // DSVの数
-	// SRV
-	static const uint32_t kMaxSRVCount; // 最大SRV数（最大テクスチャ枚数）	
 
 private: // メンバ変数
 
@@ -117,19 +102,6 @@ private: // メンバ変数
 
 	/// ===backBuffer=== ///
 	std::vector<ComPtr<ID3D12Resource>> backBuffers_; // BackBuffer
-
-	/// ===RTV=== ///
-	ComPtr<ID3D12DescriptorHeap> rtvHeap_; // レンダーターゲットビュー
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2]; // レンダーターゲットビューのディスクリプタ
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{}; // レンダーターゲットビューのデスク
-	uint32_t descriptorSizeRTV_; // RTV(DescriptorSize)
-
-	/// ===DSV=== ///
-	ComPtr<ID3D12Resource> depthStencilResource_; // depthStencilResource
-	ComPtr<ID3D12DescriptorHeap> dsvHeap_; // DSV
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc_{}; // DSVデスク
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_; // DSVハンドル	
-	uint32_t descriptorSizeDSV_; // // DSV(DescriptorSize)
 
 	/// ===fence=== ///
 	ComPtr<ID3D12Fence> fence_; // Fence
@@ -165,10 +137,6 @@ private:/// ===関数=== ///
 	void CreateSwapChain();
 	// ディスクリプタヒープの生成
 	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
-	// レンダーターゲットの生成(RTV)
-	void CreateFinalRenderTargets();
-	// 深度バッファの生成(DSV)
-	void CreateDepthBuffer();
 	// フェンスの生成
 	void CreateFence();
 	// DXCの初期化

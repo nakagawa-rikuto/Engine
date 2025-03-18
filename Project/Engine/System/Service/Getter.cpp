@@ -6,6 +6,8 @@
 #include "Engine/Core/DXCommon.h"
 // Manager
 #include "Engine/System/Managers/SRVManager.h"
+#include "Engine/System/Managers/RTVManager.h"
+#include "Engine/System/Managers/DSVManager.h"
 #include "Engine/System/Managers/TextureManager.h"
 #include "Engine/System/Managers/ModelManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
@@ -17,17 +19,17 @@
 ///-------------------------------------------///
 // RTV
 D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetRTVCPUDescriptorHandle(uint32_t index) { 
-	return ServiceLocator::GetDXCommon()->GetRTVCPUDescriptorHandle(index);
+	return ServiceLocator::GetRTVManager()->GetCPUDescriptorHandle(index);
 }
 D3D12_GPU_DESCRIPTOR_HANDLE Getter::GetRTVGPUDescriptorHandle(uint32_t index) { 
-	return ServiceLocator::GetDXCommon()->GetRTVGPUDescriptorHandle(index);
+	return ServiceLocator::GetRTVManager()->GetGPUDescriptorHandle(index);
 }
 // DSV
 D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetDSVCPUDescriptorHandle(uint32_t index) { 
-	return ServiceLocator::GetDXCommon()->GetDSVCPUDescriptorHandle(index);
+	return ServiceLocator::GEtDSVManager()->GetCPUDescriptorHandle(index);
 }
 D3D12_GPU_DESCRIPTOR_HANDLE Getter::GetDSVGPUDescriptorHandle(uint32_t index) { 
-	return ServiceLocator::GetDXCommon()->GetDSVGPUDescriptorHandle(index);
+	return ServiceLocator::GEtDSVManager()->GetGPUDescriptorHandle(index);
 }
 // SRV
 D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetSRVCPUDescriptorHandle(uint32_t index) { 
