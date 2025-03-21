@@ -36,17 +36,17 @@ void Loader::LoadCSV(const std::string& filename) {
 ///-------------------------------------------/// 
 /// Animation
 ///-------------------------------------------///
-void Loader::LoadAnimation(const std::string& directorPath, const std::string& filename) {
+void Loader::LoadAnimation(const std::string& key, const std::string& filename) {
 	// ベースのディレクトリパス
 	const std::string& baseDirectorPath = "./Resource/Animations";
-	ServiceLocator::GetModelManager()->Load(baseDirectorPath, directorPath, filename);
-	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, directorPath, filename);
+	ServiceLocator::GetModelManager()->Load(baseDirectorPath, key, filename);
+	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, key, filename);
 }
-void Loader::LoadAnimationdifferentModel(const std::string& directorPath, const std::string& ModelFilename, const std::string& AnimationFilename) {
+void Loader::LoadAnimationdifferentModel(const std::string& key, const std::string& ModelFilename, const std::string& AnimationFilename) {
 	// ベースのディレクトリパス
 	const std::string& baseDirectorPath = "./Resource/Animations";
-	ServiceLocator::GetModelManager()->Load(baseDirectorPath, directorPath, ModelFilename);
-	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, directorPath, AnimationFilename);
+	ServiceLocator::GetModelManager()->Load(baseDirectorPath, key, ModelFilename);
+	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, key, AnimationFilename);
 }
 
 ///-------------------------------------------/// 

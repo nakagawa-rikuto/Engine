@@ -128,5 +128,12 @@ void MyGame::LoadAnimation() {
 	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
 	//Loader::LoadAnimation("sneakWalk", "sneakWalk.gltf");
+	//Loader::LoadAnimation("Walk", "walk.gltf");
+	// 上記の二つが読み込め対理由は,キーがDirectぽ明日になっている為、それがあっていないと読み込めない
+	// ダイレクトパスまで書いてしまえばいい。
 	Loader::LoadAnimationdifferentModel("human", "walk.gltf", "running.gltf");
+	// sneakWalk
+	// walk
+
+	//　行いたいこと
 }

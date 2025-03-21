@@ -486,6 +486,7 @@ void DebugScene::Update() {
 #pragma region Animationモデルの更新
 	animationModel_->SetTranslate(modelTranslate_);
 	animationModel_->SetRotate(modelRotate_);
+	animationModel_->SetColor(modelColor_);
 	animationModel_->SetPointLight(light_, point_);
 	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
 	animationModel_->Update();
