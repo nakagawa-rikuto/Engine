@@ -82,7 +82,7 @@ void DebugScene::Initialize() {
 	animationModel_ = std::make_unique<AnimationModel>();
 	animationModel_->Initialize("human", LightType::Lambert);
 	// アニメーションを登録しないとアニメーションが再生されない
-	animationModel_->SetAnimation("Anim0");
+	animationModel_->SetAnimation("Armature|mixamo.com|Layer0");
 #pragma endregion
 
 	/// ===カメラの初期化=== ///

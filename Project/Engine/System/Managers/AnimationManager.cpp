@@ -84,12 +84,8 @@ std::map<std::string, Animation> AnimationManager::LoadAnimation(const std::stri
 			}
 		}
 
-		// アニメーション名（Assimpが持っている名前 or "Anim0", "Anim1", ...）
-		//std::string animName = animationAssimp->mName.C_Str();
-		std::string animName = "Anim" + std::to_string(animationIndex);
-		/*if (animName.empty()) {
-			animName = "Anim" + std::to_string(animationIndex);
-		}*/
+		// アニメーションの名前を登録
+		std::string animName = animationAssimp->mName.C_Str();
 
 		// アニメーションをMapコンテナに格納
 		animations[animName] = animation;
