@@ -40,7 +40,7 @@ public:/// ===Data=== ///
 	// ModelDataの取得
 	static ModelData GetModelData(const std::string& directorPath);
 	// AnimationDataの取得
-	static Animation GetAnimationData(const std::string& directorPath);
+	static std::map<std::string, Animation> GetAnimationData(const std::string& directorPath);
 
 public:/// ===ID3D12=== ///
 	// Deviceの取得
