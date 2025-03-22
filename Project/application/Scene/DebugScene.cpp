@@ -81,6 +81,8 @@ void DebugScene::Initialize() {
 #pragma region AnimationModelの初期化
 	animationModel_ = std::make_unique<AnimationModel>();
 	animationModel_->Initialize("human", LightType::Lambert);
+	// アニメーションを登録しないとアニメーションが再生されない
+	animationModel_->SetAnimation("Anim0");
 #pragma endregion
 
 	/// ===カメラの初期化=== ///
@@ -486,6 +488,7 @@ void DebugScene::Update() {
 #pragma region Animationモデルの更新
 	animationModel_->SetTranslate(modelTranslate_);
 	animationModel_->SetRotate(modelRotate_);
+	animationModel_->SetColor(modelColor_);
 	animationModel_->SetPointLight(light_, point_);
 	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
 	animationModel_->Update();

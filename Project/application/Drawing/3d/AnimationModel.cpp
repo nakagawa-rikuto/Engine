@@ -75,6 +75,8 @@ void AnimationModel::SetSpotLight(LightInfo light, SpotLightInfo info) {
 }
 /// ===Camera=== ///
 void AnimationModel::SetCamera(Camera* camera) { camera_ = camera; }
+/// ===AnimatinoName=== ///
+void AnimationModel::SetAnimation(const std::string& animationName) { animationName_ = animationName; }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -89,6 +91,10 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	/// ===Animationの読み込み=== ///
 	animation_ = Getter::GetAnimationData(filename); // ファイルパス
 
+	/*
+	animation_.nodeAnimations[0] <- 0番目のノードのアニメーション
+	上記のようにすることによって、ノードごとにアニメーションを管理することができる
+	*/
 	/// ===Boneがあれば=== ///
 	if (modelData_.haveBone) {
 		/// ===Skeletonの作成=== ///
@@ -140,9 +146,9 @@ void AnimationModel::Update() {
 	/// ===Animationの再生=== ///
 	animationTime_ += 1.0f / 60.0f; // 時刻を進める。1/60で固定してあるが、計測した時間を使って可変フレーム対応する方が望ましい
 	// 後々ここにif分でリピートするかしないかを選択できるようにする
-	animationTime_ = std::fmod(animationTime_, animation_.duration); // 最後までいったら最初からリピート再生。リピートしなくても別にいい
+	animationTime_ = std::fmod(animationTime_, animation_[animationName_].duration); // 最後までいったら最初からリピート再生。リピートしなくても別にいい
 	// SkeletonにAnimationを適用
-	ApplyAnimation(skeleton_, animation_, animationTime_);
+	ApplyAnimation(skeleton_, animation_[animationName_], animationTime_);
 	// Skeletonの更新
 	SkeletonUpdate(skeleton_);
 	// SkinClusterの更新
@@ -241,7 +247,7 @@ void AnimationModel::TransformDataWrite() {
 		);
 	} else {
 		/// ===Animationの再生=== ///
-		NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
+		NodeAnimation& rootNodeAnimation = animation_[animationName_].nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
 		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime_); // 指定自国の値を取得。
 		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime_);
 		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime_);

@@ -61,7 +61,7 @@ ModelData Getter::GetModelData(const std::string& directorPath) {
 	return ServiceLocator::GetModelManager()->GetModelData(directorPath);
 }
 // アニメーションの取得
-Animation Getter::GetAnimationData(const std::string& directorPath) { 
+std::map<std::string, Animation> Getter::GetAnimationData(const std::string& directorPath) {
 	return ServiceLocator::GetAnimationManager()->GetAnimation(directorPath);
 }
 

@@ -54,6 +54,8 @@ public: /// ===Setter=== ///
 	void SetSpotLight(LightInfo shiniss, SpotLightInfo info);
 	// Camera
 	void SetCamera(Camera* camera);
+	// Animation
+	void SetAnimation(const std::string& animationName);
 
 private: /// ===Variables(変数)=== ///
 
@@ -95,7 +97,8 @@ private: /// ===Variables(変数)=== ///
 
 	/// ===Animation=== ///
 	float animationTime_ = 0.0f;
-	Animation animation_;
+	std::map<std::string, Animation> animation_;
+	std::string animationName_;
 	Skeleton skeleton_;
 	SkinCluster skinCluster_;
 
