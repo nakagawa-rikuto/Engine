@@ -72,9 +72,22 @@ void DebugScene::Initialize() {
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
+	// 球
+	sky_ = std::make_unique<Model>();
+	sky_->Initialize("sky", LightType::HalfLambert);
+	sky_->SetPosition({ 0.0f, 0.0f, 0.0f });
+	cloud_ = std::make_unique<Model>();
+	cloud_->Initialize("cloud", LightType::HalfLambert);
+	cloud_->SetPosition({ 0.0f, 0.0f, 0.0f });
+
+	point_.position = { 0.0f, 0.0f, 99.0f };
+	point_.radius = 500.0f;
+
 	model_->Update();
 	model2_->Update();
 	modelLight_->Update();
+	sky_->Update();
+	cloud_->Update();
 #pragma endregion
 
 	/// ===アニメーションモデルの初期化=== ///
@@ -482,6 +495,15 @@ void DebugScene::Update() {
 	modelLight_->SetPosition(point_.position);
 	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());
 	modelLight_->Update();
+
+
+	sky_->SetDirectionalLight(light_, directional_);
+	sky_->SetCamera(cameraManager_->GetActiveCamera().get());
+	sky_->Update();
+
+	cloud_->SetDirectionalLight(light_, directional_);
+	cloud_->SetCamera(cameraManager_->GetActiveCamera().get());
+	cloud_->Update();
 #pragma endregion
 
 	/// ===AnimaitonModelの更新=== ///
@@ -524,6 +546,9 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
+	modelLight_->Draw();
+	sky_->Draw();
+	cloud_->Draw();
 
 	animationModel_->Draw();
 
@@ -531,7 +556,7 @@ void DebugScene::Draw() {
 	if (isDisplay_.Model) {
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
-		modelLight_->Draw();
+		
 	}
 	/// ===Particle=== ///
 	if (isDisplay_.Particle1) {
