@@ -114,14 +114,27 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 	shaderSourceBuffer.Encoding = DXC_CP_UTF8; // UTF8の文字コードであることを通知
 
 	/// ===2. Compileする === ///
+#ifdef _DEBUG
 	LPCWSTR arguments[] = {
-		filePath.c_str(), // コンパイル対象のhlslファイル名
-		L"-E", L"main",   // エントリーポイントの指定。基本的にmain以外にはしない
-		L"-T", profile,   // ShaderProfileの設定
-		L"-Zi", L"-Qembed_debug",   // デバッグ用の情報を埋め込む
-		L"-Od",    // 最適化を外しておく
-		L"-Zpr",   // メモリレイアウトは行優先
+		filePath.c_str(),
+		L"-E", L"main",
+		L"-T", profile,
+		L"-Zi", L"-Qembed_debug",   // デバッグ情報あり
+		L"-Od",                     // 最適化オフ
+		L"-Zpr",
+		L"-D", L"_DEBUG",           // _DEBUGマクロを定義
 	};
+#else
+	LPCWSTR arguments[] = {
+		filePath.c_str(),
+		L"-E", L"main",
+		L"-T", profile,
+		// デバッグ情報はなし
+		L"-O2",                     // 高速化のための最適化
+		L"-Zpr",
+		L"-D", L"NDEBUG",           // NDEBUGマクロを定義（必要なら）
+	};
+#endif
 
 	// 実際にShaderをコンパイルする
 	ComPtr<IDxcResult> shaderResult = nullptr;
