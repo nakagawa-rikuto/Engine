@@ -4,13 +4,12 @@
 #include <map>
 #include <string>
 // Math
-#include "Math/Vector3.h"
+#include "Engine/DataInfo/ColliderData.h"
 
  // ColliderType
 enum class ColliderType {
     AABB,      // 軸整合バウンディングボックス（矩形）
     Sphere,    // 球体
-    Capsule,   // カプセル
     OBB        // 任意方向のバウンディングボックス
 };
 
@@ -28,17 +27,15 @@ public:
 
 public: /// ===衝突=== ///
     // 衝突時の応答処理
-    virtual void OnCollision() = 0;
-    // Translateの取得
-    void SetWorldTranslate(const Vector3& translate);
+    virtual void OnCollision(Collider* collider) = 0;
 
 public: /// ===Getter=== ///
-    // Translate
-    Vector3 GetWorldTranslate() const;
+    // Type
+    ColliderType GetColliderType();
+    // CollsisionName
+    std::string GetColliderName();
 
 protected:
-    // Translate
-    Vector3 translate_;
     // Type
     ColliderType type_;
     // ColliderName

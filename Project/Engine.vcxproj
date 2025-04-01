@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Game\Collider\AABBCollider.cpp" />
     <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
     <ClCompile Include="application\Game\Collider\Collider.cpp" />
+    <ClCompile Include="application\Game\Collider\ColliderManager.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
     <ClCompile Include="Engine\System\Service\Getter.cpp" />
@@ -197,11 +198,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
     <ClCompile Include="Engine\System\Managers\RTVManager.cpp" />
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
+    <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
     <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
     <ClInclude Include="application\Game\Collider\Collider.h" />
+    <ClInclude Include="application\Game\Collider\ColliderManager.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
     <ClInclude Include="Engine\System\Service\Getter.h" />
@@ -235,7 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Drawing\Particle\ExplosionParticle.h" />
     <ClInclude Include="Engine\System\Input\InputCommon.h" />
     <ClInclude Include="Engine\System\Input\Keyboard.h" />
-    <ClInclude Include="Math\MathData.h" />
+    <ClInclude Include="Engine\DataInfo\ColliderData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\MatrixMath.h" />
@@ -296,6 +299,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
     <ClInclude Include="Engine\System\Managers\RTVManager.h" />
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
+    <ClInclude Include="application\Game\Collider\OBBCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

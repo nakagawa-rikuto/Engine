@@ -6,3 +6,10 @@
 void AABBCollider::Initialize() {
 	type_ = ColliderType::AABB;
 }
+
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+AABB AABBCollider::GetAABB() const {
+	return aabb_;
+}

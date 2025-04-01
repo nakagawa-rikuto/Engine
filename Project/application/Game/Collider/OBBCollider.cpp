@@ -1,16 +1,15 @@
-#include "SphereCollider.h"
+#include "OBBCollider.h"
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void SphereCollider::Initialize() {
-	type_ = ColliderType::Sphere;
+void OBBCollider::Initialize() {
+	type_ = ColliderType::OBB;
 }
 
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
-// Radius
-Sphere SphereCollider::GetSphere() const {
-	return sphere_;
+OBB OBBCollider::GetOBB() const {
+	return obb_;
 }

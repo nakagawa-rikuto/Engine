@@ -19,10 +19,12 @@ public:
 	virtual void Draw() = 0;
 
 public: /// ===衝突=== ///
-	virtual void OnCollision() override = 0;
+	virtual void OnCollision(Collider* collider) override = 0;
+
+public: /// ===Getter=== ///
+	Sphere GetSphere()const;
 
 protected:
-	// 半径
-	float radius_;
+	Sphere sphere_;
 };
 

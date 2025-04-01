@@ -19,11 +19,12 @@ public:
 	virtual void Draw() = 0;
 
 public: /// ===衝突=== ///
-	virtual void OnCollision() override = 0;
+	virtual void OnCollision(Collider* collider) override = 0;
+
+public: /// ===Getter=== ///
+	AABB GetAABB() const;
 
 protected:
-	// サイズ
-	// 幅・高さ・奥行
-	Vector3 size_ = { 0.0f, 0.0f, 0.0f };
+	AABB aabb_;
 };
 
