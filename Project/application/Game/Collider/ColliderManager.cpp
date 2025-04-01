@@ -39,20 +39,17 @@ void ColliderManager::CheckPairCollision(Collider* colliderA, Collider* collider
 	bool isHit = false;
 
 	if (typeA == ColliderType::Sphere && typeB == ColliderType::Sphere) {
-		isHit = SphereToSpherCollision();
+		isHit = SphereToSpherCollision(static_cast<SphereCollider*>(colliderA), static_cast<SphereCollider*>(colliderB));
 	} else if (typeA == ColliderType::AABB && typeB == ColliderType::AABB) {
-		isHit = AABBToAABBCollisison();
+		isHit = AABBToAABBCollisison(static_cast<AABBCollider*>(colliderA), static_cast<AABBCollider*>(colliderB));
 	} else if (typeA == ColliderType::OBB && typeB == ColliderType::OBB) {
-		isHit = OBBToOBBCollisison();
-	} else if ((typeA == ColliderType::Sphere && typeB == ColliderType::AABB) ||
-		(typeA == ColliderType::AABB && typeB == ColliderType::Sphere)) {
-		isHit = SphereToAABBCollisison();
-	} else if ((typeA == ColliderType::AABB && typeB == ColliderType::OBB) ||
-		(typeA == ColliderType::OBB && typeB == ColliderType::AABB)) {
-		isHit = AABBToOBBCollsision();
-	} else if ((typeA == ColliderType::Sphere && typeB == ColliderType::OBB) ||
-		(typeA == ColliderType::OBB && typeB == ColliderType::Sphere)) {
-		isHit = SphereToOBBCollisison();
+		isHit = OBBToOBBCollisison(static_cast<OBBCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
+	} else if (typeA == ColliderType::Sphere && typeB == ColliderType::AABB) {
+		isHit = SphereToAABBCollisison(static_cast<SphereCollider*>(colliderA), static_cast<AABBCollider*>(colliderB));
+	} else if (typeA == ColliderType::AABB && typeB == ColliderType::OBB) {
+		isHit = AABBToOBBCollsision(static_cast<AABBCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
+	} else if (typeA == ColliderType::Sphere && typeB == ColliderType::OBB) {
+		isHit = SphereToOBBCollisison(static_cast<SphereCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
 	}
 
 	if (isHit) {
