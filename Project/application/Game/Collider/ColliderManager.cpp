@@ -83,7 +83,12 @@ bool ColliderManager::SphereToSpherCollision(SphereCollider* a, SphereCollider* 
 	float distSq = Dot(diff);
 	float radiusSum = s1.radius + s2.radius;
 
-	return distSq <= (radiusSum * radiusSum);
+	// 判定
+	if (distSq <= (radiusSum * radiusSum)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 // AABBとAABB
 bool ColliderManager::AABBToAABBCollisison(AABBCollider* a, AABBCollider* b) {
@@ -93,6 +98,22 @@ bool ColliderManager::AABBToAABBCollisison(AABBCollider* a, AABBCollider* b) {
 	return (aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
 		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
 		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z);
+
+	// x軸方向の判定
+	if (aabb1.max.x < aabb2.min.x || aabb1.max.x > aabb2.max.x) {
+		return false;
+	}
+	// y軸方向の判定
+	if (aabb1.max.y < aabb2.min.y || aabb1.min.y > aabb2.max.y) {
+		return false;
+	}
+	// z軸方向の判定
+	if (aabb1.max.z < aabb2.min.z || aabb1.min.z > aabb2.max.z) {
+		return false;
+	}
+
+	// 全ての軸が重なっている場合は衝突
+	return true;
 }
 // OBBとOBB
 bool ColliderManager::OBBToOBBCollisison(OBBCollider* a, OBBCollider* b) {
@@ -113,7 +134,13 @@ bool ColliderManager::SphereToAABBCollisison(SphereCollider* sphere, AABBCollide
 	};
 
 	Vector3 diff = spherecol.center - closestPoint;
-	return Dot(diff) <= (spherecol.radius * spherecol.radius);
+
+	// 衝突の判定
+	if (Dot(diff) <= (spherecol.radius * spherecol.radius)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 // AABBとOBB
 bool ColliderManager::AABBToOBBCollsision(AABBCollider* aabb, OBBCollider* obb) {
@@ -153,7 +180,13 @@ bool ColliderManager::SphereToOBBCollisison(SphereCollider* sphere, OBBCollider*
 	}
 
 	Vector3 diff = sphereCol.center - closest;
-	return Dot(diff) <= (sphereCol.radius * sphereCol.radius);
+
+	// 衝突判定
+	if (Dot(diff) <= (sphereCol.radius * sphereCol.radius)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 ///-------------------------------------------/// 
