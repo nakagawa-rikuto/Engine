@@ -2,6 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+#include "Vector3.h"
 #include "Quaternion.h"
 
 namespace Math {
