@@ -122,6 +122,8 @@ void MyGame::LoadModel() {
 	// Game
 	Loader::LoadModel("Ground", "Ground.obj");
 	Loader::LoadModel("skydome", "skydome.obj");
+	Loader::LoadModel("sky", "sky.gltf");
+	Loader::LoadModel("cloud", "cloud.gltf");
 }
 // アニメーション
 void MyGame::LoadAnimation() {
