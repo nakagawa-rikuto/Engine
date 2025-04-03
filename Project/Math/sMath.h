@@ -2,7 +2,6 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#include "MathData.h"
 #include "Quaternion.h"
 
 namespace Math {

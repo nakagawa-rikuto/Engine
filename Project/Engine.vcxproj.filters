@@ -99,6 +99,11 @@
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
     <ClCompile Include="Engine\System\Managers\RTVManager.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
+    <ClCompile Include="application\Game\Collider\Collider.cpp" />
+    <ClCompile Include="application\Game\Collider\AABBCollider.cpp" />
+    <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
+    <ClCompile Include="application\Game\Collider\ColliderManager.cpp" />
+    <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -121,7 +126,7 @@
     <ClInclude Include="Engine\System\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Scene\IScene.h" />
     <ClInclude Include="Engine\System\Service\Loader.h" />
-    <ClInclude Include="Math\MathData.h" />
+    <ClInclude Include="Engine\DataInfo\ColliderData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\MatrixMath.h" />
@@ -195,6 +200,11 @@
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
     <ClInclude Include="Engine\System\Managers\RTVManager.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />
+    <ClInclude Include="application\Game\Collider\Collider.h" />
+    <ClInclude Include="application\Game\Collider\AABBCollider.h" />
+    <ClInclude Include="application\Game\Collider\SphereCollider.h" />
+    <ClInclude Include="application\Game\Collider\ColliderManager.h" />
+    <ClInclude Include="application\Game\Collider\OBBCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />
