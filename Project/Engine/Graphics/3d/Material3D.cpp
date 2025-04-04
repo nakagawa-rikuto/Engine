@@ -9,7 +9,7 @@ Material3D::~Material3D() { buffer_.Reset(); }
 /// リソースの生成
 ///-------------------------------------------///
 void Material3D::Create(ID3D12Device* device, size_t sizeInBytes) {
-	buffer_ = CreateBufferResource(device, sizeInBytes);
+	buffer_ = CreateBufferResourceComPtr(device, sizeInBytes);
 }
 
 ///-------------------------------------------/// 

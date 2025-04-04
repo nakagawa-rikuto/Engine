@@ -12,7 +12,7 @@ Transform3D::~Transform3D() { buffer_.Reset(); }
 ///
 ///-------------------------------------------///
 void Transform3D::Create(ID3D12Device* device, size_t sizeInBytes) {
-	buffer_ = CreateBufferResource(device, sizeInBytes);
+	buffer_ = CreateBufferResourceComPtr(device, sizeInBytes);
 }
 
 ///-------------------------------------------/// 

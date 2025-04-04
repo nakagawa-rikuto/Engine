@@ -116,4 +116,8 @@ private:
 
 	// ReportLiveObjects
 	D3DResourceLeakChecker leakCheck;
+
+private:
+	// リソースリークチェック
+	void ReportLiveObjects();
 };

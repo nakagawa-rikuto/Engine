@@ -11,7 +11,7 @@ Camera3D::~Camera3D() { buffer_.Reset(); }
 /// 生成
 ///-------------------------------------------///
 void Camera3D::Create(ID3D12Device* device, size_t sizeInBytes) {
-	buffer_ = CreateBufferResource(device, sizeInBytes);
+	buffer_ = CreateBufferResourceComPtr(device, sizeInBytes);
 }
 
 ///-------------------------------------------/// 

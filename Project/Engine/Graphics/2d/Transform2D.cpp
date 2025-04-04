@@ -9,7 +9,7 @@ Transform2D::~Transform2D() { buffer_.Reset(); }
 /// リソースの作成
 ///-------------------------------------------///
 void Transform2D::Create(ID3D12Device* device, size_t sizeInBytes) {
-	buffer_ = CreateBufferResource(device, sizeInBytes);
+	buffer_ = CreateBufferResourceComPtr(device, sizeInBytes);
 }
 
 ///-------------------------------------------/// 

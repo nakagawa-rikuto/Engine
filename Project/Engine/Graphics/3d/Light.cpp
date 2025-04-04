@@ -11,7 +11,7 @@ Light::~Light() { buffer_.Reset(); }
 /// リソースの生成
 ///-------------------------------------------///
 void Light::Create(ID3D12Device* device, size_t sizeInBytes) {
-	buffer_ = CreateBufferResource(device, sizeInBytes);
+	buffer_ = CreateBufferResourceComPtr(device, sizeInBytes);
 }
 
 ///-------------------------------------------/// 

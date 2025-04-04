@@ -55,8 +55,6 @@ void TextureManager::Initialize(DXCommon* dxCommon, SRVManager* srvManager) {
 
 	// SRVの数と同数
 	textureDatas_.reserve(SRVManager::kMaxSRVCount_);
-
-	// テクスチャデータを入れてあげなければいけない
 }
 
 ///-------------------------------------------/// 
