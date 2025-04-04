@@ -38,6 +38,7 @@ private:/// ===メンバ変数=== ///
 	/// </summary>
 
 	/// ===ImGui用フラグ=== ///
+#pragma region ImGui
 	struct Setting {
 		bool Sprite;
 		bool Model;
@@ -70,8 +71,10 @@ private:/// ===メンバ変数=== ///
 	Display isDisplay_ = {false};
 	Imgui isImgui_ = {false};
 	LightTypeInfo lightType_ = { false };
+#pragma endregion
 
 	/// ===クラス=== ///
+#pragma region クラス
 	// スプライト
 	std::unique_ptr<Sprite> sprite_;
 	//Camera
@@ -90,8 +93,10 @@ private:/// ===メンバ変数=== ///
 	std::shared_ptr<WindParticle> windParticle_;
 	std::shared_ptr<ExplosionParticle> explosionParticle_;
 	std::shared_ptr<ConfettiParticle> confettiParticle_;
+#pragma endregion
 
 	/// ===変数=== ///
+#pragma region 変数
 	// モデル
 	Vector3 modelTranslate_ = { 0.0f, 0.0f, 0.0f };
 	Vector3 modelRotate_ = { 0.0f, 0.0f, 0.0f };
@@ -126,4 +131,5 @@ private:/// ===メンバ変数=== ///
 	// Particle
 	bool start_ = false;
 	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+#pragma endregion
 };
