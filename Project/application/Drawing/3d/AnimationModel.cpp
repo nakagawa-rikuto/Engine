@@ -433,7 +433,7 @@ SkinCluster AnimationModel::CreateSkinCluster(
 	SkinCluster skinCluster;
 	/// ===paletter用のResourceを確保=== ///
 	uint32_t paletteIndex = srvManager->Allocate();
-	skinCluster.paletteResource = CreateBufferResource(device.Get(), sizeof(WellForGPU) * skeleton.joints.size());
+	skinCluster.paletteResource = CreateBufferResourceComPtr(device.Get(), sizeof(WellForGPU) * skeleton.joints.size());
 	WellForGPU* mappedPalette = nullptr;
 	skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
 	skinCluster.mappedPalette = { mappedPalette, skeleton.joints.size() }; // spanを使ってアクセスするようにする
@@ -453,7 +453,7 @@ SkinCluster AnimationModel::CreateSkinCluster(
 
 	/// ===Influence用Resourceの作成=== ///
 	//uint32_t influenceIndex = srvManager->Allocate();
-	skinCluster.influenceResource = CreateBufferResource(device.Get(), sizeof(VertexInfluence) * modelData.vertices.size());
+	skinCluster.influenceResource = CreateBufferResourceComPtr(device.Get(), sizeof(VertexInfluence) * modelData.vertices.size());
 	VertexInfluence* mappedInfluence = nullptr;
 	skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
 	std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size()); // 0埋め。weightを0にしておく。

@@ -9,7 +9,7 @@ IndexBuffer3D::~IndexBuffer3D() { buffer_.Reset(); }
 ///リソースの作成
 ///-------------------------------------------///
 void IndexBuffer3D::Create(ID3D12Device* device, size_t sizeInBytes) {
-	buffer_ = CreateBufferResource(device, sizeInBytes);
+	buffer_ = CreateBufferResourceComPtr(device, sizeInBytes);
 }
 
 ///-------------------------------------------/// 
