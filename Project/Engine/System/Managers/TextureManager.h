@@ -8,6 +8,8 @@
 // C++
 #include <string>
 #include <unordered_map>
+// DirectX
+#include <d3dx12.h>
 
 /// ===前方宣言=== ///
 class DXCommon;
@@ -62,6 +64,7 @@ private:/// ===Variables(変数)=== ///
 		std::string filePath;
 		DirectX::TexMetadata metadata;
 		ComPtr<ID3D12Resource> resource;
+		ComPtr<ID3D12Resource> intermediateResource;
 		uint32_t srvIndex;
 		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
 		D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
@@ -77,6 +80,7 @@ private:/// ===Functions(関数)=== ///
 	// TextureResourceの作成
 	ComPtr<ID3D12Resource> CreateTextureResource( const DirectX::TexMetadata& metadata);
 	// データを転送する
-	void UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
+	[[nodiscard]]
+	ComPtr<ID3D12Resource> UploadTextureData(ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 };
 

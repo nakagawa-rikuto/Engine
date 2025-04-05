@@ -110,9 +110,6 @@ void Mii::Finalize() {
 	dXCommon_.reset(); // DXCommon
 	winApp_.reset(); // WinApp
 
-	// リークチェック
-	ReportLiveObjects();
-
 	// COMの終了
 	CoUninitialize();
 }
@@ -175,16 +172,3 @@ Mouse* Mii::GetMouse() { return mouse_.get(); }
 // Controller
 Controller* Mii::GetController() { return controller_.get(); }
 #pragma endregion
-
-///-------------------------------------------/// 
-/// リークチェック
-///-------------------------------------------///
-void Mii::ReportLiveObjects() {
-	ComPtr<IDXGIDebug1> debug;
-	HRESULT hr = DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug));
-	if (SUCCEEDED(hr)) {
-		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
-	} else {
-		OutputDebugStringA("DXGIGetDebugInterface1 failed. Make sure the Debug Layer is enabled.\n");
-	}
-}
