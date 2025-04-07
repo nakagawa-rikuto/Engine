@@ -37,9 +37,8 @@ public:
 	void PostDraw();
 
 	/// ===Heapの生成=== ///
-	ComPtr<ID3D12DescriptorHeap> CreateRTVHeap(const uint32_t RTVDescriptor); // RTV
-	ComPtr<ID3D12DescriptorHeap> CreateDSVHeap(const uint32_t DSVDescriptor); // DSV
-	ComPtr<ID3D12DescriptorHeap> CreateSRVHeap(const uint32_t maxSrvCount); // SRV
+	// ディスクリプタヒープの生成
+	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
 	/// ===DescriptorSizeの取得=== ///
 	const uint32_t GetRTVDescriptorSize(); // RTV
@@ -135,8 +134,6 @@ private:/// ===関数=== ///
 	void InitializeCommand();
 	// スワップチェーンの生成
 	void CreateSwapChain();
-	// ディスクリプタヒープの生成
-	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 	// フェンスの生成
 	void CreateFence();
 	// DXCの初期化

@@ -47,7 +47,7 @@ void SRVManager::Initialize(DXCommon* dxcommon) {
 	dXCommon_ = dxcommon;
 
 	// デスクリプタヒープの生成
-	descriptorHeap_ = dXCommon_->CreateSRVHeap(kMaxSRVCount_);
+	descriptorHeap_ = dXCommon_->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount_, true);
 
 	// デスクリプタ1個分のサイズを取得して記録
 	descriptorSize_ = dXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -73,14 +73,14 @@ uint32_t SRVManager::Allocate() {
 	/// ===上限に達していないかチェックしてassert=== ///
 	assert(AssertAllocate());
 	// return する番号をいったん記録しておく
-	int index = useIndex;
+	int index = useIndex_;
 	// 次回のために番号を1進める
-	useIndex++;
+	useIndex_++;
 	// 上で記録した番号をreturn(0番はImGuiだから+1)
 	return index + 1;
 }
 // 上限チャック
-bool SRVManager::AssertAllocate() { return useIndex < kMaxSRVCount_; }
+bool SRVManager::AssertAllocate() { return useIndex_ < kMaxSRVCount_; }
 
 
 ///-------------------------------------------/// 

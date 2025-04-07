@@ -22,12 +22,15 @@ public:
 
 	// 初期化
 	void Initialize(DXCommon* dxcommon);
+	// 深度バッファの生成(DSV)
+	void CreateDepthBuffer(uint32_t index);
 	// クリア
 	void ClearDepthBuffer(ID3D12GraphicsCommandList* commandList);
+	// 確保関数
+	uint32_t Allocate();
+	bool AssertAllocate();
 
 public: /// ===Getter=== ///
-	// Handle
-	D3D12_CPU_DESCRIPTOR_HANDLE GetHandle()const;
 	// Heap
 	ID3D12DescriptorHeap* GetDescriptorHeap() const;
 	// CPU
@@ -38,23 +41,18 @@ public: /// ===Getter=== ///
 public:/// ===定数=== ///
 
 	// DSVの数
-	static const uint32_t kNumDSVDescriptor_;
+	static const uint32_t kMaxDSVCount_ = 16;
 
 private:
 	// DXCommon
 	DXCommon* dxcommon_ = nullptr;
 	// depthStencilResource
-	ComPtr<ID3D12Resource> depthStencilResource_;
+	ComPtr<ID3D12Resource> resource_[kMaxDSVCount_];
 	// ヒープ
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
-	// ハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandles_;
 	// スクリプタサイズ
 	uint32_t descriptorSize_ = 0;
-
-private:
-
-	// 深度バッファの生成(DSV)
-	void CreateDepthBuffer();
+	// 次に使用するSRVインデックス
+	uint32_t useIndex_ = 0;
 };
 

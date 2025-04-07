@@ -114,8 +114,8 @@ void DXCommon::PreDraw(RTVManager* rtv, DSVManager* dsv) {
 	commandList_->ResourceBarrier(1, &barrier_);
 
 	// 描画先のRTVを設定する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv->GetHandle(backBufferIndex);
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv->GetHandle();
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv->GetCPUDescriptorHandle(backBufferIndex);
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv->GetCPUDescriptorHandle(0); // 通常DSVは1つ
 	commandList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
@@ -189,10 +189,17 @@ void DXCommon::PostDraw() {
 ///-------------------------------------------/// 
 /// DescriptorHeapの生成
 ///-------------------------------------------///
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap(const uint32_t RTVDescriptor) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, RTVDescriptor, false); }
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap(const uint32_t DSVDescriptor) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, DSVDescriptor, false); }
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap(const uint32_t maxSrvCount) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, maxSrvCount, true); }
-
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDescriptorHeap(
+	D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+	ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+	descriptorHeapDesc.Type = heapType;
+	descriptorHeapDesc.NumDescriptors = numDescriptors;
+	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	HRESULT hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	assert(SUCCEEDED(hr));
+	return descriptorHeap;
+}
 ///-------------------------------------------/// 
 /// DescriptorSizeの取得
 ///-------------------------------------------///
@@ -417,21 +424,6 @@ void DXCommon::CreateSwapChain() {
 	assert(SUCCEEDED(hr));
 	hr = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResource_[1]));
 	assert(SUCCEEDED(hr));
-}
-
-///-------------------------------------------/// 
-/// ディスクリプタヒープの生成
-///-------------------------------------------///
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDescriptorHeap(
-	D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
-	ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-	descriptorHeapDesc.Type = heapType;
-	descriptorHeapDesc.NumDescriptors = numDescriptors;
-	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	HRESULT hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
-	assert(SUCCEEDED(hr));
-	return descriptorHeap;
 }
 
 ///-------------------------------------------/// 

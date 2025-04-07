@@ -66,7 +66,7 @@ private:/// ===variable=== ///
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
 
 	// 次に使用するSRVインデックス
-	uint32_t useIndex = 0;
+	uint32_t useIndex_ = 0;
 };
 
 

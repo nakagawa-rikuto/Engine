@@ -104,6 +104,9 @@
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
     <ClCompile Include="application\Game\Collider\ColliderManager.cpp" />
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\RenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -205,6 +208,9 @@
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
     <ClInclude Include="application\Game\Collider\ColliderManager.h" />
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\RenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />
