@@ -49,29 +49,42 @@ void RenderTarget::CreateRenderTexture(ID3D12Device* device) {
 		D3D12_RESOURCE_STATE_RENDER_TARGET, // Resourceの状態
 		&clearValue,				// ClearValueの設定
 		IID_PPV_ARGS(&buffer_));	// Resourceのポインタ
-}
 
-///-------------------------------------------/// 
-/// RTVの生成
-///-------------------------------------------///
-void RenderTarget::CreateRTV() {
+
+	/// ===RTV=== ///
 	// DESCの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	rtvDesc.Format = format_; // フォーマット
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
-	// RTVの生成
-	//rtvManager_->CreateRTV(buffer_.Get(), rtvDesc, rtvHeap_->GetCPUDescriptorHandleForHeapStart());
-}
 
-///-------------------------------------------/// 
-/// SRVの生成
-///-------------------------------------------///
-void RenderTarget::CreateSRV() {
+	// RTVの作成
+	rtvHandleIndex_ = rtvManager_->Allocate(); // RTVのインデックスを確保
+	rtvManager_->CreateRenderTarget(rtvHandleIndex_, buffer_.Get(), rtvDesc);
+
+
+	/// ===SRV=== ///
 	// DESCの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = format_; // フォーマット
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
 
+	// SRVの作成
+	srvHandleIndex_ = srvManager_->Allocate(); // SRVのインデックスを確保
+	srvManager_->CreateSRV(srvHandleIndex_, buffer_.Get(), srvDesc);
 }
 
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
+// RenderTargetの取得
 ID3D12Resource* RenderTarget::GetBuffer() { return buffer_.Get(); }
+// RTVHandleの取得
+D3D12_CPU_DESCRIPTOR_HANDLE RenderTarget::GetRTVHandle() { return rtvManager_->GetCPUDescriptorHandle(rtvHandleIndex_); }
+// SRVHandleの取得
+D3D12_GPU_DESCRIPTOR_HANDLE RenderTarget::GetSRVHandle() { return srvManager_->GetGPUDescriptorHandle(srvHandleIndex_); }
+// RTVのインデックス番号の取得
+uint32_t RenderTarget::GetRTVHandleIndex() const { return rtvHandleIndex_; }
+// SRVのインデックス番号の取得
+uint32_t RenderTarget::GetSRVHandleIndex() const { return srvHandleIndex_; }

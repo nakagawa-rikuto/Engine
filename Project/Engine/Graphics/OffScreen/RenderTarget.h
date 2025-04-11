@@ -26,16 +26,19 @@ public:
 
 	// RenderTargetの生成
 	void CreateRenderTexture(ID3D12Device* device);
-	// RTVの生成
-	void CreateRTV();
-	// SRVの生成
-	void CreateSRV();
 
 public:
 
 	// RenderTargetの取得
 	ID3D12Resource* GetBuffer();
-
+	// RTVHandleの取得
+	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle();
+	// SRVHandleの取得
+	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandle();
+	// RTVのインデックス番号の取得
+	uint32_t GetRTVHandleIndex() const;
+	// SRVのインデックス番号の取得
+	uint32_t GetSRVHandleIndex() const;
 private:
 	// Manager
 	RTVManager* rtvManager_ = nullptr;
@@ -49,8 +52,7 @@ private:
 
 	// Resource
 	ComPtr<ID3D12Resource> buffer_;
-	// DescriptorHeap
-	ComPtr<ID3D12DescriptorHeap> rtvHeap_;
-	ComPtr<ID3D12DescriptorHeap> srvHeap_;
+	uint32_t rtvHandleIndex_ = 0;
+	uint32_t srvHandleIndex_ = 0;
 };
 

@@ -32,7 +32,9 @@ public:
 		WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight);
 
 	// 描画前処理
-	void PreDraw(RTVManager* rtv, DSVManager* dsv);
+	void PreDraw();
+	// コマンドを積む
+	void BeginCommand();
 	// 描画後処理
 	void PostDraw();
 

@@ -24,6 +24,8 @@ public:
 	void Initialize(DXCommon* dxcommon);
 	// 描画前処理
 	void PreDraw();
+	// SRVの作成
+	void CreateSRV(uint32_t srvIndex, ID3D12Resource* pResource, D3D12_SHADER_RESOURCE_VIEW_DESC desc);
 	// 確保関数
 	uint32_t Allocate();
 	bool AssertAllocate();

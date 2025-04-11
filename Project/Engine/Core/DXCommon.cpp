@@ -86,7 +86,7 @@ void DXCommon::Initialize(
 ///-------------------------------------------/// 
 /// 描画前処理
 ///-------------------------------------------///
-void DXCommon::PreDraw(RTVManager* rtv, DSVManager* dsv) {
+void DXCommon::PreDraw() {
 
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
@@ -112,22 +112,15 @@ void DXCommon::PreDraw(RTVManager* rtv, DSVManager* dsv) {
 
 	// TransitionBarrierを張る
 	commandList_->ResourceBarrier(1, &barrier_);
+}
 
-	// 描画先のRTVを設定する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv->GetCPUDescriptorHandle(backBufferIndex);
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv->GetCPUDescriptorHandle(0); // 通常DSVは1つ
-	commandList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
-
-	// 全画面クリア
-	rtv->ClearRenderTarget(commandList_.Get());
-	dsv->ClearDepthBuffer(commandList_.Get());
-
+///-------------------------------------------/// 
+/// コマンドを積む
+///-------------------------------------------///
+void DXCommon::BeginCommand() {
 	// コマンドを積む
 	commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
 	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorを設定
-
-	// プリミティブトポロジーをセット
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 ///-------------------------------------------/// 

@@ -11,6 +11,8 @@
     <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\SkinningObj3D.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\SkinningObj3D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\CopyImage.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\CopyImage.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -107,6 +109,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTarget.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -211,12 +214,14 @@
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTarget.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />
     <None Include="Resource\Shaders\Obj.hlsli" />
     <None Include="Resource\Shaders\Obj3D.hlsli" />
     <None Include="Resource\Shaders\SkinningObj3D.hlsli" />
+    <None Include="Resource\Shaders\CopyImage.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

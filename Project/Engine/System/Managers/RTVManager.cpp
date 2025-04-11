@@ -49,12 +49,11 @@ void RTVManager::CreateRenderTarget(uint32_t index, ID3D12Resource* resource, co
 ///-------------------------------------------/// 
 /// クリア
 ///-------------------------------------------///
-void RTVManager::ClearRenderTarget(ID3D12GraphicsCommandList* commandList) {
-
-	UINT backBufferIndex = dxcommon_->GetBackBufferIndex();
-
+void RTVManager::ClearRenderTarget(ID3D12GraphicsCommandList* commandList, uint32_t index) {
+	// クリアカラーを指定
 	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
-	commandList->ClearRenderTargetView(descriptorHandles_[backBufferIndex], clearColor, 0, nullptr);
+	// RTVをクリア
+	commandList->ClearRenderTargetView(descriptorHandles_[index], clearColor, 0, nullptr);
 }
 
 ///-------------------------------------------/// 

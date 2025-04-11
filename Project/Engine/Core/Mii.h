@@ -116,4 +116,9 @@ private:
 
 	// ReportLiveObjects
 	D3DResourceLeakChecker leakCheck;
+
+private:
+	// 描画前処理
+	void PreDraw();	
 };
+

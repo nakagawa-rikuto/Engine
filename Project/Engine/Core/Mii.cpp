@@ -121,7 +121,9 @@ void Mii::Finalize() {
 /// フレーム開始処理
 ///=====================================================///
 void Mii::BeginFrame() {
-	dXCommon_->PreDraw(rtvManager_.get(), dsvManager_.get());
+	// 描画前処理
+	PreDraw();
+	// ImGuiの開始処理
 	imGuiManager_->Draw();
 }
 
@@ -130,7 +132,9 @@ void Mii::BeginFrame() {
 /// フレーム終了処理
 ///=====================================================///
 void Mii::EndFrame() {
+	// ImGuiの終了処理
 	imGuiManager_->End();
+	// DXCommonの描画後処理
 	dXCommon_->PostDraw();
 }
 
@@ -139,6 +143,33 @@ void Mii::EndFrame() {
 /// Windowsのメッセージを処理する
 ///=====================================================///
 int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
+
+
+///=====================================================/// 
+/// 描画前後処理
+///=====================================================///
+void Mii::PreDraw() {
+
+	ID3D12GraphicsCommandList* commandList = dXCommon_->GetCommandList();
+
+	// DXCommonの描画前処理
+	dXCommon_->PreDraw();
+
+	// 描画先のRTVを設定する
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvManager_->GetCPUDescriptorHandle(dXCommon_->GetBackBufferIndex());
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvManager_->GetCPUDescriptorHandle(0); // 通常DSVは1つ
+	commandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+
+	// 全画面クリア
+	rtvManager_->ClearRenderTarget(commandList, dXCommon_->GetBackBufferIndex());
+	dsvManager_->ClearDepthBuffer(commandList);
+
+	// コマンドを積む
+	dXCommon_->BeginCommand();
+
+	// プリミティブトポロジーをセット
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
 
 
 ///-------------------------------------------/// 

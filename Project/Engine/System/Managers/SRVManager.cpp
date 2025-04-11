@@ -65,6 +65,13 @@ void SRVManager::PreDraw() {
 	dXCommon_->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
+///-------------------------------------------/// 
+/// SRVの作成
+///-------------------------------------------///
+void SRVManager::CreateSRV(uint32_t srvIndex, ID3D12Resource* pResource, D3D12_SHADER_RESOURCE_VIEW_DESC desc) {
+	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &desc, GetCPUDescriptorHandle(srvIndex));
+}
+
 
 ///-------------------------------------------/// 
 /// 確保関数
@@ -96,7 +103,7 @@ void SRVManager::CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
 	srvDesc.Texture2D.MipLevels = MipLevels;
 
 	// SRVを作成
-	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+	CreateSRV(srvIndex, pResource, srvDesc);
 }
 // Struct Buffer用
 void SRVManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride) {
@@ -110,5 +117,5 @@ void SRVManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource*
 	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
 	// SRVを作成
-	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+	CreateSRV(srvIndex, pResource, srvDesc);
 }
