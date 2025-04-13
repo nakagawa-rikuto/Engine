@@ -65,7 +65,7 @@ RTVManager* ServiceLocator::GetRTVManager() { return rtvManager_; }
 ///-------------------------------------------/// 
 /// DSVManager
 ///-------------------------------------------///
-DSVManager* ServiceLocator::GEtDSVManager() { return dsvManager_; }
+DSVManager* ServiceLocator::GetDSVManager() { return dsvManager_; }
 
 ///-------------------------------------------/// 
 /// AudioManager

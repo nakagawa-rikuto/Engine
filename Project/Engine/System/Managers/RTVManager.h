@@ -25,7 +25,7 @@ public:
 	// 作成
 	void CreateRenderTarget(uint32_t index, ID3D12Resource* resource, const D3D12_RENDER_TARGET_VIEW_DESC& desc);
 	// クリア
-	void ClearRenderTarget(ID3D12GraphicsCommandList* commandList, uint32_t index);
+	void ClearRenderTarget(ID3D12GraphicsCommandList* commandList, uint32_t index, const float color[4]);
 	// 確保関数
 	uint32_t Allocate();
 	bool AssertAllocate();

@@ -11,6 +11,7 @@
 /// ===前方宣言///
 class SRVManager;
 class RTVManager;
+class DSVManager;
 
 ///=====================================================/// 
 /// RenderTarget
@@ -22,10 +23,12 @@ public:
 	~RenderTarget() = default;
 
 	// 初期化
-	void Initialize(uint32_t width, uint32_t height, const Vector4& color);
+	void Initialize(SRVManager* srv, RTVManager* rtv);
 
 	// RenderTargetの生成
 	void CreateRenderTexture(ID3D12Device* device);
+	// RenderTargetのクリア
+	void Clear(ID3D12GraphicsCommandList* commandList, DSVManager* dsv);
 
 public:
 
@@ -41,6 +44,7 @@ public:
 	uint32_t GetSRVHandleIndex() const;
 private:
 	// Manager
+
 	RTVManager* rtvManager_ = nullptr;
 	SRVManager* srvManager_ = nullptr;
 

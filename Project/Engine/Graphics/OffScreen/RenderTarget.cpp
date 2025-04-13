@@ -1,22 +1,23 @@
 #include "RenderTarget.h"
 // Engine
 #include "Engine/System/Managers/RTVManager.h"
+#include "Engine/System/Managers/DSVManager.h"
 #include "Engine/System/Managers/SRVManager.h"
 // Service
-#include "Engine/System/Service/ServiceLocator.h"
+#include "Engine/System/Service/Getter.h"
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void RenderTarget::Initialize(uint32_t width, uint32_t height, const Vector4& color) {
+void RenderTarget::Initialize(SRVManager* srv, RTVManager* rtv) {
 
-	width_ = width;
-	height_ = height;
+	width_ = Getter::GetWindowWidth();
+	height_ = Getter::GetWindowHeight();
 	format_ = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	clearColor_ = color;
+	clearColor_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f); // 赤
 	// Managerの取得
-	rtvManager_ = ServiceLocator::GetRTVManager();
-	srvManager_ = ServiceLocator::GetSRVManager();
+	rtvManager_ = rtv;
+	srvManager_ = srv;
 }
 
 ///-------------------------------------------///  
@@ -73,6 +74,17 @@ void RenderTarget::CreateRenderTexture(ID3D12Device* device) {
 	// SRVの作成
 	srvHandleIndex_ = srvManager_->Allocate(); // SRVのインデックスを確保
 	srvManager_->CreateSRV(srvHandleIndex_, buffer_.Get(), srvDesc);
+}
+
+///-------------------------------------------/// 
+/// クリア
+///-------------------------------------------///
+void RenderTarget::Clear(ID3D12GraphicsCommandList* commandList, DSVManager* dsv) {
+	// RTVのクリア
+	const float clearColor[4] = { clearColor_.x, clearColor_.y, clearColor_.z, clearColor_.w };
+	rtvManager_->ClearRenderTarget(commandList, rtvHandleIndex_, clearColor);
+	// DSVのクリア
+	dsv->ClearDepthBuffer(commandList);
 }
 
 ///-------------------------------------------/// 

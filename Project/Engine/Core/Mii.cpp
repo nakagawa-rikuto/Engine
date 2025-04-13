@@ -161,7 +161,9 @@ void Mii::PreDraw() {
 	commandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 
 	// 全画面クリア
-	rtvManager_->ClearRenderTarget(commandList, dXCommon_->GetBackBufferIndex());
+	// クリアカラーを指定
+	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
+	rtvManager_->ClearRenderTarget(commandList, dXCommon_->GetBackBufferIndex(), clearColor);
 	dsvManager_->ClearDepthBuffer(commandList);
 
 	// コマンドを積む

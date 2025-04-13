@@ -17,3 +17,4 @@ protected:
 	std::shared_ptr<RenderTarget> renderTarget_;
 };
 
+ 

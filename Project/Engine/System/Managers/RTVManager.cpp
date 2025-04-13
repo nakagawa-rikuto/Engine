@@ -49,11 +49,9 @@ void RTVManager::CreateRenderTarget(uint32_t index, ID3D12Resource* resource, co
 ///-------------------------------------------/// 
 /// クリア
 ///-------------------------------------------///
-void RTVManager::ClearRenderTarget(ID3D12GraphicsCommandList* commandList, uint32_t index) {
-	// クリアカラーを指定
-	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
+void RTVManager::ClearRenderTarget(ID3D12GraphicsCommandList* commandList, uint32_t index, const float color[4]) {
 	// RTVをクリア
-	commandList->ClearRenderTargetView(descriptorHandles_[index], clearColor, 0, nullptr);
+	commandList->ClearRenderTargetView(descriptorHandles_[index], color, 0, nullptr);
 }
 
 ///-------------------------------------------/// 
