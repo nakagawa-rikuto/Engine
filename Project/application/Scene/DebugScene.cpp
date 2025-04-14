@@ -302,7 +302,7 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
-			windParticle_->Initialze("Particle");
+			windParticle_->Initialze();
 			windParticle_->SetTranslate(particleTranslate_);
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
@@ -322,7 +322,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			explosionParticle_->Initialze("Particle");
+			explosionParticle_->Initialze();
 			explosionParticle_->SetTranslate(particleTranslate_);
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {

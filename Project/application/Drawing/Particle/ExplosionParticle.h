@@ -17,11 +17,11 @@ public:
 
     /// ===Override=== ///
     // 初期化
-    void Initialze(const std::string& filename = "plane") override;
+    void Initialze()override;
     // 更新（override）
     void InstancingUpdate(std::list<ParticleData>::iterator it)override;
     // 更新
-    void Update();
+    void Update() override;
     // 描画
     void Draw(BlendMode mode = BlendMode::KBlendModeNormal) override;
 

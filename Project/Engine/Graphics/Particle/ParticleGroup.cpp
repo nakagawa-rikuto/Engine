@@ -14,15 +14,6 @@ ParticleGroup::~ParticleGroup() {
 }
 
 ///-------------------------------------------/// 
-/// 初期化
-///-------------------------------------------///
-void ParticleGroup::Initialze(const std::string& filename) {
-    /// ===パーティクルグループの初期化=== ///
-    group_.particle = std::make_unique<ParticleSetUp>();
-    group_.particle->Initialze(filename, group_.maxInstance);
-}
-
-///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
 void ParticleGroup::InstancingUpdate(std::list<ParticleData>::iterator it) {

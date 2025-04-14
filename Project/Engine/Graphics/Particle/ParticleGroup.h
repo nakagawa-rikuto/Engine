@@ -13,9 +13,11 @@ public:
 	virtual ~ParticleGroup();
 
 	// 初期化
-	virtual void Initialze(const std::string& filename);
+	virtual void Initialze() = 0;
 	// 更新
 	virtual void InstancingUpdate(std::list<ParticleData>::iterator it);
+	// 更新
+	virtual void Update() = 0;
 	// 描画
 	virtual void Draw(BlendMode mode);
 

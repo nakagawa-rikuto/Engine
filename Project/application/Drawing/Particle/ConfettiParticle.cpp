@@ -7,7 +7,7 @@
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ConfettiParticle::Initialze(const std::string& filename) {
+void ConfettiParticle::Initialze() {
     /// ===乱数生成器の初期化=== ///
     std::random_device seedGenerator;
     randomEngine_.seed(seedGenerator());
@@ -25,7 +25,8 @@ void ConfettiParticle::Initialze(const std::string& filename) {
     };
 
     /// ===パーティクルグループの初期化=== ///
-    ParticleGroup::Initialze(filename);
+    group_.particle = std::make_unique<ParticleSetUp>();
+    group_.particle->Initialze("plane", group_.maxInstance); /*"Particle"*/
 
     /// ===フラグと設定の初期化=== ///
     hasExploded_ = false;
