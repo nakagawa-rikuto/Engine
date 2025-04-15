@@ -20,6 +20,10 @@ public:
 	virtual void Update() = 0;
 	// 描画
 	virtual void Draw(BlendMode mode);
+	// クローン 
+	virtual std::unique_ptr<ParticleGroup> Clone() = 0;
+	// 生存判定
+	virtual bool IsFinish();
 
 public: /// ===Setter=== ///
 	// Translate

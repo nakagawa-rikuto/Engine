@@ -92,6 +92,13 @@ void ConfettiParticle::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
+/// クローン
+///-------------------------------------------///
+std::unique_ptr<ParticleGroup> ConfettiParticle::Clone() {
+    return std::make_unique<ConfettiParticle>(*this);
+}
+
+///-------------------------------------------/// 
 /// コンフェッティパーティクルの生成
 ///-------------------------------------------///
 ParticleData ConfettiParticle::MakeConfettiParticle(std::mt19937& randomEngine, const Vector3& center) {

@@ -25,6 +25,8 @@ public:
     void Update() override;
     // 描画
     void Draw(BlendMode mode = BlendMode::KBlendModeNormal) override;
+    // クローン
+    std::unique_ptr<ParticleGroup> Clone() override;
 
 private:
     /// ===プライベートフィールド=== ///

@@ -116,6 +116,13 @@ void WindParticle::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
+/// クローン
+///-------------------------------------------///
+std::unique_ptr<ParticleGroup> WindParticle::Clone() {
+	return std::make_unique<WindParticle>(*this);
+}
+
+///-------------------------------------------/// 
 /// ランダム発生処理
 ///-------------------------------------------///
 ParticleData WindParticle::MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {

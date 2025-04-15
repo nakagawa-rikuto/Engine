@@ -88,6 +88,13 @@ void ExplosionParticle::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
+/// クローン
+///-------------------------------------------///
+std::unique_ptr<ParticleGroup> ExplosionParticle::Clone() {
+    return std::make_unique<ExplosionParticle>(*this);
+}
+
+///-------------------------------------------/// 
 /// 爆発パーティクルの生成
 ///-------------------------------------------///
 ParticleData ExplosionParticle::MakeExplosionParticle(std::mt19937& randomEngine, const Vector3& center) {

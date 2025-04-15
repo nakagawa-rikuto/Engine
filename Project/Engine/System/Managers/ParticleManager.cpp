@@ -4,57 +4,74 @@
 /// デストラクタ
 ///-------------------------------------------///
 ParticleManager::~ParticleManager() {
-	particles_.clear();
+	prototype_.clear();
+	activeParticles_.clear();
 }
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void ParticleManager::Initialize() {
-	particles_.clear();
+	prototype_.clear();
+	activeParticles_.clear();
 }
 
 ///-------------------------------------------/// 
 /// Partlceの追加
 ///-------------------------------------------///
 void ParticleManager::AddParticle(const std::string & name, std::unique_ptr<ParticleGroup> particle) {
-	// マップに追加
-	particles_[name] = std::move(particle);
+	if (prototype_.find(name) == prototype_.end()) {
+		prototype_[name] = std::move(particle);
+	}
 }
 
 ///-------------------------------------------/// 
-/// 個別のPartlcelの設定
+/// 発生
 ///-------------------------------------------///
-void ParticleManager::SetPartlce(const std::string& name, const Vector3& tralslate) {
-	particles_[name]->Initialze();
-	particles_[name]->SetTranslate(tralslate);
+void ParticleManager::Emit(const std::string& name, const Vector3& translate) {
+	auto it = prototype_.find(name);
+	if (it == prototype_.end()) return;
+
+	std::unique_ptr<ParticleGroup> newParticle = it->second->Clone();
+	newParticle->Initialze();
+	newParticle->SetTranslate(translate);
+	activeParticles_[name].push_back(std::move(newParticle));
 }
 // Texture
 void ParticleManager::SetTexture(const std::string& name, const std::string& textureName) {
-	particles_[name]->SetTexture(textureName);
+	auto it = activeParticles_.find(name);
+	if (it == activeParticles_.end()) return;
+
+	for (auto& particle : it->second) {
+		if (particle) {
+			particle->SetTexture(textureName);
+		}
+	}
 }
 
 ///-------------------------------------------/// 
 /// 全てのPartlceの更新
 ///-------------------------------------------///
 void ParticleManager::Update() {
-	for (auto& [name, particle] : particles_) {
-		particle->Update();
+	for (auto& [name, list] : activeParticles_) {
+		for (auto it = list.begin(); it != list.end();) {
+			(*it)->Update();
+			if ((*it)->IsFinish()) {
+				it = list.erase(it);
+			} else {
+				++it;
+			}
+		}
 	}
-}
-
-///-------------------------------------------/// 
-/// 個別のPartlceの描画
-///-------------------------------------------///
-void ParticleManager::Draw(const std::string & name, BlendMode mode) {
-	particles_[name]->Draw(mode);
 }
 
 ///-------------------------------------------/// 
 /// 全てのPartlceの描画
 ///-------------------------------------------///
 void ParticleManager::DrawAll(BlendMode mode) {
-	for (auto& [name, particle] : particles_) {
-		particle->Draw(mode);
+	for (auto& [name, list] : activeParticles_) {
+		for (const auto& particle : list) {
+			particle->Draw(mode);
+		}
 	}
 }

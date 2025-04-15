@@ -20,22 +20,20 @@ class ParticleManager {
 
     // パーティクルの追加
     void AddParticle(const std::string& name, std::unique_ptr<ParticleGroup> particle);
-
-    // パーティクルの設定
-    void SetPartlce(const std::string& name, const Vector3& tralslate);
+    // パーティクルの発生
+    void Emit(const std::string& name, const Vector3& translate);
     // テクスチャの設定
     void SetTexture(const std::string& name, const std::string& textureName);
 
     // パーティクルの全体更新
     void Update();
-
-    // パーティクルの描画
-    void Draw(const std::string& name, BlendMode mode = BlendMode::KBlendModeNormal);
-
     // すべて描画
     void DrawAll(BlendMode mode = BlendMode::KBlendModeNormal);
 
 private:
-    std::map<std::string, std::unique_ptr<ParticleGroup>> particles_;
+    // 登録されたテンプレート
+    std::map<std::string, std::unique_ptr<ParticleGroup>> prototype_;
+    // 実際に動いているパーティクル
+    std::map<std::string, std::vector<std::unique_ptr<ParticleGroup>>> activeParticles_;
 };
 
