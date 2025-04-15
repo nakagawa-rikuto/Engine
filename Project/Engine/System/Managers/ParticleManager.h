@@ -5,18 +5,15 @@
 #include <memory>
 #include <string>
 // PartlceGroup
-#include "Engine/Graphics/Particle/ParticleGroup.h"
+#include "Engine/Graphics/Particle/Base/ParticleGroup.h"
 
 ///=====================================================/// 
 /// ParticleManager
 ///=====================================================///
 class ParticleManager {
-
-	ParticleManager();
+public:
+	ParticleManager() = default;
 	~ParticleManager();
-
-    // 初期化
-    void Initialize();
 
     // パーティクルの追加
     void AddParticle(const std::string& name, std::unique_ptr<ParticleGroup> particle);

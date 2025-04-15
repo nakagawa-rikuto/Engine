@@ -1,23 +1,24 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Graphics/Particle/ParticleGroup.h"
+// Engine
+#include "Engine/Graphics/Particle/Base/ParticleGroup.h"
 // Math
 #include "Engine/DataInfo/ColliderData.h"
 // c++
 #include <random>
 
 ///=====================================================/// 
-/// 爆破エミッタ
+/// コンフェッティパーティクル
 ///=====================================================///
-class ExplosionParticle : public ParticleGroup {
+class ConfettiParticle : public ParticleGroup {
 public:
 
-    ExplosionParticle() = default; // コンストラクタでの処理は行わない
-    ~ExplosionParticle() override = default;
+    ConfettiParticle() = default; // コンストラクタでの処理は行わない
+    ~ConfettiParticle() override = default;
 
     /// ===Override=== ///
     // 初期化
-    void Initialze()override;
+    void Initialze() override;
     // 更新（override）
     void InstancingUpdate(std::list<ParticleData>::iterator it)override;
     // 更新
@@ -30,12 +31,15 @@ public:
 private:
     /// ===プライベートフィールド=== ///
     std::mt19937 randomEngine_; // 乱数生成器
-    bool hasExploded_; // 爆発が発生したかのフラグ
+    bool hasExploded_; // パーティクルが発生したかのフラグ
 
-    // 爆発の設定
+    // コンフェッティ設定
+    Vector3 explosionCenter_; // 爆発の中心位置
     float explosionRadius_; // 爆発の半径
+    float gravity_; // 重力加速度
+    float upwardForce_; // 上方向の初期加速度
     float maxLifetime_; // パーティクルの最大寿命
 
     // ランダムパーティクル生成
-    ParticleData MakeExplosionParticle(std::mt19937& randomEngine, const Vector3& center);
+    ParticleData MakeConfettiParticle(std::mt19937& randomEngine, const Vector3& center);
 };

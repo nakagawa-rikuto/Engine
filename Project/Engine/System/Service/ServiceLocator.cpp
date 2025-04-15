@@ -9,6 +9,8 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
     // nullチェック
     assert(registry.srvManager);
     assert(registry.audioManager);
+    assert(registry.animationManager);
+    assert(registry.particleManager);
     assert(registry.textureManager);
     assert(registry.modelManager);
     assert(registry.pipelineManager);
@@ -29,6 +31,7 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
     animationManager_ = registry.animationManager;
     audioManager_ = registry.audioManager;
     csvManager_ = registry.csvManager;
+    particleManager_ = registry.particleManager;
     keyboard_ = registry.keyboard;
     mouse_ = registry.mouse;
     controller_ = registry.controller;
@@ -43,6 +46,7 @@ void ServiceLocator::Finalize() {
     keyboard_ = nullptr;
     csvManager_ = nullptr;
     audioManager_ = nullptr;
+    particleManager_ = nullptr;
     animationManager_ = nullptr;
     modelManager_ = nullptr;
     textureManager_ = nullptr;
@@ -71,6 +75,11 @@ DSVManager* ServiceLocator::GEtDSVManager() { return dsvManager_; }
 /// AudioManager
 ///-------------------------------------------///
 AudioManager* ServiceLocator::GetAudioManager() { return audioManager_; }
+
+///-------------------------------------------/// 
+/// ParticleManager
+///-------------------------------------------///
+ParticleManager* ServiceLocator::GetParticleManager() { return particleManager_; }
 
 ///-------------------------------------------/// 
 /// TextureManager

@@ -9,14 +9,6 @@ ParticleManager::~ParticleManager() {
 }
 
 ///-------------------------------------------/// 
-/// 初期化
-///-------------------------------------------///
-void ParticleManager::Initialize() {
-	prototype_.clear();
-	activeParticles_.clear();
-}
-
-///-------------------------------------------/// 
 /// Partlceの追加
 ///-------------------------------------------///
 void ParticleManager::AddParticle(const std::string & name, std::unique_ptr<ParticleGroup> particle) {

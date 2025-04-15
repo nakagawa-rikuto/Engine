@@ -66,6 +66,9 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// Controllerの生成
 	controller_ = std::make_unique<Controller>();
 	controller_->Initialize();
+
+	// ParticleManager
+	particleManager_ = std::make_unique<ParticleManager>();
 }
 
 ///=====================================================/// 
@@ -93,22 +96,23 @@ void Mii::Finalize() {
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
-	controller_.reset(); // Controller
-	mouse_.reset(); // Mouse
-	keyboard_.reset(); // Keyboard
-	inputCommon_.reset(); // InputCommon
+	controller_.reset();       // Controller
+	mouse_.reset();            // Mouse
+	keyboard_.reset();         // Keyboard
+	inputCommon_.reset();      // InputCommon
 	animationManager_.reset(); // AnimationManager
-	csvManager_.reset(); // CSVManager
-	audioManager_.reset(); // AudioManager
-	modelManager_.reset(); // Modelmanager
-	textureManager_.reset(); // TextrureManager
-	pipelineManager_.reset(); // PipelineManager
-	imGuiManager_.reset(); // ImGuiManager
-	dsvManager_.reset(); // DSVManager
-	rtvManager_.reset(); // RTVManager
-	srvManager_.reset(); // SRVManager
-	dXCommon_.reset(); // DXCommon
-	winApp_.reset(); // WinApp
+	csvManager_.reset();       // CSVManager
+	audioManager_.reset();     // AudioManager
+	particleManager_.reset();  // ParticleManager
+	modelManager_.reset();     // Modelmanager
+	textureManager_.reset();   // TextrureManager
+	pipelineManager_.reset();  // PipelineManager
+	imGuiManager_.reset();     // ImGuiManager
+	dsvManager_.reset();       // DSVManager
+	rtvManager_.reset();       // RTVManager
+	srvManager_.reset();       // SRVManager
+	dXCommon_.reset();         // DXCommon
+	winApp_.reset();           // WinApp
 
 	// COMの終了
 	CoUninitialize();
@@ -165,6 +169,8 @@ AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 // AnimationManager
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
+// ParticleManager
+ParticleManager* Mii::GetParticleManager() { return particleManager_.get(); }
 // Keyboard
 Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse
