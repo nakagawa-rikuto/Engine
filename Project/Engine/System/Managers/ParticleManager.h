@@ -21,6 +21,8 @@ public:
     void Emit(const std::string& name, const Vector3& translate);
     // テクスチャの設定
     void SetTexture(const std::string& name, const std::string& textureName);
+    // カメラの設定
+    void SetCamera(const std::string& name, Camera* camera);
 
     // パーティクルの全体更新
     void Update();

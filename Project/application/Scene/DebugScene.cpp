@@ -4,6 +4,7 @@
 // Service
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
+#include "Engine/System/Service/Particle.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -20,10 +21,6 @@ DebugScene::~DebugScene() {
 	modelLight_.reset();
 	// animationModel
 	animationModel_.reset();
-	// Particle
-	windParticle_.reset();
-	explosionParticle_.reset();
-	confettiParticle_.reset();
 
 	// ISceneのデストラクタ
 	IScene::~IScene();
@@ -122,13 +119,6 @@ void DebugScene::Initialize() {
 	/// ===音=== ///
 #pragma region Audio
 	//audio_->PlayeSound("clear", false);
-#pragma endregion
-
-	/// ===Particle=== ///
-#pragma region Particleの生成
-	windParticle_ = std::make_shared<WindParticle>();
-	explosionParticle_ = std::make_shared<ExplosionParticle>();
-	confettiParticle_ = std::make_shared<ConfettiParticle>();
 #pragma endregion
 }
 
@@ -302,8 +292,7 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
-			windParticle_->Initialze();
-			windParticle_->SetTranslate(particleTranslate_);
+			Particle::Emit("Wind", particleTranslate_);
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle1 = false;
@@ -322,8 +311,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			explosionParticle_->Initialze();
-			explosionParticle_->SetTranslate(particleTranslate_);
+			Particle::Emit("Explosion", particleTranslate_);
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle2 = false;
@@ -342,9 +330,8 @@ void DebugScene::Update() {
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
 		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
-			confettiParticle_->Initialze();
-			confettiParticle_->SetTranslate(particleTranslate_);
-			confettiParticle_->SetTexture("monsterBall");
+			Particle::Emit("Confetti", particleTranslate_);
+			Particle::SetTexture("Confetti", "monsterBall");
 			isDisplay_.Particle3 = true;
 		} else if (isDisplay_.Particle3 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle3 = false;
@@ -518,9 +505,10 @@ void DebugScene::Update() {
 
 	/// ===Particle=== ///
 #pragma region Particle
-	windParticle_->Update();
-	explosionParticle_->Update();
-	confettiParticle_->Update();
+	Particle::Update();
+	Particle::SetCamera("Wind", cameraManager_->GetActiveCamera().get());
+	Particle::SetCamera("Explosion", cameraManager_->GetActiveCamera().get());
+	Particle::SetCamera("Confetti", cameraManager_->GetActiveCamera().get());
 #pragma endregion
 
 	/// ===カメラの更新=== ///
@@ -547,7 +535,7 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 	modelLight_->Draw();
-	sky_->Draw();
+	//sky_->Draw();
 	cloud_->Draw();
 
 	animationModel_->Draw();
@@ -559,15 +547,7 @@ void DebugScene::Draw() {
 		
 	}
 	/// ===Particle=== ///
-	if (isDisplay_.Particle1) {
-		windParticle_->Draw();
-	}
-	if (isDisplay_.Particle2) {
-		explosionParticle_->Draw();
-	}
-	if (isDisplay_.Particle3) {
-		confettiParticle_->Draw();
-	}
+	Particle::Draw();
 
 #pragma endregion
 

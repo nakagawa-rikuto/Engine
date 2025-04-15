@@ -24,7 +24,6 @@ ParticleSetUp::~ParticleSetUp() {
 }
 
 
-
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
@@ -54,11 +53,6 @@ void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMa
 	vertex_ = std::make_unique<VertexBuffer3D>();
 	common_ = std::make_unique<ParticleCommon>();
 
-	/// ===worldTransform=== ///
-	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
-	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-
 	/// ===vertex=== ///
 	// Buffer
 	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
@@ -83,6 +77,7 @@ void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMa
 	srvData_.srvManager_->CreateSRVForStructuredBuffer(
 		srvData_.srvIndex, common_->GetInstancing(), kNumMaxInstance_, sizeof(ParticleForGPU));
 }
+
 
 ///-------------------------------------------/// 
 /// 描画

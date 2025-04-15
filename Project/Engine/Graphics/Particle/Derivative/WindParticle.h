@@ -13,8 +13,8 @@
 class WindParticle : public ParticleGroup {
 public:
 
-	WindParticle() = default;
-	~WindParticle() override = default;
+	WindParticle();
+	~WindParticle();
 
 	/// ===Override=== ///
 	// 初期化
@@ -29,6 +29,10 @@ public:
 	std::unique_ptr<ParticleGroup> Clone() override;
 
 private:
+	// === コピー禁止 === ///
+	WindParticle(const WindParticle&) = delete;
+	WindParticle& operator=(const WindParticle&) = delete;
+
 	/// ===Field=== ///
 	struct AccelerationField {
 		Vector3 acceleration;

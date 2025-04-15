@@ -3,6 +3,9 @@
 #include "ParticleSetUp.h"
 #include <list>
 
+/// ===Camera=== ///
+class Camera;
+
 ///=====================================================/// 
 /// パーティクルのグループ
 ///=====================================================///
@@ -34,6 +37,8 @@ public: /// ===Setter=== ///
 	void SetScale(const Vector3& scale);
 	// Texture
 	void SetTexture(const std::string& fileName);
+	// Camera
+	void SetCamera(Camera* camera);
 
 protected:
 	/// ===Emitter=== ///
@@ -47,6 +52,7 @@ protected:
 		uint32_t frequencyCount; // パーティクルの発生頻度のカウント
 		float frequency; // パーティクルの発生頻度
 		float frequencyTime; // パーティクルの発生頻度の時間
+		Camera* camera = nullptr;
 	};
 
 	// エミッタ

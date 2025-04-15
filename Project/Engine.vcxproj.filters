@@ -104,6 +104,8 @@
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
     <ClCompile Include="application\Game\Collider\ColliderManager.cpp" />
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
+    <ClCompile Include="Engine\System\Service\Particle.cpp" />
+    <ClCompile Include="Engine\System\ParticleStorage\ParticleStorage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -205,6 +207,8 @@
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
     <ClInclude Include="application\Game\Collider\ColliderManager.h" />
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
+    <ClInclude Include="Engine\System\Service\Particle.h" />
+    <ClInclude Include="Engine\System\ParticleStorage\ParticleStorage.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

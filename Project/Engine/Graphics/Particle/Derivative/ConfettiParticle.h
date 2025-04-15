@@ -13,8 +13,8 @@
 class ConfettiParticle : public ParticleGroup {
 public:
 
-    ConfettiParticle() = default; // コンストラクタでの処理は行わない
-    ~ConfettiParticle() override = default;
+    ConfettiParticle(); // コンストラクタでの処理は行わない
+    ~ConfettiParticle();
 
     /// ===Override=== ///
     // 初期化
@@ -29,6 +29,10 @@ public:
     std::unique_ptr<ParticleGroup> Clone() override;
 
 private:
+    // === コピー禁止 === ///
+    ConfettiParticle(const ConfettiParticle&) = delete;
+    ConfettiParticle& operator=(const ConfettiParticle&) = delete;
+
     /// ===プライベートフィールド=== ///
     std::mt19937 randomEngine_; // 乱数生成器
     bool hasExploded_; // パーティクルが発生したかのフラグ

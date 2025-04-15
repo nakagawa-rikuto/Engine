@@ -5,6 +5,15 @@
 #include <numbers>
 
 ///-------------------------------------------/// 
+/// コンストラクタ・デストラクタ
+///-------------------------------------------///
+ExplosionParticle::ExplosionParticle() {}
+ExplosionParticle::~ExplosionParticle() {
+    group_.particles.clear();
+    group_.particle.reset();
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void ExplosionParticle::Initialze() {
@@ -91,7 +100,15 @@ void ExplosionParticle::Draw(BlendMode mode) {
 /// クローン
 ///-------------------------------------------///
 std::unique_ptr<ParticleGroup> ExplosionParticle::Clone() {
-    return std::make_unique<ExplosionParticle>(*this);
+    // 新しいインスタンスを作成
+    std::unique_ptr<ExplosionParticle> clone = std::make_unique<ExplosionParticle>();
+
+    // 状態のコピー（Emit側でTranslateは上書きされるので最小限でOK）
+    clone->explosionRadius_ = this->explosionRadius_;
+    clone->maxLifetime_ = this->maxLifetime_;
+
+    // 初期化は Emit 側で呼ばれるので不要
+    return clone;
 }
 
 ///-------------------------------------------/// 

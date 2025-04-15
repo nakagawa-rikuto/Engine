@@ -5,6 +5,15 @@
 #include <numbers>
 
 ///-------------------------------------------/// 
+/// コンストラクタ・デストラクタ
+///-------------------------------------------///
+ConfettiParticle::ConfettiParticle() {}
+ConfettiParticle::~ConfettiParticle() {
+    group_.particles.clear();
+    group_.particle.reset();
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void ConfettiParticle::Initialze() {
@@ -95,7 +104,15 @@ void ConfettiParticle::Draw(BlendMode mode) {
 /// クローン
 ///-------------------------------------------///
 std::unique_ptr<ParticleGroup> ConfettiParticle::Clone() {
-    return std::make_unique<ConfettiParticle>(*this);
+    // 新しいインスタンスを作成
+    std::unique_ptr<ConfettiParticle> clone = std::make_unique<ConfettiParticle>();
+
+    // 状態のコピー（Emit側でTranslateは上書きされるので最小限でOK）
+    clone->explosionRadius_ = this->explosionRadius_;
+    clone->maxLifetime_ = this->maxLifetime_;
+
+    // 初期化は Emit 側で呼ばれるので不要
+    return clone;
 }
 
 ///-------------------------------------------/// 

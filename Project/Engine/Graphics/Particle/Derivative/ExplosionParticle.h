@@ -12,8 +12,8 @@
 class ExplosionParticle : public ParticleGroup {
 public:
 
-    ExplosionParticle() = default; // コンストラクタでの処理は行わない
-    ~ExplosionParticle() override = default;
+    ExplosionParticle(); // コンストラクタでの処理は行わない
+    ~ExplosionParticle();
 
     /// ===Override=== ///
     // 初期化
@@ -28,6 +28,10 @@ public:
     std::unique_ptr<ParticleGroup> Clone() override;
 
 private:
+    // === コピー禁止 === ///
+    ExplosionParticle(const ExplosionParticle&) = delete;
+    ExplosionParticle& operator=(const ExplosionParticle&) = delete;
+
     /// ===プライベートフィールド=== ///
     std::mt19937 randomEngine_; // 乱数生成器
     bool hasExploded_; // 爆発が発生したかのフラグ

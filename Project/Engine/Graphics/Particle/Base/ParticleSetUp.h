@@ -57,17 +57,8 @@ private:
 	
 	/// ===モデルデータ=== ///
 	ModelData modelData_;
-	EulerTransform uvTransform_;
-
-	/// ===カメラ=== ///
-	Camera* camera_ = nullptr;
-	EulerTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
 	uint32_t kNumMaxInstance_;
-	EulerTransform worldTransform_;
-	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-
 };
 

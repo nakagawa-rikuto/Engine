@@ -8,6 +8,15 @@
 #include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
+/// コンストラクタ・デストラクタ
+///-------------------------------------------///
+WindParticle::WindParticle() {}
+WindParticle::~WindParticle() {
+	group_.particles.clear();
+	group_.particle.reset();
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void WindParticle::Initialze() {
@@ -119,7 +128,11 @@ void WindParticle::Draw(BlendMode mode) {
 /// クローン
 ///-------------------------------------------///
 std::unique_ptr<ParticleGroup> WindParticle::Clone() {
-	return std::make_unique<WindParticle>(*this);
+	// 新しいインスタンスを作成
+	std::unique_ptr<WindParticle> clone = std::make_unique<WindParticle>();
+
+	// 初期化は Emit 側で呼ばれるので不要
+	return clone;
 }
 
 ///-------------------------------------------/// 
