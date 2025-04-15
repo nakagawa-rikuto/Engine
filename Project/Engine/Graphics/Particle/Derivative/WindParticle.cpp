@@ -8,9 +8,18 @@
 #include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
+/// コンストラクタ・デストラクタ
+///-------------------------------------------///
+WindParticle::WindParticle() {}
+WindParticle::~WindParticle() {
+	group_.particles.clear();
+	group_.particle.reset();
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void WindParticle::Initialze(const std::string & filename) {
+void WindParticle::Initialze() {
 
 	/// ===乱数生成器の初期化=== ///
 	std::random_device seedGenerator;
@@ -38,8 +47,9 @@ void WindParticle::Initialze(const std::string & filename) {
 	accelerationFild_.area.min = { -1.0f, -1.0f, -1.0f };
 	accelerationFild_.area.max = { 1.0f, 1.0f, 1.0f };
 
-	/// ===Emitterの初期化=== ///
-	ParticleGroup::Initialze(filename);
+	/// ===パーティクルグループの初期化=== ///
+	group_.particle = std::make_unique<ParticleSetUp>();
+	group_.particle->Initialze("plane", group_.maxInstance); /*"Particle"*/
 }
 
 ///-------------------------------------------/// 
@@ -112,6 +122,17 @@ void WindParticle::Update() {
 ///-------------------------------------------///
 void WindParticle::Draw(BlendMode mode) {
 	ParticleGroup::Draw(mode);
+}
+
+///-------------------------------------------/// 
+/// クローン
+///-------------------------------------------///
+std::unique_ptr<ParticleGroup> WindParticle::Clone() {
+	// 新しいインスタンスを作成
+	std::unique_ptr<WindParticle> clone = std::make_unique<WindParticle>();
+
+	// 初期化は Emit 側で呼ばれるので不要
+	return clone;
 }
 
 ///-------------------------------------------/// 

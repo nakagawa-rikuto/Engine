@@ -5,9 +5,18 @@
 #include <numbers>
 
 ///-------------------------------------------/// 
+/// コンストラクタ・デストラクタ
+///-------------------------------------------///
+ExplosionParticle::ExplosionParticle() {}
+ExplosionParticle::~ExplosionParticle() {
+    group_.particles.clear();
+    group_.particle.reset();
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ExplosionParticle::Initialze(const std::string& filename) {
+void ExplosionParticle::Initialze() {
     /// ===乱数生成器の初期化=== ///
     std::random_device seedGenerator;
     randomEngine_.seed(seedGenerator());
@@ -25,7 +34,8 @@ void ExplosionParticle::Initialze(const std::string& filename) {
     };
 
     /// ===パーティクルグループの初期化=== ///
-    ParticleGroup::Initialze(filename);
+    group_.particle = std::make_unique<ParticleSetUp>();
+    group_.particle->Initialze("plane", group_.maxInstance); /*"Particle"*/
 
     /// ===フラグと設定の初期化=== ///
     hasExploded_ = false;
@@ -84,6 +94,21 @@ void ExplosionParticle::Draw(BlendMode mode) {
     if (group_.numInstance > 0) {
         ParticleGroup::Draw(mode);
     }
+}
+
+///-------------------------------------------/// 
+/// クローン
+///-------------------------------------------///
+std::unique_ptr<ParticleGroup> ExplosionParticle::Clone() {
+    // 新しいインスタンスを作成
+    std::unique_ptr<ExplosionParticle> clone = std::make_unique<ExplosionParticle>();
+
+    // 状態のコピー（Emit側でTranslateは上書きされるので最小限でOK）
+    clone->explosionRadius_ = this->explosionRadius_;
+    clone->maxLifetime_ = this->maxLifetime_;
+
+    // 初期化は Emit 側で呼ばれるので不要
+    return clone;
 }
 
 ///-------------------------------------------/// 
