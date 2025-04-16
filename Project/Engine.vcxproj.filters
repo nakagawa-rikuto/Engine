@@ -106,7 +106,7 @@
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
     <ClCompile Include="application\Game\Collider\ColliderManager.cpp" />
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
-    <ClCompile Include="Engine\Graphics\OffScreen\RenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
@@ -211,7 +211,7 @@
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
     <ClInclude Include="application\Game\Collider\ColliderManager.h" />
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
-    <ClInclude Include="Engine\Graphics\OffScreen\RenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />

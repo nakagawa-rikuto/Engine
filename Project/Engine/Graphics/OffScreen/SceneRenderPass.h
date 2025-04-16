@@ -11,7 +11,7 @@ public:
 	~SceneRenderPass() = default;
 
 	// 初期化
-	void Initialize(std::shared_ptr<RenderTarget> renderTarget) override;
+	void Initialize(std::shared_ptr<RenderTexture> RenderTexture) override;
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle) override;
 };

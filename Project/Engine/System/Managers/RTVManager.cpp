@@ -42,8 +42,15 @@ void RTVManager::Initialize(DXCommon* dxcommon) {
 /// 作成
 ///-------------------------------------------///
 void RTVManager::CreateRenderTarget(uint32_t index, ID3D12Resource* resource, const D3D12_RENDER_TARGET_VIEW_DESC& desc) {
+	assert(index < kMaxRTVCount_);
+	// ハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = GetCPUDescriptorHandle(index);
+
 	// RTVの生成
 	dxcommon_->GetDevice()->CreateRenderTargetView(resource, &desc, GetCPUDescriptorHandle(index));
+
+	// ハンドルを記録（ClearRenderTargetViewで使うため）
+	descriptorHandles_[index] = handle;
 }
 
 ///-------------------------------------------/// 

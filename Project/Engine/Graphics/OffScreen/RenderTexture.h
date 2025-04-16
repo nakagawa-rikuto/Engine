@@ -8,31 +8,30 @@
 // uint32_t
 #include <cstdint>
 
-/// ===前方宣言///
+/// ===前方宣言=== ///
 class SRVManager;
 class RTVManager;
-class DSVManager;
 
 ///=====================================================/// 
-/// RenderTarget
+/// RenderTexture
 ///=====================================================///
-class RenderTarget {
+class RenderTexture {
 public:
 
-	RenderTarget() = default;
-	~RenderTarget() = default;
+	RenderTexture() = default;
+	~RenderTexture();
 
 	// 初期化
-	void Initialize(SRVManager* srv, RTVManager* rtv);
+	void Initialize(SRVManager* srv, RTVManager* rtv, uint32_t width, uint32_t height, const Vector4& clearColor, DXGI_FORMAT format);
 
-	// RenderTargetの生成
+	// RenderTextureの生成
 	void CreateRenderTexture(ID3D12Device* device);
-	// RenderTargetのクリア
-	void Clear(ID3D12GraphicsCommandList* commandList, DSVManager* dsv);
+	// RenderTextureのクリア
+	void Clear(ID3D12GraphicsCommandList* commandList);
 
 public:
 
-	// RenderTargetの取得
+	// RenderTextureの取得
 	ID3D12Resource* GetBuffer();
 	// RTVHandleの取得
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle();
@@ -44,7 +43,6 @@ public:
 	uint32_t GetSRVHandleIndex() const;
 private:
 	// Manager
-
 	RTVManager* rtvManager_ = nullptr;
 	SRVManager* srvManager_ = nullptr;
 

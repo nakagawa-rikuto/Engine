@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Graphics/OffScreen/RenderTarget.h"
+#include "Engine/Graphics/OffScreen/RenderTexture.h"
 #include <memory>
 
 ///=====================================================/// 
@@ -10,11 +10,13 @@ public:
 	RenderPass() = default;
 	virtual ~RenderPass() = default;
 
-	virtual void Initialize(std::shared_ptr<RenderTarget> renderTarget);
+	// 初期化
+	virtual void Initialize(std::shared_ptr<RenderTexture> RenderTexture) = 0;
+	// 描画
 	virtual void Draw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle) = 0;
 
 protected:
-	std::shared_ptr<RenderTarget> renderTarget_;
+	std::shared_ptr<RenderTexture> renderTexture_;
 };
 
  

@@ -201,7 +201,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
-    <ClCompile Include="Engine\Graphics\OffScreen\RenderTarget.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -306,7 +306,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
-    <ClInclude Include="Engine\Graphics\OffScreen\RenderTarget.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
   </ItemGroup>
   <ItemGroup>

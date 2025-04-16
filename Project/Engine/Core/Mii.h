@@ -21,6 +21,8 @@
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
+// OffScreenRender
+#include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
 
 ///=====================================================///
 /// システム
@@ -95,6 +97,8 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<AudioManager> audioManager_;         // AudioMangaer
 	std::unique_ptr<CSVManager> csvManager_;             // CSVManager
 	std::unique_ptr<AnimationManager> animationManager_; // AnimationManager
+
+	std::unique_ptr<OffScreenRenderer> offScreenRenderer_; // OffScreen
 
 private:
 	///=====================================================/// 

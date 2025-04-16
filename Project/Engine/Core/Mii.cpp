@@ -68,6 +68,13 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// Controllerの生成
 	controller_ = std::make_unique<Controller>();
 	controller_->Initialize();
+
+	// OffScreenRenderer
+	offScreenRenderer_ = std::make_unique<OffScreenRenderer>();
+	offScreenRenderer_->Initialize(
+		dXCommon_->GetDevice(),
+		srvManager_.get(), rtvManager_.get(),
+		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
 ///=====================================================/// 
@@ -104,6 +111,7 @@ void Mii::Finalize() {
 	audioManager_.reset(); // AudioManager
 	modelManager_.reset(); // Modelmanager
 	textureManager_.reset(); // TextrureManager
+	offScreenRenderer_.reset(); // OffScreenRender
 	pipelineManager_.reset(); // PipelineManager
 	imGuiManager_.reset(); // ImGuiManager
 	dsvManager_.reset(); // DSVManager
@@ -156,14 +164,10 @@ void Mii::PreDraw() {
 	dXCommon_->PreDraw();
 
 	// 描画先のRTVを設定する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvManager_->GetCPUDescriptorHandle(dXCommon_->GetBackBufferIndex());
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvManager_->GetCPUDescriptorHandle(0); // 通常DSVは1つ
-	commandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
-
-	// 全画面クリア
-	// クリアカラーを指定
-	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
-	rtvManager_->ClearRenderTarget(commandList, dXCommon_->GetBackBufferIndex(), clearColor);
+	// OffScreenでRTVとDSVをセットしてRTVをクリアしている
+	offScreenRenderer_->Draw(commandList, dsvHandle);
+	// DSVはOffScreenで使用していないのでここでクリア
 	dsvManager_->ClearDepthBuffer(commandList);
 
 	// コマンドを積む
