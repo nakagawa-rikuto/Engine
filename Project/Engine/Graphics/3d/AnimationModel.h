@@ -1,8 +1,8 @@
 #pragma once
 // buffer
-#include "Engine/Graphics/3d/VertexBuffer3D.h"
-#include "Engine/Graphics/3d/IndexBuffer3D.h"
-#include "Engine/Graphics/3d/ModelCommon.h"
+#include "Engine/Graphics/3d/Base/VertexBuffer3D.h"
+#include "Engine/Graphics/3d/Base/IndexBuffer3D.h"
+#include "Engine/Graphics/3d/Base/ModelCommon.h"
 // Data
 #include "Engine/DataInfo/AnimationData.h"
 #include "Engine/DataInfo/PipelineStateObjectType.h"
@@ -11,7 +11,6 @@
 
 /// ===前方宣言=== ///
 class Camera;
-class SRVManager;
 
 ///=====================================================/// 
 /// アニメーションモデル
@@ -23,11 +22,11 @@ public:
 	~AnimationModel();
 
 	// 初期化
-	void Initialize(const std::string& filename, LightType type = LightType::None);
+	void Initialize(const std::string& filename, LightType type);
 	// 更新
 	void Update();
 	// 描画
-	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
+	void Draw(BlendMode mode);
 
 public: /// ===Getter=== ///
 	// モデル座標
@@ -49,17 +48,13 @@ public: /// ===Setter=== ///
 	// Light
 	void SetLight(LightType type);
 	// LightData
-	void SetDirectionalLight(LightInfo shiniss, DirectionalLightInfo info);
-	void SetPointLight(LightInfo shiniss, PointLightInfo info);
-	void SetSpotLight(LightInfo shiniss, SpotLightInfo info);
+	void SetLightData(LightInfo light);
 	// Camera
 	void SetCamera(Camera* camera);
 	// Animation
 	void SetAnimation(const std::string& animationName);
 
 private: /// ===Variables(変数)=== ///
-
-	SRVManager* srvManager_ = nullptr;
 
 	/// ===バッファリソース=== ///
 	std::unique_ptr<VertexBuffer3D> vertex_;
@@ -87,13 +82,12 @@ private: /// ===Variables(変数)=== ///
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
-	LightInfo light_ = { 40.0f };
-	// DirctionalLight
-	DirectionalLightInfo directional_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f };
-	// PointLight
-	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f };
-	// SpotLight
-	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f };
+	LightInfo light_ = {
+		40.0f,
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f},
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f},
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f}
+	};
 
 	/// ===Animation=== ///
 	float animationTime_ = 0.0f;
@@ -125,7 +119,7 @@ private: /// ===Functions(関数)=== ///
 	// Skeletonの更新関数
 	void SkeletonUpdate(Skeleton& skeleton);
 	// SkinClusterの生成関数
-	SkinCluster CreateSkinCluster(const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData, SRVManager* srvManager);
+	SkinCluster CreateSkinCluster(const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData);
 	// SkinClusterの更新関数
 	void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
 };

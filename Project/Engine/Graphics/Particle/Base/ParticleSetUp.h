@@ -1,7 +1,7 @@
 #pragma once
 /// ===Icnlde=== ///
 // Buffer
-#include "Engine/Graphics/3d/VertexBuffer3D.h"
+#include "Engine/Graphics/3d/base/VertexBuffer3D.h"
 #include "ParticleCommon.h"
 // Pipleine
 #include "Engine/DataInfo/PipelineStateObjectType.h"

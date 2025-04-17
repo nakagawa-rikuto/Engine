@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application\Game\Collider\AABBCollider.cpp" />
-    <ClCompile Include="application\Drawing\3d\AnimationModel.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\AnimationModel.cpp" />
     <ClCompile Include="application\Game\Collider\Collider.cpp" />
     <ClCompile Include="application\Game\Collider\ColliderManager.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
@@ -122,7 +122,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Particle\Derivative\ConfettiParticle.cpp" />
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
     <ClCompile Include="Engine\System\Managers\CSVManager.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Camera3D.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="application\Scene\ClearScene.cpp" />
     <ClCompile Include="Engine\Scene\Framework.cpp" />
@@ -133,7 +133,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
     <ClCompile Include="Engine\System\Service\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Material3D.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\Material3D.cpp" />
     <ClCompile Include="Engine\System\Managers\ImGuiManager.cpp" />
     <ClCompile Include="application\Scene\IScene.cpp" />
     <ClCompile Include="Engine\System\Service\Loader.cpp" />
@@ -154,7 +154,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Pipeline\RasterizerState.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\RootSignature.cpp" />
     <ClCompile Include="Engine\Core\Mii.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Transform3D.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\Transform3D.cpp" />
     <ClCompile Include="Engine\Core\WinApp.cpp" />
     <ClCompile Include="Engine\Graphics\Pipeline\DepthStencil.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -166,8 +166,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Graphics\2d\IndexBuffer2D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\IndexBuffer3D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Light.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\IndexBuffer3D.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application\Drawing\2d\Sprite.cpp" />
     <ClCompile Include="Engine\System\Managers\TextureManager.cpp" />
@@ -175,12 +175,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\2d\Transform2D.cpp" />
     <ClCompile Include="Engine\Graphics\2d\Material2D.cpp" />
     <ClCompile Include="Engine\Graphics\2d\VertexBuffer2D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\VertexBuffer3D.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\VertexBuffer3D.cpp" />
     <ClCompile Include="Engine\System\Managers\SRVManager.cpp" />
-    <ClCompile Include="application\Drawing\3d\Model.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Model.cpp" />
     <ClCompile Include="Engine\System\Managers\ModelManager.cpp" />
     <ClCompile Include="Engine\System\Managers\PiplineManager.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\ModelCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\ModelCommon.cpp" />
     <ClCompile Include="Engine\Graphics\2d\SpriteCommon.cpp" />
     <ClCompile Include="application\Scene\MyGame.cpp" />
     <ClCompile Include="Engine\System\Managers\SceneManager.cpp" />
@@ -205,10 +205,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
+    <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
-    <ClInclude Include="application\Drawing\3d\AnimationModel.h" />
+    <ClInclude Include="Engine\Graphics\3d\AnimationModel.h" />
     <ClInclude Include="application\Game\Collider\Collider.h" />
     <ClInclude Include="application\Game\Collider\ColliderManager.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />
@@ -223,7 +224,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DataInfo\InputData.h" />
     <ClInclude Include="Engine\System\Input\Controller.h" />
     <ClInclude Include="Engine\System\Managers\CSVManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Camera3D.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\Camera3D.h" />
     <ClInclude Include="Engine\DataInfo\ParticleData.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="application\Scene\ClearScene.h" />
@@ -236,7 +237,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\System\Service\Input.h" />
     <ClInclude Include="Engine\Core\Logger.h" />
-    <ClInclude Include="Engine\Graphics\3d\Material3D.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\Material3D.h" />
     <ClInclude Include="Engine\System\Managers\ImGuiManager.h" />
     <ClInclude Include="application\Scene\IScene.h" />
     <ClInclude Include="Engine\DataInfo\SceneType.h" />
@@ -260,7 +261,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Pipeline\RasterizerState.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\RootSignature.h" />
     <ClInclude Include="Engine\Core\Mii.h" />
-    <ClInclude Include="Engine\Graphics\3d\Transform3D.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\Transform3D.h" />
     <ClInclude Include="Engine\Core\WinApp.h" />
     <ClInclude Include="Engine\Core\ComPtr.h" />
     <ClInclude Include="Engine\Graphics\Pipeline\DepthStencil.h" />
@@ -279,15 +280,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\2d\Transform2D.h" />
     <ClInclude Include="Engine\Graphics\2d\Material2D.h" />
     <ClInclude Include="Engine\Graphics\2d\IndexBuffer2D.h" />
-    <ClInclude Include="Engine\Graphics\3d\IndexBuffer3D.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\IndexBuffer3D.h" />
     <ClInclude Include="Engine\Graphics\2d\VertexBuffer2D.h" />
-    <ClInclude Include="Engine\Graphics\3d\VertexBuffer3D.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\VertexBuffer3D.h" />
     <ClInclude Include="Engine\System\Managers\SRVManager.h" />
-    <ClInclude Include="application\Drawing\3d\Model.h" />
+    <ClInclude Include="Engine\Graphics\3d\Model.h" />
     <ClInclude Include="Engine\System\Managers\ModelManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Light.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\Light.h" />
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\ModelCommon.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />
     <ClInclude Include="application\Scene\MyGame.h" />
     <ClInclude Include="Engine\System\Managers\SceneManager.h" />
@@ -312,6 +313,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
+    <ClInclude Include="application\Drawing\3d\Object3d.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

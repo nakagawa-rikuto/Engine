@@ -3,8 +3,7 @@
 #include "application/Scene/IScene.h"
 // Game
 #include "application/Drawing/2d/Sprite.h"
-#include "application/Drawing/3d/Model.h"
-#include "application/Drawing/3d/AnimationModel.h"
+#include "application/Drawing/3d/Object3d.h"
 #include "application/Drawing/3d/Camera.h"
 // Math
 #include "Math/sMath.h"
@@ -62,9 +61,9 @@ private:/// ===メンバ変数=== ///
 		bool SpotLight;
 		bool None;
 	};
-	Setting isSetting_ = {false};
-	Display isDisplay_ = {false};
-	Imgui isImgui_ = {false};
+	Setting isSetting_ = { false };
+	Display isDisplay_ = { false };
+	Imgui isImgui_ = { false };
 	LightTypeInfo lightType_ = { false };
 #pragma endregion
 
@@ -76,14 +75,14 @@ private:/// ===メンバ変数=== ///
 	std::shared_ptr<Camera> camera_;
 	std::shared_ptr<Camera> camera2_;
 	// モデル
-	std::unique_ptr<Model> model_;
-	std::unique_ptr<Model> model2_;
-	std::unique_ptr<AnimationModel> animationModel_;
+	std::unique_ptr<Object3d> model_;
+	std::unique_ptr<Object3d> model2_;
+	std::unique_ptr<Object3d> animationModel_;
 	// 球
-	std::unique_ptr<Model> sky_;
-	std::unique_ptr<Model> cloud_;
+	std::unique_ptr<Object3d> sky_;
+	std::unique_ptr<Object3d> cloud_;
 	// モデルライト
-	std::unique_ptr<Model> modelLight_;
+	std::unique_ptr<Object3d> modelLight_;
 #pragma endregion
 
 	/// ===変数=== ///
@@ -91,24 +90,23 @@ private:/// ===メンバ変数=== ///
 	// モデル
 	Vector3 modelTranslate_ = { 0.0f, 0.0f, 0.0f };
 	Vector3 modelRotate_ = { 0.0f, 0.0f, 0.0f };
-	Vector3 modelScale_ = { 1.0f, 1.0f, 1.0f }; 
+	Vector3 modelScale_ = { 1.0f, 1.0f, 1.0f };
 	Vector4 modelColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	bool isRotate = false;  
+	bool isRotate = false;
 	// sprite
 	Vector2 spriteTranslate_ = { 0.0f, 0.0f };
 	float spriteRotate_ = 0.0f;
 	Vector2 spriteSize_ = { 100.0f, 100.0f };
 	Vector4 spriteColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// ライト
-	LightInfo light_ = { 48.5f };
-	// Directional
-	DirectionalLightInfo directional_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 1.0f, 0.0f } , 1.0f };
-	// point
-	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 2.0f, 0.0f } , 1.0f, 10.0f, 1.0f };
-	// spotLight
-	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize(Vector3{ -1.0f, -1.0f, 0.0f }), 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f) };
+	LightInfo light_ = {
+		{ 48.5f } ,
+		{ { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 1.0f, 0.0f } , 1.0f },
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 2.0f, 0.0f } , 1.0f, 10.0f, 1.0f},
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize(Vector3{ -1.0f, -1.0f, 0.0f }), 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f)}
+	};
 	// カメラ
-	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };  
+	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };
 	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f };
 	bool SetCamera = false;
 	// Audio
