@@ -101,10 +101,10 @@
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
     <ClCompile Include="Engine\System\Managers\RTVManager.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
-    <ClCompile Include="application\Game\Collider\Collider.cpp" />
+    <ClCompile Include="application\Game\Collider\Base\Collider.cpp" />
     <ClCompile Include="application\Game\Collider\AABBCollider.cpp" />
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
-    <ClCompile Include="application\Game\Collider\ColliderManager.cpp" />
+    <ClCompile Include="application\Game\Collider\Manager\ColliderManager.cpp" />
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
     <ClCompile Include="Engine\System\Service\Particle.cpp" />
     <ClCompile Include="Engine\System\ParticleStorage\ParticleStorage.cpp" />
@@ -209,10 +209,10 @@
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
     <ClInclude Include="Engine\System\Managers\RTVManager.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />
-    <ClInclude Include="application\Game\Collider\Collider.h" />
+    <ClInclude Include="application\Game\Collider\Base\Collider.h" />
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
-    <ClInclude Include="application\Game\Collider\ColliderManager.h" />
+    <ClInclude Include="application\Game\Collider\Manager\ColliderManager.h" />
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
     <ClInclude Include="Engine\System\Service\Particle.h" />
     <ClInclude Include="Engine\System\ParticleStorage\ParticleStorage.h" />
