@@ -3,7 +3,7 @@
 // c++
 #include <list>
 // Collider
-#include "Collider.h"
+#include "application/Game/Collider/Base/Collider.h"
 
 /// ===前方宣言=== ///
 class SphereCollider;
