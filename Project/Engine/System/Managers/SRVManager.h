@@ -24,6 +24,8 @@ public:
 	void Initialize(DXCommon* dxcommon);
 	// 描画前処理
 	void PreDraw();
+	// SRVの作成
+	void CreateSRV(uint32_t srvIndex, ID3D12Resource* pResource, D3D12_SHADER_RESOURCE_VIEW_DESC desc);
 	// 確保関数
 	uint32_t Allocate();
 	bool AssertAllocate();
@@ -66,7 +68,7 @@ private:/// ===variable=== ///
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
 
 	// 次に使用するSRVインデックス
-	uint32_t useIndex = 0;
+	uint32_t useIndex_ = 0;
 };
 
 

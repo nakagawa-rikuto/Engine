@@ -47,7 +47,7 @@ void SRVManager::Initialize(DXCommon* dxcommon) {
 	dXCommon_ = dxcommon;
 
 	// デスクリプタヒープの生成
-	descriptorHeap_ = dXCommon_->CreateSRVHeap(kMaxSRVCount_);
+	descriptorHeap_ = dXCommon_->CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount_, true);
 
 	// デスクリプタ1個分のサイズを取得して記録
 	descriptorSize_ = dXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -65,6 +65,13 @@ void SRVManager::PreDraw() {
 	dXCommon_->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
+///-------------------------------------------/// 
+/// SRVの作成
+///-------------------------------------------///
+void SRVManager::CreateSRV(uint32_t srvIndex, ID3D12Resource* pResource, D3D12_SHADER_RESOURCE_VIEW_DESC desc) {
+	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &desc, GetCPUDescriptorHandle(srvIndex));
+}
+
 
 ///-------------------------------------------/// 
 /// 確保関数
@@ -73,14 +80,14 @@ uint32_t SRVManager::Allocate() {
 	/// ===上限に達していないかチェックしてassert=== ///
 	assert(AssertAllocate());
 	// return する番号をいったん記録しておく
-	int index = useIndex;
+	int index = useIndex_;
 	// 次回のために番号を1進める
-	useIndex++;
+	useIndex_++;
 	// 上で記録した番号をreturn(0番はImGuiだから+1)
 	return index + 1;
 }
 // 上限チャック
-bool SRVManager::AssertAllocate() { return useIndex < kMaxSRVCount_; }
+bool SRVManager::AssertAllocate() { return useIndex_ < kMaxSRVCount_; }
 
 
 ///-------------------------------------------/// 
@@ -96,7 +103,7 @@ void SRVManager::CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
 	srvDesc.Texture2D.MipLevels = MipLevels;
 
 	// SRVを作成
-	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+	CreateSRV(srvIndex, pResource, srvDesc);
 }
 // Struct Buffer用
 void SRVManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride) {
@@ -110,5 +117,5 @@ void SRVManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, ID3D12Resource*
 	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
 	// SRVを作成
-	dXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+	CreateSRV(srvIndex, pResource, srvDesc);
 }

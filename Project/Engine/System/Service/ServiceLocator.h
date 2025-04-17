@@ -56,7 +56,7 @@ public:
     // RTVManager 
     static RTVManager* GetRTVManager();
     // DSVManager
-    static DSVManager* GEtDSVManager();
+    static DSVManager* GetDSVManager();
     // PipelineManager
     static PipelineManager* GetPipelineManager();
     // TextureManager

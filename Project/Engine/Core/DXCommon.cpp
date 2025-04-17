@@ -86,8 +86,24 @@ void DXCommon::Initialize(
 ///-------------------------------------------/// 
 /// 描画前処理
 ///-------------------------------------------///
-void DXCommon::PreDraw(RTVManager* rtv, DSVManager* dsv) {
+/// ===RenderTexture=== ///
+void DXCommon::PreDrawRenderTexture(ID3D12Resource* resource) {
 
+	/* ///////////////////
+		　 バリアを張る
+	*/ ///////////////////
+	// TransitionBarrierの設定
+	// 今回のバリアはTransition
+	barrierRenderTexture_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+
+	// Noneにしておく
+	barrierRenderTexture_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+
+	// バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrierRenderTexture_.Transition.pResource = resource;
+}
+/// ===ImGui=== ///
+void DXCommon::PreDrawImGui(RTVManager* rtv) {
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -96,39 +112,53 @@ void DXCommon::PreDraw(RTVManager* rtv, DSVManager* dsv) {
 	*/ ///////////////////
 	// TransitionBarrierの設定
 	// 今回のバリアはTransition
-	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrierSwapChain_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 
 	// Noneにしておく
-	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrierSwapChain_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier_.Transition.pResource = swapChainResource_[backBufferIndex].Get();
+	barrierSwapChain_.Transition.pResource = swapChainResource_[backBufferIndex].Get();
 
 	// 遷移前(現在)のResourceState
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrierSwapChain_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 
 	// 遷移後のResourceState
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrierSwapChain_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
 	// TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier_);
+	commandList_->ResourceBarrier(1, &barrierSwapChain_);
+	
+	// RTVの設定
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandel = rtv->GetCPUDescriptorHandle(backBufferIndex);
+	commandList_->OMSetRenderTargets(1, &rtvHandel, false, nullptr);
+	// RTVのクリア
+	const float cleaerColor[] = { 0.1f, 0.25f, 0.5f, 1.0f }; // 青色っっぽい色、RGBAの順
+	rtv->ClearRenderTarget(commandList_.Get(), backBufferIndex, cleaerColor);
+}
 
-	// 描画先のRTVを設定する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtv->GetHandle(backBufferIndex);
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsv->GetHandle();
-	commandList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
-
-	// 全画面クリア
-	rtv->ClearRenderTarget(commandList_.Get());
-	dsv->ClearDepthBuffer(commandList_.Get());
-
+///-------------------------------------------/// 
+/// コマンドを積む
+///-------------------------------------------///
+void DXCommon::BeginCommand() {
 	// コマンドを積む
 	commandList_->RSSetViewports(1, &viewPort_); // viewportを設定
 	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorを設定
-
-	// プリミティブトポロジーをセット
-	commandList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
+
+
+///-------------------------------------------/// 
+/// バリアの状態遷移
+///-------------------------------------------///
+void DXCommon::TransitionRenderTarget() {
+	// 遷移前(現在)のResourceState
+	barrierRenderTexture_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	// 遷移後のResourceState
+	barrierRenderTexture_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	// TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrierRenderTexture_);
+}
+
 
 ///-------------------------------------------/// 
 /// 描画後処理
@@ -137,11 +167,16 @@ void DXCommon::PostDraw() {
 	HRESULT hr;
 
 	// RenderTargetからPresentにする
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	// RenderTexture
+	barrierRenderTexture_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrierRenderTexture_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	// SwapChain
+	barrierSwapChain_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrierSwapChain_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 
 	// TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier_);
+	commandList_->ResourceBarrier(1, &barrierRenderTexture_);
+	commandList_->ResourceBarrier(1, &barrierSwapChain_);
 
 	// コマンドリストの内容を確定させる。
    // すべてのコマンドを積んでからCloseすること
@@ -189,10 +224,17 @@ void DXCommon::PostDraw() {
 ///-------------------------------------------/// 
 /// DescriptorHeapの生成
 ///-------------------------------------------///
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateRTVHeap(const uint32_t RTVDescriptor) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, RTVDescriptor, false); }
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDSVHeap(const uint32_t DSVDescriptor) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, DSVDescriptor, false); }
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateSRVHeap(const uint32_t maxSrvCount) { return CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, maxSrvCount, true); }
-
+ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDescriptorHeap(
+	D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+	ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+	descriptorHeapDesc.Type = heapType;
+	descriptorHeapDesc.NumDescriptors = numDescriptors;
+	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	HRESULT hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	assert(SUCCEEDED(hr));
+	return descriptorHeap;
+}
 ///-------------------------------------------/// 
 /// DescriptorSizeの取得
 ///-------------------------------------------///
@@ -417,21 +459,6 @@ void DXCommon::CreateSwapChain() {
 	assert(SUCCEEDED(hr));
 	hr = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResource_[1]));
 	assert(SUCCEEDED(hr));
-}
-
-///-------------------------------------------/// 
-/// ディスクリプタヒープの生成
-///-------------------------------------------///
-ComPtr<ID3D12DescriptorHeap> DXCommon::CreateDescriptorHeap(
-	D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
-	ComPtr<ID3D12DescriptorHeap> descriptorHeap = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-	descriptorHeapDesc.Type = heapType;
-	descriptorHeapDesc.NumDescriptors = numDescriptors;
-	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	HRESULT hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
-	assert(SUCCEEDED(hr));
-	return descriptorHeap;
 }
 
 ///-------------------------------------------/// 

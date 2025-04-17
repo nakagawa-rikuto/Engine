@@ -534,14 +534,16 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	modelLight_->Draw();
+	// 二重天球
 	//sky_->Draw();
-	cloud_->Draw();
+	//cloud_->Draw();
 
+	// アニーメーションモデル
 	animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
+		modelLight_->Draw();
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
 		

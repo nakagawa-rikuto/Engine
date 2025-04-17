@@ -94,6 +94,5 @@ void ImGuiManager::End() {
 void ImGuiManager::Draw() {
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srvManager_->GetDescriptorHeap() };
-	commandList->SetDescriptorHeaps(1, descriptorHeaps);
+	srvManager_->PreDraw();
 }

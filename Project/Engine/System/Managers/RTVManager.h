@@ -22,12 +22,18 @@ public:
 
 	// 初期化
 	void Initialize(DXCommon* dxcommon);
+	// 作成
+	void CreateRenderTarget(uint32_t index, ID3D12Resource* resource, const D3D12_RENDER_TARGET_VIEW_DESC& desc);
 	// クリア
-	void ClearRenderTarget(ID3D12GraphicsCommandList* commandList);
+	void ClearRenderTarget(ID3D12GraphicsCommandList* commandList, uint32_t index, const float color[4]);
+	// 確保関数
+	uint32_t Allocate();
+	bool AssertAllocate();
+
+	// SwapChaiのRTVの生成
+	void CreateSwapChainRenderTargets();
 
 public: /// ===Getter=== ///
-	// Handle
-	D3D12_CPU_DESCRIPTOR_HANDLE GetHandle(uint32_t index)const;
 	// Heap
 	ID3D12DescriptorHeap* GetDescriptorHeap() const;
 	// CPU
@@ -38,21 +44,18 @@ public: /// ===Getter=== ///
 public:/// ===定数=== ///
 
 	// RTVの数
-	static const uint32_t kNumRTVDescriptor_;
+	static const uint32_t kMaxRTVCount_ = 16;
 
 private:
 	// DXCommon
 	DXCommon* dxcommon_ = nullptr;
 	// ヒープ
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
-	// ハンドル
-	D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandles_[2];
+	// デスクリプタハンドル
+	D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandles_[kMaxRTVCount_];
 	// スクリプタサイズ
-	uint32_t descriptorSize_ = 0; 
-
-private:
-
-	// RTVの生成
-	void CreateFinalRenderTargets();
+	uint32_t descriptorSize_ = 0;
+	// 次に使用するSRVインデックス
+	uint32_t useIndex_ = 0;
 };
 

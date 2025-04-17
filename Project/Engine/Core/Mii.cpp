@@ -20,10 +20,12 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// RTVManagerの生成
 	rtvManager_ = std::make_unique<RTVManager>();
 	rtvManager_->Initialize(dXCommon_.get());
+	rtvManager_->CreateSwapChainRenderTargets();
 
 	// DSVManagerの生成
 	dsvManager_ = std::make_unique<DSVManager>();
 	dsvManager_->Initialize(dXCommon_.get());
+	dsvManager_->CreateDepthBuffer(0);
 
 	// ImGuiManagerの生成
 	imGuiManager_ = std::make_unique<ImGuiManager>();
@@ -67,6 +69,13 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	controller_ = std::make_unique<Controller>();
 	controller_->Initialize();
 
+	// OffScreenRendererの生成
+	offScreenRenderer_ = std::make_unique<OffScreenRenderer>();
+	offScreenRenderer_->Initialize(
+		dXCommon_->GetDevice(),
+		srvManager_.get(), rtvManager_.get(),
+		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // クリアカラーをここで設定
+
 	// ParticleManager
 	particleManager_ = std::make_unique<ParticleManager>();
 }
@@ -75,12 +84,12 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 /// 更新
 ///=====================================================///
 void Mii::Update() {
-	// ImGui
-	imGuiManager_->Begin();
 	// Input
 	keyboard_->Update();
 	mouse_->Update();
 	controller_->Update();
+	// ImGui
+	imGuiManager_->Begin();
 }
 
 ///=====================================================/// 
@@ -96,23 +105,24 @@ void Mii::Finalize() {
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
-	controller_.reset();       // Controller
-	mouse_.reset();            // Mouse
-	keyboard_.reset();         // Keyboard
-	inputCommon_.reset();      // InputCommon
-	animationManager_.reset(); // AnimationManager
-	csvManager_.reset();       // CSVManager
-	audioManager_.reset();     // AudioManager
+	controller_.reset();		// Controller
+	mouse_.reset();				// Mouse
+	keyboard_.reset();			// Keyboard
+	inputCommon_.reset();		// InputCommon
+	animationManager_.reset();	// AnimationManager
+	csvManager_.reset();		// CSVManager
+	audioManager_.reset();		// AudioManager
 	particleManager_.reset();  // ParticleManager
-	modelManager_.reset();     // Modelmanager
-	textureManager_.reset();   // TextrureManager
-	pipelineManager_.reset();  // PipelineManager
-	imGuiManager_.reset();     // ImGuiManager
-	dsvManager_.reset();       // DSVManager
-	rtvManager_.reset();       // RTVManager
-	srvManager_.reset();       // SRVManager
-	dXCommon_.reset();         // DXCommon
-	winApp_.reset();           // WinApp
+	modelManager_.reset();		// Modelmanager
+	textureManager_.reset();	// TextrureManager
+	offScreenRenderer_.reset(); // OffScreenRender
+	pipelineManager_.reset();	// PipelineManager
+	imGuiManager_.reset();		// ImGuiManager
+	dsvManager_.reset();		// DSVManager
+	rtvManager_.reset();		// RTVManager
+	srvManager_.reset();		// SRVManager
+	dXCommon_.reset();			// DXCommon
+	winApp_.reset();			// WinApp
 
 	// COMの終了
 	CoUninitialize();
@@ -123,8 +133,28 @@ void Mii::Finalize() {
 /// フレーム開始処理
 ///=====================================================///
 void Mii::BeginFrame() {
-	dXCommon_->PreDraw(rtvManager_.get(), dsvManager_.get());
-	imGuiManager_->Draw();
+	// 描画前処理
+	// CommandListの取得
+	ID3D12GraphicsCommandList* commandList = dXCommon_->GetCommandList();
+
+	// Barrierの設定
+	dXCommon_->PreDrawRenderTexture(offScreenRenderer_->GetBuffer());
+
+	// 描画先のRTVを設定する
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvManager_->GetCPUDescriptorHandle(0); // 通常DSVは1つ
+	// OffScreenでRTVとDSVをセットしてRTVをクリアしている
+	offScreenRenderer_->PreDraw(commandList, dsvHandle);
+	// DSVはOffScreenで使用していないのでここでクリア
+	dsvManager_->ClearDepthBuffer(commandList);
+
+	// コマンドを積む
+	dXCommon_->BeginCommand();
+
+	// プリミティブトポロジーをセット
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// ディスクリプタヒープをバインド
+	srvManager_->PreDraw();
 }
 
 
@@ -132,7 +162,18 @@ void Mii::BeginFrame() {
 /// フレーム終了処理
 ///=====================================================///
 void Mii::EndFrame() {
+	// ImGuiの開始処理
+	//NOTE:ここはswapChainで設定
+	dXCommon_->PreDrawImGui(rtvManager_.get());
+	// バリアの状態遷移
+	dXCommon_->TransitionRenderTarget();
+	// OffScreen
+	offScreenRenderer_->Draw(dXCommon_->GetCommandList());
+	// ImGuiの開始処理
+	imGuiManager_->Draw();
+	// ImGuiの終了処理
 	imGuiManager_->End();
+	// DXCommonの描画後処理
 	dXCommon_->PostDraw();
 }
 

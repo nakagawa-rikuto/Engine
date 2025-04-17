@@ -26,10 +26,10 @@ D3D12_GPU_DESCRIPTOR_HANDLE Getter::GetRTVGPUDescriptorHandle(uint32_t index) {
 }
 // DSV
 D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetDSVCPUDescriptorHandle(uint32_t index) { 
-	return ServiceLocator::GEtDSVManager()->GetCPUDescriptorHandle(index);
+	return ServiceLocator::GetDSVManager()->GetCPUDescriptorHandle(index);
 }
 D3D12_GPU_DESCRIPTOR_HANDLE Getter::GetDSVGPUDescriptorHandle(uint32_t index) { 
-	return ServiceLocator::GEtDSVManager()->GetGPUDescriptorHandle(index);
+	return ServiceLocator::GetDSVManager()->GetGPUDescriptorHandle(index);
 }
 // SRV
 D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetSRVCPUDescriptorHandle(uint32_t index) { 
