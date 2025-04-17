@@ -31,8 +31,10 @@ public:
 	void Initialize(
 		WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight);
 
-	// 描画前処理
-	void PreDraw();
+	// 描画前処理(RenderTexture)
+	void PreDrawObject();
+	// 描画前処理(swapChain)
+	void PreDrawImGui(RTVManager* rtv);
 	// コマンドを積む
 	void BeginCommand();
 	// 描画後処理

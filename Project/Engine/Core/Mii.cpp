@@ -69,24 +69,24 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	controller_ = std::make_unique<Controller>();
 	controller_->Initialize();
 
-	// OffScreenRenderer
+	// OffScreenRendererの生成
 	offScreenRenderer_ = std::make_unique<OffScreenRenderer>();
 	offScreenRenderer_->Initialize(
 		dXCommon_->GetDevice(),
 		srvManager_.get(), rtvManager_.get(),
-		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // クリアカラーをここで設定
 }
 
 ///=====================================================/// 
 /// 更新
 ///=====================================================///
 void Mii::Update() {
-	// ImGui
-	imGuiManager_->Begin();
 	// Input
 	keyboard_->Update();
 	mouse_->Update();
 	controller_->Update();
+	// ImGui
+	imGuiManager_->Begin();
 }
 
 ///=====================================================/// 
@@ -102,23 +102,23 @@ void Mii::Finalize() {
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
-	controller_.reset(); // Controller
-	mouse_.reset(); // Mouse
-	keyboard_.reset(); // Keyboard
-	inputCommon_.reset(); // InputCommon
-	animationManager_.reset(); // AnimationManager
-	csvManager_.reset(); // CSVManager
-	audioManager_.reset(); // AudioManager
-	modelManager_.reset(); // Modelmanager
-	textureManager_.reset(); // TextrureManager
+	controller_.reset();		// Controller
+	mouse_.reset();				// Mouse
+	keyboard_.reset();			// Keyboard
+	inputCommon_.reset();		// InputCommon
+	animationManager_.reset();	// AnimationManager
+	csvManager_.reset();		// CSVManager
+	audioManager_.reset();		// AudioManager
+	modelManager_.reset();		// Modelmanager
+	textureManager_.reset();	// TextrureManager
 	offScreenRenderer_.reset(); // OffScreenRender
-	pipelineManager_.reset(); // PipelineManager
-	imGuiManager_.reset(); // ImGuiManager
-	dsvManager_.reset(); // DSVManager
-	rtvManager_.reset(); // RTVManager
-	srvManager_.reset(); // SRVManager
-	dXCommon_.reset(); // DXCommon
-	winApp_.reset(); // WinApp
+	pipelineManager_.reset();	// PipelineManager
+	imGuiManager_.reset();		// ImGuiManager
+	dsvManager_.reset();		// DSVManager
+	rtvManager_.reset();		// RTVManager
+	srvManager_.reset();		// SRVManager
+	dXCommon_.reset();			// DXCommon
+	winApp_.reset();			// WinApp
 
 	// COMの終了
 	CoUninitialize();
@@ -130,9 +130,8 @@ void Mii::Finalize() {
 ///=====================================================///
 void Mii::BeginFrame() {
 	// 描画前処理
+	//NOTE:ここではRenderTextureで設定
 	PreDraw();
-	// ImGuiの開始処理
-	imGuiManager_->Draw();
 }
 
 
@@ -140,6 +139,10 @@ void Mii::BeginFrame() {
 /// フレーム終了処理
 ///=====================================================///
 void Mii::EndFrame() {
+	// ImGuiの開始処理
+	//NOTE:ここはswapChainで設定
+	dXCommon_->PreDrawImGui(rtvManager_.get());
+	imGuiManager_->Draw();
 	// ImGuiの終了処理
 	imGuiManager_->End();
 	// DXCommonの描画後処理
@@ -161,7 +164,7 @@ void Mii::PreDraw() {
 	ID3D12GraphicsCommandList* commandList = dXCommon_->GetCommandList();
 
 	// DXCommonの描画前処理
-	dXCommon_->PreDraw();
+	dXCommon_->PreDrawObject();
 
 	// 描画先のRTVを設定する
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvManager_->GetCPUDescriptorHandle(0); // 通常DSVは1つ
@@ -175,6 +178,9 @@ void Mii::PreDraw() {
 
 	// プリミティブトポロジーをセット
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// ディスクリプタヒープをバインド
+	srvManager_->PreDraw();
 }
 
 

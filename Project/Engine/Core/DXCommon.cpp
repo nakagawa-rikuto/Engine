@@ -84,9 +84,9 @@ void DXCommon::Initialize(
 }
 
 ///-------------------------------------------/// 
-/// 描画前処理
+/// 描画前処理 (RenderTexture)
 ///-------------------------------------------///
-void DXCommon::PreDraw() {
+void DXCommon::PreDrawObject() {
 
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
@@ -112,6 +112,20 @@ void DXCommon::PreDraw() {
 
 	// TransitionBarrierを張る
 	commandList_->ResourceBarrier(1, &barrier_);
+}
+
+///-------------------------------------------/// 
+/// 描画前処理（swapChain）
+///-------------------------------------------///
+void DXCommon::PreDrawImGui(RTVManager* rtv) {
+	// これから書き込むバックバッファのインデックスを取得
+	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
+	// RTVの設定
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandel = rtv->GetCPUDescriptorHandle(backBufferIndex);
+	commandList_->OMSetRenderTargets(1, &rtvHandel, false, nullptr);
+	// RTVのクリア
+	const float cleaerColor[] = { 0.1f, 0.25f, 0.5f, 1.0f }; // 青色っっぽい色、RGBAの順
+	rtv->ClearRenderTarget(commandList_.Get(), backBufferIndex, cleaerColor);
 }
 
 ///-------------------------------------------/// 
