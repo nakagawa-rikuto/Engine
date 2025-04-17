@@ -62,8 +62,6 @@ void AudioManager::Load(const std::string& key, const std::string& filename, boo
 	}
 }
 
-
-
 ///-------------------------------------------/// 
 /// 音声データの解放
 ///-------------------------------------------///

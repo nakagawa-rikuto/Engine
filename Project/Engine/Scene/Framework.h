@@ -2,6 +2,8 @@
 /// ===Include=== ///
 // MiiEngine
 #include "Engine/Core/Mii.h"
+// ParticleStrage
+#include "Engine/System/ParticleStorage/ParticleStorage.h"
 // SceneFactory
 #include "Engine/Scene/AbstractSceneFactory.h"
 // ｃ++
@@ -38,7 +40,8 @@ public:/// ===メンバ関数=== ///
 private:
 	// MiiEngine
 	std::unique_ptr<Mii> MiiEngine_;
-
+	// ParticleStrage
+	std::unique_ptr<ParticleStorage> storage_;
 protected:
 	// ゲーム終了フラグ
 	bool endRequst_ = false;

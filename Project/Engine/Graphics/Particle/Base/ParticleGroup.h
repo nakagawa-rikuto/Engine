@@ -3,6 +3,9 @@
 #include "ParticleSetUp.h"
 #include <list>
 
+/// ===Camera=== ///
+class Camera;
+
 ///=====================================================/// 
 /// パーティクルのグループ
 ///=====================================================///
@@ -13,11 +16,17 @@ public:
 	virtual ~ParticleGroup();
 
 	// 初期化
-	virtual void Initialze(const std::string& filename);
+	virtual void Initialze() = 0;
 	// 更新
 	virtual void InstancingUpdate(std::list<ParticleData>::iterator it);
+	// 更新
+	virtual void Update() = 0;
 	// 描画
 	virtual void Draw(BlendMode mode);
+	// クローン 
+	virtual std::unique_ptr<ParticleGroup> Clone() = 0;
+	// 生存判定
+	virtual bool IsFinish();
 
 public: /// ===Setter=== ///
 	// Translate
@@ -28,6 +37,8 @@ public: /// ===Setter=== ///
 	void SetScale(const Vector3& scale);
 	// Texture
 	void SetTexture(const std::string& fileName);
+	// Camera
+	void SetCamera(Camera* camera);
 
 protected:
 	/// ===Emitter=== ///
@@ -41,6 +52,7 @@ protected:
 		uint32_t frequencyCount; // パーティクルの発生頻度のカウント
 		float frequency; // パーティクルの発生頻度
 		float frequencyTime; // パーティクルの発生頻度の時間
+		Camera* camera = nullptr;
 	};
 
 	// エミッタ

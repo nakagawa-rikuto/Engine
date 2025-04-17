@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // Engien
-#include "Engine/Graphics/Particle/ParticleGroup.h"
+#include "Engine/Graphics/Particle/Base/ParticleGroup.h"
 // Math
 #include "Engine/DataInfo/ColliderData.h"
 // c++
@@ -13,20 +13,26 @@
 class WindParticle : public ParticleGroup {
 public:
 
-	WindParticle() = default;
-	~WindParticle() override = default;
+	WindParticle();
+	~WindParticle();
 
 	/// ===Override=== ///
 	// 初期化
-	void Initialze(const std::string& filename = "plane")override;
+	void Initialze() override;
 	// 更新（override）
 	void InstancingUpdate(std::list<ParticleData>::iterator it)override;
 	// 更新
-	void Update();
+	void Update() override;
 	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal)override;
+	// クローン
+	std::unique_ptr<ParticleGroup> Clone() override;
 
 private:
+	// === コピー禁止 === ///
+	WindParticle(const WindParticle&) = delete;
+	WindParticle& operator=(const WindParticle&) = delete;
+
 	/// ===Field=== ///
 	struct AccelerationField {
 		Vector3 acceleration;

@@ -21,6 +21,7 @@
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
+#include "Engine/System/Managers/ParticleManager.h"
 // OffScreenRender
 #include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
 
@@ -71,6 +72,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	CSVManager* GetCSVManager();
 	// AnimationManagerの取得
 	AnimationManager* GetAnimationManager();
+	// ParticleManagerの取得
+	ParticleManager* GetParticleManager();
 	// Keyboardの取得
 	Keyboard* GetKeyboard();
 	// Mouseの取得
@@ -79,14 +82,15 @@ public:/// ===開発者用関数(Getter)=== ///
 	Controller* GetController();
 
 private:/// ===Variables(変数)=== ///
+	// Core
 	std::unique_ptr<WinApp> winApp_;                     // WinApp
 	std::unique_ptr<DXCommon> dXCommon_;                 // DirectXCommon
-
+	// Input
 	std::unique_ptr<InputCommon> inputCommon_;           // inputCommon
 	std::unique_ptr<Keyboard> keyboard_;                 // Keyboard
 	std::unique_ptr<Mouse> mouse_;                       // Mouse
 	std::unique_ptr<Controller> controller_;             // Controller
-
+	// Manager
 	std::unique_ptr<SRVManager> srvManager_;             // SRVManager
 	std::unique_ptr<RTVManager> rtvManager_;             // RTVManager
 	std::unique_ptr<DSVManager> dsvManager_;             // DSVManager
@@ -97,6 +101,7 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<AudioManager> audioManager_;         // AudioMangaer
 	std::unique_ptr<CSVManager> csvManager_;             // CSVManager
 	std::unique_ptr<AnimationManager> animationManager_; // AnimationManager
+	std::unique_ptr<ParticleManager> particleManager_;   // ParticleManager
 
 	std::unique_ptr<OffScreenRenderer> offScreenRenderer_; // OffScreen
 
