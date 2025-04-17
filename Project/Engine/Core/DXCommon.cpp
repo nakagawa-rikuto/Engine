@@ -84,10 +84,26 @@ void DXCommon::Initialize(
 }
 
 ///-------------------------------------------/// 
-/// 描画前処理 (RenderTexture)
+/// 描画前処理
 ///-------------------------------------------///
-void DXCommon::PreDrawObject() {
+/// ===RenderTexture=== ///
+void DXCommon::PreDrawRenderTexture(ID3D12Resource* resource) {
 
+	/* ///////////////////
+		　 バリアを張る
+	*/ ///////////////////
+	// TransitionBarrierの設定
+	// 今回のバリアはTransition
+	barrierRenderTexture_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+
+	// Noneにしておく
+	barrierRenderTexture_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+
+	// バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrierRenderTexture_.Transition.pResource = resource;
+}
+/// ===ImGui=== ///
+void DXCommon::PreDrawImGui(RTVManager* rtv) {
 	// これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -96,30 +112,23 @@ void DXCommon::PreDrawObject() {
 	*/ ///////////////////
 	// TransitionBarrierの設定
 	// 今回のバリアはTransition
-	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrierSwapChain_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 
 	// Noneにしておく
-	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrierSwapChain_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 
 	// バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier_.Transition.pResource = swapChainResource_[backBufferIndex].Get();
+	barrierSwapChain_.Transition.pResource = swapChainResource_[backBufferIndex].Get();
 
 	// 遷移前(現在)のResourceState
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrierSwapChain_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 
 	// 遷移後のResourceState
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrierSwapChain_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
 	// TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier_);
-}
-
-///-------------------------------------------/// 
-/// 描画前処理（swapChain）
-///-------------------------------------------///
-void DXCommon::PreDrawImGui(RTVManager* rtv) {
-	// これから書き込むバックバッファのインデックスを取得
-	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
+	commandList_->ResourceBarrier(1, &barrierSwapChain_);
+	
 	// RTVの設定
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandel = rtv->GetCPUDescriptorHandle(backBufferIndex);
 	commandList_->OMSetRenderTargets(1, &rtvHandel, false, nullptr);
@@ -137,6 +146,20 @@ void DXCommon::BeginCommand() {
 	commandList_->RSSetScissorRects(1, &scissorRect_); // scissorを設定
 }
 
+
+///-------------------------------------------/// 
+/// バリアの状態遷移
+///-------------------------------------------///
+void DXCommon::TransitionRenderTarget() {
+	// 遷移前(現在)のResourceState
+	barrierRenderTexture_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	// 遷移後のResourceState
+	barrierRenderTexture_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	// TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrierRenderTexture_);
+}
+
+
 ///-------------------------------------------/// 
 /// 描画後処理
 ///-------------------------------------------///
@@ -144,11 +167,16 @@ void DXCommon::PostDraw() {
 	HRESULT hr;
 
 	// RenderTargetからPresentにする
-	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	// RenderTexture
+	barrierRenderTexture_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrierRenderTexture_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	// SwapChain
+	barrierSwapChain_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrierSwapChain_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 
 	// TransitionBarrierを張る
-	commandList_->ResourceBarrier(1, &barrier_);
+	commandList_->ResourceBarrier(1, &barrierRenderTexture_);
+	commandList_->ResourceBarrier(1, &barrierSwapChain_);
 
 	// コマンドリストの内容を確定させる。
    // すべてのコマンドを積んでからCloseすること

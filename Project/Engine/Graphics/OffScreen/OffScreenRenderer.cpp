@@ -1,6 +1,8 @@
 #include "OffScreenRenderer.h"
 // RenderPass
 #include "SceneRenderPass.h"
+// Service
+#include "Engine/System/Service/Render.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -36,15 +38,20 @@ void OffScreenRenderer::Initialize(
 ///-------------------------------------------/// 
 /// 描画前処理
 ///-------------------------------------------///
-void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList) {}
+void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle) {
+	for (auto& pass : renderPass_) {
+		pass->Draw(commandList, dsvHandle);
+	}
+}
 
 ///-------------------------------------------/// 
 /// 描画処理
 ///-------------------------------------------///
-void OffScreenRenderer::Draw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle) {
-	for (auto& pass : renderPass_) {
-		pass->Draw(commandList, dsvHandle);
-	}
+void OffScreenRenderer::Draw(ID3D12GraphicsCommandList* commandList) {
+	Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+	commandList->SetGraphicsRootDescriptorTable(0, renderTexture_->GetSRVHandle());
+	// 頂点3つを描画
+	commandList->DrawInstanced(3, 1, 0, 0);
 }
 
 ///-------------------------------------------/// 
@@ -63,3 +70,5 @@ D3D12_GPU_DESCRIPTOR_HANDLE OffScreenRenderer::GetResultSRV() const { return ren
 uint32_t OffScreenRenderer::GetRTVHandleIndex() const { return renderTexture_->GetRTVHandleIndex(); }
 // SRVIndex
 uint32_t OffScreenRenderer::GetSRVHandleIndex() const { return renderTexture_->GetSRVHandleIndex(); }
+// Reosurce
+ID3D12Resource* OffScreenRenderer::GetBuffer() const { return renderTexture_->GetBuffer(); }

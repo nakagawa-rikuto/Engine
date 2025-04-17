@@ -130,46 +130,16 @@ void Mii::Finalize() {
 ///=====================================================///
 void Mii::BeginFrame() {
 	// 描画前処理
-	//NOTE:ここではRenderTextureで設定
-	PreDraw();
-}
-
-
-///=====================================================/// 
-/// フレーム終了処理
-///=====================================================///
-void Mii::EndFrame() {
-	// ImGuiの開始処理
-	//NOTE:ここはswapChainで設定
-	dXCommon_->PreDrawImGui(rtvManager_.get());
-	imGuiManager_->Draw();
-	// ImGuiの終了処理
-	imGuiManager_->End();
-	// DXCommonの描画後処理
-	dXCommon_->PostDraw();
-}
-
-
-///=====================================================/// 
-/// Windowsのメッセージを処理する
-///=====================================================///
-int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
-
-
-///=====================================================/// 
-/// 描画前後処理
-///=====================================================///
-void Mii::PreDraw() {
-
+	// CommandListの取得
 	ID3D12GraphicsCommandList* commandList = dXCommon_->GetCommandList();
 
-	// DXCommonの描画前処理
-	dXCommon_->PreDrawObject();
+	// Barrierの設定
+	dXCommon_->PreDrawRenderTexture(offScreenRenderer_->GetBuffer());
 
 	// 描画先のRTVを設定する
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvManager_->GetCPUDescriptorHandle(0); // 通常DSVは1つ
 	// OffScreenでRTVとDSVをセットしてRTVをクリアしている
-	offScreenRenderer_->Draw(commandList, dsvHandle);
+	offScreenRenderer_->PreDraw(commandList, dsvHandle);
 	// DSVはOffScreenで使用していないのでここでクリア
 	dsvManager_->ClearDepthBuffer(commandList);
 
@@ -182,6 +152,32 @@ void Mii::PreDraw() {
 	// ディスクリプタヒープをバインド
 	srvManager_->PreDraw();
 }
+
+
+///=====================================================/// 
+/// フレーム終了処理
+///=====================================================///
+void Mii::EndFrame() {
+	// ImGuiの開始処理
+	//NOTE:ここはswapChainで設定
+	dXCommon_->PreDrawImGui(rtvManager_.get());
+	// バリアの状態遷移
+	dXCommon_->TransitionRenderTarget();
+	// OffScreen
+	offScreenRenderer_->Draw(dXCommon_->GetCommandList());
+	// ImGuiの開始処理
+	imGuiManager_->Draw();
+	// ImGuiの終了処理
+	imGuiManager_->End();
+	// DXCommonの描画後処理
+	dXCommon_->PostDraw();
+}
+
+
+///=====================================================/// 
+/// Windowsのメッセージを処理する
+///=====================================================///
+int Mii::ProcessMessage() { return winApp_->ProcessMessage(); }
 
 
 ///-------------------------------------------/// 

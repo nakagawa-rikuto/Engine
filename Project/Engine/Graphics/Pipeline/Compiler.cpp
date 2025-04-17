@@ -66,6 +66,19 @@ void Compiler::Initialize(DXCommon* dxCommon, PipelineType Type) {
 			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 		assert(objPSBlob_ != nullptr);
 
+	} else if (Type == PipelineType::OffScreen) {
+		
+		// VS
+		objVSBlob_ = CompileShader(L"Resource/Shaders/CopyImage.VS.hlsl", L"vs_6_0",
+			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+		assert(objVSBlob_ != nullptr);
+
+		// PS
+		objPSBlob_ = CompileShader(L"Resource/Shaders/CopyImage.PS.hlsl", L"ps_6_0",
+			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+		assert(objPSBlob_ != nullptr);
+
+
 	} else {
 
 		// VS

@@ -5,7 +5,7 @@ SamplerState gSampler : register(s0);
 
 struct PixelShaderOutPut 
 {
-    float4 color : SV_TAREGET0;
+    float4 color : SV_TARGET0;
 };
 
 PixelShaderOutPut main(VertexShaderOutPut input) 

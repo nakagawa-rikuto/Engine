@@ -20,9 +20,9 @@ public:
 		SRVManager* srv, RTVManager* rtv, 
 		uint32_t width, uint32_t height, const Vector4& clearColor);
 	// 描画前処理
-	void PreDraw(ID3D12GraphicsCommandList* commandList);
+	void PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
 	// 描画処理
-	void Draw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+	void Draw(ID3D12GraphicsCommandList* commandList);
 	// 描画後処理
 	void PostDraw(ID3D12GraphicsCommandList* commandList);
 
@@ -35,6 +35,8 @@ public: /// ===Getter=== ///
 	uint32_t GetRTVHandleIndex() const;
 	// SRVのインデックス番号の取得
 	uint32_t GetSRVHandleIndex() const;
+	// Resourceの取得
+	ID3D12Resource* GetBuffer() const;
 
 private:
 	std::shared_ptr<RenderTexture> renderTexture_;

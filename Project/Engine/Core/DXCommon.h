@@ -30,13 +30,14 @@ public:
 	// 初期化
 	void Initialize(
 		WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight);
-
 	// 描画前処理(RenderTexture)
-	void PreDrawObject();
+	void PreDrawRenderTexture(ID3D12Resource* resource);
 	// 描画前処理(swapChain)
 	void PreDrawImGui(RTVManager* rtv);
 	// コマンドを積む
 	void BeginCommand();
+	// バリアの状態遷移
+	void TransitionRenderTarget();
 	// 描画後処理
 	void PostDraw();
 
@@ -111,7 +112,8 @@ private: // メンバ変数
 	uint64_t fenceValue_ = 0;  // FenceValue
 
 	/// ===バリア=== ///
-	D3D12_RESOURCE_BARRIER barrier_{};
+	D3D12_RESOURCE_BARRIER barrierRenderTexture_{};
+	D3D12_RESOURCE_BARRIER barrierSwapChain_{};
 
 	/// ===FPS固定=== ///
 	std::chrono::steady_clock::time_point reference_; // 記録時間(FPS固定用)
