@@ -8,10 +8,6 @@
 // c++
 #include <memory>
 
-/// ===LightInfo=== ///
-struct LightInfo {
-	float shininess;
-};
 /// ===DirectionalLight=== ///
 struct DirectionalLightInfo {
 	Vector4 color;     
@@ -36,6 +32,13 @@ struct SpotLightInfo {
 	float decay;
 	float cosAngle;
 };
+/// ===LightInfo=== ///
+struct LightInfo {
+	float shininess;
+	DirectionalLightInfo directional;
+	PointLightInfo point;
+	SpotLightInfo spot;
+};
 
 ///=====================================================/// 
 /// モデル共通部
@@ -49,6 +52,10 @@ public:
 	void Initialize(ID3D12Device* device, LightType type); // オブジェクトを読み込まない場合の初期化
 	// 描画
 	void Bind(ID3D12GraphicsCommandList* commandList);
+
+public: /// ===Getter=== ///
+
+	LightType GetLightType() const;
 
 public:/// ===Setter=== ///
 	// Material

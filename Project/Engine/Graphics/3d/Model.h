@@ -1,9 +1,9 @@
 #pragma once
 /// ===include=== ///
 // buffer
-#include "Engine/Graphics/3d/VertexBuffer3D.h"
-#include "Engine/Graphics/3d/IndexBuffer3D.h"
-#include "Engine/Graphics/3d/ModelCommon.h"
+#include "Engine/Graphics/3d/Base/VertexBuffer3D.h"
+#include "Engine/Graphics/3d/Base/IndexBuffer3D.h"
+#include "Engine/Graphics/3d/Base/ModelCommon.h"
 // Pipeline
 #include "Engine/DataInfo/PipelineStateObjectType.h"
 // c++
@@ -22,15 +22,15 @@ public: /// ===基本的な関数=== ///
 	~Model();
 
 	// 初期化
-	void Initialize(const std::string& filename, LightType type = LightType::None); // オブジェクトを読み込まない場合の初期化
+	void Initialize(const std::string& filename, LightType type); // オブジェクトを読み込まない場合の初期化
 	// 更新
 	void Update();
 	// 描画
-	void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
+	void Draw(BlendMode mode);
 
 public: /// ===Getter=== ///
 	// モデル座標
-	const Vector3& GetPosition() const;
+	const Vector3& GetTranslate() const;
 	// モデル回転
 	const Vector3& GetRotate() const;
 	// モデル拡縮
@@ -40,7 +40,7 @@ public: /// ===Getter=== ///
 
 public: /// ===Setter=== ///
 	// モデルTransform
-	void SetPosition(const Vector3& position);
+	void SetTranslate(const Vector3& position);
 	void SetRotate(const Vector3& rotate);
 	void SetScale(const Vector3& scale);
 	// モデルカラー
@@ -48,9 +48,7 @@ public: /// ===Setter=== ///
 	// Light
 	void SetLight(LightType type);
 	// LightData
-	void SetDirectionalLight(LightInfo shiniss, DirectionalLightInfo info);
-	void SetPointLight(LightInfo shiniss, PointLightInfo info);
-	void SetSpotLight(LightInfo shiniss, SpotLightInfo info);
+	void SetLightData(LightInfo light);
 	// カメラ
 	void SetCamera(Camera* camera);
 
@@ -82,13 +80,12 @@ private: /// ===Variables(変数)=== ///
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
-	LightInfo light_ = { 40.0f };
-	// DirctionalLight
-	DirectionalLightInfo directional_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f };
-	// PointLight
-	PointLightInfo point_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f };
-	// SpotLight
-	SpotLightInfo spot_ = { { 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f };
+	LightInfo light_ = { 
+		40.0f, 
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f},
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f},
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f} 
+	};
 
 private: /// ===Functions(関数)=== ///
 

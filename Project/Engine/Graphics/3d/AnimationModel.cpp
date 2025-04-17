@@ -46,32 +46,30 @@ void AnimationModel::SetScale(const Vector3& scale) { worldTransform_.scale = sc
 void AnimationModel::SetColor(const Vector4& color) { color_ = color; }
 /// ===Light=== ///
 void AnimationModel::SetLight(LightType type) { common_->SetLightType(type); }
-// DirectioanlLight
-void AnimationModel::SetDirectionalLight(LightInfo light, DirectionalLightInfo info) {
-	light_.shininess = light.shininess;
-	directional_.direction = info.direction;
-	directional_.intensity = info.intensity;
-	directional_.color = info.color;
-}
-// PointLight
-void AnimationModel::SetPointLight(LightInfo light, PointLightInfo info) {
-	light_.shininess = light.shininess;
-	point_.position = info.position;
-	point_.intensity = info.intensity;
-	point_.color = info.color;
-	point_.radius = info.radius;
-	point_.decay = info.decay;
-}
-// SpotLight
-void AnimationModel::SetSpotLight(LightInfo light, SpotLightInfo info) {
-	light_.shininess = light.shininess;
-	spot_.color = info.color;
-	spot_.position = info.position;
-	spot_.direction = info.direction;
-	spot_.intensity = info.intensity;
-	spot_.distance = info.distance;
-	spot_.decay = info.decay;
-	spot_.cosAngle = info.cosAngle;
+// LightData
+void AnimationModel::SetLightData(LightInfo light) { 
+	/*light_.shininess = light.shininess;
+	if (common_->GetLightType() == LightType::Lambert ||
+		common_->GetLightType() == LightType::HalfLambert) {
+		light_.directional.direction = light.directional.direction;
+		light_.directional.intensity = light.directional.intensity;
+		light_.directional.color = light.directional.color;
+	} else if (common_->GetLightType() == LightType::PointLight) {
+		light_.point.position = light.point.position;
+		light_.directional.intensity = light.directional.intensity;
+		light_.directional.color = light.directional.color;
+		light_.point.radius = light.point.radius;
+		light_.point.decay = light.point.decay;
+	} else if (common_->GetLightType() == LightType::SpotLight) {
+		light_.spot.position = light.spot.position;
+		light_.spot.direction = light.spot.direction;
+		light_.spot.intensity = light.spot.intensity;
+		light_.spot.color = light.spot.color;
+		light_.spot.distance = light.spot.distance;
+		light_.spot.decay = light.spot.decay;
+		light_.spot.cosAngle = light.spot.cosAngle;
+	}*/
+	light_ = light;
 }
 /// ===Camera=== ///
 void AnimationModel::SetCamera(Camera* camera) { camera_ = camera; }
@@ -100,7 +98,7 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 		/// ===Skeletonの作成=== ///
 		skeleton_ = CreateSkeleton(modelData_.rootNode);
 		/// ===SkinClusterの作成=== ///
-		skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_, ServiceLocator::GetSRVManager());
+		skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_);
 	}
 
 	/// ===生成=== ///
@@ -276,25 +274,25 @@ void AnimationModel::TransformDataWrite() {
 ///-------------------------------------------///
 void AnimationModel::LightDataWrite() {
 	common_->SetDirectionLight(
-		directional_.color,
-		directional_.direction,
-		directional_.intensity
+		light_.directional.color,
+		light_.directional.direction,
+		light_.directional.intensity
 	);
 	common_->SetPointLightData(
-		point_.color,
-		point_.position,
-		point_.intensity,
-		point_.radius,
-		point_.decay
+		light_.point.color,
+		light_.point.position,
+		light_.point.intensity,
+		light_.point.radius,
+		light_.point.decay
 	);
 	common_->SetSpotLightData(
-		spot_.color,
-		spot_.position,
-		spot_.direction,
-		spot_.intensity,
-		spot_.distance,
-		spot_.decay,
-		spot_.cosAngle
+		light_.spot.color,
+		light_.spot.position,
+		light_.spot.direction,
+		light_.spot.intensity,
+		light_.spot.distance,
+		light_.spot.decay,
+		light_.spot.cosAngle
 	);
 }
 
@@ -428,17 +426,17 @@ void AnimationModel::SkeletonUpdate(Skeleton& skeleton) {
 /// SkinClusterの生成
 ///-------------------------------------------///
 SkinCluster AnimationModel::CreateSkinCluster(
-	const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData, SRVManager* srvManager) {
+	const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData) {
 
 	SkinCluster skinCluster;
 	/// ===paletter用のResourceを確保=== ///
-	uint32_t paletteIndex = srvManager->Allocate();
+	uint32_t paletteIndex = ServiceLocator::GetSRVManager()->Allocate();
 	skinCluster.paletteResource = CreateBufferResourceComPtr(device.Get(), sizeof(WellForGPU) * skeleton.joints.size());
 	WellForGPU* mappedPalette = nullptr;
 	skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
 	skinCluster.mappedPalette = { mappedPalette, skeleton.joints.size() }; // spanを使ってアクセスするようにする
-	skinCluster.paletteSrvHandle.first = srvManager->GetCPUDescriptorHandle(paletteIndex);
-	skinCluster.paletteSrvHandle.second = srvManager->GetGPUDescriptorHandle(paletteIndex);
+	skinCluster.paletteSrvHandle.first = ServiceLocator::GetSRVManager()->GetCPUDescriptorHandle(paletteIndex);
+	skinCluster.paletteSrvHandle.second = ServiceLocator::GetSRVManager()->GetGPUDescriptorHandle(paletteIndex);
 
 	/// ===Palette用のSRVを作成。StructuredBufferでアクセスできるようにする=== ///
 	D3D12_SHADER_RESOURCE_VIEW_DESC paletteSrvDesc{};

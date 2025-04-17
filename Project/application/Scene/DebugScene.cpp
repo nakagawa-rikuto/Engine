@@ -50,12 +50,12 @@ void DebugScene::Initialize() {
 
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
-	model_ = std::make_unique<Model>();
-	model_->Initialize("MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
-	model2_ = std::make_unique<Model>();
-	model2_->Initialize("terrain", LightType::PointLight);
-	modelLight_ = std::make_unique<Model>();
-	modelLight_->Initialize("Particle");
+	model_ = std::make_unique<Object3d>();
+	model_->Init(ObjectType::Model, "MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
+	model2_ = std::make_unique<Object3d>();
+	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
+	modelLight_ = std::make_unique<Object3d>();
+	modelLight_->Init(ObjectType::Model, "Particle");
 	// modelLight_->SetTransform({ spot_.position }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	/* // モデルの使い方
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -70,16 +70,18 @@ void DebugScene::Initialize() {
 	*/
 
 	// 球
-	sky_ = std::make_unique<Model>();
-	sky_->Initialize("sky", LightType::HalfLambert);
-	sky_->SetPosition({ 0.0f, 0.0f, 0.0f });
-	cloud_ = std::make_unique<Model>();
-	cloud_->Initialize("cloud", LightType::HalfLambert);
-	cloud_->SetPosition({ 0.0f, 0.0f, 0.0f });
+	sky_ = std::make_unique<Object3d>();
+	sky_->Init(ObjectType::Model, "sky", LightType::HalfLambert);
+	sky_->SetTranslate({ 0.0f, 0.0f, 0.0f });
+	cloud_ = std::make_unique<Object3d>();
+	cloud_->Init(ObjectType::Model, "cloud", LightType::HalfLambert);
+	cloud_->SetTranslate({ 0.0f, 0.0f, 0.0f });
 
-	point_.position = { 0.0f, 0.0f, 99.0f };
-	point_.radius = 500.0f;
+	// ポイントライトの位置と半径の変更
+	light_.point.position = { 0.0f, 0.0f, 99.0f };
+	light_.point.radius = 500.0f;
 
+	// 一回更新をかける
 	model_->Update();
 	model2_->Update();
 	modelLight_->Update();
@@ -89,8 +91,8 @@ void DebugScene::Initialize() {
 
 	/// ===アニメーションモデルの初期化=== ///
 #pragma region AnimationModelの初期化
-	animationModel_ = std::make_unique<AnimationModel>();
-	animationModel_->Initialize("human", LightType::Lambert);
+	animationModel_ = std::make_unique<Object3d>();
+	animationModel_->Init(ObjectType::AnimationModel, "human", LightType::Lambert);
 	// アニメーションを登録しないとアニメーションが再生されない
 	animationModel_->SetAnimation("Armature|mixamo.com|Layer0");
 #pragma endregion
@@ -253,39 +255,39 @@ void DebugScene::Update() {
 				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
 				// DirectionalLight
 				ImGui::Text("DirectionalLight");
-				ImGui::ColorEdit4("LigthColor", &directional_.color.x);
-				ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
-				ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
+				ImGui::ColorEdit4("LigthColor", &light_.directional.color.x);
+				ImGui::DragFloat3("LightDirection", &light_.directional.direction.x, 0.01f);
+				ImGui::DragFloat("lightIntensity", &light_.directional.intensity, 0.01f);
 			} else if (lightType_.HalfLambert) {
 				// Shiniess
 				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
 				// DirectionalLight
 				ImGui::Text("DirectionalLight");
-				ImGui::ColorEdit4("LigthColor", &directional_.color.x);
-				ImGui::DragFloat3("LightDirection", &directional_.direction.x, 0.01f);
-				ImGui::DragFloat("lightIntensity", &directional_.intensity, 0.01f);
+				ImGui::ColorEdit4("LigthColor", &light_.directional.color.x);
+				ImGui::DragFloat3("LightDirection", &light_.directional.direction.x, 0.01f);
+				ImGui::DragFloat("lightIntensity", &light_.directional.intensity, 0.01f);
 			} else if (lightType_.PointLight) {
 				// Shiniess
 				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
 				// PointLight
 				ImGui::Text("PointLight");
-				ImGui::ColorEdit4("pointLightColor", &point_.color.x);
-				ImGui::DragFloat3("pointLightPosition", &point_.position.x, 0.01f);
-				ImGui::DragFloat("pointLightIntensity", &point_.intensity, 0.01f);
-				ImGui::DragFloat("pointLightRadius", &point_.radius, 0.01f);
-				ImGui::DragFloat("pointLightDecay", &point_.decay, 0.01f);
+				ImGui::ColorEdit4("pointLightColor", &light_.point.color.x);
+				ImGui::DragFloat3("pointLightPosition", &light_.point.position.x, 0.01f);
+				ImGui::DragFloat("pointLightIntensity", &light_.point.intensity, 0.01f);
+				ImGui::DragFloat("pointLightRadius", &light_.point.radius, 0.01f);
+				ImGui::DragFloat("pointLightDecay", &light_.point.decay, 0.01f);
 			} else if (lightType_.SpotLight) {
 				// Shiniess
 				ImGui::DragFloat("LightShininess", &light_.shininess, 0.01f);
 				// SpotLight
 				ImGui::Text("SpotLight");
-				ImGui::ColorEdit4("SpotLightColor", &spot_.color.x);
-				ImGui::DragFloat3("spotLightPosition", &spot_.position.x, 0.01f);
-				ImGui::DragFloat("SpotLightIntensity", &spot_.intensity, 0.01f);
-				ImGui::DragFloat3("SpotLightDirection", &spot_.direction.x, 0.01f);
-				ImGui::DragFloat("SpotLightDistance", &spot_.distance, 0.01f);
-				ImGui::DragFloat("SpotLightDecay", &spot_.decay, 0.01f);
-				ImGui::DragFloat("SpotLightCosAngle", &spot_.cosAngle, 0.01f);
+				ImGui::ColorEdit4("SpotLightColor", &light_.spot.color.x);
+				ImGui::DragFloat3("spotLightPosition", &light_.spot.position.x, 0.01f);
+				ImGui::DragFloat("SpotLightIntensity", &light_.spot.intensity, 0.01f);
+				ImGui::DragFloat3("SpotLightDirection", &light_.spot.direction.x, 0.01f);
+				ImGui::DragFloat("SpotLightDistance", &light_.spot.distance, 0.01f);
+				ImGui::DragFloat("SpotLightDecay", &light_.spot.decay, 0.01f);
+				ImGui::DragFloat("SpotLightCosAngle", &light_.spot.cosAngle, 0.01f);
 			}
 		}
 	}
@@ -463,32 +465,28 @@ void DebugScene::Update() {
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	model_->SetPosition(modelTranslate_);
+	model_->SetTranslate(modelTranslate_);
 	model_->SetRotate(modelRotate_);
 	model_->SetScale(modelScale_);
 	model_->SetColor(modelColor_);
-	model_->SetDirectionalLight(light_, directional_);
-	model_->SetPointLight(light_, point_);
-	model_->SetSpotLight(light_, spot_);
+	model_->SetLightData(light_);
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
 
-	model2_->SetDirectionalLight(light_, directional_);
-	model2_->SetPointLight(light_, point_);
-	model2_->SetSpotLight(light_, spot_);
+	model2_->SetLightData(light_);
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
 
-	modelLight_->SetPosition(point_.position);
+	modelLight_->SetTranslate(light_.point.position);
 	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());
 	modelLight_->Update();
 
 
-	sky_->SetDirectionalLight(light_, directional_);
+	sky_->SetLightData(light_);
 	sky_->SetCamera(cameraManager_->GetActiveCamera().get());
 	sky_->Update();
 
-	cloud_->SetDirectionalLight(light_, directional_);
+	cloud_->SetLightData(light_);
 	cloud_->SetCamera(cameraManager_->GetActiveCamera().get());
 	cloud_->Update();
 #pragma endregion
@@ -498,7 +496,7 @@ void DebugScene::Update() {
 	animationModel_->SetTranslate(modelTranslate_);
 	animationModel_->SetRotate(modelRotate_);
 	animationModel_->SetColor(modelColor_);
-	animationModel_->SetPointLight(light_, point_);
+	animationModel_->SetLightData(light_);
 	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
 	animationModel_->Update();
 #pragma endregion
