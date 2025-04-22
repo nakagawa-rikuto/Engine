@@ -16,26 +16,9 @@ ExplosionParticle::~ExplosionParticle() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ExplosionParticle::Initialze() {
-    /// ===乱数生成器の初期化=== ///
-    std::random_device seedGenerator;
-    randomEngine_.seed(seedGenerator());
-
-    /// ===最大パーティクル数の設定=== ///
-    group_.maxInstance = 150; // パーティクル数を増加
-    group_.numInstance = 0;
-
-    /// ===トランスフォームの初期化=== ///
-    group_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-    group_.cameraTransform = {
-        {1.0f,1.0f,1.0f},
-        {std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
-        {0.0f, 23.0f, 10.0f}
-    };
-
-    /// ===パーティクルグループの初期化=== ///
-    group_.particle = std::make_unique<ParticleSetUp>();
-    group_.particle->Initialze("plane", group_.maxInstance); /*"Particle"*/
+void ExplosionParticle::Initialze(const Vector3& translate) {
+    /// ===初期化=== ///
+    ParticleGroup::InstancingInit("Particle", translate, 150);
 
     /// ===フラグと設定の初期化=== ///
     hasExploded_ = false;
@@ -46,17 +29,9 @@ void ExplosionParticle::Initialze() {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-// override
-void ExplosionParticle::InstancingUpdate(std::list<ParticleData>::iterator it) {
-    ParticleGroup::InstancingUpdate(it);
-}
-//
 void ExplosionParticle::Update() {
     if (!hasExploded_) {
-        // 爆発のパーティクルを生成
-        for (uint32_t i = 0; i < group_.maxInstance; ++i) {
-            group_.particles.push_back(MakeExplosionParticle(randomEngine_, group_.transform.translate));
-        }
+        group_.particles.splice(group_.particles.end(), Emit(group_, randomEngine_)); // 発生処理
         hasExploded_ = true;
     }
 
@@ -82,7 +57,7 @@ void ExplosionParticle::Update() {
         it->color.w = alpha;
 
         /// ===ParticleEmitterの更新=== ///
-        InstancingUpdate(it);
+        ParticleGroup::InstancingUpdate(it);
         ++it;
     }
 }
@@ -114,7 +89,7 @@ std::unique_ptr<ParticleGroup> ExplosionParticle::Clone() {
 ///-------------------------------------------/// 
 /// 爆発パーティクルの生成
 ///-------------------------------------------///
-ParticleData ExplosionParticle::MakeExplosionParticle(std::mt19937& randomEngine, const Vector3& center) {
+ParticleData ExplosionParticle::MakeParticle(std::mt19937& randomEngine, const Vector3& center) {
     std::uniform_real_distribution<float> distAngle(0.0f, 2.0f * std::numbers::pi_v<float>);
     std::uniform_real_distribution<float> distRadius(0.0f, explosionRadius_ * 0.5f); // 初期位置をさらに密集
     std::uniform_real_distribution<float> distLifetime(0.1f, maxLifetime_); // 寿命をさらに短く
@@ -140,4 +115,16 @@ ParticleData ExplosionParticle::MakeExplosionParticle(std::mt19937& randomEngine
     particle.currentTime = 0.0f;
 
     return particle;
+}
+
+///-------------------------------------------/// 
+/// パーティクルの発生
+///-------------------------------------------///
+std::list<ParticleData> ExplosionParticle::Emit(const Group& group, std::mt19937& randomEngine) {
+    std::list<ParticleData> particles;
+    // 爆発のパーティクルを生成
+    for (uint32_t i = 0; i < group.maxInstance; ++i) {
+        particles.push_back(MakeParticle(randomEngine, group.transform.translate));
+    }
+    return particles;
 }

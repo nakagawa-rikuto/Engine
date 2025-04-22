@@ -113,6 +113,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
+    <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
+    <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle.hlsli" />

@@ -25,8 +25,7 @@ void ParticleManager::Emit(const std::string& name, const Vector3& translate) {
 	if (it == prototype_.end()) return;
 
 	std::unique_ptr<ParticleGroup> newParticle = it->second->Clone();
-	newParticle->Initialze();
-	newParticle->SetTranslate(translate);
+	newParticle->Initialze(translate);
 	activeParticles_[name].push_back(std::move(newParticle));
 }
 // Texture

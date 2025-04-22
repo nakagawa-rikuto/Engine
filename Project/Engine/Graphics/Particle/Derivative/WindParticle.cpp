@@ -19,45 +19,22 @@ WindParticle::~WindParticle() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void WindParticle::Initialze() {
+void WindParticle::Initialze(const Vector3& translate) {
 
-	/// ===乱数生成器の初期化=== ///
-	std::random_device seedGenerator;
-	randomEngine_.seed(seedGenerator());
-
-	/// ===最大数の設定=== ///
-	group_.maxInstance = 100;
-	group_.numInstance = 0;
-
-	/// ===発生頻度の設定=== ///
-	group_.frequencyCount = 3; // 3個ずつ発生
-	group_.frequency = 0.5f; // 0.5秒毎に発生
-	group_.frequencyTime = 0.0f; // 発生頻度ようの時刻。0で初期化
-
-	/// ===Transformの設定=== ///
-	group_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0} };
-	group_.cameraTransform = {
-		{1.0f,1.0f,1.0f},
-		{std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
-		{0.0f, 23.0f, 10.0f}
-	};
+	/// ===初期化=== ///
+	ParticleGroup::InstancingInit("plane", translate, 150);
 
 	/// ===Fildの設定=== ///
 	accelerationFild_.acceleration = { 15.0f, 0.0f, 0.0f };
 	accelerationFild_.area.min = { -1.0f, -1.0f, -1.0f };
 	accelerationFild_.area.max = { 1.0f, 1.0f, 1.0f };
-
-	/// ===パーティクルグループの初期化=== ///
-	group_.particle = std::make_unique<ParticleSetUp>();
-	group_.particle->Initialze("plane", group_.maxInstance); /*"Particle"*/
 }
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void WindParticle::InstancingUpdate(std::list<ParticleData>::iterator it) {}
 void WindParticle::Update() {
-	// 
+	/// ===自分でマトリックスを作成したい場合=== ///
 	Matrix4x4 cameraMatrix = Math::MakeAffineEulerMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate);
 	Matrix4x4 backToFrontMatrix = Math::MakeRotateYMatrix(std::numbers::pi_v<float>);
 
@@ -138,7 +115,7 @@ std::unique_ptr<ParticleGroup> WindParticle::Clone() {
 ///-------------------------------------------/// 
 /// ランダム発生処理
 ///-------------------------------------------///
-ParticleData WindParticle::MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {
+ParticleData WindParticle::MakeParticle(std::mt19937& randomEngine, const Vector3& translate) {
 	std::uniform_int_distribution<int> distribution(-1, 1);
 	std::uniform_int_distribution<int> distColor(0, 1);
 	std::uniform_int_distribution<int> distTime(1, 3);
@@ -162,7 +139,7 @@ ParticleData WindParticle::MakeNewParticle(std::mt19937& randomEngine, const Vec
 std::list<ParticleData> WindParticle::Emit(const Group& group, std::mt19937& randomEngine) {
 	std::list<ParticleData> particles;
 	for (uint32_t count = 0; count < group.frequencyCount; ++count) {
-		particles.push_back(MakeNewParticle(randomEngine, group.transform.translate));
+		particles.push_back(MakeParticle(randomEngine, group.transform.translate));
 	}
 	return particles;
 }

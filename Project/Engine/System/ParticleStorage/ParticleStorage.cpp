@@ -25,4 +25,5 @@ void ParticleStorage::AddParticle() {
 	particleManager_->AddParticle("Confetti", std::make_unique<ConfettiParticle>());
 	particleManager_->AddParticle("Explosion", std::make_unique<ExplosionParticle>());
 	particleManager_->AddParticle("Wind", std::make_unique<WindParticle>());
+	particleManager_->AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
 }

@@ -8,13 +8,13 @@
 #include <random>
 
 ///=====================================================/// 
-/// コンフェッティパーティクル
+/// HitEffectParticle
 ///=====================================================///
-class ConfettiParticle : public ParticleGroup {
+class HitEffectParticle : public ParticleGroup {
 public:
 
-    ConfettiParticle(); // コンストラクタでの処理は行わない
-    ~ConfettiParticle();
+	HitEffectParticle() = default;
+	~HitEffectParticle();
 
     /// ===Override=== ///
     // 初期化
@@ -27,19 +27,14 @@ public:
     std::unique_ptr<ParticleGroup> Clone() override;
 
 private:
-    // === コピー禁止 === ///
-    ConfettiParticle(const ConfettiParticle&) = delete;
-    ConfettiParticle& operator=(const ConfettiParticle&) = delete;
 
-    // コンフェッティ設定
-    float explosionRadius_; // 爆発の半径
-    float gravity_; // 重力加速度
-    float upwardForce_; // 上方向の初期加速度
-    float maxLifetime_; // パーティクルの最大寿命
+    HitEffectParticle(const HitEffectParticle&) = delete;
+    HitEffectParticle& operator=(const HitEffectParticle&) = delete;
+
     bool hasExploded_; // パーティクルが発生したかのフラグ
 
-    // ランダムパーティクル生成
     ParticleData MakeParticle(std::mt19937& randomEngine, const Vector3& translate)override;
     // エミっと
     std::list<ParticleData> Emit(const Group& group, std::mt19937& randomEngine)override;
 };
+

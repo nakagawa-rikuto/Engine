@@ -2,6 +2,7 @@
 /// ===incled=== ///
 #include "ParticleSetUp.h"
 #include <list>
+#include <random>
 
 /// ===Camera=== ///
 class Camera;
@@ -16,25 +17,20 @@ public:
 	virtual ~ParticleGroup();
 
 	// 初期化
-	virtual void Initialze() = 0;
-	// 更新
-	virtual void InstancingUpdate(std::list<ParticleData>::iterator it);
+	virtual void Initialze(const Vector3& translate) = 0;
 	// 更新
 	virtual void Update() = 0;
 	// 描画
 	virtual void Draw(BlendMode mode);
-	// クローン 
-	virtual std::unique_ptr<ParticleGroup> Clone() = 0;
+	
+	// 初期化
+	void InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance);
+	// 更新
+	void InstancingUpdate(std::list<ParticleData>::iterator it);
 	// 生存判定
-	virtual bool IsFinish();
+	bool IsFinish();
 
 public: /// ===Setter=== ///
-	// Translate
-	void SetTranslate(const Vector3& translate);
-	// Rotate
-	void SetRotate(const Vector3& rotate);
-	// Scale
-	void SetScale(const Vector3& scale);
 	// Texture
 	void SetTexture(const std::string& fileName);
 	// Camera
@@ -59,5 +55,17 @@ protected:
 	Group group_{};
 	// 時間の進む速度
 	const float kDeltaTime_ = 1.0f / 60.0f;
+
+	/// ===プライベートフィールド=== ///
+	std::mt19937 randomEngine_; // 乱数生成器
+
+public:
+
+	// クローン 
+	virtual std::unique_ptr<ParticleGroup> Clone() = 0;
+	// パーティクルの生成
+	virtual ParticleData MakeParticle(std::mt19937& randomEngine, const Vector3& translate) = 0;
+	// パーティクル発生
+	virtual std::list<ParticleData> Emit(const Group& group, std::mt19937& randomEngine) = 0;
 };
 

@@ -294,7 +294,7 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
-			Particle::Emit("Wind", particleTranslate_);
+			Particle::Emit("HitEffect", particleTranslate_);
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle1 = false;
@@ -504,7 +504,7 @@ void DebugScene::Update() {
 	/// ===Particle=== ///
 #pragma region Particle
 	Particle::Update();
-	Particle::SetCamera("Wind", cameraManager_->GetActiveCamera().get());
+	Particle::SetCamera("HitEffect", cameraManager_->GetActiveCamera().get());
 	Particle::SetCamera("Explosion", cameraManager_->GetActiveCamera().get());
 	Particle::SetCamera("Confetti", cameraManager_->GetActiveCamera().get());
 #pragma endregion

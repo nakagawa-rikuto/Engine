@@ -4,6 +4,7 @@
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
 #include "Engine/Graphics/Particle/Derivative/WindParticle.h"
+#include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
 
 /// ===前方宣言=== ///
 class ParticleManager;

@@ -112,6 +112,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\3d\AnimationModel.cpp" />
     <ClCompile Include="application\Game\Collider\Base\Collider.cpp" />
     <ClCompile Include="application\Game\Collider\Manager\ColliderManager.cpp" />
+    <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
     <ClCompile Include="Engine\System\Service\Getter.cpp" />
@@ -212,6 +213,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\3d\AnimationModel.h" />
     <ClInclude Include="application\Game\Collider\Base\Collider.h" />
     <ClInclude Include="application\Game\Collider\Manager\ColliderManager.h" />
+    <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
     <ClInclude Include="Engine\System\Service\Getter.h" />
