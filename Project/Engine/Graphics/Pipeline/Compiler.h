@@ -7,9 +7,9 @@
 // directX
 #include <d3d12.h>
 #include <dxcapi.h>
-
 // c++
 #include <string>
+#include <unordered_map>
 
 #pragma comment(lib, "dxcompiler.lib")
 
@@ -25,29 +25,29 @@ public:
 	Compiler() = default;
 	~Compiler();
 
-	/// <summary>
-	/// shaderをコンパイルする
-	/// </summary>
+	// shaderをコンパイルする
 	void Initialize(DXCommon* dxCommon, PipelineType Type);
 
-	/// <summary>
-	/// ObjectVertexShaderBlobの取得
-	/// </summary>
-	/// <returns></returns>
+	/// ===ShaderBlobの取得=== ///
+	// VS
 	IDxcBlob* GetObjVS();
-
-	/// <summary>
-	/// ObjectPixelShaderBlobの取得
-	/// </summary>
-	/// <returns></returns>
+	// PS
 	IDxcBlob* GetObjPS();
 
 private:
+
+	struct ShaderInfo {
+		std::wstring vsPath;
+		std::wstring psPath;
+	};
 
 	//　ObjectShader
 	ComPtr<IDxcBlob> objVSBlob_;
 	ComPtr<IDxcBlob> objPSBlob_;
 
+	static const std::unordered_map<PipelineType, ShaderInfo> kShaderTable_; 
+
+private:
 	/// <summary>
 	/// CompileShader関数
 	/// </summary>

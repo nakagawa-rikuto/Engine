@@ -11,8 +11,9 @@
     <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\SkinningObj3D.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\SkinningObj3D.PS.hlsl" />
-    <FxCompile Include="Resource\Shaders\CopyImage.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Fullscreen.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\CopyImage.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Grayscale.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -227,7 +228,7 @@
     <None Include="Resource\Shaders\Obj.hlsli" />
     <None Include="Resource\Shaders\Obj3D.hlsli" />
     <None Include="Resource\Shaders\SkinningObj3D.hlsli" />
-    <None Include="Resource\Shaders\CopyImage.hlsli" />
+    <None Include="Resource\Shaders\Fullscreen.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
