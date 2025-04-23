@@ -14,6 +14,9 @@
     <FxCompile Include="Resource\Shaders\Fullscreen.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\CopyImage.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\Grayscale.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Vignette.Ps.hlsl" />
+    <FxCompile Include="Resource\Shaders\BoxFilter3x3.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\BoxFilter5x5.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />

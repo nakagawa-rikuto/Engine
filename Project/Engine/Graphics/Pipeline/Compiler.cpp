@@ -22,7 +22,7 @@ const std::unordered_map<PipelineType, Compiler::ShaderInfo> Compiler::kShaderTa
 	{ PipelineType::BackGround2D, { L"Resource/Shaders/Obj2D.VS.hlsl",        L"Resource/Shaders/Obj2D.PS.hlsl" } },
 	{ PipelineType::Particle,     { L"Resource/Shaders/Particle.VS.hlsl",     L"Resource/Shaders/Particle.PS.hlsl" } },
 	{ PipelineType::Skinning3D,   { L"Resource/Shaders/SkinningObj3D.VS.hlsl",L"Resource/Shaders/SkinningObj3D.PS.hlsl" } },
-	{ PipelineType::OffScreen,    { L"Resource/Shaders/Fullscreen.VS.hlsl",   L"Resource/Shaders/Grayscale.PS.hlsl" } },
+	{ PipelineType::OffScreen,    { L"Resource/Shaders/Fullscreen.VS.hlsl",   L"Resource/Shaders/BoxFilter5x5.PS.hlsl" } },
 };
 
 ///-------------------------------------------/// 
