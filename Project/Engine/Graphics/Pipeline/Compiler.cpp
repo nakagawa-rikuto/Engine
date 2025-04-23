@@ -17,12 +17,13 @@ Compiler::~Compiler() {
 /// Shaderデーブルの定義
 ///-------------------------------------------///
 const std::unordered_map<PipelineType, Compiler::ShaderInfo> Compiler::kShaderTable_ = {
-	{ PipelineType::Obj3D,        { L"Resource/Shaders/Obj3D.VS.hlsl",        L"Resource/Shaders/Obj3D.PS.hlsl" } },
-	{ PipelineType::ForGround2D,  { L"Resource/Shaders/Obj2D.VS.hlsl",        L"Resource/Shaders/Obj2D.PS.hlsl" } },
-	{ PipelineType::BackGround2D, { L"Resource/Shaders/Obj2D.VS.hlsl",        L"Resource/Shaders/Obj2D.PS.hlsl" } },
-	{ PipelineType::Particle,     { L"Resource/Shaders/Particle.VS.hlsl",     L"Resource/Shaders/Particle.PS.hlsl" } },
-	{ PipelineType::Skinning3D,   { L"Resource/Shaders/SkinningObj3D.VS.hlsl",L"Resource/Shaders/SkinningObj3D.PS.hlsl" } },
-	{ PipelineType::OffScreen,    { L"Resource/Shaders/Fullscreen.VS.hlsl",   L"Resource/Shaders/BoxFilter5x5.PS.hlsl" } },
+	{ PipelineType::Obj3D,        { L"3D/Obj3D.VS.hlsl",			  L"3D/Obj3D.PS.hlsl" } },
+	{ PipelineType::ForGround2D,  { L"2D/Obj2D.VS.hlsl",		      L"2D/Obj2D.PS.hlsl" } },
+	{ PipelineType::BackGround2D, { L"2D/Obj2D.VS.hlsl",			  L"2D/Obj2D.PS.hlsl" } },
+	{ PipelineType::Particle,     { L"Particle/Particle.VS.hlsl",     L"Particle/Particle.PS.hlsl" } },
+	{ PipelineType::Particle,     { L"Particle/Particle.VS.hlsl",     L"Particle/Particle.PS.hlsl" } },
+	{ PipelineType::Skinning3D,   { L"3D/SkinningObj3D.VS.hlsl",      L"3D/SkinningObj3D.PS.hlsl" } },
+	{ PipelineType::OffScreen,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/BoxFilter5x5.PS.hlsl" } },
 };
 
 ///-------------------------------------------/// 
@@ -64,13 +65,17 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 
 	HRESULT hr;
 
+	// ベースのファイルパスを設定
+	const std::wstring& baseShaderPath = L"Resource/Shaders";
+	const std::wstring& shaderFileName = baseShaderPath + L"/" + filePath;
+
 	/// ===1. hlslファイルを読み込む=== ///
 	// これからシェーダーをコンパイルする旨をログに出す
-	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", shaderFileName, profile)));
 
 	// hlslファイルを読む
 	ComPtr<IDxcBlobEncoding> shaderSource = nullptr;
-	hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+	hr = dxcUtils->LoadFile(shaderFileName.c_str(), nullptr, &shaderSource);
 
 	// 読めなかったら止める
 	assert(SUCCEEDED(hr));
@@ -84,7 +89,7 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 	/// ===2. Compileする === ///
 #ifdef _DEBUG
 	LPCWSTR arguments[] = {
-		filePath.c_str(),
+		shaderFileName.c_str(),
 		L"-E", L"main",
 		L"-T", profile,
 		L"-Zi", L"-Qembed_debug",   // デバッグ情報あり
@@ -94,7 +99,7 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 	};
 #else
 	LPCWSTR arguments[] = {
-		filePath.c_str(),
+		shaderFileName.c_str(),
 		L"-E", L"main",
 		L"-T", profile,
 		// デバッグ情報はなし
@@ -135,7 +140,7 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 	assert(SUCCEEDED(hr));
 
 	// 成功したログを出す
-	Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", shaderFileName, profile)));
 
 	// 実行用のバイナリを返却
 	return shaderBlob;
