@@ -14,83 +14,39 @@ Compiler::~Compiler() {
 }
 
 ///-------------------------------------------/// 
+/// Shaderデーブルの定義
+///-------------------------------------------///
+const std::unordered_map<PipelineType, Compiler::ShaderInfo> Compiler::kShaderTable_ = {
+	{ PipelineType::Obj3D,        { L"3D/Obj3D.VS.hlsl",			  L"3D/Obj3D.PS.hlsl" } },
+	{ PipelineType::ForGround2D,  { L"2D/Obj2D.VS.hlsl",		      L"2D/Obj2D.PS.hlsl" } },
+	{ PipelineType::BackGround2D, { L"2D/Obj2D.VS.hlsl",			  L"2D/Obj2D.PS.hlsl" } },
+	{ PipelineType::Particle,     { L"Particle/Particle.VS.hlsl",     L"Particle/Particle.PS.hlsl" } },
+	{ PipelineType::Particle,     { L"Particle/Particle.VS.hlsl",     L"Particle/Particle.PS.hlsl" } },
+	{ PipelineType::Skinning3D,   { L"3D/SkinningObj3D.VS.hlsl",      L"3D/SkinningObj3D.PS.hlsl" } },
+	{ PipelineType::OffScreen,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/BoxFilter5x5.PS.hlsl" } },
+};
+
+///-------------------------------------------/// 
 /// shaderをコンパイルする
 ///-------------------------------------------///
-void Compiler::Initialize(DXCommon* dxCommon, PipelineType Type) {
+void Compiler::Initialize(DXCommon* dxCommon, PipelineType type) {
+	// 対応するシェーダーの検索
+	const auto& it = kShaderTable_.find(type);
+	assert(it != kShaderTable_.end() && "Unknown PipelineType");
 
-	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D ) {
+	// 対応する情報を取得
+	const ShaderInfo& info = it->second;
 
-		// VS
-		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj2D.VS.hlsl", L"vs_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objVSBlob_ != nullptr);
+	// VSシェーダのコンパイル
+	objVSBlob_ = CompileShader(info.vsPath, L"vs_6_0",
+		dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
+	// PSシェーダのコンパイル
+	objPSBlob_ = CompileShader(info.psPath, L"ps_6_0",
+		dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 
-		// PS
-		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj2D.PS.hlsl", L"ps_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objPSBlob_ != nullptr);
-
-	} else if (Type == PipelineType::Obj3D) {
-
-		// VS
-		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj3D.VS.hlsl", L"vs_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objVSBlob_ != nullptr);
-
-		// PS
-		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj3D.PS.hlsl", L"ps_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objPSBlob_ != nullptr);
-
-	} else if(Type == PipelineType::Particle){
-
-		// VS
-		objVSBlob_ = CompileShader(L"Resource/Shaders/Particle.VS.hlsl", L"vs_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objVSBlob_ != nullptr);
-
-		// PS
-		objPSBlob_ = CompileShader(L"Resource/Shaders/Particle.PS.hlsl", L"ps_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objPSBlob_ != nullptr);
-
-	} else if (Type == PipelineType::Skinning3D) {
-
-		// VS
-		objVSBlob_ = CompileShader(L"Resource/Shaders/SkinningObj3D.VS.hlsl", L"vs_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objVSBlob_ != nullptr);
-
-		// PS
-		objPSBlob_ = CompileShader(L"Resource/Shaders/SkinningObj3D.PS.hlsl", L"ps_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objPSBlob_ != nullptr);
-
-	} else if (Type == PipelineType::OffScreen) {
-		
-		// VS
-		objVSBlob_ = CompileShader(L"Resource/Shaders/CopyImage.VS.hlsl", L"vs_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objVSBlob_ != nullptr);
-
-		// PS
-		objPSBlob_ = CompileShader(L"Resource/Shaders/CopyImage.PS.hlsl", L"ps_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objPSBlob_ != nullptr);
-
-
-	} else {
-
-		// VS
-		objVSBlob_ = CompileShader(L"Resource/Shaders/Obj.VS.hlsl", L"vs_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objVSBlob_ != nullptr);
-
-		// PS
-		objPSBlob_ = CompileShader(L"Resource/Shaders/Obj.PS.hlsl", L"ps_6_0",
-			dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
-		assert(objPSBlob_ != nullptr);
-	}
+	// コンパイル結果を確認
+	assert(objVSBlob_ && "Vertex Shader Compile Failed");
+	assert(objPSBlob_ && "Pixel Shader Compile Failed");
 }
 
 ///-------------------------------------------/// 
@@ -109,13 +65,17 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 
 	HRESULT hr;
 
+	// ベースのファイルパスを設定
+	const std::wstring& baseShaderPath = L"Resource/Shaders";
+	const std::wstring& shaderFileName = baseShaderPath + L"/" + filePath;
+
 	/// ===1. hlslファイルを読み込む=== ///
 	// これからシェーダーをコンパイルする旨をログに出す
-	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"Begin CompileShader, path:{}, profile:{}\n", shaderFileName, profile)));
 
 	// hlslファイルを読む
 	ComPtr<IDxcBlobEncoding> shaderSource = nullptr;
-	hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+	hr = dxcUtils->LoadFile(shaderFileName.c_str(), nullptr, &shaderSource);
 
 	// 読めなかったら止める
 	assert(SUCCEEDED(hr));
@@ -129,7 +89,7 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 	/// ===2. Compileする === ///
 #ifdef _DEBUG
 	LPCWSTR arguments[] = {
-		filePath.c_str(),
+		shaderFileName.c_str(),
 		L"-E", L"main",
 		L"-T", profile,
 		L"-Zi", L"-Qembed_debug",   // デバッグ情報あり
@@ -139,7 +99,7 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 	};
 #else
 	LPCWSTR arguments[] = {
-		filePath.c_str(),
+		shaderFileName.c_str(),
 		L"-E", L"main",
 		L"-T", profile,
 		// デバッグ情報はなし
@@ -180,7 +140,7 @@ ComPtr<IDxcBlob> Compiler::CompileShader(
 	assert(SUCCEEDED(hr));
 
 	// 成功したログを出す
-	Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", shaderFileName, profile)));
 
 	// 実行用のバイナリを返却
 	return shaderBlob;

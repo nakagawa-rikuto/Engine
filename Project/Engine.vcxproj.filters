@@ -1,18 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="Resource\Shaders\Particle.PS.hlsl" />
-    <FxCompile Include="Resource\Shaders\Particle.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Particle\Particle.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\Particle\Particle.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\Obj.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\Obj.VS.hlsl" />
-    <FxCompile Include="Resource\Shaders\Obj2D.PS.hlsl" />
-    <FxCompile Include="Resource\Shaders\Obj2D.VS.hlsl" />
-    <FxCompile Include="Resource\Shaders\Obj3D.PS.hlsl" />
-    <FxCompile Include="Resource\Shaders\Obj3D.VS.hlsl" />
-    <FxCompile Include="Resource\Shaders\SkinningObj3D.VS.hlsl" />
-    <FxCompile Include="Resource\Shaders\SkinningObj3D.PS.hlsl" />
-    <FxCompile Include="Resource\Shaders\CopyImage.VS.hlsl" />
-    <FxCompile Include="Resource\Shaders\CopyImage.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\2D\Obj2D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\2D\Obj2D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\Obj3D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\Obj3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\SkinningObj3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\SkinningObj3D.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\Fullscreen.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\CopyImage.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\Grayscale.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.Ps.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter3x3.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter5x5.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -223,11 +227,11 @@
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resource\Shaders\Particle.hlsli" />
+    <None Include="Resource\Shaders\Particle\Particle.hlsli" />
     <None Include="Resource\Shaders\Obj.hlsli" />
-    <None Include="Resource\Shaders\Obj3D.hlsli" />
-    <None Include="Resource\Shaders\SkinningObj3D.hlsli" />
-    <None Include="Resource\Shaders\CopyImage.hlsli" />
+    <None Include="Resource\Shaders\3D\Obj3D.hlsli" />
+    <None Include="Resource\Shaders\3D\SkinningObj3D.hlsli" />
+    <None Include="Resource\Shaders\OffScreen\Fullscreen.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
