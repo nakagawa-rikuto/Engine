@@ -41,9 +41,6 @@ private:
 	const float kInnerRadius = 0.2f; // リングの内半径
 	const float radianPreDivide = 2.0f * std::numbers::pi_v<float> / float(kRingDivide); // リングの分割数あたりのラジアン
 
-
-
-
 private:
     ParticleData MakeParticle(std::mt19937& randomEngine, const Vector3& translate)override;
     // エミっと
