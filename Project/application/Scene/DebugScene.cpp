@@ -206,6 +206,7 @@ void DebugScene::Update() {
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
 			if (!lightType_.Lambert && ImGui::Button("Lambert")) {
+				animationModel_->SetLight(LightType::Lambert);
 				model_->SetLight(LightType::Lambert);
 				model2_->SetLight(LightType::Lambert);
 				lightType_.Lambert = true;
@@ -215,6 +216,7 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.HalfLambert && ImGui::Button("HalfLambert")) {
+				animationModel_->SetLight(LightType::HalfLambert);
 				model_->SetLight(LightType::HalfLambert);
 				model2_->SetLight(LightType::HalfLambert);
 				lightType_.Lambert = false;
@@ -224,6 +226,7 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.PointLight && ImGui::Button("PointLight")) {
+				animationModel_->SetLight(LightType::PointLight);
 				model_->SetLight(LightType::PointLight);
 				model2_->SetLight(LightType::PointLight);
 				lightType_.Lambert = false;
@@ -233,6 +236,7 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.SpotLight && ImGui::Button("SpotLight")) {
+				animationModel_->SetLight(LightType::SpotLight);
 				model_->SetLight(LightType::SpotLight);
 				model2_->SetLight(LightType::SpotLight);
 				lightType_.Lambert = false;
@@ -537,11 +541,12 @@ void DebugScene::Draw() {
 	//cloud_->Draw();
 
 	// アニーメーションモデル
-	//animationModel_->Draw();
+	modelLight_->Draw();
+	animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
-		modelLight_->Draw();
+		
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
 		

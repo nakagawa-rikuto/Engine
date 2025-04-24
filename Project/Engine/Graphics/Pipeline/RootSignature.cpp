@@ -39,7 +39,7 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
 		/// ===RootParameterの生成=== ///
-		D3D12_ROOT_PARAMETER rootParameters[3]{};
+		D3D12_ROOT_PARAMETER rootParameters[3] = {};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使う
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 		rootParameters[0].Descriptor.ShaderRegister = 0; // レジスタ番号の指定
@@ -57,7 +57,7 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		descriptionRootSignatureObj2D.NumParameters = _countof(rootParameters); // 配列の長さ
 
 		/// ===Samplerの設定=== ///
-		D3D12_STATIC_SAMPLER_DESC staticSamplers[1]{};
+		D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 		staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 		staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
