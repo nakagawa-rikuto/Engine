@@ -24,6 +24,8 @@
 #include "Engine/System/Managers/ParticleManager.h"
 // OffScreenRender
 #include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
+// ImGui
+#include "Engine/System/ImGui/SceneView.h"
 
 ///=====================================================///
 /// システム
@@ -102,8 +104,10 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<CSVManager> csvManager_;             // CSVManager
 	std::unique_ptr<AnimationManager> animationManager_; // AnimationManager
 	std::unique_ptr<ParticleManager> particleManager_;   // ParticleManager
-
+	// OffScreen
 	std::unique_ptr<OffScreenRenderer> offScreenRenderer_; // OffScreen
+	// ImGui
+	std::unique_ptr<SceneView> sceneView_;               // SceneView
 
 private:
 	///=====================================================/// 
