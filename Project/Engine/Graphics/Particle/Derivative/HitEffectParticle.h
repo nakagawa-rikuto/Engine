@@ -6,6 +6,7 @@
 #include "Engine/DataInfo/ColliderData.h"
 // c++
 #include <random>
+#include <numbers>
 
 ///=====================================================/// 
 /// HitEffectParticle
