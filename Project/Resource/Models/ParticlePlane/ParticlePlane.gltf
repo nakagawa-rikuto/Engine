@@ -62,8 +62,8 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"circle",
-			"uri":"circle.png"
+			"name":"circle2",
+			"uri":"circle2.png"
 		}
 	],
 	"accessors":[

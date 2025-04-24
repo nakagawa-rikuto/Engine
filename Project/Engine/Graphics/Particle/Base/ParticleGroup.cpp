@@ -40,6 +40,12 @@ void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& 
     /// ===パーティクルグループの初期化=== ///
     group_.particle = std::make_unique<ParticleSetUp>();
     group_.particle->Initialze(modelName, group_.maxInstance);
+
+    // ===== 初期位置での1回だけの更新 =====
+    group_.particles = Emit(group_, randomEngine_); // パーティクルを1回Emit
+    for (auto it = group_.particles.begin(); it != group_.particles.end(); ++it) {
+        InstancingUpdate(it); // WVPなどを設定
+    }
 }
 
 ///-------------------------------------------/// 
