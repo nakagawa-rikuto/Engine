@@ -537,7 +537,7 @@ void DebugScene::Draw() {
 	//cloud_->Draw();
 
 	// アニーメーションモデル
-	animationModel_->Draw();
+	//animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {

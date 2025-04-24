@@ -76,6 +76,8 @@ void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMa
 	// SRVの生成
 	srvData_.srvManager_->CreateSRVForStructuredBuffer(
 		srvData_.srvIndex, common_->GetInstancing(), kNumMaxInstance_, sizeof(ParticleForGPU));
+
+
 }
 
 

@@ -87,7 +87,7 @@ ParticleData HitEffectParticle::MakeParticle(std::mt19937& randomEngine, const V
     particleData.velocity = { 0.0f, 0.0f, 0.0f };
     particleData.color = { 1.0f, 1.0f, 1.0f, 1.0f };
     particleData.currentTime = 0;
-	particleData.lifeTime = 1.0f; // 寿命を1秒に設定
+	particleData.lifeTime = 0.5f; // 寿命を1秒に設定
     return particleData;
 }
 
