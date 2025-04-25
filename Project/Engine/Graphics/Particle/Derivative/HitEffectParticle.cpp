@@ -34,22 +34,24 @@ void HitEffectParticle::Update() {
 
     // パーティクルの更新
     group_.numInstance = 0; // インスタンス数をリセット
-    for (auto it = group_.particles.begin(); it != group_.particles.end();) {
-        if (it->currentTime >= it->lifeTime) {
-            it = group_.particles.erase(it); // 寿命が尽きたパーティクルを削除
+    for (std::list<ParticleData>::iterator particleIterator = group_.particles.begin(); particleIterator != group_.particles.end();) {
+
+		// 寿命が尽きたパーティクルを削除
+        if (particleIterator->lifeTime <= particleIterator->currentTime) {
+            particleIterator = group_.particles.erase(particleIterator); // 寿命が尽きたパーティクルを削除
             continue;
         }
 
-        // 位置と時間の更新
-        it->currentTime += kDeltaTime_;
+        // 時間の更新
+        particleIterator->currentTime += kDeltaTime_;
 
         // アルファ値の更新
-        float alpha = 1.0f - (it->currentTime / it->lifeTime);
-        it->color.w = alpha;
+        /*float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
+        particleIterator->color.w = alpha;*/
 
         /// ===ParticleEmitterの更新=== ///
-        ParticleGroup::InstancingUpdate(it);
-        ++it;
+        ParticleGroup::InstancingUpdate(particleIterator);
+        ++particleIterator; // 次のイテレータに進める
     }
 }
 
@@ -81,7 +83,8 @@ ParticleData HitEffectParticle::MakeParticle(std::mt19937& randomEngine, const V
     std::uniform_real_distribution<float> distRotate(-std::numbers::pi_v<float>, std::numbers::pi_v<float>);
 
 	ParticleData particleData;
-    particleData.transform.scale = { 0.1f, distRotate(randomEngine), 1.0f };
+    //particleData.transform.scale = { 0.05f, distRotate(randomEngine), 1.0f };
+    particleData.transform.scale = { 0.05f, 0.8f, 1.0f };
 	particleData.transform.rotate = { 0.0f, 0.0f, distRotate(randomEngine)};
 	particleData.transform.translate = translate;
     particleData.velocity = { 0.0f, 0.0f, 0.0f };

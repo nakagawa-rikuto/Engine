@@ -30,7 +30,7 @@ public:
     // パーティクルの全体更新
     void Update();
     // すべて描画
-    void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
+    void Draw(BlendMode mode = BlendMode::kBlendModeAdd);
 
 private:
     // Camera

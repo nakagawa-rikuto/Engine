@@ -563,7 +563,7 @@ void DebugScene::Draw() {
 		
 	}
 	/// ===Particle=== ///
-	particleManager_->Draw();
+	particleManager_->Draw(BlendMode::kBlendModeAdd);
 
 #pragma endregion
 
