@@ -110,8 +110,6 @@
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
     <ClCompile Include="application\Game\Collider\Manager\ColliderManager.cpp" />
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
-    <ClCompile Include="Engine\System\Service\Particle.cpp" />
-    <ClCompile Include="Engine\System\ParticleStorage\ParticleStorage.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
@@ -219,8 +217,6 @@
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
     <ClInclude Include="application\Game\Collider\Manager\ColliderManager.h" />
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
-    <ClInclude Include="Engine\System\Service\Particle.h" />
-    <ClInclude Include="Engine\System\ParticleStorage\ParticleStorage.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />

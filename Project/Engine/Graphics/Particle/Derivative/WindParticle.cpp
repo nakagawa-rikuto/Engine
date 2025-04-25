@@ -19,10 +19,10 @@ WindParticle::~WindParticle() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void WindParticle::Initialze(const Vector3& translate) {
+void WindParticle::Initialze(const Vector3& translate, Camera* camera) {
 
 	/// ===初期化=== ///
-	ParticleGroup::InstancingInit("plane", translate, 150);
+	ParticleGroup::InstancingInit("plane", translate, 150, camera);
 
 	/// ===Fildの設定=== ///
 	accelerationFild_.acceleration = { 15.0f, 0.0f, 0.0f };
@@ -64,6 +64,7 @@ void WindParticle::Update() {
 
 		if (group_.numInstance < group_.maxInstance) {
 
+			// 寿命が尽きたParticleは削除
 			if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
 				particleIterator = group_.particles.erase(particleIterator); // 生存帰還が過ぎたParticleはListから消す。戻り値が次のイテレータとなる
 				continue;
