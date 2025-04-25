@@ -200,8 +200,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Managers\RTVManager.cpp" />
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
-    <ClCompile Include="Engine\System\Service\Particle.cpp" />
-    <ClCompile Include="Engine\System\ParticleStorage\ParticleStorage.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
@@ -309,8 +307,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\RTVManager.h" />
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
-    <ClInclude Include="Engine\System\Service\Particle.h" />
-    <ClInclude Include="Engine\System\ParticleStorage\ParticleStorage.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />

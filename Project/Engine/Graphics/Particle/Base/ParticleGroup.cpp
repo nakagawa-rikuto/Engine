@@ -20,7 +20,7 @@ ParticleGroup::~ParticleGroup() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance) {
+void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera) {
     /// ===乱数生成器の初期化=== ///
     std::random_device seedGenerator;
     randomEngine_.seed(seedGenerator());
@@ -41,11 +41,8 @@ void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& 
     group_.particle = std::make_unique<ParticleSetUp>();
     group_.particle->Initialze(modelName, group_.maxInstance);
 
-    // ===== 初期位置での1回だけの更新 =====
-    group_.particles = Emit(group_, randomEngine_); // パーティクルを1回Emit
-    for (auto it = group_.particles.begin(); it != group_.particles.end(); ++it) {
-        InstancingUpdate(it); // WVPなどを設定
-    }
+    /// ===Cameraの設定=== ///
+    group_.camera = camera;
 }
 
 ///-------------------------------------------/// 
@@ -90,5 +87,3 @@ bool ParticleGroup::IsFinish() {
 ///-------------------------------------------///
 // Texture
 void ParticleGroup::SetTexture(const std::string& fileName) { group_.particle->SetTexture(fileName); }
-// Cmaera
-void ParticleGroup::SetCamera(Camera* camera) { group_.camera = camera; }

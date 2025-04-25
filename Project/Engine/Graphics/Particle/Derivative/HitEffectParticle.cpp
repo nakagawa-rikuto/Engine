@@ -15,9 +15,9 @@ HitEffectParticle::~HitEffectParticle() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void HitEffectParticle::Initialze(const Vector3& translate) {
+void HitEffectParticle::Initialze(const Vector3& translate, Camera* camera) {
     /// ===初期化=== ///
-    ParticleGroup::InstancingInit("ParticlePlane", translate, 8);
+    ParticleGroup::InstancingInit("ParticlePlane", translate, 8, camera);
 
 	/// ===フラグと設定の初期化=== ///
     hasExploded_ = false;

@@ -25,7 +25,7 @@ void ParticleManager::Emit(const std::string& name, const Vector3& translate) {
 	if (it == prototype_.end()) return;
 
 	std::unique_ptr<ParticleGroup> newParticle = it->second->Clone();
-	newParticle->Initialze(translate);
+	newParticle->Initialze(translate, camera_);
 	activeParticles_[name].push_back(std::move(newParticle));
 }
 // Texture
@@ -40,23 +40,7 @@ void ParticleManager::SetTexture(const std::string& name, const std::string& tex
 	}
 }
 // Camera
-void ParticleManager::SetCamera(const std::string& name, Camera* camera) {
-	// 実際に動いているパーティクル（activeParticles_）
-	auto activeIt = activeParticles_.find(name);
-	if (activeIt != activeParticles_.end()) {
-		for (auto& particle : activeIt->second) {
-			if (particle) {
-				particle->SetCamera(camera);
-			}
-		}
-	}
-
-	// これからEmitされるプロトタイプ（prototype_）
-	auto protoIt = prototype_.find(name);
-	if (protoIt != prototype_.end() && protoIt->second) {
-		protoIt->second->SetCamera(camera);
-	}
-}
+void ParticleManager::SetCamera(Camera* camera) {camera_ = camera; }
 
 ///-------------------------------------------/// 
 /// 全てのPartlceの更新
@@ -77,7 +61,7 @@ void ParticleManager::Update() {
 ///-------------------------------------------/// 
 /// 全てのPartlceの描画
 ///-------------------------------------------///
-void ParticleManager::DrawAll(BlendMode mode) {
+void ParticleManager::Draw(BlendMode mode) {
 	for (auto& [name, list] : activeParticles_) {
 		for (const auto& particle : list) {
 			particle->Draw(mode);

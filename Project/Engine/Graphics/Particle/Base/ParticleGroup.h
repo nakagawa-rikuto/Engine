@@ -17,14 +17,14 @@ public:
 	virtual ~ParticleGroup();
 
 	// 初期化
-	virtual void Initialze(const Vector3& translate) = 0;
+	virtual void Initialze(const Vector3& translate, Camera* camera) = 0;
 	// 更新
 	virtual void Update() = 0;
 	// 描画
 	virtual void Draw(BlendMode mode);
 	
 	// 初期化
-	void InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance);
+	void InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera);
 	// 更新
 	void InstancingUpdate(std::list<ParticleData>::iterator it);
 	// 生存判定
@@ -33,8 +33,6 @@ public:
 public: /// ===Setter=== ///
 	// Texture
 	void SetTexture(const std::string& fileName);
-	// Camera
-	void SetCamera(Camera* camera);
 
 protected:
 	/// ===Emitter=== ///

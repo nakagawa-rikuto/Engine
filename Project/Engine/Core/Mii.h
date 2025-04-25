@@ -21,7 +21,6 @@
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
-#include "Engine/System/Managers/ParticleManager.h"
 // OffScreenRender
 #include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
 
@@ -72,8 +71,6 @@ public:/// ===開発者用関数(Getter)=== ///
 	CSVManager* GetCSVManager();
 	// AnimationManagerの取得
 	AnimationManager* GetAnimationManager();
-	// ParticleManagerの取得
-	ParticleManager* GetParticleManager();
 	// Keyboardの取得
 	Keyboard* GetKeyboard();
 	// Mouseの取得
@@ -101,7 +98,6 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<AudioManager> audioManager_;         // AudioMangaer
 	std::unique_ptr<CSVManager> csvManager_;             // CSVManager
 	std::unique_ptr<AnimationManager> animationManager_; // AnimationManager
-	std::unique_ptr<ParticleManager> particleManager_;   // ParticleManager
 
 	std::unique_ptr<OffScreenRenderer> offScreenRenderer_; // OffScreen
 

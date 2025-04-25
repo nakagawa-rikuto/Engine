@@ -75,9 +75,6 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 		dXCommon_->GetDevice(),
 		srvManager_.get(), rtvManager_.get(),
 		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // クリアカラーをここで設定
-
-	// ParticleManager
-	particleManager_ = std::make_unique<ParticleManager>();
 }
 
 ///=====================================================/// 
@@ -112,7 +109,6 @@ void Mii::Finalize() {
 	animationManager_.reset();	// AnimationManager
 	csvManager_.reset();		// CSVManager
 	audioManager_.reset();		// AudioManager
-	particleManager_.reset();  // ParticleManager
 	modelManager_.reset();		// Modelmanager
 	textureManager_.reset();	// TextrureManager
 	offScreenRenderer_.reset(); // OffScreenRender
@@ -210,8 +206,6 @@ AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 // AnimationManager
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
-// ParticleManager
-ParticleManager* Mii::GetParticleManager() { return particleManager_.get(); }
 // Keyboard
 Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse
