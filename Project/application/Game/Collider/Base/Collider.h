@@ -3,6 +3,8 @@
 // map
 #include <map>
 #include <string>
+// Object3d
+#include "application/Drawing/3d/Object3d.h"
 // Math
 #include "Engine/DataInfo/ColliderData.h"
 
@@ -40,5 +42,7 @@ protected:
     ColliderType type_;
     // ColliderName
     std::string colliderName_;
+    // Object3D
+    std::unique_ptr<Object3d> object3d_;
 };
 

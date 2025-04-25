@@ -117,6 +117,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
+    <ClInclude Include="application\Game\Entity\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />
