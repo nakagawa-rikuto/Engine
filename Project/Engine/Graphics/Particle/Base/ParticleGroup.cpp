@@ -20,7 +20,7 @@ ParticleGroup::~ParticleGroup() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera) {
+void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera, shapeType type) {
     /// ===乱数生成器の初期化=== ///
     std::random_device seedGenerator;
     randomEngine_.seed(seedGenerator());
@@ -39,7 +39,7 @@ void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& 
 
     /// ===パーティクルグループの初期化=== ///
     group_.particle = std::make_unique<ParticleSetUp>();
-    group_.particle->Initialze(modelName, group_.maxInstance);
+    group_.particle->Initialze(modelName, group_.maxInstance, type);
 
     /// ===Cameraの設定=== ///
     group_.camera = camera;

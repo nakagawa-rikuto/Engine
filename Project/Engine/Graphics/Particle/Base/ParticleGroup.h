@@ -24,7 +24,7 @@ public:
 	virtual void Draw(BlendMode mode);
 	
 	// 初期化
-	void InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera);
+	void InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera, shapeType type = shapeType::kNone);
 	// 更新
 	void InstancingUpdate(std::list<ParticleData>::iterator it);
 	// 生存判定

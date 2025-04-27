@@ -46,8 +46,8 @@ void HitEffectParticle::Update() {
         particleIterator->currentTime += kDeltaTime_;
 
         // アルファ値の更新
-        /*float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
-        particleIterator->color.w = alpha;*/
+        float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
+        particleIterator->color.w = alpha;
 
         /// ===ParticleEmitterの更新=== ///
         ParticleGroup::InstancingUpdate(particleIterator);
@@ -83,8 +83,7 @@ ParticleData HitEffectParticle::MakeParticle(std::mt19937& randomEngine, const V
     std::uniform_real_distribution<float> distRotate(-std::numbers::pi_v<float>, std::numbers::pi_v<float>);
 
 	ParticleData particleData;
-    //particleData.transform.scale = { 0.05f, distRotate(randomEngine), 1.0f };
-    particleData.transform.scale = { 0.05f, 0.8f, 1.0f };
+    particleData.transform.scale = { 0.05f, distRotate(randomEngine), 1.0f };
 	particleData.transform.rotate = { 0.0f, 0.0f, distRotate(randomEngine)};
 	particleData.transform.translate = translate;
     particleData.velocity = { 0.0f, 0.0f, 0.0f };

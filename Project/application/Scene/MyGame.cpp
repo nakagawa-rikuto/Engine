@@ -103,6 +103,7 @@ void MyGame::LoadTexture() {
 	Loader::LoadTexture("uvChecker", "uvChecker.png");
 	Loader::LoadTexture("monsterBall", "monsterBall.png");
 	Loader::LoadTexture("circle", "circle.png");
+	Loader::LoadTexture("gradationLine", "gradationLine.png");
 }
 // モデル
 void MyGame::LoadModel() {
