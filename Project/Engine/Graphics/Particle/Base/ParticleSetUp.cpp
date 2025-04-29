@@ -117,8 +117,8 @@ void ParticleSetUp::SetVertexBUfferCircle() {
 
 	// 変数の宣言
 	const uint32_t kRingDivide = 32; // 円の分割数
-	const float kOuterRadius = 10.0f; // 外半径
-	const float kInnerRadius = 1.0f; // 内半径
+	const float kOuterRadius = 1.0f; // 外半径
+	const float kInnerRadius = 0.2f; // 内半径
 	const float radianPerDivide = 2.0f * std::numbers::pi_v<float> / kRingDivide; // 円の分割角度
 
 	for (uint32_t index = 0; index < kRingDivide; ++index) {
@@ -130,16 +130,16 @@ void ParticleSetUp::SetVertexBUfferCircle() {
 		float uNext = static_cast<float>(index + 1) / float(kRingDivide);
 
 		// positionとuv。normalは必要なら+zを設定する
-		vertexData_[0].position = { -sin * kOuterRadius, cos * kOuterRadius, 0.0f, 1.0f };
-		vertexData_[0].texcoord = { u, 0.0f };
+		vertexData_[3].position = { -sin * kOuterRadius, cos * kOuterRadius, 0.0f, 1.0f };
+		vertexData_[3].texcoord = { u, 0.0f };
 
-		vertexData_[1].position = { -sinNext * kOuterRadius, cosNext * kOuterRadius, 0.0f, 1.0f };
-		vertexData_[1].texcoord = { uNext, 0.0f };
+		vertexData_[2].position = { -sinNext * kOuterRadius, cosNext * kOuterRadius, 0.0f, 1.0f };
+		vertexData_[2].texcoord = { uNext, 0.0f };
 
-		vertexData_[2].position = { -sin * kInnerRadius, cos * kInnerRadius, 0.0f, 1.0f };
-		vertexData_[2].texcoord = { u, 1.0f };
+		vertexData_[1].position = { -sin * kInnerRadius, cos * kInnerRadius, 0.0f, 1.0f };
+		vertexData_[1].texcoord = { u, 1.0f };
 
-		vertexData_[3].position = { -sinNext * kInnerRadius, cosNext * kInnerRadius, 0.0f, 1.0f };
-		vertexData_[3].texcoord = { uNext, 1.0f };
+		vertexData_[0].position = { -sinNext * kInnerRadius, cosNext * kInnerRadius, 0.0f, 1.0f };
+		vertexData_[0].texcoord = { uNext, 1.0f };
 	}
 }

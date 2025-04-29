@@ -43,7 +43,7 @@ void DebugScene::Initialize() {
 	// カメラ1
 	camera_ = std::make_shared<Camera>();
 	camera_->Initialize();
-	camera_->SetTranslate({ 0.0f, 0.0f, -10.0f });
+	camera_->SetTranslate({ 0.0f, 0.0f, -4.0f });
 	camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
 	// カメラ2
 	camera2_ = std::make_shared<Camera>();
@@ -137,6 +137,9 @@ void DebugScene::Initialize() {
 #pragma region Audio
 	//audio_->PlayeSound("clear", false);
 #pragma endregion
+
+	/// ===Particle=== ///
+	particleTranslate_ = { 0.0f, 0.0f, 0.0f };
 }
 
 ///-------------------------------------------/// 
@@ -555,7 +558,7 @@ void DebugScene::Draw() {
 	//cloud_->Draw();
 
 	// アニーメーションモデル
-	modelLight_->Draw();
+	//modelLight_->Draw();
 	//animationModel_->Draw();
 
 	/// ===Model=== ///
