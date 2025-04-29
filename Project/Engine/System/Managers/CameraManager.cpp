@@ -11,19 +11,6 @@ CameraManager::~CameraManager() {
 }
 
 ///-------------------------------------------/// 
-/// 初期化
-///-------------------------------------------///
-void CameraManager::Initialize() {
-	// デフォルトカメラを生成
-	auto defaultCamera = std::make_shared<Camera>();
-	defaultCamera->Initialize();
-
-	// デフォルトカメラの設定
-	Add("Default", defaultCamera);
-	SetActiveCamera("Default");
-}
-
-///-------------------------------------------/// 
 /// 全てのカメラの更新
 ///-------------------------------------------///
 void CameraManager::UpdateAllCameras() {

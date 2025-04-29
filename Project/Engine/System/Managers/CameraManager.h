@@ -17,11 +17,6 @@ public:/// ===基本的な関数=== ///
 	~CameraManager();
 
 	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
-
-	/// <summary>
 	/// 全てのカメラの更新
 	/// </summary>
 	void UpdateAllCameras();

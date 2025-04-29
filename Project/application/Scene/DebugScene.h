@@ -106,7 +106,7 @@ private:/// ===メンバ変数=== ///
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize(Vector3{ -1.0f, -1.0f, 0.0f }), 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f)}
 	};
 	// カメラ
-	Vector3 cameraPos = { 0.0f, 2.0f, -13.0f };
+	Vector3 cameraPos = { 0.0f, 0.0f, -13.0f };
 	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f };
 	bool SetCamera = false;
 	// Audio
@@ -119,6 +119,6 @@ private:/// ===メンバ変数=== ///
 	Vector2 mousePosition_ = { 0.0f, 0.0f };
 	// Particle
 	bool start_ = false;
-	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+	Vector3 particleTranslate_ = { 0.0f, 0.0f, -10.0f };
 #pragma endregion
 };

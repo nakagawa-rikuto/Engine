@@ -6,6 +6,8 @@
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"
+// c++
+#include <numbers>
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -13,6 +15,34 @@
 ParticleGroup::~ParticleGroup() { 
     group_.particles.clear();
     group_.particle.reset();
+}
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera, shapeType type) {
+    /// ===乱数生成器の初期化=== ///
+    std::random_device seedGenerator;
+    randomEngine_.seed(seedGenerator());
+
+    /// ===最大パーティクル数の設定=== ///
+    group_.maxInstance = maxInstance;
+    group_.numInstance = 0;
+
+    /// ===トランスフォームの初期化=== ///
+    group_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, translate };
+    group_.cameraTransform = {
+       {1.0f,1.0f,1.0f},
+       {std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
+       {0.0f, 23.0f, 10.0f}
+    };
+
+    /// ===パーティクルグループの初期化=== ///
+    group_.particle = std::make_unique<ParticleSetUp>();
+    group_.particle->Initialze(modelName, group_.maxInstance, type);
+
+    /// ===Cameraの設定=== ///
+    group_.camera = camera;
 }
 
 ///-------------------------------------------/// 
@@ -55,13 +85,5 @@ bool ParticleGroup::IsFinish() {
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-// Translate
-void ParticleGroup::SetTranslate(const Vector3& translate) { group_.transform.translate = translate; }
-// Rotate
-void ParticleGroup::SetRotate(const Vector3& rotate) { group_.transform.rotate = rotate; }
-// Scale
-void ParticleGroup::SetScale(const Vector3& scale) { group_.transform.scale = scale; }
 // Texture
 void ParticleGroup::SetTexture(const std::string& fileName) { group_.particle->SetTexture(fileName); }
-// Cmaera
-void ParticleGroup::SetCamera(Camera* camera) { group_.camera = camera; }

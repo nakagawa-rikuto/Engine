@@ -4,6 +4,7 @@
 // c++
 #include <numbers>
 
+
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
@@ -16,50 +17,29 @@ ConfettiParticle::~ConfettiParticle() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ConfettiParticle::Initialze() {
-    /// ===乱数生成器の初期化=== ///
-    std::random_device seedGenerator;
-    randomEngine_.seed(seedGenerator());
+void ConfettiParticle::Initialze(const Vector3& translate, Camera* camera) {
 
-    /// ===最大パーティクル数の設定=== ///
-    group_.maxInstance = 300; // パーティクル数を増加
-    group_.numInstance = 0;
-
-    /// ===トランスフォームの初期化=== ///
-    group_.transform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-    group_.cameraTransform = {
-       {1.0f,1.0f,1.0f},
-       {std::numbers::pi_v<float> / 3.0f, std::numbers::pi_v<float>, 0.0f },
-       {0.0f, 23.0f, 10.0f}
-    };
-
-    /// ===パーティクルグループの初期化=== ///
-    group_.particle = std::make_unique<ParticleSetUp>();
-    group_.particle->Initialze("plane", group_.maxInstance); /*"Particle"*/
+    /// ===初期化=== ///
+    ParticleGroup::InstancingInit("plane", translate, 300, camera);
 
     /// ===フラグと設定の初期化=== ///
     hasExploded_ = false;
-    explosionCenter_ = { 0.0f, 0.0f, 0.0f };
     explosionRadius_ = 0.5f; // 初期位置を密集させる
     gravity_ = -9.8f; // 重力加速度
     upwardForce_ = 15.0f; // 上方向の初期加速度を追加
     maxLifetime_ = 2.0f; // パーティクルの寿命を調整
+
+    // 位置の更新をかけたい
+    //ParticleGroup::InstancingUpdate(Emit(group_, randomEngine_));
 }
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-// override
-void ConfettiParticle::InstancingUpdate(std::list<ParticleData>::iterator it) {
-    ParticleGroup::InstancingUpdate(it);
-}
-// 
 void ConfettiParticle::Update() {
     if (!hasExploded_) {
         // 爆発のパーティクルを生成
-        for (uint32_t i = 0; i < group_.maxInstance; ++i) {
-            group_.particles.push_back(MakeConfettiParticle(randomEngine_, explosionCenter_));
-        }
+        group_.particles.splice(group_.particles.end(), Emit(group_, randomEngine_));
         hasExploded_ = true;
     }
 
@@ -81,12 +61,8 @@ void ConfettiParticle::Update() {
 
         it->currentTime += kDeltaTime_;
 
-        // カラーの変化: ランダムな色を保持
-        /*float alpha = 1.0f - (it->currentTime / it->lifeTime);
-        it->color.w = alpha;*/
-
         /// ===ParticleEmitterの更新=== ///
-        InstancingUpdate(it);
+        ParticleGroup::InstancingUpdate(it);
         ++it;
     }
 }
@@ -118,7 +94,7 @@ std::unique_ptr<ParticleGroup> ConfettiParticle::Clone() {
 ///-------------------------------------------/// 
 /// コンフェッティパーティクルの生成
 ///-------------------------------------------///
-ParticleData ConfettiParticle::MakeConfettiParticle(std::mt19937& randomEngine, const Vector3& center) {
+ParticleData ConfettiParticle::MakeParticle(std::mt19937& randomEngine, const Vector3& center) {
     std::uniform_real_distribution<float> distAngle(0.0f, 2.0f * std::numbers::pi_v<float>);
     std::uniform_real_distribution<float> distRadius(0.0f, explosionRadius_);
     std::uniform_real_distribution<float> distLifetime(0.5f, maxLifetime_);
@@ -146,4 +122,15 @@ ParticleData ConfettiParticle::MakeConfettiParticle(std::mt19937& randomEngine, 
     particle.currentTime = 0.0f;
 
     return particle;
+}
+
+///-------------------------------------------/// 
+/// パーティクルの発生処理
+///-------------------------------------------///
+std::list<ParticleData> ConfettiParticle::Emit(const Group& group, std::mt19937& randomEngine) {
+    std::list<ParticleData> particles;
+    for (uint32_t i = 0; i < group_.maxInstance; ++i) {
+        particles.push_back(MakeParticle(randomEngine_, group_.transform.translate));
+    }
+    return particles;
 }

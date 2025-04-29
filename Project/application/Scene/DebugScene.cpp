@@ -4,7 +4,12 @@
 // Service
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
-#include "Engine/System/Service/Particle.h"
+// Particle
+#include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
+#include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
+#include "Engine/Graphics/Particle/Derivative/WindParticle.h"
+#include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
+#include "Engine/Graphics/Particle/Derivative/RingParticle.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -32,6 +37,33 @@ DebugScene::~DebugScene() {
 void DebugScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
+
+	/// ===カメラの初期化=== ///
+#pragma region Cameraの初期化
+	// カメラ1
+	camera_ = std::make_shared<Camera>();
+	camera_->Initialize();
+	camera_->SetTranslate({ 0.0f, 0.0f, -4.0f });
+	camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
+	// カメラ2
+	camera2_ = std::make_shared<Camera>();
+	camera2_->Initialize();
+	camera2_->SetTranslate({ 0.0f, 0.0f, -30.0f });
+	camera2_->SetRotate({ 0.0f, 0.0f, 0.0f });
+	// カメラマネージャにカメラを追加
+	cameraManager_->Add("Debug", camera_);
+	cameraManager_->Add("Debug2", camera2_);
+#pragma endregion
+
+	/// ===ParticleManager=== ///
+#pragma region Particleの追加
+	// Particleの追加
+	particleManager_->AddParticle("Confetti", std::make_unique<ConfettiParticle>());
+	particleManager_->AddParticle("Explosion", std::make_unique<ExplosionParticle>());
+	particleManager_->AddParticle("Wind", std::make_unique<WindParticle>());
+	particleManager_->AddParticle("Ring", std::make_unique<RingParticle>());
+	particleManager_->AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
+#pragma endregion
 
 	/// ===スプライトの初期化=== ///
 #pragma region Spriteの初期化
@@ -97,23 +129,6 @@ void DebugScene::Initialize() {
 	animationModel_->SetAnimation("Armature|mixamo.com|Layer0");
 #pragma endregion
 
-	/// ===カメラの初期化=== ///
-#pragma region Cameraの初期化
-	// カメラ1
-	camera_ = std::make_shared<Camera>();
-	camera_->Initialize();
-	camera_->SetTranslate({ 0.0f, 0.0f, -10.0f });
-	camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
-	// カメラ2
-	camera2_ = std::make_shared<Camera>();
-	camera2_->Initialize();
-	camera2_->SetTranslate({ 0.0f, 0.0f, -30.0f });
-	camera2_->SetRotate({ 0.0f, 0.0f, 0.0f });
-	// カメラマネージャにカメラを追加
-	cameraManager_->Add("Debug", camera_);
-	cameraManager_->Add("Debug2", camera2_);
-#pragma endregion
-
 	/// ===ライト=== ///
 #pragma region Lightの情報
 #pragma endregion
@@ -122,6 +137,9 @@ void DebugScene::Initialize() {
 #pragma region Audio
 	//audio_->PlayeSound("clear", false);
 #pragma endregion
+
+	/// ===Particle=== ///
+	particleTranslate_ = { 0.0f, 0.0f, 0.0f };
 }
 
 ///-------------------------------------------/// 
@@ -298,7 +316,8 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
-			Particle::Emit("Wind", particleTranslate_);
+			particleManager_->Emit("Ring", particleTranslate_);
+			particleManager_->SetTexture("Ring", "gradationLine");
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle1 = false;
@@ -317,7 +336,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			Particle::Emit("Explosion", particleTranslate_);
+			particleManager_->Emit("Explosion", particleTranslate_);
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle2 = false;
@@ -336,8 +355,8 @@ void DebugScene::Update() {
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
 		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
-			Particle::Emit("Confetti", particleTranslate_);
-			Particle::SetTexture("Confetti", "monsterBall");
+			particleManager_->Emit("Confetti", particleTranslate_);
+			particleManager_->SetTexture("Confetti", "monsterBall");
 			isDisplay_.Particle3 = true;
 		} else if (isDisplay_.Particle3 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle3 = false;
@@ -507,10 +526,8 @@ void DebugScene::Update() {
 
 	/// ===Particle=== ///
 #pragma region Particle
-	Particle::Update();
-	Particle::SetCamera("Wind", cameraManager_->GetActiveCamera().get());
-	Particle::SetCamera("Explosion", cameraManager_->GetActiveCamera().get());
-	Particle::SetCamera("Confetti", cameraManager_->GetActiveCamera().get());
+	particleManager_->Update();
+	particleManager_->SetCamera(cameraManager_->GetActiveCamera().get());
 #pragma endregion
 
 	/// ===カメラの更新=== ///
@@ -541,8 +558,8 @@ void DebugScene::Draw() {
 	//cloud_->Draw();
 
 	// アニーメーションモデル
-	modelLight_->Draw();
-	animationModel_->Draw();
+	//modelLight_->Draw();
+	//animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
@@ -552,7 +569,7 @@ void DebugScene::Draw() {
 		
 	}
 	/// ===Particle=== ///
-	Particle::Draw();
+	particleManager_->Draw(BlendMode::kBlendModeAdd);
 
 #pragma endregion
 
