@@ -48,7 +48,18 @@ void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CP
 /// 描画処理
 ///-------------------------------------------///
 void OffScreenRenderer::Draw(ID3D12GraphicsCommandList* commandList) {
-	Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+
+	if (type_ == OffScreenType::Grayscale) {
+		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+	} else if (type_ == OffScreenType::Vignette) {
+		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+	} else if (type_ == OffScreenType::BoxFilter3x3) {
+		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+	} else if (type_ == OffScreenType::BoxFilter5x5) {
+		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+	} else {
+		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+	}
 	commandList->SetGraphicsRootDescriptorTable(0, renderTexture_->GetSRVHandle());
 	// 頂点3つを描画
 	commandList->DrawInstanced(3, 1, 0, 0);
@@ -72,3 +83,9 @@ uint32_t OffScreenRenderer::GetRTVHandleIndex() const { return renderTexture_->G
 uint32_t OffScreenRenderer::GetSRVHandleIndex() const { return renderTexture_->GetSRVHandleIndex(); }
 // Reosurce
 ID3D12Resource* OffScreenRenderer::GetBuffer() const { return renderTexture_->GetBuffer(); }
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+// Typeの設定
+void OffScreenRenderer::SetType(OffScreenType type) { type_ = type; }
