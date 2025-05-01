@@ -70,6 +70,10 @@ void ImGuiManager::Begin() {
 	ImGui::NewFrame();
 	// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の初期に置き換える
 	//ImGui::ShowDemoWindow();
+
+	// Dock付きUI描画
+	DrawMainDockWindow();
+
 #endif // USE_IMGUI
 }
 
@@ -79,8 +83,7 @@ void ImGuiManager::Begin() {
 ///-------------------------------------------///
 void ImGuiManager::End() {
 #ifdef USE_IMGUI
-	// Dock付きUI描画
-	DrawMainDockWindow();
+	
 
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
@@ -133,6 +136,8 @@ void ImGuiManager::DrawMainDockWindow() {
 
 	ImGuiID dockspace_id = ImGui::GetID("MainDockspace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+	ImGui::DockSpaceOverViewport
+	(ImGui::GetMainViewport()->ID, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
 	ImGui::End();
 
 	// 各ウィンドウを描画

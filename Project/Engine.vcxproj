@@ -207,6 +207,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
     <ClCompile Include="Engine\System\ImGui\SceneView.cpp" />
+    <ClCompile Include="Engine\System\Service\Setter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
@@ -316,6 +317,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
     <ClInclude Include="Engine\System\ImGui\SceneView.h" />
+    <ClInclude Include="Engine\System\Service\Setter.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

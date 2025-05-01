@@ -39,7 +39,7 @@ public:
 public:/// ===開発者用関数(システム)=== ///
 
 	// システム全体の初期化
-	void Initialize(const wchar_t* title, int width = 1280, int height = 720);
+	void Initialize(const wchar_t* title, int width = 1920, int height = 1080);
 	// システム全体の更新
 	void Update();
 	// システム全体の終了
@@ -76,6 +76,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	AnimationManager* GetAnimationManager();
 	// ParticleManagerの取得
 	ParticleManager* GetParticleManager();
+	// OffScreenRendererの取得
+	OffScreenRenderer* GetOffScreenRenderer();
 	// Keyboardの取得
 	Keyboard* GetKeyboard();
 	// Mouseの取得

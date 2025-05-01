@@ -11,6 +11,7 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
     assert(registry.audioManager);
     assert(registry.animationManager);
     assert(registry.particleManager);
+    assert(registry.offScreenRenderer);
     assert(registry.textureManager);
     assert(registry.modelManager);
     assert(registry.pipelineManager);
@@ -32,6 +33,7 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
     audioManager_ = registry.audioManager;
     csvManager_ = registry.csvManager;
     particleManager_ = registry.particleManager;
+	offScreenRenderer_ = registry.offScreenRenderer;
     keyboard_ = registry.keyboard;
     mouse_ = registry.mouse;
     controller_ = registry.controller;
@@ -47,6 +49,7 @@ void ServiceLocator::Finalize() {
     csvManager_ = nullptr;
     audioManager_ = nullptr;
     particleManager_ = nullptr;
+	offScreenRenderer_ = nullptr;
     animationManager_ = nullptr;
     modelManager_ = nullptr;
     textureManager_ = nullptr;
@@ -80,6 +83,11 @@ AudioManager* ServiceLocator::GetAudioManager() { return audioManager_; }
 /// ParticleManager
 ///-------------------------------------------///
 ParticleManager* ServiceLocator::GetParticleManager() { return particleManager_; }
+
+///-------------------------------------------/// 
+/// OffScreenRenderer
+///-------------------------------------------///
+OffScreenRenderer* ServiceLocator::GetOffScreenRenderer() { return offScreenRenderer_; }
 
 ///-------------------------------------------/// 
 /// TextureManager

@@ -118,6 +118,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
     <ClCompile Include="Engine\System\ImGui\SceneView.cpp" />
+    <ClCompile Include="Engine\System\Service\Setter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
     <ClInclude Include="Engine\System\ImGui\SceneView.h" />
+    <ClInclude Include="Engine\System\Service\Setter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

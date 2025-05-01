@@ -120,5 +120,8 @@ private:/// ===メンバ変数=== ///
 	// Particle
 	bool start_ = false;
 	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+
+	// OffScreen
+	bool isGrayscale = false;
 #pragma endregion
 };

@@ -227,6 +227,8 @@ CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
 // ParticleManager
 ParticleManager* Mii::GetParticleManager() { return particleManager_.get(); }
+// OffScreenRenderer
+OffScreenRenderer* Mii::GetOffScreenRenderer() { return offScreenRenderer_.get(); }
 // Keyboard
 Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse
