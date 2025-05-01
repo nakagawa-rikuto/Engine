@@ -12,6 +12,14 @@
 class Camera;
 class SRVManager;
 
+/// ===選択肢=== ///
+enum class shapeType {
+	// 円
+	kCircle,
+	// 総数(これは最後にしなければいけない)
+	kNone,
+};
+
 ///=====================================================/// 
 /// Particle共通描画設定
 ///=====================================================///
@@ -22,7 +30,7 @@ public:
 	~ParticleSetUp();
 
 	// 初期化
-	void Initialze(const std::string& filename, const uint32_t kNumMaxInstance);
+	void Initialze(const std::string& filename, const uint32_t kNumMaxInstance, shapeType type);
 	// 描画
 	void Darw(const uint32_t instance, BlendMode mode);
 
@@ -60,5 +68,10 @@ private:
 
 	/// ===モデル情報=== ///
 	uint32_t kNumMaxInstance_;
+
+private:
+	/// ===VertexBufferの設定=== ///
+	// 円
+	void SetVertexBUfferCircle();
 };
 

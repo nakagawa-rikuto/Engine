@@ -2,6 +2,7 @@
 // c++
 #include <cassert>
 #include <fstream>
+#include <numbers>
 // Service
 #include "Engine/System/Service/ServiceLocator.h"
 #include "Engine/System/Service/Getter.h"
@@ -38,7 +39,7 @@ void ParticleSetUp::SetInstancingData(size_t index, const Vector4& color, const 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMaxInstance) {
+void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMaxInstance, shapeType type) {
 
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = Getter::GetDXDevice();
@@ -63,6 +64,11 @@ void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMa
 	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
 	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
 	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
+	// タイプ次第でVertexBufferを変更する
+	if (type == shapeType::kCircle) {
+		// 円
+		SetVertexBUfferCircle();
+	}
 
 	/// ===SetUp=== ///
 	common_->Initlize(device, kNumMaxInstance_);
@@ -101,4 +107,39 @@ void ParticleSetUp::Darw(const uint32_t instance, BlendMode mode) {
 	// 描画（Drawコール）
 	commandList->DrawInstanced(UINT(modelData_.vertices.size()), instance, 0, 0);
 
+}
+
+///-------------------------------------------/// 
+/// VertexBufferの設定
+///-------------------------------------------///
+// 円
+void ParticleSetUp::SetVertexBUfferCircle() {
+
+	// 変数の宣言
+	const uint32_t kRingDivide = 32; // 円の分割数
+	const float kOuterRadius = 1.0f; // 外半径
+	const float kInnerRadius = 0.2f; // 内半径
+	const float radianPerDivide = 2.0f * std::numbers::pi_v<float> / kRingDivide; // 円の分割角度
+
+	for (uint32_t index = 0; index < kRingDivide; ++index) {
+		float sin = std::sin(index * radianPerDivide);
+		float cos = std::cos(index * radianPerDivide);
+		float sinNext = std::sin(static_cast<float>(index + 1)) * radianPerDivide;
+		float cosNext = std::cos(static_cast<float>(index + 1)) * radianPerDivide;
+		float u = static_cast<float>(index) / float(kRingDivide);
+		float uNext = static_cast<float>(index + 1) / float(kRingDivide);
+
+		// positionとuv。normalは必要なら+zを設定する
+		vertexData_[3].position = { -sin * kOuterRadius, cos * kOuterRadius, 0.0f, 1.0f };
+		vertexData_[3].texcoord = { u, 0.0f };
+
+		vertexData_[2].position = { -sinNext * kOuterRadius, cosNext * kOuterRadius, 0.0f, 1.0f };
+		vertexData_[2].texcoord = { uNext, 0.0f };
+
+		vertexData_[1].position = { -sin * kInnerRadius, cos * kInnerRadius, 0.0f, 1.0f };
+		vertexData_[1].texcoord = { u, 1.0f };
+
+		vertexData_[0].position = { -sinNext * kInnerRadius, cosNext * kInnerRadius, 0.0f, 1.0f };
+		vertexData_[0].texcoord = { uNext, 1.0f };
+	}
 }

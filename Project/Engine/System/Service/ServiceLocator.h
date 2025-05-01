@@ -33,7 +33,7 @@ struct ServiceRegister {
     AudioManager* audioManager = nullptr;
     CSVManager* csvManager = nullptr;
     ParticleManager* particleManager = nullptr;
-	OffScreenRenderer* offScreenRenderer = nullptr;
+	  OffScreenRenderer* offScreenRenderer = nullptr;
     Keyboard* keyboard = nullptr;
     Mouse* mouse = nullptr;
     Controller* controller = nullptr;
@@ -73,8 +73,8 @@ public:
     static AudioManager* GetAudioManager();
     // ParticleManager
     static ParticleManager* GetParticleManager();
-	// OffScreenRenderer
-	static OffScreenRenderer* GetOffScreenRenderer();
+	  // OffScreenRenderer
+  	static OffScreenRenderer* GetOffScreenRenderer();
     // Input (Keyboard, Mouse, Controller)
     static Keyboard* GetKeyboard();
     static Mouse* GetMouse();
@@ -93,7 +93,7 @@ private:
     static inline CSVManager* csvManager_ = nullptr;
     static inline AudioManager* audioManager_ = nullptr;
     static inline ParticleManager* particleManager_ = nullptr;
-	static inline OffScreenRenderer* offScreenRenderer_ = nullptr;
+  	static inline OffScreenRenderer* offScreenRenderer_ = nullptr;
     static inline Keyboard* keyboard_ = nullptr;
     static inline Mouse* mouse_ = nullptr;
     static inline Controller* controller_ = nullptr;

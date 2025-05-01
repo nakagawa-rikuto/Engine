@@ -30,9 +30,6 @@ void Framework::Initialize(const wchar_t* title) {
 		MiiEngine_->GetMouse(),
 		MiiEngine_->GetController() }
 	);
-	// Particleの追加
-	storage_ = std::make_unique<ParticleStorage>();
-	storage_->Initialize(MiiEngine_->GetParticleManager());
 }
 
 ///-------------------------------------------/// 

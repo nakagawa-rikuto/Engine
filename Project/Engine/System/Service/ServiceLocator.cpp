@@ -33,7 +33,7 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
     audioManager_ = registry.audioManager;
     csvManager_ = registry.csvManager;
     particleManager_ = registry.particleManager;
-	offScreenRenderer_ = registry.offScreenRenderer;
+	  offScreenRenderer_ = registry.offScreenRenderer;
     keyboard_ = registry.keyboard;
     mouse_ = registry.mouse;
     controller_ = registry.controller;
@@ -49,7 +49,7 @@ void ServiceLocator::Finalize() {
     csvManager_ = nullptr;
     audioManager_ = nullptr;
     particleManager_ = nullptr;
-	offScreenRenderer_ = nullptr;
+	  offScreenRenderer_ = nullptr;
     animationManager_ = nullptr;
     modelManager_ = nullptr;
     textureManager_ = nullptr;
