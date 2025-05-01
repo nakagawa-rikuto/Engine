@@ -6,57 +6,54 @@
 /// 全てのサービスを提供
 ///-------------------------------------------///
 void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
-    // nullチェック
-    assert(registry.srvManager);
-    assert(registry.audioManager);
-    assert(registry.animationManager);
-    assert(registry.particleManager);
-    assert(registry.offScreenRenderer);
-    assert(registry.textureManager);
-    assert(registry.modelManager);
-    assert(registry.pipelineManager);
-    assert(registry.animationManager);
-    assert(registry.csvManager);
-    assert(registry.dxCommon);
-    assert(registry.winApp);
-    assert(registry.keyboard);
-    assert(registry.mouse);
-    assert(registry.controller);
+	// nullチェック
+	assert(registry.srvManager);
+	assert(registry.audioManager);
+	assert(registry.animationManager);
+	assert(registry.offScreenRenderer);
+	assert(registry.textureManager);
+	assert(registry.modelManager);
+	assert(registry.pipelineManager);
+	assert(registry.animationManager);
+	assert(registry.csvManager);
+	assert(registry.dxCommon);
+	assert(registry.winApp);
+	assert(registry.keyboard);
+	assert(registry.mouse);
+	assert(registry.controller);
 
-    dxCommon_ = registry.dxCommon;
-    winApp_ = registry.winApp;
-    srvManager_ = registry.srvManager;
-    pipelineManager_ = registry.pipelineManager;
-    textureManager_ = registry.textureManager;
-    modelManager_ = registry.modelManager;
-    animationManager_ = registry.animationManager;
-    audioManager_ = registry.audioManager;
-    csvManager_ = registry.csvManager;
-    particleManager_ = registry.particleManager;
-	  offScreenRenderer_ = registry.offScreenRenderer;
-    keyboard_ = registry.keyboard;
-    mouse_ = registry.mouse;
-    controller_ = registry.controller;
+	dxCommon_ = registry.dxCommon;
+	winApp_ = registry.winApp;
+	srvManager_ = registry.srvManager;
+	pipelineManager_ = registry.pipelineManager;
+	textureManager_ = registry.textureManager;
+	modelManager_ = registry.modelManager;
+	animationManager_ = registry.animationManager;
+	audioManager_ = registry.audioManager;
+	csvManager_ = registry.csvManager;
+	offScreenRenderer_ = registry.offScreenRenderer;
+	keyboard_ = registry.keyboard;
+	mouse_ = registry.mouse;
+	controller_ = registry.controller;
 }
 
 ///-------------------------------------------/// 
 /// 全てのサービスを終了
 ///-------------------------------------------///
 void ServiceLocator::Finalize() {
-    controller_ = nullptr;
-    mouse_ = nullptr;
-    keyboard_ = nullptr;
-    csvManager_ = nullptr;
-    audioManager_ = nullptr;
-    particleManager_ = nullptr;
-	  offScreenRenderer_ = nullptr;
-    animationManager_ = nullptr;
-    modelManager_ = nullptr;
-    textureManager_ = nullptr;
-    pipelineManager_ = nullptr;
-    srvManager_ = nullptr;
-    winApp_ = nullptr;
-    dxCommon_ = nullptr;
+	controller_ = nullptr;
+	mouse_ = nullptr;
+	keyboard_ = nullptr;
+	csvManager_ = nullptr;
+	audioManager_ = nullptr;
+	offScreenRenderer_ = nullptr;
+	animationManager_ = nullptr;
+	modelManager_ = nullptr;
+	textureManager_ = nullptr;
+	pipelineManager_ = nullptr;
+	srvManager_ = nullptr;
+	winApp_ = nullptr;
+	dxCommon_ = nullptr;
 }
 
 ///-------------------------------------------/// 
@@ -78,11 +75,6 @@ DSVManager* ServiceLocator::GetDSVManager() { return dsvManager_; }
 /// AudioManager
 ///-------------------------------------------///
 AudioManager* ServiceLocator::GetAudioManager() { return audioManager_; }
-
-///-------------------------------------------/// 
-/// ParticleManager
-///-------------------------------------------///
-ParticleManager* ServiceLocator::GetParticleManager() { return particleManager_; }
 
 ///-------------------------------------------/// 
 /// OffScreenRenderer

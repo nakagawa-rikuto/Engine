@@ -58,9 +58,6 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// AnimationManagerの生成
 	animationManager_ = std::make_unique<AnimationManager>();
 
-	// ParticleManager
-	particleManager_ = std::make_unique<ParticleManager>();
-
 	// Audiomanagerの生成
 	audioManager_ = std::make_unique<AudioManager>();
 	audioManager_->Initialze();
@@ -118,7 +115,6 @@ void Mii::Finalize() {
 	// Manager
 	csvManager_.reset();		// CSVManager
 	audioManager_.reset();		// AudioManager
-	particleManager_.reset();  // ParticleManager
 	animationManager_.reset();	// AnimationManager
 	modelManager_.reset();		// Modelmanager
 	textureManager_.reset();	// TextrureManager
@@ -225,8 +221,6 @@ AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 // AnimationManager
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
-// ParticleManager
-ParticleManager* Mii::GetParticleManager() { return particleManager_.get(); }
 // OffScreenRenderer
 OffScreenRenderer* Mii::GetOffScreenRenderer() { return offScreenRenderer_.get(); }
 // Keyboard

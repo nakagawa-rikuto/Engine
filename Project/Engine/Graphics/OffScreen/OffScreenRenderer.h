@@ -56,6 +56,6 @@ private:
 	std::vector<std::shared_ptr<RenderPass>> renderPass_;
 
 	// Piplineのタイプ
-	OffScreenType type_ = OffScreenType::Grayscale;
+	OffScreenType type_ = OffScreenType::CopyImage;
 };
 

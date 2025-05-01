@@ -24,7 +24,6 @@ void Framework::Initialize(const wchar_t* title) {
 		MiiEngine_->GetAnimationManager(),
 		MiiEngine_->GetAudioManager(),
 		MiiEngine_->GetCSVManager(),
-		MiiEngine_->GetParticleManager(),
 		MiiEngine_->GetOffScreenRenderer(),
 		MiiEngine_->GetKeyboard(),
 		MiiEngine_->GetMouse(),

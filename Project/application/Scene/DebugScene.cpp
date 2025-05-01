@@ -4,7 +4,6 @@
 // Service
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
-#include "Engine/System/Service/Particle.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -112,7 +111,7 @@ void DebugScene::Initialize() {
 	cloud_->SetTranslate({ 0.0f, 0.0f, 0.0f });
 
 	// ポイントライトの位置と半径の変更
-	light_.point.position = { 0.0f, 0.0f, 99.0f };
+	light_.point.position = { 0.0f, 0.0f, -10.0f };
 	light_.point.radius = 500.0f;
 
 	// 一回更新をかける
