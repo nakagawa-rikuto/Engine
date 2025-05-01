@@ -50,14 +50,19 @@ void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CP
 void OffScreenRenderer::Draw(ID3D12GraphicsCommandList* commandList) {
 
 	if (type_ == OffScreenType::Grayscale) {
-		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+		// グレースケール
+		Render::SetPSO(commandList, PipelineType::Grayscale, BlendMode::kBlendModeNone);
 	} else if (type_ == OffScreenType::Vignette) {
-		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+		// ビネット
+		Render::SetPSO(commandList, PipelineType::Vignette, BlendMode::kBlendModeNone);
 	} else if (type_ == OffScreenType::BoxFilter3x3) {
-		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+		// ボックスフィルタ3x3
+		Render::SetPSO(commandList, PipelineType::BoxFilter3x3, BlendMode::kBlendModeNone);
 	} else if (type_ == OffScreenType::BoxFilter5x5) {
-		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+		// ボックスフィルタ5x5
+		Render::SetPSO(commandList, PipelineType::BoxFilter5x5, BlendMode::kBlendModeNone);
 	} else {
+		// コピーイメージ
 		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
 	}
 	commandList->SetGraphicsRootDescriptorTable(0, renderTexture_->GetSRVHandle());
