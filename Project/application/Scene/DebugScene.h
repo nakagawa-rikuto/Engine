@@ -119,6 +119,8 @@ private:/// ===メンバ変数=== ///
 	Vector2 mousePosition_ = { 0.0f, 0.0f };
 	// Particle
 	bool start_ = false;
-	Vector3 particleTranslate_ = { 0.0f, 0.0f, -10.0f };
+	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+	// OffScreen
+	bool isGrayscale = false;
 #pragma endregion
 };

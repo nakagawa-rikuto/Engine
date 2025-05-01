@@ -95,7 +95,9 @@ void InputLayout::Create(PipelineType Type) {
 
 		inputLayoutDesc_.pInputElementDescs = inputElementDescs;
 		inputLayoutDesc_.NumElements = _countof(inputElementDescs);
-	} else if (Type == PipelineType::OffScreen) {
+	} else if (
+		Type == PipelineType::OffScreen || Type == PipelineType::Grayscale || Type == PipelineType::Vignette || 
+		Type == PipelineType::BoxFilter3x3 || Type == PipelineType::BoxFilter5x5) {
 		// 頂点二は何もデータを入力しないので、InputLayoputは利用しない。
 		inputLayoutDesc_.pInputElementDescs = nullptr;
 		inputLayoutDesc_.NumElements = 0;

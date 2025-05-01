@@ -293,7 +293,9 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		hr = dxCommon->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(), signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
 		assert(SUCCEEDED(hr));
 
-	} else if (Type == PipelineType::OffScreen) {
+	} else if (
+		Type == PipelineType::OffScreen || Type == PipelineType::Grayscale || Type == PipelineType::Vignette ||
+		Type == PipelineType::BoxFilter3x3 || Type == PipelineType::BoxFilter5x5) {
 		/// ===RootSignatureの生成=== ///
 		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignatureObj2D{};
 		descriptionRootSignatureObj2D.Flags =

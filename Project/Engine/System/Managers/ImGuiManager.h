@@ -14,6 +14,7 @@
 class WinApp;
 class DXCommon;
 class SRVManager;
+class SceneView;
 
 ///=====================================================/// 
 /// ImGuiManager
@@ -34,11 +35,19 @@ public:
 	void End();
 	// 画面への描画処理
 	void Draw();
+	
+	// Setter
+	void SetSceneView(SceneView* sceneView);
 
 private:
 	
 	WinApp* winApp_ = nullptr;
 	DXCommon* dxCommon_ = nullptr;
 	SRVManager* srvManager_ = nullptr;
+	SceneView* sceneView_ = nullptr;
+
+private:
+	void DrawMainDockWindow(); // Dock付きUI描画
+	void MenuBar();            // メニューバーのみ
 };
 

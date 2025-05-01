@@ -6,6 +6,15 @@
 #include "RenderTexture.h"
 #include "RenderPass.h"
 
+/// ===タイプ=== ///
+enum class OffScreenType {
+	CopyImage,
+	Grayscale,
+	Vignette,
+	BoxFilter3x3,
+	BoxFilter5x5,
+};
+
 ///=====================================================/// 
 /// OffScreenRenderer
 ///=====================================================///
@@ -38,8 +47,15 @@ public: /// ===Getter=== ///
 	// Resourceの取得
 	ID3D12Resource* GetBuffer() const;
 
+public: /// ===Setter=== ///
+	// Typeの設定
+	void SetType(OffScreenType type);
+
 private:
 	std::shared_ptr<RenderTexture> renderTexture_;
 	std::vector<std::shared_ptr<RenderPass>> renderPass_;
+
+	// Piplineのタイプ
+	OffScreenType type_ = OffScreenType::Grayscale;
 };
 

@@ -1,6 +1,5 @@
 #pragma once
 /// ===Include=== ///
-/// ===Include=== ///
 // C++
 #include <string>
 #include <d3d12.h>

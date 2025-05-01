@@ -4,12 +4,14 @@
 // Service
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
+#include "Engine/System/Service/Particle.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
 #include "Engine/Graphics/Particle/Derivative/WindParticle.h"
 #include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
 #include "Engine/Graphics/Particle/Derivative/RingParticle.h"
+#include "Engine/System/Service/Setter.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -138,6 +140,11 @@ void DebugScene::Initialize() {
 	//audio_->PlayeSound("clear", false);
 #pragma endregion
 
+	/// ===OffScreen=== ///
+#pragma region OffScreen
+	isGrayscale = false;
+#pragma endregion
+	
 	/// ===Particle=== ///
 	particleTranslate_ = { 0.0f, 0.0f, 0.0f };
 }
@@ -399,8 +406,21 @@ void DebugScene::Update() {
 	ImGui::DragFloat("Volume", &volume, 0.01f);
 	ImGui::DragFloat("Ptich", &pitch, 0.01f);
 	ImGui::End();
+	/// ===OffScreen=== ///
+	ImGui::Begin("OffScreen");
+	ImGui::Checkbox("Grayscale", &isGrayscale);
+	ImGui::End();
 
 #endif // USE_IMGUI
+
+#pragma region OffScreen
+	/// ===OffScreen=== ///
+	if (isGrayscale) {
+		Setter::SetOffScreenType(OffScreenType::Grayscale);
+	} else {
+		Setter::SetOffScreenType(OffScreenType::CopyImage);
+	}
+#pragma endregion
 
 	/// ===カメラの変更=== ///
 #pragma region カメラの変更

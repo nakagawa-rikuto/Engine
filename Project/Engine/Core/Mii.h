@@ -23,6 +23,8 @@
 #include "Engine/System/Managers/AnimationManager.h"
 // OffScreenRender
 #include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
+// ImGui
+#include "Engine/System/ImGui/SceneView.h"
 
 ///=====================================================///
 /// システム
@@ -36,7 +38,7 @@ public:
 public:/// ===開発者用関数(システム)=== ///
 
 	// システム全体の初期化
-	void Initialize(const wchar_t* title, int width = 1280, int height = 720);
+	void Initialize(const wchar_t* title, int width = 1920, int height = 1080);
 	// システム全体の更新
 	void Update();
 	// システム全体の終了
@@ -71,6 +73,10 @@ public:/// ===開発者用関数(Getter)=== ///
 	CSVManager* GetCSVManager();
 	// AnimationManagerの取得
 	AnimationManager* GetAnimationManager();
+	// ParticleManagerの取得
+	ParticleManager* GetParticleManager();
+	// OffScreenRendererの取得
+	OffScreenRenderer* GetOffScreenRenderer();
 	// Keyboardの取得
 	Keyboard* GetKeyboard();
 	// Mouseの取得
@@ -98,8 +104,11 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<AudioManager> audioManager_;         // AudioMangaer
 	std::unique_ptr<CSVManager> csvManager_;             // CSVManager
 	std::unique_ptr<AnimationManager> animationManager_; // AnimationManager
-
+	std::unique_ptr<ParticleManager> particleManager_;   // ParticleManager
+	// OffScreen
 	std::unique_ptr<OffScreenRenderer> offScreenRenderer_; // OffScreen
+	// ImGui
+	std::unique_ptr<SceneView> sceneView_;               // SceneView
 
 private:
 	///=====================================================/// 
