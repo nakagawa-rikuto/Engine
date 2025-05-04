@@ -59,7 +59,9 @@ void DepthStencil::Create(PipelineType Type) {
 
 		// 比較関数はLessEqual。
 		depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	} else if (Type == PipelineType::OffScreen) {
+	} else if (
+		Type == PipelineType::OffScreen || Type == PipelineType::Grayscale || Type == PipelineType::Vignette ||
+		Type == PipelineType::BoxFilter3x3 || Type == PipelineType::BoxFilter5x5) {
 
 		// 全画面に対して何か処理を施したいだけだから,比較も書き込みも必要ない為,有効化しない
 		depthStencilDesc_.DepthEnable = false;
