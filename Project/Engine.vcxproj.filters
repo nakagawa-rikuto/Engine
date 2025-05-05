@@ -18,6 +18,7 @@
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter3x3.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter5x5.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\LuminanceBasedOutline.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\RadialBlur.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
