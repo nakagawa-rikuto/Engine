@@ -72,7 +72,7 @@ void ImGuiManager::Begin() {
 	//ImGui::ShowDemoWindow();
 
 	// Dock付きUI描画
-	DrawMainDockWindow();
+	//DrawMainDockWindow();
 
 #endif // USE_IMGUI
 }
