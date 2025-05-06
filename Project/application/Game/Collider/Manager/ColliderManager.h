@@ -28,6 +28,14 @@ public:
 	// 全てのColliderの当たり判定
 	void CheckAllCollisions();
 
+public: /// ===Setter=== ///
+	// カメラの設定
+	void SetCamera(Camera* camera);
+
+	// Lightの設定
+	void SetLight(LightType type);
+	void SetLightData(LightInfo light);
+
 private: /// ===変数=== ///
 
 	// コライダーのリスト
