@@ -88,7 +88,7 @@ private:/// ===メンバ変数=== ///
 	/// ===変数=== ///
 #pragma region 変数
 	// モデル
-	Vector3 modelTranslate_ = { 0.0f, 0.0f, 0.0f };
+	Vector3 modelTranslate_ = { 0.0f, -1.3f, 0.0f };
 	Vector3 modelRotate_ = { 0.0f, 0.0f, 0.0f };
 	Vector3 modelScale_ = { 1.0f, 1.0f, 1.0f };
 	Vector4 modelColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };

@@ -141,7 +141,7 @@ void DebugScene::Initialize() {
 
 	/// ===OffScreen=== ///
 #pragma region OffScreen
-	isGrayscale = false;
+	isGrayscale = true;
 #pragma endregion
 	
 	/// ===Particle=== ///
@@ -515,6 +515,7 @@ void DebugScene::Update() {
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model_->Update();
 
+	model2_->SetTranslate(modelTranslate_);
 	model2_->SetLightData(light_);
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
