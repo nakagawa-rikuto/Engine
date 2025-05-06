@@ -18,9 +18,7 @@ public:
 
 	/// ===Override=== ///
 	// 初期化
-	void Initialze() override;
-	// 更新（override）
-	void InstancingUpdate(std::list<ParticleData>::iterator it)override;
+	void Initialze(const Vector3& translate, Camera* camera) override;
 	// 更新
 	void Update() override;
 	// 描画
@@ -41,15 +39,12 @@ private:
 
 	AccelerationField accelerationFild_;
 
-	// 乱数生成器の初期化
-	std::mt19937 randomEngine_;
-
 private:
 
 	// ランダムに発生させるための関数
-	ParticleData MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate);
+	ParticleData MakeParticle(std::mt19937& randomEngine, const Vector3& translate)override;
 	// エミっと
-	std::list<ParticleData> Emit(const Group& group, std::mt19937& randomEngine);
+	std::list<ParticleData> Emit(const Group& group, std::mt19937& randomEngine)override;
 	// AABBの当たり判定
 	bool IsCollision(const AABB& aabb, const Vector3& point);
 

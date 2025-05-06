@@ -10,7 +10,7 @@ void Framework::Initialize(const wchar_t* title) {
 	/// ===初期化=== ///
 	// MiiEnigne
 	MiiEngine_ = std::make_unique<Mii>();
-	MiiEngine_->Initialize(title, 1280, 720);
+	MiiEngine_->Initialize(title, 1920, 1080);
 	// ServiceLocator
 	ServiceLocator::ProvideAll({ 
 		MiiEngine_->GetWinApp(),
@@ -24,14 +24,11 @@ void Framework::Initialize(const wchar_t* title) {
 		MiiEngine_->GetAnimationManager(),
 		MiiEngine_->GetAudioManager(),
 		MiiEngine_->GetCSVManager(),
-		MiiEngine_->GetParticleManager(),
+		MiiEngine_->GetOffScreenRenderer(),
 		MiiEngine_->GetKeyboard(),
 		MiiEngine_->GetMouse(),
 		MiiEngine_->GetController() }
 	);
-	// Particleの追加
-	storage_ = std::make_unique<ParticleStorage>();
-	storage_->Initialize(MiiEngine_->GetParticleManager());
 }
 
 ///-------------------------------------------/// 

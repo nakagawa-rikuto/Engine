@@ -33,7 +33,19 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// PipelineManagerの生成
 	pipelineManager_ = std::make_unique<PipelineManager>();
-	pipelineManager_->Initialize(dXCommon_.get());;
+	pipelineManager_->Initialize(dXCommon_.get());
+
+	// OffScreenRendererの生成
+	offScreenRenderer_ = std::make_unique<OffScreenRenderer>();
+	offScreenRenderer_->Initialize(
+		dXCommon_->GetDevice(),
+		srvManager_.get(), rtvManager_.get(),
+		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // クリアカラーをここで設定
+
+	// SceneViewの生成
+	sceneView_ = std::make_unique<SceneView>();
+	sceneView_->SetTextureHandle(offScreenRenderer_->GetResultSRV());
+	imGuiManager_->SetSceneView(sceneView_.get());
 
 	// TextureManagerの生成
 	textureManager_ = std::make_unique<TextureManager>();
@@ -43,15 +55,15 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	modelManager_ = std::make_unique<ModelManager>();
 	modelManager_->Initialize(textureManager_.get());
 
+	// AnimationManagerの生成
+	animationManager_ = std::make_unique<AnimationManager>();
+
 	// Audiomanagerの生成
 	audioManager_ = std::make_unique<AudioManager>();
 	audioManager_->Initialze();
 
 	// CSVManagerの生成
 	csvManager_ = std::make_unique<CSVManager>();
-
-	// AnimationManagerの生成
-	animationManager_ = std::make_unique<AnimationManager>();
 
 	// InputCommonの生成
 	inputCommon_ = std::make_unique<InputCommon>();
@@ -68,16 +80,6 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// Controllerの生成
 	controller_ = std::make_unique<Controller>();
 	controller_->Initialize();
-
-	// OffScreenRendererの生成
-	offScreenRenderer_ = std::make_unique<OffScreenRenderer>();
-	offScreenRenderer_->Initialize(
-		dXCommon_->GetDevice(),
-		srvManager_.get(), rtvManager_.get(),
-		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // クリアカラーをここで設定
-
-	// ParticleManager
-	particleManager_ = std::make_unique<ParticleManager>();
 }
 
 ///=====================================================/// 
@@ -105,24 +107,33 @@ void Mii::Finalize() {
 	winApp_->TerminateGameWindow();
 
 	// 手動の解放
+	// Input
 	controller_.reset();		// Controller
 	mouse_.reset();				// Mouse
 	keyboard_.reset();			// Keyboard
 	inputCommon_.reset();		// InputCommon
-	animationManager_.reset();	// AnimationManager
+	// Manager
 	csvManager_.reset();		// CSVManager
 	audioManager_.reset();		// AudioManager
-	particleManager_.reset();  // ParticleManager
+	animationManager_.reset();	// AnimationManager
 	modelManager_.reset();		// Modelmanager
 	textureManager_.reset();	// TextrureManager
-	offScreenRenderer_.reset(); // OffScreenRender
-	pipelineManager_.reset();	// PipelineManager
-	imGuiManager_.reset();		// ImGuiManager
+	// SceneView
+	sceneView_.reset();
+	// OffScreen
+	offScreenRenderer_.reset();
+	// Pipline
+	pipelineManager_.reset();
+	// ImGui
+	imGuiManager_.reset();
+	// SRV, RTV, DSV
 	dsvManager_.reset();		// DSVManager
 	rtvManager_.reset();		// RTVManager
 	srvManager_.reset();		// SRVManager
-	dXCommon_.reset();			// DXCommon
-	winApp_.reset();			// WinApp
+	// DXCommon
+	dXCommon_.reset();
+	// WinApp
+	winApp_.reset();
 
 	// COMの終了
 	CoUninitialize();
@@ -210,8 +221,8 @@ AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 // AnimationManager
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
-// ParticleManager
-ParticleManager* Mii::GetParticleManager() { return particleManager_.get(); }
+// OffScreenRenderer
+OffScreenRenderer* Mii::GetOffScreenRenderer() { return offScreenRenderer_.get(); }
 // Keyboard
 Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse

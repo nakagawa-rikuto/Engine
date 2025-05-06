@@ -17,6 +17,9 @@
     <FxCompile Include="Resource\Shaders\OffScreen\Vignette.Ps.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter3x3.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter5x5.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\LuminanceBasedOutline.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\RadialBlur.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\Dissolve.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -110,13 +113,15 @@
     <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
     <ClCompile Include="application\Game\Collider\Manager\ColliderManager.cpp" />
     <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
-    <ClCompile Include="Engine\System\Service\Particle.cpp" />
-    <ClCompile Include="Engine\System\ParticleStorage\ParticleStorage.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
+    <ClCompile Include="Engine\System\ImGui\SceneView.cpp" />
+    <ClCompile Include="Engine\System\Service\Setter.cpp" />
+    <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
+    <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
     <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -219,13 +224,15 @@
     <ClInclude Include="application\Game\Collider\SphereCollider.h" />
     <ClInclude Include="application\Game\Collider\Manager\ColliderManager.h" />
     <ClInclude Include="application\Game\Collider\OBBCollider.h" />
-    <ClInclude Include="Engine\System\Service\Particle.h" />
-    <ClInclude Include="Engine\System\ParticleStorage\ParticleStorage.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
+    <ClInclude Include="Engine\System\ImGui\SceneView.h" />
+    <ClInclude Include="Engine\System\Service\Setter.h" />
+    <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
+    <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
     <ClInclude Include="application\Game\Entity\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>

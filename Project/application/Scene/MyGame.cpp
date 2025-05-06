@@ -102,6 +102,8 @@ void MyGame::LoadAudio() {
 void MyGame::LoadTexture() {
 	Loader::LoadTexture("uvChecker", "uvChecker.png");
 	Loader::LoadTexture("monsterBall", "monsterBall.png");
+	Loader::LoadTexture("circle", "circle.png");
+	Loader::LoadTexture("gradationLine", "gradationLine.png");
 }
 // モデル
 void MyGame::LoadModel() {
@@ -111,6 +113,7 @@ void MyGame::LoadModel() {
 	Loader::LoadModel("axis", "axis.obj");
 	Loader::LoadModel("plane", "plane.obj");
 	Loader::LoadModel("Particle", "Particle.obj");
+	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 
 	// Game
 	Loader::LoadModel("Ground", "Ground.obj");

@@ -7,6 +7,9 @@
 // PartlceGroup
 #include "Engine/Graphics/Particle/Base/ParticleGroup.h"
 
+/// ===前方宣言=== ///
+class Camera;
+
 ///=====================================================/// 
 /// ParticleManager
 ///=====================================================///
@@ -22,14 +25,16 @@ public:
     // テクスチャの設定
     void SetTexture(const std::string& name, const std::string& textureName);
     // カメラの設定
-    void SetCamera(const std::string& name, Camera* camera);
+    void SetCamera(Camera* camera);
 
     // パーティクルの全体更新
     void Update();
     // すべて描画
-    void DrawAll(BlendMode mode = BlendMode::KBlendModeNormal);
+    void Draw(BlendMode mode = BlendMode::kBlendModeAdd);
 
 private:
+    // Camera
+    Camera* camera_ = nullptr;
     // 登録されたテンプレート
     std::map<std::string, std::unique_ptr<ParticleGroup>> prototype_;
     // 実際に動いているパーティクル

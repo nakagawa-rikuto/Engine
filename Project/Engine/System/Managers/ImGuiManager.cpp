@@ -3,6 +3,7 @@
 #include "Engine/Core/WinApp.h"
 #include "Engine/Core/DXCommon.h"
 #include "Engine/System/Managers/SRVManager.h"
+#include "Engine/System/ImGui/SceneView.h"
 // c++
 #include <cassert>
 
@@ -69,6 +70,10 @@ void ImGuiManager::Begin() {
 	ImGui::NewFrame();
 	// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の初期に置き換える
 	//ImGui::ShowDemoWindow();
+
+	// Dock付きUI描画
+	DrawMainDockWindow();
+
 #endif // USE_IMGUI
 }
 
@@ -78,6 +83,8 @@ void ImGuiManager::Begin() {
 ///-------------------------------------------///
 void ImGuiManager::End() {
 #ifdef USE_IMGUI
+	
+
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	// ImGuiの内部コマンドを生成する
@@ -95,4 +102,63 @@ void ImGuiManager::Draw() {
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	srvManager_->PreDraw();
+}
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void ImGuiManager::SetSceneView(SceneView* sceneView) { sceneView_ = sceneView; }
+
+///-------------------------------------------/// 
+/// Dock付きUI描画
+///-------------------------------------------///
+void ImGuiManager::DrawMainDockWindow() {
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	ImGuiWindowFlags window_flags =
+		ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoBringToFrontOnFocus |
+		ImGuiWindowFlags_NoNavFocus |
+		ImGuiWindowFlags_MenuBar;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::Begin("DockSpace Window", nullptr, window_flags);
+	ImGui::PopStyleVar(2);
+
+	MenuBar();
+
+	ImGuiID dockspace_id = ImGui::GetID("MainDockspace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+	ImGui::DockSpaceOverViewport
+	(ImGui::GetMainViewport()->ID, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
+	ImGui::End();
+
+	// 各ウィンドウを描画
+	if (sceneView_) sceneView_->Draw();
+}
+
+///-------------------------------------------/// 
+/// メニューバーのみ
+///-------------------------------------------///
+void ImGuiManager::MenuBar() {
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+			ImGui::MenuItem("Open", "Ctrl+O");
+			ImGui::MenuItem("Save", "Ctrl+S");
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit")) {
+			ImGui::MenuItem("Undo", "Ctrl+Z");
+			ImGui::MenuItem("Redo", "Ctrl+Y");
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
 }

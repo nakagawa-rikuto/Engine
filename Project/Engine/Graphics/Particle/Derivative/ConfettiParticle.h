@@ -18,9 +18,7 @@ public:
 
     /// ===Override=== ///
     // 初期化
-    void Initialze() override;
-    // 更新（override）
-    void InstancingUpdate(std::list<ParticleData>::iterator it)override;
+    void Initialze(const Vector3& translate, Camera* camera) override;
     // 更新
     void Update() override;
     // 描画
@@ -33,17 +31,15 @@ private:
     ConfettiParticle(const ConfettiParticle&) = delete;
     ConfettiParticle& operator=(const ConfettiParticle&) = delete;
 
-    /// ===プライベートフィールド=== ///
-    std::mt19937 randomEngine_; // 乱数生成器
-    bool hasExploded_; // パーティクルが発生したかのフラグ
-
     // コンフェッティ設定
-    Vector3 explosionCenter_; // 爆発の中心位置
     float explosionRadius_; // 爆発の半径
     float gravity_; // 重力加速度
     float upwardForce_; // 上方向の初期加速度
     float maxLifetime_; // パーティクルの最大寿命
+    bool hasExploded_; // パーティクルが発生したかのフラグ
 
     // ランダムパーティクル生成
-    ParticleData MakeConfettiParticle(std::mt19937& randomEngine, const Vector3& center);
+    ParticleData MakeParticle(std::mt19937& randomEngine, const Vector3& translate)override;
+    // エミっと
+    std::list<ParticleData> Emit(const Group& group, std::mt19937& randomEngine)override;
 };
