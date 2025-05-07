@@ -18,6 +18,7 @@ void Ground::Initialize() {
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "Ground");
 	SetScale({ 0.5f, 0.5f, 0.5f });
+	object3d_->Update();
 }
 
 ///-------------------------------------------/// 

@@ -13,6 +13,8 @@ GameScene::~GameScene() {
 	camera_.reset();
 	// Player
 	player_.reset();
+	// Ground
+	ground_.reset();
 }
 
 ///-------------------------------------------/// 
@@ -30,6 +32,7 @@ void GameScene::Initialize() {
 	// Managerに追加,アクティブに
 	cameraManager_->Add("Game", camera_);
 	cameraManager_->SetActiveCamera("Game");
+	cameraManager_->UpdateAllCameras();
 
 	/// ===Player=== ///
 	player_ = std::make_unique<Player>();
