@@ -29,7 +29,7 @@ const std::unordered_map<PipelineType, Compiler::ShaderInfo> Compiler::kShaderTa
 	{ PipelineType::BoxFilter5x5, { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/BoxFilter5x5.PS.hlsl" } },
 };
 
-/// ===LuminanceBasedOutline, RadialBlur, === ///
+/// ===LuminanceBasedOutline, RadialBlur, CopyImag, === ///
 
 ///-------------------------------------------/// 
 /// shaderをコンパイルする
