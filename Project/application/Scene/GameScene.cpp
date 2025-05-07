@@ -2,12 +2,17 @@
 // SceneManager
 #include "Engine/System/Managers/SceneManager.h"
 
+
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
 GameScene::~GameScene() {
 	// ISceneのデストラクタ
 	IScene::~IScene();
+	// Camera
+	camera_.reset();
+	// Player
+	player_.reset();
 }
 
 ///-------------------------------------------/// 
@@ -16,6 +21,20 @@ GameScene::~GameScene() {
 void GameScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
+
+	/// ===Camera=== ///
+	camera_ = std::make_shared<Camera>();
+	camera_->Initialize();
+	camera_->SetTranslate(cameraInfo_.translate);
+	camera_->SetRotate(cameraInfo_.rotate);
+	// Managerに追加,アクティブに
+	cameraManager_->Add("Game", camera_);
+	cameraManager_->SetActiveCamera("Game");
+
+	/// ===Player=== ///
+	player_ = std::make_unique<Player>();
+	player_->Initialize();
+	player_->SetCamera(cameraManager_->GetActiveCamera().get());
 }
 
 ///-------------------------------------------/// 
@@ -26,7 +45,24 @@ void GameScene::Update() {
 #ifdef USE_IMGUI
 	ImGui::Begin("GameScene");
 	ImGui::End();
+	// Camera
+	ImGui::Begin("Camera");
+	ImGui::DragFloat3("Translate", &cameraInfo_.translate.x, 0.01f);
+	ImGui::DragFloat3("Rotate", &cameraInfo_.rotate.x, 0.001f);
+	ImGui::End();
+	// Player
+	player_->UpdateImGui();
+
 #endif // USE_IMGUI
+
+	/// ===Playerの更新=== ///
+	player_->SetCamera(cameraManager_->GetActiveCamera().get());
+	player_->Update();
+
+	/// ===Cameraの更新=== ///
+	camera_->SetTranslate(cameraInfo_.translate);
+	camera_->SetRotate(cameraInfo_.rotate);
+	cameraManager_->UpdateAllCameras();
 }
 
 ///-------------------------------------------/// 
@@ -34,9 +70,12 @@ void GameScene::Update() {
 ///-------------------------------------------///
 void GameScene::Draw() {
 #pragma region 背景スプライト描画
+	
 #pragma endregion
 
 #pragma region モデル描画
+	// Player
+	player_->Draw();
 #pragma endregion
 
 #pragma region 前景スプライト描画

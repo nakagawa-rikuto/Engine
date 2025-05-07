@@ -10,7 +10,7 @@
 // Managers
 #include "Engine/System/Managers/SRVManager.h"
 // camera
-#include "application/Drawing/3d/Camera.h"
+#include "application/Game/Camera/Camera.h"
 // Math
 #include "Math/sMath.h"
 

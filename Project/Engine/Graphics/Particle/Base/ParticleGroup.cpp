@@ -1,6 +1,6 @@
 #include "ParticleGroup.h"
 // Camera
-#include "application/Drawing/3d/Camera.h"
+#include "application/Game/Camera/Camera.h"
 // Service
 #include "Engine/System/Service/Getter.h"
 // Math

@@ -41,6 +41,7 @@ public: /// ===Getter=== ///
     std::string GetColliderName();
 
 public: /// ===Setter=== ///
+    //NOTE:定点用のセッター
 	// Object3D
     void SetTranslate(const Vector3& translate);
 	void SetRotate(const Vector3& rotate);
@@ -57,9 +58,6 @@ protected:
     ColliderType type_;
     // ColliderName
     std::string colliderName_;
-
-    // Camera
-    Camera* camera_ = nullptr;
 
 	// Object3D
 	std::unique_ptr<Object3d> object3d_;

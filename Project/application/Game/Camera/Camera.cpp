@@ -71,7 +71,7 @@ void Camera::SetStick(const Vector2& stickValue) { stickValue_ = stickValue; }
 /// 初期化
 ///-------------------------------------------///
 void Camera::Initialize() {
-	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
+	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f} };
 	addTransform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
 	horizontalView_ = 0.45f;
 	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());
