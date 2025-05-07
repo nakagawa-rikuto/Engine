@@ -15,8 +15,10 @@ void SceneView::SetTextureHandle(D3D12_GPU_DESCRIPTOR_HANDLE handle) { textureHa
 /// 描画
 ///-------------------------------------------///
 void SceneView::Draw() {
+#ifdef USE_IMGUI
     ImGui::Begin("Scene");
     ImVec2 size = ImGui::GetContentRegionAvail();
     ImGui::Image((ImTextureID)textureHandle_.ptr, size);
     ImGui::End();
+#endif // USE_IMGUI
 }
