@@ -35,6 +35,10 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize();
 	player_->SetCamera(cameraManager_->GetActiveCamera().get());
+
+	/// ===Ground=== ///
+	ground_ = std::make_unique<Ground>();
+	ground_->Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -59,6 +63,10 @@ void GameScene::Update() {
 	player_->SetCamera(cameraManager_->GetActiveCamera().get());
 	player_->Update();
 
+	/// ===Groundの更新=== ///
+	ground_->SetCamera(cameraManager_->GetActiveCamera().get());
+	ground_->Update();
+
 	/// ===Cameraの更新=== ///
 	camera_->SetTranslate(cameraInfo_.translate);
 	camera_->SetRotate(cameraInfo_.rotate);
@@ -74,6 +82,8 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
+	// Ground
+	ground_->Draw();
 	// Player
 	player_->Draw();
 #pragma endregion
