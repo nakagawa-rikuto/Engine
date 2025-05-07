@@ -28,13 +28,14 @@ public: /// ===Getter=== ///
 	Vector3 GetTranslate()const;
 	Vector3 GetRotate()const;
 
-private:
+private: /// ===変数の宣言=== ///
 
 	/// ===振る舞い=== ///
 	enum class Behavior {
 		kRoot,
 		kMove,
-		kCharge
+		kCharge,
+		kAttack
 	};
 	Behavior behavior_ = Behavior::kRoot;
 	// 次の振る舞いリクエスト
@@ -52,15 +53,38 @@ private:
 
 	/// ===移動情報=== ///
 	struct MoveInfo {
-		float speed;
+		float speed;               // 移動速度
+		float invincibleTime;      // 無敵時間
+		float invincibleTimer;     // 無敵タイマー
+		bool isInvincible = false; // 無敵フラグ
 	};
 	MoveInfo moveInfo_;
 
 	/// ===突進情報=== ///
 	struct ChargeInfo {
-		float speed;
+		float speed;          // 突進時の移動速度
+		float activeTime;     // 突進の有効時間
+		float cooltime;		  // 突進のクールタイム
+		float InvincibleTime; // 突進時の無敵時間
+		float timer;          // 突進のタイマー
+		bool isFlag = false;  // 突進のフラグ
 	};
 	ChargeInfo chargeInfo_;
+
+	/// ===攻撃情報=== ///
+	struct AttackInfo {
+		// 攻撃目標のリスト(Enemy : マーク用)
+		// 攻撃目標のリスト(Enemy : 攻撃用)
+		float reachTime;               // 攻撃の最終座標までの到達時間
+		float ratio;                   // 攻撃の移動割合
+		const float freezeTime = 0.3f; // 攻撃完了から爆破までの時間
+		float freezeTimer;             // 
+		Vector3 startPos;              // 攻撃の最初の座標
+		Vector3 endPos;                // 攻撃の最終の座標
+		bool isFlag = false;           // 攻撃のフラグ
+		bool isSetTarget = false;      // ターゲットのフラグ
+	};
+	AttackInfo attackInfo_;
 
 private:
 	// Root
@@ -72,5 +96,8 @@ private:
 	// Charge
 	void InitCharge();
 	void UpdateCharge();
+	// Attack
+	void InitAttack();
+	void UpdateAttack();
 };
 

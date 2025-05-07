@@ -61,6 +61,9 @@ void Player::Update() {
 		case Player::Behavior::kCharge:
 			InitCharge();
 			break;
+		case Player::Behavior::kAttack:
+			InitAttack();
+			break;
 		}
 
 		// 振る舞いリクエストをリセット
@@ -77,6 +80,9 @@ void Player::Update() {
 		break;
 	case Player::Behavior::kCharge:
 		UpdateCharge();
+		break;
+	case Player::Behavior::kAttack:
+		UpdateAttack();
 		break;
 	}
 
@@ -165,3 +171,9 @@ void Player::UpdateMove() {
 ///-------------------------------------------///
 void Player::InitCharge() {}
 void Player::UpdateCharge() {}
+
+///-------------------------------------------/// 
+/// Attack
+///-------------------------------------------///
+void Player::InitAttack() {}
+void Player::UpdateAttack() {}
