@@ -58,9 +58,6 @@ protected:
     // ColliderName
     std::string colliderName_;
 
-    // Camera
-    Camera* camera_ = nullptr;
-
 	// Object3D
 	std::unique_ptr<Object3d> object3d_;
 };
