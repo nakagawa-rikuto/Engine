@@ -43,7 +43,7 @@ const Quaternion& Camera::GetRotate() const { return transform_.rotate; }
 // Translate
 void Camera::SetTranslate(const Vector3& translate) { addTransform_.translate = translate; }
 // Rotate
-void Camera::SetRotate(const Vector3& rotate) { addTransform_.rotate = {rotate.x, rotate.y, rotate.z, 1.0f}; }
+void Camera::SetRotate(const Quaternion& rotate) { addTransform_.rotate = rotate; }
 // ForY
 void Camera::SetForY(const float& forY) { horizontalView_ = forY; }
 // AspectRatio

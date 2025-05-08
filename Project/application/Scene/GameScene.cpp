@@ -55,7 +55,7 @@ void GameScene::Update() {
 	// Camera
 	ImGui::Begin("Camera");
 	ImGui::DragFloat3("Translate", &cameraInfo_.translate.x, 0.01f);
-	ImGui::DragFloat3("Rotate", &cameraInfo_.rotate.x, 0.001f);
+	ImGui::DragFloat4("Rotate", &cameraInfo_.rotate.x, 0.001f);
 	ImGui::End();
 	// Player
 	player_->UpdateImGui();

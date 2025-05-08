@@ -17,7 +17,7 @@ Player::~Player() {
 /// Setter
 ///-------------------------------------------///
 Vector3 Player::GetTranslate() const { return baseInfo_.translate; }
-Vector3 Player::GetRotate() const { return baseInfo_.rotate; }
+Quaternion Player::GetRotate() const { return baseInfo_.rotate; }
 
 
 ///-------------------------------------------/// 
@@ -115,7 +115,7 @@ void Player::UpdateImGui() {
 #ifdef USE_IMGUI
 	ImGui::Begin("Player");
 	ImGui::DragFloat3("Translate", &baseInfo_.translate.x, 0.1f);
-	ImGui::DragFloat3("Rotate", &baseInfo_.rotate.x, 0.1f);
+	ImGui::DragFloat4("Rotate", &baseInfo_.rotate.x, 0.1f);
 	ImGui::DragFloat3("Velocity", &baseInfo_.velocity.x, 0.1f);
 	ImGui::End();
 #endif // USE_IMGUI

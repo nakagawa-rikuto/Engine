@@ -28,7 +28,7 @@ public: /// ===Getter=== ///
 	// モデル座標
 	const Vector3& GetTranslate() const;
 	// モデル回転
-	const Vector3& GetRotate() const;
+	const Quaternion& GetRotate() const;
 	// モデル拡縮
 	const Vector3& GetScale() const;
 	// モデルカラー
@@ -37,7 +37,7 @@ public: /// ===Getter=== ///
 public: /// ===Setter=== ///
 	// モデルTransform
 	void SetTranslate(const Vector3& translate);
-	void SetRotate(const Vector3& rotate);
+	void SetRotate(const Quaternion& rotate);
 	void SetScale(const Vector3& scale);
 	// モデルColor
 	void SetColor(const Vector4& color);

@@ -44,7 +44,7 @@ public: /// ===Setter=== ///
     //NOTE:定点用のセッター
 	// Object3D
     void SetTranslate(const Vector3& translate);
-	void SetRotate(const Vector3& rotate);
+	void SetRotate(const Quaternion& rotate);
 	void SetScale(const Vector3& scale);
 	void SetColor(const Vector4& color);
     // Camera

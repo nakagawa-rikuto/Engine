@@ -52,7 +52,7 @@ public:/// ===Setter=== ///
 	// Translate
 	void SetTranslate(const Vector3& translate);
 	// Rotate
-	void SetRotate(const Vector3& rotate);
+	void SetRotate(const Quaternion& rotate);
 	// ForY
 	void SetForY(const float& forY);
 	// Aspect

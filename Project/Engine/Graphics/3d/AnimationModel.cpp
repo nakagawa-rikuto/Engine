@@ -32,7 +32,7 @@ AnimationModel::~AnimationModel() {
 ///-------------------------------------------///
 /// ===モデル=== ///
 const Vector3& AnimationModel::GetTranslate() const { return worldTransform_.translate; }
-const Vector3& AnimationModel::GetRotate() const { return worldTransform_.rotate; }
+const Quaternion& AnimationModel::GetRotate() const { return worldTransform_.rotate; }
 const Vector3& AnimationModel::GetScale() const { return worldTransform_.scale; }
 const Vector4& AnimationModel::GetColor() const { return color_; }
 
@@ -41,7 +41,7 @@ const Vector4& AnimationModel::GetColor() const { return color_; }
 ///-------------------------------------------///
 /// ===モデル=== ///
 void AnimationModel::SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
-void AnimationModel::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
+void AnimationModel::SetRotate(const Quaternion& rotate) { worldTransform_.rotate = rotate; }
 void AnimationModel::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void AnimationModel::SetColor(const Vector4& color) { color_ = color; }
 /// ===Light=== ///
@@ -107,7 +107,7 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	common_ = std::make_unique<ModelCommon>();
 
 	/// ===EulerTransform=== ///
-	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
 	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
@@ -223,7 +223,7 @@ void AnimationModel::MateialDataWrite() {
 /// Transform情報の書き込み
 ///-------------------------------------------///
 void AnimationModel::TransformDataWrite() {
-	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldMatrix = Math::MakeAffineQuaternionMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
 	if (modelData_.haveBone) {

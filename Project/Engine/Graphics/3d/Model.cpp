@@ -27,7 +27,7 @@ Model::~Model() {
 ///-------------------------------------------///
 /// ===モデル=== ///
 const Vector3& Model::GetTranslate() const { return worldTransform_.translate; }
-const Vector3& Model::GetRotate() const { return worldTransform_.rotate; }
+const Quaternion& Model::GetRotate() const { return worldTransform_.rotate; }
 const Vector3& Model::GetScale() const { return worldTransform_.scale; }
 const Vector4& Model::GetColor() const { return color_; }
 
@@ -36,7 +36,7 @@ const Vector4& Model::GetColor() const { return color_; }
 ///-------------------------------------------///
 /// ===モデル=== ///
 void Model::SetTranslate(const Vector3& position) { worldTransform_.translate = position; }
-void Model::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
+void Model::SetRotate(const Quaternion& rotate) { worldTransform_.rotate = rotate; }
 void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void Model::SetColor(const Vector4& color) { color_ = color; }
 /// ===Light=== ///
@@ -87,7 +87,7 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	common_ = std::make_unique<ModelCommon>();
 
 	/// ===worldTransform=== ///
-	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
 	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
@@ -170,7 +170,7 @@ void Model::MateialDataWrite() {
 ///-------------------------------------------///
 void Model::TransformDataWrite() {
 
-	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldMatrix = Math::MakeAffineQuaternionMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
 	/// ===Matrixの作成=== ///

@@ -90,7 +90,7 @@ private:/// ===メンバ変数=== ///
 #pragma region 変数
 	// モデル
 	Vector3 modelTranslate_ = { 0.0f, -1.3f, 0.0f };
-	Vector3 modelRotate_ = { 0.0f, 0.0f, 0.0f };
+	Quaternion modelRotate_ = { 0.0f, 0.0f, 0.0f, 1.0f };
 	Vector3 modelScale_ = { 1.0f, 1.0f, 1.0f };
 	Vector4 modelColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	bool isRotate = false;
@@ -108,7 +108,7 @@ private:/// ===メンバ変数=== ///
 	};
 	// カメラ
 	Vector3 cameraPos = { 0.0f, 0.0f, -13.0f };
-	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f };
+	Quaternion cameraRotate = { 0.0f, 0.0f, 0.0f, 1.0f };
 	bool SetCamera = false;
 	// Audio
 	bool playAudio = false;
