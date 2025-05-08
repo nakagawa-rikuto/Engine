@@ -43,6 +43,10 @@ void Player::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void Player::Update() {
+
+	/// ===タイマーを進める=== ///
+	advanceTimer();
+
 	/// ===Behavior遷移の実装=== ///
 	if (behaviorRequest_) {
 		// 振る舞いを変更
@@ -87,8 +91,9 @@ void Player::Update() {
 	}
 
 	/// ===移動量の反映=== ///
-	baseInfo_.translate += baseInfo_.velocity_;
+	baseInfo_.translate += baseInfo_.velocity;
 
+	/// ===Object3dの更新=== ///
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
 	object3d_->Update();
@@ -111,7 +116,7 @@ void Player::UpdateImGui() {
 	ImGui::Begin("Player");
 	ImGui::DragFloat3("Translate", &baseInfo_.translate.x, 0.1f);
 	ImGui::DragFloat3("Rotate", &baseInfo_.rotate.x, 0.1f);
-	ImGui::DragFloat3("Velocity", &baseInfo_.velocity_.x, 0.1f);
+	ImGui::DragFloat3("Velocity", &baseInfo_.velocity.x, 0.1f);
 	ImGui::End();
 #endif // USE_IMGUI
 }
@@ -120,7 +125,7 @@ void Player::UpdateImGui() {
 ///-------------------------------------------/// 
 /// 衝突
 ///-------------------------------------------///
-void Player::OnCollision(Collider * collider) {}
+void Player::OnCollision(Collider* collider) {}
 
 
 ///-------------------------------------------/// 
@@ -134,11 +139,37 @@ void Player::UpdateRoot() {
 	// 右スティック入力取得（視点回転用）
 	StickState rightStick = Input::GetRightStickState(0);
 
+	// 減速率（数値を下げればゆっくり止まる）
+	const float deceleration = 0.75f;
+
+	// Velocityが0でないなら徐々に0にする
+	if (baseInfo_.velocity.x != 0.0f) {
+		// 各軸に対して減速適用
+		baseInfo_.velocity.x *= deceleration;
+		// 小さすぎる値は完全に0にスナップ
+		if (std::abs(baseInfo_.velocity.x) < 0.01f) {
+			baseInfo_.velocity.x = 0.0f;
+		}
+	}
+	if (baseInfo_.velocity.z != 0.0f) {
+		baseInfo_.velocity.z *= deceleration;
+		if (std::abs(baseInfo_.velocity.z) < 0.01f) {
+			baseInfo_.velocity.z = 0.0f;
+		}
+	}
+
 	/// ===Behaviorの遷移=== ///
 	// 移動があれば移動状態へ
 	if (std::abs(leftStick.x) > 0.1f || std::abs(leftStick.y) > 0.1f) {
-		// behaviorRequest_ = Behavior::kRotateToCamera;
 		behaviorRequest_ = Behavior::kMove;
+	}
+	// Aボタンが押されたら進んでいる突進状態へ
+	if (Input::TriggerButton(0, ControllerButtonType::A)) {
+		// タイマーがクールタイムより高ければ、
+		if (chargeInfo_.isFlag) {
+			behaviorRequest_ = Behavior::kCharge;
+			chargeInfo_.direction = Normalize(baseInfo_.velocity);
+		}
 	}
 }
 
@@ -155,25 +186,75 @@ void Player::UpdateMove() {
 	// 右スティック入力取得（視点回転用）
 	StickState rightStick = Input::GetRightStickState(0);
 
-	baseInfo_.velocity_.x = leftStick.x;
-	baseInfo_.velocity_.z = leftStick.y;
-	
-	baseInfo_.velocity_ = baseInfo_.velocity_ * moveInfo_.speed;
+	// 方向の設定
+	moveInfo_.direction.x = leftStick.x;
+	moveInfo_.direction.z = leftStick.y;
+
+	// Velcotiyに反映
+	baseInfo_.velocity = moveInfo_.direction * moveInfo_.speed;
 
 	/// ===Behaviorの変更=== ///
 	if (std::abs(leftStick.x) < 0.1f && std::abs(leftStick.y) < 0.1f) {
 		behaviorRequest_ = Behavior::kRoot;
+	}
+	if (Input::TriggerButton(0, ControllerButtonType::A)) {
+		if (chargeInfo_.isFlag) {
+			behaviorRequest_ = Behavior::kCharge;
+			chargeInfo_.direction = Normalize(moveInfo_.direction);
+		}
 	}
 }
 
 ///-------------------------------------------/// 
 /// Charge
 ///-------------------------------------------///
-void Player::InitCharge() {}
-void Player::UpdateCharge() {}
+void Player::InitCharge() {
+	// 突進スピードの設定
+	chargeInfo_.acceleration = 0.2f;
+	// 突進時間を0にする
+	chargeInfo_.timer = chargeInfo_.activeTime;
+}
+void Player::UpdateCharge() {
+
+	/// ===フラグがtrueなら=== ///
+	// 無敵時間の変更
+	invicibleInfo_.timer = invicibleInfo_.time - chargeInfo_.invincibleTime;
+
+	// 加速度の減少
+	chargeInfo_.acceleration -= deltaTime_ * chargeInfo_.activeTime;
+	// 速度の設定
+	chargeInfo_.speed = moveInfo_.speed * chargeInfo_.acceleration;
+
+	// Velcotiyに反映
+	baseInfo_.velocity += chargeInfo_.direction * chargeInfo_.speed;
+
+	/// ===タイマーが突進の有効期限を超えていたら=== ///
+	if (chargeInfo_.timer <= 0.0f) {
+		behaviorRequest_ = Behavior::kRoot;
+		chargeInfo_.isFlag = false;
+		chargeInfo_.timer = chargeInfo_.cooltime;
+	}
+
+}
 
 ///-------------------------------------------/// 
 /// Attack
 ///-------------------------------------------///
 void Player::InitAttack() {}
 void Player::UpdateAttack() {}
+
+///-------------------------------------------/// 
+/// 時間を進める
+///-------------------------------------------///
+void Player::advanceTimer() {
+	// 無敵タイマーを進める
+	invicibleInfo_.timer += deltaTime_;
+
+	// 突進用のタイマーを進める
+	if (chargeInfo_.timer > 0.0f) {
+		chargeInfo_.timer -= deltaTime_;
+	} else {
+		chargeInfo_.isFlag = true;
+	}
+
+}
