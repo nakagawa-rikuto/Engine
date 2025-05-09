@@ -15,7 +15,7 @@ RingParticle::~RingParticle() {
 ///-------------------------------------------///
 void RingParticle::Initialze(const Vector3& translate, Camera* camera) {
 	/// ===初期化=== ///
-	ParticleGroup::InstancingInit("ParticlePlane", translate, 100, camera, shapeType::kCircle);
+	ParticleGroup::InstancingInit("plane", translate, 100, camera, shapeType::kCircle);
 	/// ===フラグと設定の初期化=== ///
 	hasExploded_ = false;
 }
@@ -80,9 +80,10 @@ std::unique_ptr<ParticleGroup> RingParticle::Clone() {
 ParticleData RingParticle::MakeParticle(std::mt19937& randomEngine, const Vector3& translate) {
 
 	std::uniform_real_distribution<float> distRotate(-std::numbers::pi_v<float>, std::numbers::pi_v<float>);
+	std::uniform_real_distribution<float> distScale(0.1f, 2.0f);
 
 	ParticleData particleData;
-	particleData.transform.scale = { 0.5f, 1.0f, 1.0f };
+	particleData.transform.scale = { 1.0f, distScale(randomEngine), 1.0f};
 	particleData.transform.rotate = { 0.0f, 0.0f, distRotate(randomEngine) };
 	particleData.transform.translate = translate;
 	particleData.velocity = { 0.0f, 0.0f, 0.0f };

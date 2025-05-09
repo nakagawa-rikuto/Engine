@@ -15,7 +15,7 @@ CylinderParticle::~CylinderParticle() {
 ///-------------------------------------------///
 void CylinderParticle::Initialze(const Vector3& translate, Camera* camera) {
 	/// ===初期化=== ///
-	ParticleGroup::InstancingInit("ParticlePlane", translate, 100, camera, shapeType::kCylinder);
+	ParticleGroup::InstancingInit("plane", translate, 100, camera, shapeType::kCylinder);
 	/// ===フラグと設定の初期化=== ///
 	hasExploded_ = false;
 }
@@ -42,7 +42,7 @@ void CylinderParticle::Update() {
 		if (particleIterator->currentTime >= particleIterator->lifeTime) {
 			particleIterator = group_.particles.erase(particleIterator);
 			continue;
-		}
+		};
 
 		// アルファ値の更新
 		float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
@@ -79,18 +79,33 @@ std::unique_ptr<ParticleGroup> CylinderParticle::Clone() {
 ///-------------------------------------------///
 ParticleData CylinderParticle::MakeParticle(std::mt19937& randomEngine, const Vector3& translate) {
 
-	std::uniform_real_distribution<float> distRotate(-std::numbers::pi_v<float>, std::numbers::pi_v<float>);
+	std::uniform_real_distribution<float> angleDist(0.0f, 2.0f * std::numbers::pi_v<float>);
+	std::uniform_real_distribution<float> distScale(0.1f, 2.0f);
 
-	ParticleData particleData;
-	particleData.transform.scale = { 0.5f, 1.0f, 1.0f };
-	particleData.transform.rotate = { 0.0f, 0.0f, distRotate(randomEngine) };
-	particleData.transform.translate = translate;
-	particleData.velocity = { 0.0f, 0.0f, 0.0f };
-	particleData.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	particleData.currentTime = 0;
-	particleData.lifeTime = 10.0f; // 寿命を1秒に設定
+    float angle = angleDist(randomEngine);
+	float scale = distScale(randomEngine);
 
-	return particleData;
+    float x = std::cos(angle) * radius_;
+    float z = std::sin(angle) * radius_;
+
+    ParticleData particleData;
+    particleData.transform.translate = translate + Vector3{ x, 0.0f, z }; // 円周に配置
+
+    particleData.transform.scale = { 1.0f, scale, 1.0f }; // 細長く縦に伸びた円柱
+
+    // Y軸回転なし（すでに円周に沿って配置されているので回転は基本不要）
+    particleData.transform.rotate = { 0.0f, 0.0f, 0.0f };
+
+    // 静止 or わずかに上昇させたい場合
+    particleData.velocity = { 0.0f, 0.0f, 0.0f };
+
+    particleData.color = { 0.0f, 0.0f, 1.0f, 1.0f };
+    particleData.currentTime = 0.0f;
+    particleData.lifeTime = 100.0f; // 1秒で消える
+
+	
+
+    return particleData;
 }
 
 ///-------------------------------------------/// 
