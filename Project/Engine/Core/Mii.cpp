@@ -40,7 +40,7 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	offScreenRenderer_->Initialize(
 		dXCommon_->GetDevice(),
 		srvManager_.get(), rtvManager_.get(),
-		width, height, Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // クリアカラーをここで設定
+		width, height, Vector4(0.47f, 0.81f, 0.62f, 1.0f)); // クリアカラーをここで設定
 
 	// SceneViewの生成
 	sceneView_ = std::make_unique<SceneView>();

@@ -122,6 +122,7 @@
     <ClCompile Include="Engine\System\Service\Setter.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
+    <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Engine\System\Service\Setter.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
+    <ClInclude Include="Engine\Graphics\Particle\Derivative\CylinderParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

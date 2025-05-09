@@ -20,7 +20,7 @@ VertexShaderOutput main(VertexShaderInput input, uint instanceId : SV_InstanceID
 {
     VertexShaderOutput output;
     output.position = mul(input.position, gParticle[instanceId].WVP);
-    output.texcood = input.texcoord;
+    output.texcoord = input.texcoord;
     output.color = gParticle[instanceId].color;
     return output;
 }
