@@ -25,8 +25,11 @@ PixlShaderOutput main(VertexShaderOutput input)
 {
     PixlShaderOutput output;
     
+    float2 texcoord = input.texcoord;
+    texcoord.y = 1.0f - texcoord.y; // flip v
+    
     // TransformedUVの計算
-    float4 transformedUV = mul(float4(input.texcood, 0.0f, 1.0f), gMaterial.uvTransform);
+    float4 transformedUV = mul(float4(texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     
     //TextureをSamplingする
     float4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);

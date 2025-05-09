@@ -67,7 +67,10 @@ void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMa
 	// タイプ次第でVertexBufferを変更する
 	if (type == shapeType::kCircle) {
 		// 円
-		SetVertexBUfferCircle();
+		SetVertexBufferCircle();
+	} else if (type == shapeType::kCylinder) {
+		// cylinder
+		SetVertexBufferCylinder();
 	}
 
 	/// ===SetUp=== ///
@@ -113,13 +116,12 @@ void ParticleSetUp::Darw(const uint32_t instance, BlendMode mode) {
 /// VertexBufferの設定
 ///-------------------------------------------///
 // 円
-void ParticleSetUp::SetVertexBUfferCircle() {
-
+void ParticleSetUp::SetVertexBufferCircle() {
 	// 変数の宣言
 	const uint32_t kRingDivide = 32; // 円の分割数
 	const float kOuterRadius = 1.0f; // 外半径
 	const float kInnerRadius = 0.2f; // 内半径
-	const float radianPerDivide = 2.0f * std::numbers::pi_v<float> / kRingDivide; // 円の分割角度
+	const float radianPerDivide = 2.0f * std::numbers::pi_v<float> / float(kRingDivide); // 円の分割角度
 
 	for (uint32_t index = 0; index < kRingDivide; ++index) {
 		float sin = std::sin(index * radianPerDivide);
@@ -141,5 +143,51 @@ void ParticleSetUp::SetVertexBUfferCircle() {
 
 		vertexData_[0].position = { -sinNext * kInnerRadius, cosNext * kInnerRadius, 0.0f, 1.0f };
 		vertexData_[0].texcoord = { uNext, 1.0f };
+	}
+}
+
+// Cylinder
+void ParticleSetUp::SetVertexBufferCylinder() {
+	// 変数の宣言
+	const uint32_t kCylinderDivide = 32;
+	const float kTopRadius = 0.5f;
+	const float kBottomRadius = 0.5f;
+	const float kHeight = 3.0f;
+	const float radianPerDivide = 2.0f * std::numbers::pi_v<float> / float(kCylinderDivide);
+
+	for (uint32_t index = 0; index < kCylinderDivide; ++index) {
+		float sin = std::sin(index * radianPerDivide);
+		float cos = std::cos(index * radianPerDivide);
+		float sinNext = std::sin((index + 1) * radianPerDivide);
+		float cosNext = std::cos((index + 1) * radianPerDivide);
+
+		float u = static_cast<float>(index) / static_cast<float>(kCylinderDivide);
+		float uNext = static_cast<float>(index + 1) / static_cast<float>(kCylinderDivide);
+
+		uint32_t base = index * 6;
+
+		vertexData_[0].position = { -sin * kTopRadius, kHeight, cos * kTopRadius, 1.0f };
+		vertexData_[0].texcoord = { u, 0.0f };
+		vertexData_[0].normal = { -sin, 0.0f, cos };
+
+		vertexData_[1].position = { -sinNext * kTopRadius, kHeight, cosNext * kTopRadius, 1.0f };
+		vertexData_[1].texcoord = { uNext, 0.0f };
+		vertexData_[1].normal = { -sinNext, 0.0f, cosNext };
+
+		vertexData_[2].position = { -sin * kBottomRadius, 0.0f, cos * kBottomRadius, 1.0f };
+		vertexData_[2].texcoord = { u, 1.0f };
+		vertexData_[2].normal = { -sin, 0.0f, cos };
+
+		vertexData_[3].position = { -sin * kBottomRadius, 0.0f, cos * kBottomRadius, 1.0f };
+		vertexData_[3].texcoord = { u, 1.0f };
+		vertexData_[3].normal = { -sin, 0.0f, cos };
+
+		vertexData_[4].position = { -sinNext * kTopRadius, kHeight, cosNext * kTopRadius, 1.0f };
+		vertexData_[4].texcoord = { uNext, 0.0f };
+		vertexData_[4].normal = { -sinNext, 0.0f, cosNext };
+
+		vertexData_[5].position = { -sinNext * kBottomRadius, 0.0f, cosNext * kBottomRadius, 1.0f };
+		vertexData_[5].texcoord = { uNext, 1.0f };
+		vertexData_[5].normal = { -sinNext, 0.0f, cosNext };
 	}
 }
