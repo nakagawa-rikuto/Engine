@@ -16,6 +16,8 @@ class SRVManager;
 enum class shapeType {
 	// 円
 	kCircle,
+	// Cylinder
+	kCylinder,
 	// 総数(これは最後にしなければいけない)
 	kNone,
 };
@@ -72,6 +74,8 @@ private:
 private:
 	/// ===VertexBufferの設定=== ///
 	// 円
-	void SetVertexBUfferCircle();
+	void SetVertexBufferCircle();
+	// Cylinder
+	void SetVertexBufferCylinder();
 };
 
