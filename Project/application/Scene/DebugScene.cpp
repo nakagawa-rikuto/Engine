@@ -388,7 +388,7 @@ void DebugScene::Update() {
 	ImGui::Begin("Camera");
 	ImGui::Checkbox("Flag", &SetCamera);
 	ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
-	ImGui::DragFloat4("Rotate", &cameraRotate.x, 0.1f);
+	ImGui::DragFloat4("Rotate", &cameraRotate.x, 0.001f);
 	ImGui::End();
 	/// ===Keybord=== ///
 	/*ImGui::Begin("Keybord");
