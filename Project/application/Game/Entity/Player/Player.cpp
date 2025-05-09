@@ -1,0 +1,260 @@
+#include "Player.h"
+// Service
+#include "Engine/System/Service/Input.h"
+// ImGui
+#ifdef USE_IMGUI
+#include "imgui.h"
+#endif // USE_IMGUI
+
+///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+Player::~Player() {
+	object3d_.reset();
+}
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+Vector3 Player::GetTranslate() const { return baseInfo_.translate; }
+Quaternion Player::GetRotate() const { return baseInfo_.rotate; }
+
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void Player::Initialize() {
+	// Sphereの設定
+	SphereCollider::Initialize();
+	sphere_.center = baseInfo_.translate;
+	sphere_.radius = 1.0f;
+
+	object3d_ = std::make_unique<Object3d>();
+	object3d_->Init(ObjectType::Model, "MonsterBall");
+	SetTranslate(baseInfo_.translate);
+	SetRotate(baseInfo_.rotate);
+	SetScale(baseInfo_.scale);
+	SetColor(baseInfo_.color);
+	object3d_->Update();
+}
+
+
+///-------------------------------------------/// 
+/// 更新
+///-------------------------------------------///
+void Player::Update() {
+
+	/// ===タイマーを進める=== ///
+	advanceTimer();
+
+	/// ===Behavior遷移の実装=== ///
+	if (behaviorRequest_) {
+		// 振る舞いを変更
+		behavior_ = behaviorRequest_.value();
+		// 各振る舞いの初期化
+		switch (behavior_) {
+			// 通常
+		case Player::Behavior::kRoot:
+			InitRoot();
+			break;
+			// 移動
+		case Player::Behavior::kMove:
+			InitMove();
+			break;
+			// 突進
+		case Player::Behavior::kCharge:
+			InitCharge();
+			break;
+		case Player::Behavior::kAttack:
+			InitAttack();
+			break;
+		}
+
+		// 振る舞いリクエストをリセット
+		behaviorRequest_ = std::nullopt;
+	}
+
+	// 各振る舞いの更新
+	switch (behavior_) {
+	case Player::Behavior::kRoot:
+		UpdateRoot();
+		break;
+	case Player::Behavior::kMove:
+		UpdateMove();
+		break;
+	case Player::Behavior::kCharge:
+		UpdateCharge();
+		break;
+	case Player::Behavior::kAttack:
+		UpdateAttack();
+		break;
+	}
+
+	/// ===移動量の反映=== ///
+	baseInfo_.translate += baseInfo_.velocity;
+
+	/// ===Object3dの更新=== ///
+	SetTranslate(baseInfo_.translate);
+	SetRotate(baseInfo_.rotate);
+	object3d_->Update();
+}
+
+
+///-------------------------------------------///  
+/// 描画
+///-------------------------------------------///
+void Player::Draw() {
+	object3d_->Draw();
+}
+
+
+///-------------------------------------------/// 
+/// ImGui
+///-------------------------------------------///
+void Player::UpdateImGui() {
+#ifdef USE_IMGUI
+	ImGui::Begin("Player");
+	ImGui::DragFloat3("Translate", &baseInfo_.translate.x, 0.1f);
+	ImGui::DragFloat4("Rotate", &baseInfo_.rotate.x, 0.1f);
+	ImGui::DragFloat3("Velocity", &baseInfo_.velocity.x, 0.1f);
+	ImGui::End();
+#endif // USE_IMGUI
+}
+
+
+///-------------------------------------------/// 
+/// 衝突
+///-------------------------------------------///
+void Player::OnCollision(Collider* collider) {}
+
+
+///-------------------------------------------/// 
+/// Root
+///-------------------------------------------///
+void Player::InitRoot() {}
+void Player::UpdateRoot() {
+
+	// 左スティック入力取得（移動用）
+	StickState leftStick = Input::GetLeftStickState(0);
+	// 右スティック入力取得（視点回転用）
+	StickState rightStick = Input::GetRightStickState(0);
+
+	// 減速率（数値を下げればゆっくり止まる）
+	const float deceleration = 0.75f;
+
+	// Velocityが0でないなら徐々に0にする
+	if (baseInfo_.velocity.x != 0.0f) {
+		// 各軸に対して減速適用
+		baseInfo_.velocity.x *= deceleration;
+		// 小さすぎる値は完全に0にスナップ
+		if (std::abs(baseInfo_.velocity.x) < 0.01f) {
+			baseInfo_.velocity.x = 0.0f;
+		}
+	}
+	if (baseInfo_.velocity.z != 0.0f) {
+		baseInfo_.velocity.z *= deceleration;
+		if (std::abs(baseInfo_.velocity.z) < 0.01f) {
+			baseInfo_.velocity.z = 0.0f;
+		}
+	}
+
+	/// ===Behaviorの遷移=== ///
+	// 移動があれば移動状態へ
+	if (std::abs(leftStick.x) > 0.1f || std::abs(leftStick.y) > 0.1f) {
+		behaviorRequest_ = Behavior::kMove;
+	}
+	// Aボタンが押されたら進んでいる突進状態へ
+	if (Input::TriggerButton(0, ControllerButtonType::A)) {
+		// タイマーがクールタイムより高ければ、
+		if (chargeInfo_.isFlag) {
+			behaviorRequest_ = Behavior::kCharge;
+			chargeInfo_.direction = Normalize(baseInfo_.velocity);
+		}
+	}
+}
+
+///-------------------------------------------/// 
+/// Move
+///-------------------------------------------///
+void Player::InitMove() {
+	moveInfo_.speed = 0.4f;
+}
+void Player::UpdateMove() {
+
+	// 左スティック入力取得（移動用）
+	StickState leftStick = Input::GetLeftStickState(0);
+	// 右スティック入力取得（視点回転用）
+	StickState rightStick = Input::GetRightStickState(0);
+
+	// 方向の設定
+	moveInfo_.direction.x = leftStick.x;
+	moveInfo_.direction.z = leftStick.y;
+
+	// Velcotiyに反映
+	baseInfo_.velocity = moveInfo_.direction * moveInfo_.speed;
+
+	/// ===Behaviorの変更=== ///
+	if (std::abs(leftStick.x) < 0.1f && std::abs(leftStick.y) < 0.1f) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+	if (Input::TriggerButton(0, ControllerButtonType::A)) {
+		if (chargeInfo_.isFlag) {
+			behaviorRequest_ = Behavior::kCharge;
+			chargeInfo_.direction = Normalize(moveInfo_.direction);
+		}
+	}
+}
+
+///-------------------------------------------/// 
+/// Charge
+///-------------------------------------------///
+void Player::InitCharge() {
+	// 突進スピードの設定
+	chargeInfo_.acceleration = 0.2f;
+	// 突進時間を0にする
+	chargeInfo_.timer = chargeInfo_.activeTime;
+}
+void Player::UpdateCharge() {
+
+	/// ===フラグがtrueなら=== ///
+	// 無敵時間の変更
+	invicibleInfo_.timer = invicibleInfo_.time - chargeInfo_.invincibleTime;
+
+	// 加速度の減少
+	chargeInfo_.acceleration -= deltaTime_ * chargeInfo_.activeTime;
+	// 速度の設定
+	chargeInfo_.speed = moveInfo_.speed * chargeInfo_.acceleration;
+
+	// Velcotiyに反映
+	baseInfo_.velocity += chargeInfo_.direction * chargeInfo_.speed;
+
+	/// ===タイマーが突進の有効期限を超えていたら=== ///
+	if (chargeInfo_.timer <= 0.0f) {
+		behaviorRequest_ = Behavior::kRoot;
+		chargeInfo_.isFlag = false;
+		chargeInfo_.timer = chargeInfo_.cooltime;
+	}
+
+}
+
+///-------------------------------------------/// 
+/// Attack
+///-------------------------------------------///
+void Player::InitAttack() {}
+void Player::UpdateAttack() {}
+
+///-------------------------------------------/// 
+/// 時間を進める
+///-------------------------------------------///
+void Player::advanceTimer() {
+	// 無敵タイマーを進める
+	invicibleInfo_.timer += deltaTime_;
+
+	// 突進用のタイマーを進める
+	if (chargeInfo_.timer > 0.0f) {
+		chargeInfo_.timer -= deltaTime_;
+	} else {
+		chargeInfo_.isFlag = true;
+	}
+
+}

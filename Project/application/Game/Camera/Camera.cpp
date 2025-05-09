@@ -43,7 +43,7 @@ const Quaternion& Camera::GetRotate() const { return transform_.rotate; }
 // Translate
 void Camera::SetTranslate(const Vector3& translate) { addTransform_.translate = translate; }
 // Rotate
-void Camera::SetRotate(const Vector3& rotate) { addTransform_.rotate = {rotate.x, rotate.y, rotate.z, 1.0f}; }
+void Camera::SetRotate(const Quaternion& rotate) { addTransform_.rotate = rotate; }
 // ForY
 void Camera::SetForY(const float& forY) { horizontalView_ = forY; }
 // AspectRatio
@@ -71,7 +71,7 @@ void Camera::SetStick(const Vector2& stickValue) { stickValue_ = stickValue; }
 /// 初期化
 ///-------------------------------------------///
 void Camera::Initialize() {
-	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
+	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f} };
 	addTransform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
 	horizontalView_ = 0.45f;
 	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());

@@ -229,7 +229,7 @@ void DebugScene::Update() {
 		if (isImgui_.Model) {
 			// Model
 			ImGui::DragFloat3("Tranlate", &modelTranslate_.x, 0.1f);
-			ImGui::DragFloat3("Rotate", &modelRotate_.x, 0.1f);
+			ImGui::DragFloat4("Rotate", &modelRotate_.x, 0.1f);
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
 			if (!lightType_.Lambert && ImGui::Button("Lambert")) {
@@ -388,7 +388,7 @@ void DebugScene::Update() {
 	ImGui::Begin("Camera");
 	ImGui::Checkbox("Flag", &SetCamera);
 	ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
-	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.001f);
+	ImGui::DragFloat4("Rotate", &cameraRotate.x, 0.1f);
 	ImGui::End();
 	/// ===Keybord=== ///
 	/*ImGui::Begin("Keybord");
