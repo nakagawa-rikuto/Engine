@@ -132,17 +132,17 @@ void ParticleSetUp::SetVertexBufferCircle() {
 		float uNext = static_cast<float>(index + 1) / float(kRingDivide);
 
 		// positionとuv。normalは必要なら+zを設定する
-		vertexData_[3].position = { -sin * kOuterRadius, cos * kOuterRadius, 0.0f, 1.0f };
-		vertexData_[3].texcoord = { u, 0.0f };
+		vertexData_[0].position = { -sin * kOuterRadius, cos * kOuterRadius, 0.0f, 1.0f };
+		vertexData_[0].texcoord = { u, 0.0f };
 
-		vertexData_[2].position = { -sinNext * kOuterRadius, cosNext * kOuterRadius, 0.0f, 1.0f };
-		vertexData_[2].texcoord = { uNext, 0.0f };
+		vertexData_[1].position = { -sinNext * kOuterRadius, cosNext * kOuterRadius, 0.0f, 1.0f };
+		vertexData_[1].texcoord = { uNext, 0.0f };
 
-		vertexData_[1].position = { -sin * kInnerRadius, cos * kInnerRadius, 0.0f, 1.0f };
-		vertexData_[1].texcoord = { u, 1.0f };
+		vertexData_[2].position = { -sin * kInnerRadius, cos * kInnerRadius, 0.0f, 1.0f };
+		vertexData_[2].texcoord = { u, 1.0f };
 
-		vertexData_[0].position = { -sinNext * kInnerRadius, cosNext * kInnerRadius, 0.0f, 1.0f };
-		vertexData_[0].texcoord = { uNext, 1.0f };
+		vertexData_[3].position = { -sinNext * kInnerRadius, cosNext * kInnerRadius, 0.0f, 1.0f };
+		vertexData_[3].texcoord = { uNext, 1.0f };
 	}
 }
 
