@@ -273,6 +273,7 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.None && ImGui::Button("None")) {
+				animationModel_->SetLight(LightType::None);
 				model_->SetLight(LightType::None);
 				model2_->SetLight(LightType::None);
 				lightType_.Lambert = false;
@@ -583,7 +584,7 @@ void DebugScene::Draw() {
 
 	// アニーメーションモデル
 	//modelLight_->Draw();
-	//animationModel_->Draw();
+	animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {

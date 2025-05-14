@@ -4,6 +4,7 @@
 #include "Engine/DataInfo/PipelineStateObjectType.h"
 // directX
 #include <d3d12.h>
+#include <unordered_map>
 
 ///=====================================================/// 
 /// DepthStencil
@@ -28,4 +29,7 @@ public:
 private:
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{}; // DepthStencil
+
+	// 設定用テーブル
+	static const std::unordered_map<PipelineType, D3D12_DEPTH_STENCIL_DESC> kDepthStencilTable_;
 };

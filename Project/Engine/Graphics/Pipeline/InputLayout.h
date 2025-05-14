@@ -5,6 +5,7 @@
 
 // c++
 #include <d3d12.h>
+#include <unordered_map>
 
 ///=====================================================/// 
 /// InputLayout
@@ -29,4 +30,13 @@ public:
 private:
 
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc_{}; // InputLayout
+
+	// 
+	struct LayoutInfo {
+		const D3D12_INPUT_ELEMENT_DESC* elements;
+		UINT numElements;
+	};
+
+	// 設定用テーブル
+	static const std::unordered_map<PipelineType, LayoutInfo> kLayoutTable_;
 };
