@@ -1,34 +1,36 @@
 #include "RasterizerState.h"
 
 ///-------------------------------------------/// 
+/// ラスタライザステートの設定
+///-------------------------------------------///
+const std::unordered_map<PipelineType, D3D12_CULL_MODE> RasterizerState::kCullModeTable_ = {
+	{ PipelineType::ForGround2D,  D3D12_CULL_MODE_NONE },
+	{ PipelineType::BackGround2D, D3D12_CULL_MODE_NONE },
+	{ PipelineType::Obj3D,        D3D12_CULL_MODE_BACK },
+	{ PipelineType::Particle,     D3D12_CULL_MODE_NONE },
+	{ PipelineType::Skinning3D,   D3D12_CULL_MODE_BACK },
+	{ PipelineType::OffScreen,    D3D12_CULL_MODE_NONE },
+	{ PipelineType::Grayscale,    D3D12_CULL_MODE_NONE },
+	{ PipelineType::Vignette,     D3D12_CULL_MODE_NONE },
+	{ PipelineType::BoxFilter3x3, D3D12_CULL_MODE_NONE },
+	{ PipelineType::BoxFilter5x5, D3D12_CULL_MODE_NONE },
+};
+
+
+///-------------------------------------------/// 
 /// ラスタライザステートの生成
 ///-------------------------------------------///
 void RasterizerState::Create(PipelineType Type) {
-	// RasterizerStateの設定
-	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D) {
-
-		// カリングしない（裏面も描画させる）
-		rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE;
-	} else if (Type == PipelineType::Obj3D) {
-
-		// 裏面(時計回り)を表示しない
-		rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
-	} else if (Type == PipelineType::Particle){
-
-		// カリングしない（裏面も描画させる）
-		rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE;
-	} else if (Type == PipelineType::Skinning3D) {
-
-		// 裏面(時計回り)を表示しない
-		rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
+	// CullModeをテーブルから取得
+	auto it = kCullModeTable_.find(Type);
+	if (it != kCullModeTable_.end()) {
+		rasterizerDesc_.CullMode = it->second;
 	} else {
-
-		// カリングしない（裏面も描画させる）
-		rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE;
+		rasterizerDesc_.CullMode = D3D12_CULL_MODE_NONE; // fallback
 	}
 	
 	// 三角形の中を塗りつぶす
-	rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
+	rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID; // 全て共通の設定
 }
 
 ///-------------------------------------------/// 

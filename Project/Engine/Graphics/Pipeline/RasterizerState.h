@@ -4,6 +4,7 @@
 #include "Engine/DataInfo/PipelineStateObjectType.h"
 // directX
 #include <d3d12.h>
+#include <unordered_map>
 
 ///=====================================================/// 
 /// RasterizerState
@@ -27,6 +28,9 @@ public:
 	D3D12_RASTERIZER_DESC GetRasterizerState()const;
 
 private:
+	// RasterizerState
+	D3D12_RASTERIZER_DESC rasterizerDesc_{}; 
 
-	D3D12_RASTERIZER_DESC rasterizerDesc_{}; // RasterizerState
+	// 設定用テーブル
+	static const std::unordered_map<PipelineType, D3D12_CULL_MODE> kCullModeTable_;
 };

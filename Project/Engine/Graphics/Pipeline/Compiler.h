@@ -45,6 +45,7 @@ private:
 	ComPtr<IDxcBlob> objVSBlob_;
 	ComPtr<IDxcBlob> objPSBlob_;
 
+	// 設定用テーブル
 	static const std::unordered_map<PipelineType, ShaderInfo> kShaderTable_; 
 
 private:

@@ -1,109 +1,108 @@
 #include "InputLayout.h"
 
 ///-------------------------------------------/// 
+/// テーブルで使用するDescを作成し設定
+///-------------------------------------------///
+namespace {
+	/// ===配列が２つ=== ///
+	static D3D12_INPUT_ELEMENT_DESC inputElementDescs2[2] = {};
+	// デスクに対応した設定
+	void InitLayout2Array() {
+		inputElementDescs2[0].SemanticName = "POSITION";
+		inputElementDescs2[0].SemanticIndex = 0;
+		inputElementDescs2[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		inputElementDescs2[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputElementDescs2[1].SemanticName = "TEXCOORD";
+		inputElementDescs2[1].SemanticIndex = 0;
+		inputElementDescs2[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+		inputElementDescs2[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	}
+
+	/// ===配列が3つ=== ///
+	static D3D12_INPUT_ELEMENT_DESC inputElementDescs3[3] = {};
+	void InitLayout3Array() {
+		inputElementDescs3[0].SemanticName = "POSITION";
+		inputElementDescs3[0].SemanticIndex = 0;
+		inputElementDescs3[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		inputElementDescs3[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputElementDescs3[1].SemanticName = "TEXCOORD";
+		inputElementDescs3[1].SemanticIndex = 0;
+		inputElementDescs3[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+		inputElementDescs3[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputElementDescs3[2].SemanticName = "NORMAL";
+		inputElementDescs3[2].SemanticIndex = 0;
+		inputElementDescs3[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		inputElementDescs3[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+		inputElementDescs3[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	}
+
+	/// ===配列が5つ=== ///
+	static D3D12_INPUT_ELEMENT_DESC inputElementDescs5[5] = {};
+	void InitLayout5Array() {
+		inputElementDescs5[0].SemanticName = "POSITION";
+		inputElementDescs5[0].SemanticIndex = 0;
+		inputElementDescs5[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		inputElementDescs5[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputElementDescs5[1].SemanticName = "TEXCOORD";
+		inputElementDescs5[1].SemanticIndex = 0;
+		inputElementDescs5[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+		inputElementDescs5[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputElementDescs5[2].SemanticName = "NORMAL";
+		inputElementDescs5[2].SemanticIndex = 0;
+		inputElementDescs5[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		inputElementDescs5[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputElementDescs5[3].SemanticName = "WEIGHT";
+		inputElementDescs5[3].SemanticIndex = 0;
+		inputElementDescs5[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // float4
+		inputElementDescs5[3].InputSlot = 1; // 一番目のslotのVBVのことだと伝える
+		inputElementDescs5[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputElementDescs5[4].SemanticName = "INDEX";
+		inputElementDescs5[4].SemanticIndex = 0;
+		inputElementDescs5[4].Format = DXGI_FORMAT_R32G32B32A32_SINT; // int4
+		inputElementDescs5[4].InputSlot = 1; // 一番目のslotのVBVのことだと伝える
+		inputElementDescs5[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	}
+}
+
+// テーブル
+const std::unordered_map<PipelineType, InputLayout::LayoutInfo> InputLayout::kLayoutTable_ = [] {
+	InitLayout2Array();
+	InitLayout3Array();
+	InitLayout5Array();
+	// タイプに応じて設定
+	return std::unordered_map<PipelineType, LayoutInfo>{
+		{ PipelineType::ForGround2D, { inputElementDescs2,       _countof(inputElementDescs2) } },
+		{ PipelineType::BackGround2D, { inputElementDescs2,      _countof(inputElementDescs2) } },
+		{ PipelineType::Obj3D,        { inputElementDescs3,      _countof(inputElementDescs3) } },
+		{ PipelineType::Particle,     { inputElementDescs3,      _countof(inputElementDescs3) } },
+		{ PipelineType::Skinning3D,   { inputElementDescs5,		 _countof(inputElementDescs5) } },
+		{ PipelineType::OffScreen,    { nullptr,                  0 } },
+		{ PipelineType::Grayscale,    { nullptr,                  0 } },
+		{ PipelineType::Vignette,     { nullptr,                  0 } },
+		{ PipelineType::BoxFilter3x3, { nullptr,                  0 } },
+		{ PipelineType::BoxFilter5x5, { nullptr,                  0 } },
+	};
+}();
+
+///-------------------------------------------/// 
 /// InputLayoutの生成
 ///-------------------------------------------///
 void InputLayout::Create(PipelineType Type) {
 
-	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D) { /// ===Obj2D=== ///
-		/// ===Descsの設定=== ///
-		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
-		inputElementDescs[0].SemanticName = "POSITION";
-		inputElementDescs[0].SemanticIndex = 0;
-		inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[1].SemanticName = "TEXCOORD";
-		inputElementDescs[1].SemanticIndex = 0;
-		inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-		inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputLayoutDesc_.pInputElementDescs = inputElementDescs;
-		inputLayoutDesc_.NumElements = _countof(inputElementDescs);
-
-	} else if (Type == PipelineType::Obj3D) { /// ===Obj3D=== ///
-		/// ===Descsの設定=== ///
-		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
-		inputElementDescs[0].SemanticName = "POSITION";
-		inputElementDescs[0].SemanticIndex = 0;
-		inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[1].SemanticName = "TEXCOORD";
-		inputElementDescs[1].SemanticIndex = 0;
-		inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-		inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[2].SemanticName = "NORMAL";
-		inputElementDescs[2].SemanticIndex = 0;
-		inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputLayoutDesc_.pInputElementDescs = inputElementDescs;
-		inputLayoutDesc_.NumElements = _countof(inputElementDescs);
-
-	} else if(Type == PipelineType::Particle){ /// ===Particle=== ///
-		/// ===Descsの設定=== ///
-		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
-		inputElementDescs[0].SemanticName = "POSITION";
-		inputElementDescs[0].SemanticIndex = 0;
-		inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[1].SemanticName = "TEXCOORD";
-		inputElementDescs[1].SemanticIndex = 0;
-		inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-		inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[2].SemanticName = "NORMAL";
-		inputElementDescs[2].SemanticIndex = 0;
-		inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputLayoutDesc_.pInputElementDescs = inputElementDescs;
-		inputLayoutDesc_.NumElements = _countof(inputElementDescs);
-
-	} else if (Type == PipelineType::Skinning3D) {
-		/// ===Descsの設定=== ///
-		static D3D12_INPUT_ELEMENT_DESC inputElementDescs[5] = {};
-		inputElementDescs[0].SemanticName = "POSITION";
-		inputElementDescs[0].SemanticIndex = 0;
-		inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[1].SemanticName = "TEXCOORD";
-		inputElementDescs[1].SemanticIndex = 0;
-		inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-		inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[2].SemanticName = "NORMAL";
-		inputElementDescs[2].SemanticIndex = 0;
-		inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[3].SemanticName = "WEIGHT";
-		inputElementDescs[3].SemanticIndex = 0;
-		inputElementDescs[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // float4
-		inputElementDescs[3].InputSlot = 1; // 一番目のslotのVBVのことだと伝える
-		inputElementDescs[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputElementDescs[4].SemanticName = "INDEX";
-		inputElementDescs[4].SemanticIndex = 0;
-		inputElementDescs[4].Format = DXGI_FORMAT_R32G32B32A32_SINT; // int4
-		inputElementDescs[4].InputSlot = 1; // 一番目のslotのVBVのことだと伝える
-		inputElementDescs[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputLayoutDesc_.pInputElementDescs = inputElementDescs;
-		inputLayoutDesc_.NumElements = _countof(inputElementDescs);
-	} else if (
-		Type == PipelineType::OffScreen || Type == PipelineType::Grayscale || Type == PipelineType::Vignette || 
-		Type == PipelineType::BoxFilter3x3 || Type == PipelineType::BoxFilter5x5) {
-		// 頂点二は何もデータを入力しないので、InputLayoputは利用しない。
+	auto it = kLayoutTable_.find(Type);
+	if (it != kLayoutTable_.end()) {
+		inputLayoutDesc_.pInputElementDescs = it->second.elements;
+		inputLayoutDesc_.NumElements = it->second.numElements;
+	} else {
 		inputLayoutDesc_.pInputElementDescs = nullptr;
 		inputLayoutDesc_.NumElements = 0;
-
-	} else {
-		return;
 	}
 }
 
