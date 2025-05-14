@@ -1,4 +1,3 @@
-
 #pragma once
 /// ===include=== ///
 // Engine
@@ -7,6 +6,8 @@
 #include "Engine/DataInfo/PipelineStateObjectType.h"
 // c++
 #include <d3d12.h>
+#include <unordered_map>
+#include <functional>
 
 /// ===前方宣言=== ///
 class DXCommon;
@@ -34,8 +35,4 @@ public:
 private:
 
 	ComPtr<ID3D12RootSignature> rootSignature_; // ルートシグネイチャ
-
-	ComPtr<ID3DBlob> signatureBlob_; // 
-	ComPtr<ID3DBlob> errorBlob_; // エラーオブジェクト
-
 };

@@ -72,7 +72,7 @@ void ImGuiManager::Begin() {
 	//ImGui::ShowDemoWindow();
 
 	// Dock付きUI描画
-	//DrawMainDockWindow();
+	DrawMainDockWindow();
 
 #endif // USE_IMGUI
 }
@@ -113,6 +113,7 @@ void ImGuiManager::SetSceneView(SceneView* sceneView) { sceneView_ = sceneView; 
 /// Dock付きUI描画
 ///-------------------------------------------///
 void ImGuiManager::DrawMainDockWindow() {
+#ifdef USE_IMGUI
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->Pos);
 	ImGui::SetNextWindowSize(viewport->Size);
@@ -134,11 +135,9 @@ void ImGuiManager::DrawMainDockWindow() {
 
 	MenuBar();
 
-	ImGuiID dockspace_id = ImGui::GetID("MainDockspace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-	ImGui::DockSpaceOverViewport
-	(ImGui::GetMainViewport()->ID, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
 	ImGui::End();
+#endif // USE_IMGUI
 
 	// 各ウィンドウを描画
 	if (sceneView_) sceneView_->Draw();
@@ -148,6 +147,7 @@ void ImGuiManager::DrawMainDockWindow() {
 /// メニューバーのみ
 ///-------------------------------------------///
 void ImGuiManager::MenuBar() {
+#ifdef USE_IMGUI
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 			ImGui::MenuItem("Open", "Ctrl+O");
@@ -161,4 +161,5 @@ void ImGuiManager::MenuBar() {
 		}
 		ImGui::EndMenuBar();
 	}
+#endif // USE_IMGUI
 }

@@ -15,30 +15,24 @@
 ///-------------------------------------------///
 RootSignature::~RootSignature() {
 	rootSignature_.Reset();
-	signatureBlob_.Reset();
-	errorBlob_.Reset();
 }
 
-/// <summary>
-/// ルートシグネイチャの生成
-/// </summary>
-void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
-	HRESULT hr;
+///-------------------------------------------/// 
+/// パイプラインの設定
+///-------------------------------------------///
+namespace {
 
-	if (Type == PipelineType::ForGround2D || Type == PipelineType::BackGround2D) { /// ===Obj2D=== ///
-		/// ===RootSignatureの生成=== ///
-		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignatureObj2D{};
-		descriptionRootSignatureObj2D.Flags =
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-		/// ===DescriptroRangeの生成=== ///
+	/// ===2D=== ///
+	ComPtr<ID3D12RootSignature> Type2D(ID3D12Device* device) {
+		// DescriptroRangeの生成
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 		descriptorRange[0].BaseShaderRegister = 0; // 0から始める
 		descriptorRange[0].NumDescriptors = 1; // 数は1つ
 		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-		/// ===RootParameterの生成=== ///
+
+		// RootParameterの生成
 		D3D12_ROOT_PARAMETER rootParameters[3] = {};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使う
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
@@ -53,10 +47,8 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange; // Tableの中身の配列を指定
 		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
 
-		descriptionRootSignatureObj2D.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
-		descriptionRootSignatureObj2D.NumParameters = _countof(rootParameters); // 配列の長さ
 
-		/// ===Samplerの設定=== ///
+		// Samplerの設定
 		D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 		staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -67,39 +59,47 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		staticSamplers[0].ShaderRegister = 0;
 		staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		descriptionRootSignatureObj2D.pStaticSamplers = staticSamplers;
-		descriptionRootSignatureObj2D.NumStaticSamplers = _countof(staticSamplers);
 
-		// シリアライズしてバイナリにする
-		hr = D3D12SerializeRootSignature(
-			&descriptionRootSignatureObj2D, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
+		// RootSignatureの生成
+		D3D12_ROOT_SIGNATURE_DESC desc{};
+		desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		desc.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
+		desc.NumParameters = _countof(rootParameters); // 配列の長さ
+		desc.pStaticSamplers = staticSamplers;
+		desc.NumStaticSamplers = _countof(staticSamplers);
+
+		// --- シリアライズ & 作成 ---
+		ComPtr<ID3DBlob> signatureBlob;
+		ComPtr<ID3DBlob> errorBlob;
+		HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 		if (FAILED(hr)) {
-			Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
+			if (errorBlob) {
+				OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+			}
 			assert(false);
+			return nullptr;
 		}
 
-		// バイナリを元に生成
-		assert(signatureBlob_);
-		hr = dxCommon->GetDevice()->CreateRootSignature(
-			0, signatureBlob_->GetBufferPointer(), signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
-		if (FAILED(hr)) {
-			assert(SUCCEEDED(hr));
-		}
+		ComPtr<ID3D12RootSignature> rootSignature;
+		hr = device->CreateRootSignature(
+			0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
+		assert(SUCCEEDED(hr));
 
-	} else if (Type == PipelineType::Obj3D) { /// ===Obj3D=== ///
-		/// ===RootSignatureの生成=== ///
-		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignatureObj3D{};
-		descriptionRootSignatureObj3D.Flags =
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		return rootSignature;
+	}
 
-		/// ===DescriptroRangeの生成=== ///
+	/// ===3D=== ///
+	ComPtr<ID3D12RootSignature> Type3D(ID3D12Device* device) {
+		// DescriptroRangeの生成
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 		descriptorRange[0].BaseShaderRegister = 0; // 0から始める
 		descriptorRange[0].NumDescriptors = 1; // 数は1つ
 		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-		/// ===RootParameterの生成=== ///
+
+		// RootParameterの生成
 		D3D12_ROOT_PARAMETER rootParameters[7] = {};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使用
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使用
@@ -130,10 +130,8 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[6].Descriptor.ShaderRegister = 4; // レジスタ番号4を使用
 
-		descriptionRootSignatureObj3D.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
-		descriptionRootSignatureObj3D.NumParameters = _countof(rootParameters); // 配列の高さ
 
-		/// ===Samplerの設定=== ///
+		// Samplerの設定
 		D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 		staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -144,35 +142,47 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		staticSamplers[0].ShaderRegister = 0;
 		staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		descriptionRootSignatureObj3D.pStaticSamplers = staticSamplers;
-		descriptionRootSignatureObj3D.NumStaticSamplers = _countof(staticSamplers);
 
-		// シリアライズしてバイナリにする
-		hr = D3D12SerializeRootSignature(&descriptionRootSignatureObj3D, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
+		// RootSignatureの生成
+		D3D12_ROOT_SIGNATURE_DESC desc{};
+		desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		desc.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
+		desc.NumParameters = _countof(rootParameters); // 配列の高さ
+		desc.pStaticSamplers = staticSamplers;
+		desc.NumStaticSamplers = _countof(staticSamplers);
+
+		// --- シリアライズ & 作成 ---
+		ComPtr<ID3DBlob> signatureBlob;
+		ComPtr<ID3DBlob> errorBlob;
+		HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 		if (FAILED(hr)) {
-			Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
+			if (errorBlob) {
+				OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+			}
 			assert(false);
+			return nullptr;
 		}
 
-		// バイナリを元に生成
-		hr = dxCommon->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(), signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+		ComPtr<ID3D12RootSignature> rootSignature;
+		hr = device->CreateRootSignature(
+			0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
 		assert(SUCCEEDED(hr));
 
-	} else if (Type == PipelineType::Particle) { /// ===Particle=== ///
+		return rootSignature;
+	}
 
-		/// ===RootSignatureの生成=== ///
-		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignatureParticle{};
-		descriptionRootSignatureParticle.Flags =
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-		/// ===DescriptroRangeの生成=== ///
+	/// ===Particle=== ///
+	ComPtr<ID3D12RootSignature> TypeParticle(ID3D12Device* device) {
+		// DescriptroRangeの生成
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 		descriptorRange[0].BaseShaderRegister = 0; // 0から始める
 		descriptorRange[0].NumDescriptors = 1; // 数は1つ
 		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-		/// ===RootParameterの生成=== ///
+
+		// RootParameterの生成
 		D3D12_ROOT_PARAMETER rootParameters[3] = {};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使う
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
@@ -188,10 +198,8 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange; // Tableの中身の配列を指定
 		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
 
-		descriptionRootSignatureParticle.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
-		descriptionRootSignatureParticle.NumParameters = _countof(rootParameters); // 配列の高さ
 
-		/// ===Samplerの設定=== ///
+		// Samplerの設定
 		D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 		staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -202,34 +210,47 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		staticSamplers[0].ShaderRegister = 0;
 		staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		descriptionRootSignatureParticle.pStaticSamplers = staticSamplers;
-		descriptionRootSignatureParticle.NumStaticSamplers = _countof(staticSamplers);
 
-		// シリアライズしてバイナリにする
-		hr = D3D12SerializeRootSignature(&descriptionRootSignatureParticle, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
+		// RootSignatureの生成
+		D3D12_ROOT_SIGNATURE_DESC desc{};
+		desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		desc.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
+		desc.NumParameters = _countof(rootParameters); // 配列の高さ
+		desc.pStaticSamplers = staticSamplers;
+		desc.NumStaticSamplers = _countof(staticSamplers);
+
+		// --- シリアライズ & 作成 ---
+		ComPtr<ID3DBlob> signatureBlob;
+		ComPtr<ID3DBlob> errorBlob;
+		HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 		if (FAILED(hr)) {
-			Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
+			if (errorBlob) {
+				OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+			}
 			assert(false);
+			return nullptr;
 		}
 
-		// バイナリを元に生成
-		hr = dxCommon->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(), signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+		ComPtr<ID3D12RootSignature> rootSignature;
+		hr = device->CreateRootSignature(
+			0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
 		assert(SUCCEEDED(hr));
 
-	} else if (Type == PipelineType::Skinning3D) { /// ===Skinning3D=== ///
-		/// ===RootSignatureの生成=== ///
-		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignatureObj3D{};
-		descriptionRootSignatureObj3D.Flags =
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		return rootSignature;
+	}
 
-		/// ===DescriptroRangeの生成=== ///
+	/// ===Skinning3D=== ///
+	ComPtr<ID3D12RootSignature> TypeSkinning3D(ID3D12Device* device) {
+		// DescriptroRangeの生成
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 		descriptorRange[0].BaseShaderRegister = 0; // 0から始める
 		descriptorRange[0].NumDescriptors = 1; // 数は1つ
 		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-		/// ===RootParameterの生成=== ///
+
+		// RootParameterの生成
 		D3D12_ROOT_PARAMETER rootParameters[8] = {};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使用
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使用
@@ -261,14 +282,12 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		rootParameters[6].Descriptor.ShaderRegister = 4; // レジスタ番号4を使用
 
 		rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTableを使う
-		rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX; 
+		rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 		rootParameters[7].DescriptorTable.pDescriptorRanges = descriptorRange; // テーブルの中身の配列を指定
 		rootParameters[7].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // テーブルで利用可能
 
-		descriptionRootSignatureObj3D.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
-		descriptionRootSignatureObj3D.NumParameters = _countof(rootParameters); // 配列の高さ
 
-		/// ===Samplerの設定=== ///
+		// Samplerの設定
 		D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 		staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -279,46 +298,53 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		staticSamplers[0].ShaderRegister = 0;
 		staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		descriptionRootSignatureObj3D.pStaticSamplers = staticSamplers;
-		descriptionRootSignatureObj3D.NumStaticSamplers = _countof(staticSamplers);
 
-		// シリアライズしてバイナリにする
-		hr = D3D12SerializeRootSignature(&descriptionRootSignatureObj3D, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
+		// RootSignatureの生成
+		D3D12_ROOT_SIGNATURE_DESC desc{};
+		desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		desc.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
+		desc.NumParameters = _countof(rootParameters); // 配列の高さ
+		desc.pStaticSamplers = staticSamplers;
+		desc.NumStaticSamplers = _countof(staticSamplers);
+
+		// --- シリアライズ & 作成 ---
+		ComPtr<ID3DBlob> signatureBlob;
+		ComPtr<ID3DBlob> errorBlob;
+		HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 		if (FAILED(hr)) {
-			Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
+			if (errorBlob) {
+				OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+			}
 			assert(false);
+			return nullptr;
 		}
 
-		// バイナリを元に生成
-		hr = dxCommon->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(), signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
+		ComPtr<ID3D12RootSignature> rootSignature;
+		hr = device->CreateRootSignature(
+			0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
 		assert(SUCCEEDED(hr));
 
-	} else if (
-		Type == PipelineType::OffScreen || Type == PipelineType::Grayscale || Type == PipelineType::Vignette ||
-		Type == PipelineType::BoxFilter3x3 || Type == PipelineType::BoxFilter5x5) {
-		/// ===RootSignatureの生成=== ///
-		D3D12_ROOT_SIGNATURE_DESC descriptionRootSignatureObj2D{};
-		descriptionRootSignatureObj2D.Flags =
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		return rootSignature;
+	}
 
-		/// ===DescriptroRangeの生成=== ///
+	/// ===OffScreen=== ///
+	ComPtr<ID3D12RootSignature> TypeOffScreen(ID3D12Device* device) {
+		// DescriptroRangeの生成
 		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
 		descriptorRange[0].BaseShaderRegister = 0; // 0から始める
 		descriptorRange[0].NumDescriptors = 1; // 数は1つ
 		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-		/// ===RootParameterの生成=== ///
+		// RootParameterの生成
 		D3D12_ROOT_PARAMETER rootParameters[1]{};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTableを使う
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 		rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange; // Tableの中身の配列を指定
 		rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
 
-		descriptionRootSignatureObj2D.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
-		descriptionRootSignatureObj2D.NumParameters = _countof(rootParameters); // 配列の長さ
-
-		/// ===Samplerの設定=== ///
+		// Samplerの設定
 		D3D12_STATIC_SAMPLER_DESC staticSamplers[1]{};
 		staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -329,31 +355,67 @@ void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
 		staticSamplers[0].ShaderRegister = 0;
 		staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		descriptionRootSignatureObj2D.pStaticSamplers = staticSamplers;
-		descriptionRootSignatureObj2D.NumStaticSamplers = _countof(staticSamplers);
+		// RootSignatureの生成
+		D3D12_ROOT_SIGNATURE_DESC desc{};
+		desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		desc.pParameters = rootParameters; // ルートパラメータ配列へのポインタ
+		desc.NumParameters = _countof(rootParameters); // 配列の長さ
+		desc.pStaticSamplers = staticSamplers;
+		desc.NumStaticSamplers = _countof(staticSamplers);
 
-		// シリアライズしてバイナリにする
-		hr = D3D12SerializeRootSignature(
-			&descriptionRootSignatureObj2D, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
+		// --- シリアライズ & 作成 ---
+		ComPtr<ID3DBlob> signatureBlob;
+		ComPtr<ID3DBlob> errorBlob;
+		HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 		if (FAILED(hr)) {
-			Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
+			if (errorBlob) {
+				OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+			}
 			assert(false);
+			return nullptr;
 		}
 
-		// バイナリを元に生成
-		assert(signatureBlob_);
-		hr = dxCommon->GetDevice()->CreateRootSignature(
-			0, signatureBlob_->GetBufferPointer(), signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
-		if (FAILED(hr)) {
-			assert(SUCCEEDED(hr));
-		}
+		ComPtr<ID3D12RootSignature> rootSignature;
+		hr = device->CreateRootSignature(
+			0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(),
+			IID_PPV_ARGS(&rootSignature));
+		assert(SUCCEEDED(hr));
+
+		return rootSignature;
+	}
+
+
+	/// ===マップに登録=== ///
+	using RootSigGenerator = std::function<ComPtr<ID3D12RootSignature>(ID3D12Device*)>;
+	const std::unordered_map<PipelineType, RootSigGenerator> kRootSignatureTable_ = {
+		{ PipelineType::Obj3D,        Type3D },
+		{ PipelineType::ForGround2D,  Type2D },
+		{ PipelineType::BackGround2D, Type2D },
+		{ PipelineType::Particle,     TypeParticle },
+		{ PipelineType::Skinning3D,   TypeSkinning3D  },
+		{ PipelineType::OffScreen,    TypeOffScreen },
+		{ PipelineType::Grayscale,    TypeOffScreen },
+		{ PipelineType::Vignette ,    TypeOffScreen },
+		{ PipelineType::BoxFilter3x3, TypeOffScreen },
+		{ PipelineType::BoxFilter5x5, TypeOffScreen },
+	};
+}
+
+///-------------------------------------------/// 
+/// ルートシグネイチャの生成
+///-------------------------------------------///
+void RootSignature::Create(DXCommon* dxCommon, PipelineType Type) {
+	auto it = kRootSignatureTable_.find(Type);
+	if (it != kRootSignatureTable_.end()) {
+		// 直接 RootSignature を作って返す構成に変更
+		rootSignature_ = it->second(dxCommon->GetDevice());
 	} else {
-		return;
+		assert(false && "Unknown PipelineType in RootSignature");
 	}
 }
 
-/// <summary>
-///  ルートシグネイチャの取得
-/// </summary>
-/// <returns></returns>
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
 ID3D12RootSignature* RootSignature::GetRootSignature() const { return rootSignature_.Get(); }
+

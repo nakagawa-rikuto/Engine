@@ -1,74 +1,52 @@
 #include "DepthStencil.h"
 
+namespace {
+	D3D12_DEPTH_STENCIL_DESC CreateDepthDesc(bool enable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_ALWAYS, bool stencilEnable = false) {
+		D3D12_DEPTH_STENCIL_DESC desc{};
+		desc.DepthEnable = enable;
+		desc.DepthWriteMask = writeMask;
+		desc.DepthFunc = func;
+		desc.StencilEnable = stencilEnable;
+		return desc;
+	}
+
+	/// ===テーブルに登録=== ///
+	const std::unordered_map<PipelineType, D3D12_DEPTH_STENCIL_DESC> kDepthStencilTable_ = {
+		// 2D: 前景（深度有効, 書き込みあり, 比較常にOK）
+		{ PipelineType::ForGround2D,  CreateDepthDesc(true,  D3D12_DEPTH_WRITE_MASK_ALL,    D3D12_COMPARISON_FUNC_ALWAYS) },
+
+		// 2D: 背景（深度無効, 書き込みなし, 比較LessEqual, ステンシル無効）
+		{ PipelineType::BackGround2D, CreateDepthDesc(false, D3D12_DEPTH_WRITE_MASK_ZERO,   D3D12_COMPARISON_FUNC_LESS_EQUAL, false) },
+
+		// 3D Object（深度有効, 書き込みあり, 比較LessEqual）
+		{ PipelineType::Obj3D,        CreateDepthDesc(true,  D3D12_DEPTH_WRITE_MASK_ALL,    D3D12_COMPARISON_FUNC_LESS_EQUAL) },
+
+		// Particle（深度有効, 書き込みなし, 比較LessEqual）
+		{ PipelineType::Particle,     CreateDepthDesc(true,  D3D12_DEPTH_WRITE_MASK_ZERO,   D3D12_COMPARISON_FUNC_LESS_EQUAL) },
+
+		// Skinning 3D（深度有効, 書き込みあり, 比較LessEqual）
+		{ PipelineType::Skinning3D,   CreateDepthDesc(true,  D3D12_DEPTH_WRITE_MASK_ALL,    D3D12_COMPARISON_FUNC_LESS_EQUAL) },
+
+		// PostEffect 系（深度無効）
+		{ PipelineType::OffScreen,    CreateDepthDesc(false) },
+		{ PipelineType::Grayscale,    CreateDepthDesc(false) },
+		{ PipelineType::Vignette,     CreateDepthDesc(false) },
+		{ PipelineType::BoxFilter3x3, CreateDepthDesc(false) },
+		{ PipelineType::BoxFilter5x5, CreateDepthDesc(false) },
+	};
+}
+
+
+
 ///-------------------------------------------/// 
 /// デプスステンシルの生成
 ///-------------------------------------------///
 void DepthStencil::Create(PipelineType Type) {
-	// DepthStencil
-	if (Type == PipelineType::ForGround2D) {
-
-		// Depthの機能を有効化
-		depthStencilDesc_.DepthEnable = true;
-
-		// 書き込みします
-		depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-
-		// 比較関数はLessEqual。
-		depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-	}else if(Type == PipelineType::BackGround2D){
-
-		// Depthの機能を無効か
-		depthStencilDesc_.DepthEnable = false;
-
-		// 書き込み市内
-		depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-
-		// ｚ値に関係なく描画。
-		depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-
-		// ステンシルバッファの無効化
-		depthStencilDesc_.StencilEnable = false;
-
-	} else if (Type == PipelineType::Obj3D) {
-
-		// Depthの機能を有効化
-		depthStencilDesc_.DepthEnable = true;
-
-		// 書き込みします
-		depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-
-		// 比較関数はLessEqual。
-		depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	} else if(Type == PipelineType::Particle){
-
-		// Depthの機能を有効化
-		depthStencilDesc_.DepthEnable = true;
-
-		// 書き込みします
-		depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-
-		// 比較関数はLessEqual。
-		depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	} else if (Type == PipelineType::Skinning3D) {
-	
-		// Depthの機能を有効化
-		depthStencilDesc_.DepthEnable = true;
-
-		// 書き込みします
-		depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-
-		// 比較関数はLessEqual。
-		depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-	} else if (
-		Type == PipelineType::OffScreen || Type == PipelineType::Grayscale || Type == PipelineType::Vignette ||
-		Type == PipelineType::BoxFilter3x3 || Type == PipelineType::BoxFilter5x5) {
-
-		// 全画面に対して何か処理を施したいだけだから,比較も書き込みも必要ない為,有効化しない
-		depthStencilDesc_.DepthEnable = false;
-
+	auto it = kDepthStencilTable_.find(Type);
+	if (it != kDepthStencilTable_.end()) {
+		depthStencilDesc_ = it->second;
 	} else {
-
-		return;
+		depthStencilDesc_ = {}; // fallback to default
 	}
 }
 

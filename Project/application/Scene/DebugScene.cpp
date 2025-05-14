@@ -4,13 +4,15 @@
 // Service
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
+#include "Engine/System/Service/Setter.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
 #include "Engine/Graphics/Particle/Derivative/WindParticle.h"
 #include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
 #include "Engine/Graphics/Particle/Derivative/RingParticle.h"
-#include "Engine/System/Service/Setter.h"
+#include "Engine/Graphics/Particle/Derivative/CylinderParticle.h"
+
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -64,6 +66,7 @@ void DebugScene::Initialize() {
 	particleManager_->AddParticle("Wind", std::make_unique<WindParticle>());
 	particleManager_->AddParticle("Ring", std::make_unique<RingParticle>());
 	particleManager_->AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
+	particleManager_->AddParticle("Cylinder", std::make_unique<CylinderParticle>());
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -141,7 +144,7 @@ void DebugScene::Initialize() {
 
 	/// ===OffScreen=== ///
 #pragma region OffScreen
-	isGrayscale = true;
+	isGrayscale = false;
 #pragma endregion
 	
 	/// ===Particle=== ///
@@ -270,6 +273,7 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.None && ImGui::Button("None")) {
+				animationModel_->SetLight(LightType::None);
 				model_->SetLight(LightType::None);
 				model2_->SetLight(LightType::None);
 				lightType_.Lambert = false;
@@ -322,8 +326,8 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Ring", particleTranslate_);
-			particleManager_->SetTexture("Ring", "gradationLine");
+			particleManager_->Emit("Cylinder", particleTranslate_);
+			particleManager_->SetTexture("Cylinder", "gradationLine");
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle1 = false;
@@ -342,7 +346,8 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Explosion", particleTranslate_);
+			particleManager_->Emit("Ring", particleTranslate_);
+			particleManager_->SetTexture("Ring", "gradationLine");
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle2 = false;
@@ -384,7 +389,7 @@ void DebugScene::Update() {
 	ImGui::Begin("Camera");
 	ImGui::Checkbox("Flag", &SetCamera);
 	ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
-	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.1f);
+	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.001f);
 	ImGui::End();
 	/// ===Keybord=== ///
 	/*ImGui::Begin("Keybord");
@@ -579,7 +584,7 @@ void DebugScene::Draw() {
 
 	// アニーメーションモデル
 	//modelLight_->Draw();
-	//animationModel_->Draw();
+	animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
