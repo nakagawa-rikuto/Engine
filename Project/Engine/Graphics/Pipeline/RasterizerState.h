@@ -30,7 +30,4 @@ public:
 private:
 	// RasterizerState
 	D3D12_RASTERIZER_DESC rasterizerDesc_{}; 
-
-	// 設定用テーブル
-	static const std::unordered_map<PipelineType, D3D12_CULL_MODE> kCullModeTable_;
 };

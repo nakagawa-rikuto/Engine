@@ -15,8 +15,6 @@
 ///-------------------------------------------///
 RootSignature::~RootSignature() {
 	rootSignature_.Reset();
-	signatureBlob_.Reset();
-	errorBlob_.Reset();
 }
 
 ///-------------------------------------------/// 
@@ -389,7 +387,7 @@ namespace {
 
 	/// ===マップに登録=== ///
 	using RootSigGenerator = std::function<ComPtr<ID3D12RootSignature>(ID3D12Device*)>;
-	static std::unordered_map<PipelineType, RootSigGenerator> kRootSignatureTable_ = {
+	const std::unordered_map<PipelineType, RootSigGenerator> kRootSignatureTable_ = {
 		{ PipelineType::Obj3D,        Type3D },
 		{ PipelineType::ForGround2D,  Type2D },
 		{ PipelineType::BackGround2D, Type2D },
@@ -401,24 +399,7 @@ namespace {
 		{ PipelineType::BoxFilter3x3, TypeOffScreen },
 		{ PipelineType::BoxFilter5x5, TypeOffScreen },
 	};
-
 }
-
-///-------------------------------------------/// 
-/// マップに登録
-///-------------------------------------------///
-//const std::unordered_map<PipelineType, RootSignature::RootSigGenerator> RootSignature::kRootSignatureTable_ = {
-//	{ PipelineType::Obj3D,        Type3D },
-//	{ PipelineType::ForGround2D,  Type2D },
-//	{ PipelineType::BackGround2D, Type2D },
-//	{ PipelineType::Particle,     TypeParticle },
-//	{ PipelineType::Skinning3D,   TypeSkinning3D  },
-//	{ PipelineType::OffScreen,    TypeOffScreen },
-//	{ PipelineType::Grayscale,    TypeOffScreen },
-//	{ PipelineType::Vignette ,    TypeOffScreen },
-//	{ PipelineType::BoxFilter3x3, TypeOffScreen },
-//	{ PipelineType::BoxFilter5x5, TypeOffScreen },
-//};
 
 ///-------------------------------------------/// 
 /// ルートシグネイチャの生成

@@ -69,27 +69,35 @@ namespace {
 		inputElementDescs5[4].InputSlot = 1; // 一番目のslotのVBVのことだと伝える
 		inputElementDescs5[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 	}
+
+	// 情報
+	struct LayoutInfo {
+		const D3D12_INPUT_ELEMENT_DESC* elements;
+		UINT numElements;
+	};
+
+	// テーブル
+	const std::unordered_map<PipelineType, LayoutInfo> kLayoutTable_ = [] {
+		InitLayout2Array();
+		InitLayout3Array();
+		InitLayout5Array();
+		// タイプに応じて設定
+		return std::unordered_map<PipelineType, LayoutInfo>{
+			{ PipelineType::ForGround2D, { inputElementDescs2,       _countof(inputElementDescs2) } },
+			{ PipelineType::BackGround2D, { inputElementDescs2,      _countof(inputElementDescs2) } },
+			{ PipelineType::Obj3D,        { inputElementDescs3,      _countof(inputElementDescs3) } },
+			{ PipelineType::Particle,     { inputElementDescs3,      _countof(inputElementDescs3) } },
+			{ PipelineType::Skinning3D,   { inputElementDescs5,		 _countof(inputElementDescs5) } },
+			{ PipelineType::OffScreen,    { nullptr,                  0 } },
+			{ PipelineType::Grayscale,    { nullptr,                  0 } },
+			{ PipelineType::Vignette,     { nullptr,                  0 } },
+			{ PipelineType::BoxFilter3x3, { nullptr,                  0 } },
+			{ PipelineType::BoxFilter5x5, { nullptr,                  0 } },
+		};
+	}();
 }
 
-// テーブル
-const std::unordered_map<PipelineType, InputLayout::LayoutInfo> InputLayout::kLayoutTable_ = [] {
-	InitLayout2Array();
-	InitLayout3Array();
-	InitLayout5Array();
-	// タイプに応じて設定
-	return std::unordered_map<PipelineType, LayoutInfo>{
-		{ PipelineType::ForGround2D, { inputElementDescs2,       _countof(inputElementDescs2) } },
-		{ PipelineType::BackGround2D, { inputElementDescs2,      _countof(inputElementDescs2) } },
-		{ PipelineType::Obj3D,        { inputElementDescs3,      _countof(inputElementDescs3) } },
-		{ PipelineType::Particle,     { inputElementDescs3,      _countof(inputElementDescs3) } },
-		{ PipelineType::Skinning3D,   { inputElementDescs5,		 _countof(inputElementDescs5) } },
-		{ PipelineType::OffScreen,    { nullptr,                  0 } },
-		{ PipelineType::Grayscale,    { nullptr,                  0 } },
-		{ PipelineType::Vignette,     { nullptr,                  0 } },
-		{ PipelineType::BoxFilter3x3, { nullptr,                  0 } },
-		{ PipelineType::BoxFilter5x5, { nullptr,                  0 } },
-	};
-}();
+
 
 ///-------------------------------------------/// 
 /// InputLayoutの生成
