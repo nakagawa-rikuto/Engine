@@ -36,17 +36,9 @@ public:
 
 private:
 
-	struct ShaderInfo {
-		std::wstring vsPath;
-		std::wstring psPath;
-	};
-
 	//　ObjectShader
 	ComPtr<IDxcBlob> objVSBlob_;
 	ComPtr<IDxcBlob> objPSBlob_;
-
-	// 設定用テーブル
-	static const std::unordered_map<PipelineType, ShaderInfo> kShaderTable_; 
 
 private:
 	/// <summary>

@@ -3,7 +3,8 @@
 ///-------------------------------------------/// 
 /// ラスタライザステートの設定
 ///-------------------------------------------///
-const std::unordered_map<PipelineType, D3D12_CULL_MODE> RasterizerState::kCullModeTable_ = {
+namespace {
+	const std::unordered_map<PipelineType, D3D12_CULL_MODE> kCullModeTable_ = {
 	{ PipelineType::ForGround2D,  D3D12_CULL_MODE_NONE },
 	{ PipelineType::BackGround2D, D3D12_CULL_MODE_NONE },
 	{ PipelineType::Obj3D,        D3D12_CULL_MODE_BACK },
@@ -14,8 +15,8 @@ const std::unordered_map<PipelineType, D3D12_CULL_MODE> RasterizerState::kCullMo
 	{ PipelineType::Vignette,     D3D12_CULL_MODE_NONE },
 	{ PipelineType::BoxFilter3x3, D3D12_CULL_MODE_NONE },
 	{ PipelineType::BoxFilter5x5, D3D12_CULL_MODE_NONE },
-};
-
+	};
+}
 
 ///-------------------------------------------/// 
 /// ラスタライザステートの生成
