@@ -147,9 +147,9 @@ void Object3d::SetCamera(Camera * camera) {
 	}
 }
 // Animation
-void Object3d::SetAnimation(const std::string& animationName) {
+void Object3d::SetAnimation(const std::string& animationName, bool isLoop) {
 	if (type_ == ObjectType::AnimationModel) {
-		animationModel_->SetAnimation(animationName);
+		animationModel_->SetAnimation(animationName, isLoop);
 	} else {
 		// タイプがアニメーションモデル出なければ強制的に止める
 		assert(0);

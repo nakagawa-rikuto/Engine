@@ -464,8 +464,12 @@ void DebugScene::Update() {
 	if (Input::TriggerMouse(MouseButtonType::Right)) {
 		if (TriggerRight_) {
 			TriggerRight_ = false;
+			// アニメーションのループを無効化
+			animationModel_->SetAnimation("Armature|mixamo.com|Layer0", false);
 		} else {
 			TriggerRight_ = true;
+			// アニメーションのループを有効化
+			animationModel_->SetAnimation("Armature|mixamo.com|Layer0", true);
 		}
 	}
 	mousePosition_.x = static_cast<float>(Input::GetMousePosition().x);
