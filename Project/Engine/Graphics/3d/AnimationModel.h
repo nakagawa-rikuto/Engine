@@ -52,7 +52,7 @@ public: /// ===Setter=== ///
 	// Camera
 	void SetCamera(Camera* camera);
 	// Animation
-	void SetAnimation(const std::string& animationName, bool isLoop = true);
+	void SetAnimation(const std::string& animationName, bool isLoop);
 
 private: /// ===Variables(変数)=== ///
 
