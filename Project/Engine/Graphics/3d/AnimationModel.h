@@ -52,7 +52,7 @@ public: /// ===Setter=== ///
 	// Camera
 	void SetCamera(Camera* camera);
 	// Animation
-	void SetAnimation(const std::string& animationName);
+	void SetAnimation(const std::string& animationName, bool isLoop = true);
 
 private: /// ===Variables(変数)=== ///
 
@@ -90,11 +90,12 @@ private: /// ===Variables(変数)=== ///
 	};
 
 	/// ===Animation=== ///
-	float animationTime_ = 0.0f;
+	float animationTime_;
 	std::map<std::string, Animation> animation_;
 	std::string animationName_;
 	Skeleton skeleton_;
 	SkinCluster skinCluster_;
+	bool isLoop_;
 
 private: /// ===Functions(関数)=== ///
 

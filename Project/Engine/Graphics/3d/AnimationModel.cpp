@@ -1,5 +1,7 @@
 #include "AnimationModel.h"
+#define NOMINMAX
 // c++
+#include <Windows.h>
 #include <cassert>
 #include <fstream>
 #include <vector>
@@ -74,7 +76,10 @@ void AnimationModel::SetLightData(LightInfo light) {
 /// ===Camera=== ///
 void AnimationModel::SetCamera(Camera* camera) { camera_ = camera; }
 /// ===AnimatinoName=== ///
-void AnimationModel::SetAnimation(const std::string& animationName) { animationName_ = animationName; }
+void AnimationModel::SetAnimation(const std::string& animationName, bool isLoop) { 
+	animationName_ = animationName; 
+	isLoop_ = isLoop;
+}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -134,6 +139,10 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 
 	/// ===Common=== ///
 	common_->Initialize(device, type);
+
+	/// ===animation=== ///
+	isLoop_ = true;
+	animationTime_ = 0.0f;
 }
 
 ///-------------------------------------------/// 
@@ -142,9 +151,21 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 void AnimationModel::Update() {
 
 	/// ===Animationの再生=== ///
-	animationTime_ += 1.0f / 60.0f; // 時刻を進める。1/60で固定してあるが、計測した時間を使って可変フレーム対応する方が望ましい
-	// 後々ここにif分でリピートするかしないかを選択できるようにする
-	animationTime_ = std::fmod(animationTime_, animation_[animationName_].duration); // 最後までいったら最初からリピート再生。リピートしなくても別にいい
+	float duration = animation_[animationName_].duration;
+	// ループするかのif分
+	if (isLoop_) {
+		animationTime_ += 1.0f / 60.0f;
+		animationTime_ = std::fmod(animationTime_, duration); // ループ
+	} else {
+		if (animationTime_ < duration) {
+			animationTime_ += 1.0f / 60.0f;
+			if (animationTime_ > duration) {
+				animationTime_ = duration; // 明示的に止める
+				// 後々ここにフラグなどを入れてもOK
+			}
+		}
+	}
+	
 	// SkeletonにAnimationを適用
 	ApplyAnimation(skeleton_, animation_[animationName_], animationTime_);
 	// Skeletonの更新
