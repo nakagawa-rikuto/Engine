@@ -20,6 +20,8 @@
     <FxCompile Include="Resource\Shaders\OffScreen\LuminanceBasedOutline.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\RadialBlur.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\Dissolve.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\Skybox.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\Skybox.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -123,6 +125,7 @@
     <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -234,6 +237,7 @@
     <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\CylinderParticle.h" />
+    <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />
@@ -241,6 +245,7 @@
     <None Include="Resource\Shaders\3D\Obj3D.hlsli" />
     <None Include="Resource\Shaders\3D\SkinningObj3D.hlsli" />
     <None Include="Resource\Shaders\OffScreen\Fullscreen.hlsli" />
+    <None Include="Resource\Shaders\3D\Skybox.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

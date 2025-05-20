@@ -89,8 +89,16 @@ void TextureManager::LoadTexture(const std::string& key, const std::string& file
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 
 	// SRVの生成
-	srvManager_->CreateSRVForTexture2D(
-		textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, UINT(textureData.metadata.mipLevels));
+	if (textureData.metadata.IsCubemap()) {
+		// CubMap
+		srvManager_->CreateSRVForCubeMap(
+			textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, UINT_MAX);
+	} else {
+		// Texture2D
+		srvManager_->CreateSRVForTexture2D(
+			textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, UINT(textureData.metadata.mipLevels));
+	}
+	
 }
 
 
@@ -102,15 +110,28 @@ DirectX::ScratchImage TextureManager::Load(const std::string& key, const std::st
 	// テクスチャファイルを読み込んでプログラムで扱えるよにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString(filePath);
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+	HRESULT hr;
+
+	// 拡張子の判別
+	if (filePath.ends_with(".dds") || filePath.ends_with(".DDS")) {
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+	} else {
+		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+	}
+	 
 	// リリースでもエラーが出るようにする
 	if (FAILED(hr)) {
 		throw std::runtime_error("Failed to load texture with key: " + key + ", from file: " + filePath);
 	}
 
+	/// ===ミップマップの対応処理=== ///
 	// ミップマップの作成
 	DirectX::ScratchImage mipImages{};
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
+	if (DirectX::IsCompressed(image.GetMetadata().format)) { // 圧縮フォーマットかどうかを調べる
+		mipImages = std::move(image); // 圧縮フォーマットならそのまま使うのでmoveする
+	} else {
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImages);
+	}
 	if (FAILED(hr)) {
 		throw std::runtime_error("Failed to generate mipmaps for texture with key: " + key + ", from file: " + filePath);
 	}

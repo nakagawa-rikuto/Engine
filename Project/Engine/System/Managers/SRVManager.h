@@ -35,6 +35,9 @@ public:
 	/// </summary>
 	void CreateSRVForTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT Format, UINT MipLevels);
 
+	// SRVの生成(cubemap用)
+	void CreateSRVForCubeMap(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT Format, UINT MipLevels);
+
 	/// <summary>
 	/// SRV生成（Structured Buffer用）
 	/// </summary>
