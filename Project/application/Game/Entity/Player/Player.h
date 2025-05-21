@@ -11,6 +11,9 @@ public:
 	Player() = default;
 	~Player();
 
+	// 初期化（GameScene用）
+	void Init(Camera* camera);
+
 	// 初期化
 	void Initialize()override;
 	// 更新
@@ -29,6 +32,8 @@ public: /// ===Getter=== ///
 	Quaternion GetRotate()const;
 
 private: /// ===変数の宣言=== ///
+
+	Camera* camera_ = nullptr; // カメラ
 
 	/// ===振る舞い=== ///
 	enum class Behavior {

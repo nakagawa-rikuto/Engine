@@ -1,4 +1,6 @@
 #include "Player.h"
+// Camera
+#include "application/Game/Camera/Camera.h"
 // Service
 #include "Engine/System/Service/Input.h"
 // ImGui
@@ -19,6 +21,22 @@ Player::~Player() {
 Vector3 Player::GetTranslate() const { return baseInfo_.translate; }
 Quaternion Player::GetRotate() const { return baseInfo_.rotate; }
 
+///-------------------------------------------/// 
+/// 初期化（GameScene用）
+///-------------------------------------------///
+void Player::Init(Camera* camera) {
+	
+	camera_ = camera;
+
+	// 初期化
+	Initialize();
+	SetCamera(camera_);
+	camera_->SetFollowCamera(FollowCameraType::TopDown);
+	camera_->SetOffset({ 0.0f, 70.0f, 0.0f });
+	camera_->SetFollowSpeed(0.1f);
+	
+	object3d_->Update();
+}
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -35,7 +53,6 @@ void Player::Initialize() {
 	SetRotate(baseInfo_.rotate);
 	SetScale(baseInfo_.scale);
 	SetColor(baseInfo_.color);
-	object3d_->Update();
 }
 
 
@@ -43,6 +60,9 @@ void Player::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void Player::Update() {
+
+	StickState rightStick = Input::GetRightStickState(0);
+	camera_->SetStick({ rightStick.x, rightStick.y });
 
 	/// ===タイマーを進める=== ///
 	advanceTimer();
@@ -93,6 +113,9 @@ void Player::Update() {
 	/// ===移動量の反映=== ///
 	baseInfo_.translate += baseInfo_.velocity;
 
+	/// ===camera=== ///
+	camera_->SetTarget(&baseInfo_.translate, &baseInfo_.rotate);
+
 	/// ===Object3dの更新=== ///
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
@@ -136,8 +159,6 @@ void Player::UpdateRoot() {
 
 	// 左スティック入力取得（移動用）
 	StickState leftStick = Input::GetLeftStickState(0);
-	// 右スティック入力取得（視点回転用）
-	StickState rightStick = Input::GetRightStickState(0);
 
 	// 減速率（数値を下げればゆっくり止まる）
 	const float deceleration = 0.75f;
@@ -183,8 +204,6 @@ void Player::UpdateMove() {
 
 	// 左スティック入力取得（移動用）
 	StickState leftStick = Input::GetLeftStickState(0);
-	// 右スティック入力取得（視点回転用）
-	StickState rightStick = Input::GetRightStickState(0);
 
 	// 方向の設定
 	moveInfo_.direction.x = leftStick.x;

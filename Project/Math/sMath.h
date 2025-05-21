@@ -4,6 +4,7 @@
 
 #include "Vector3.h"
 #include "Quaternion.h"
+#include "Matrix4x4.h"
 
 namespace Math {
 	/// ===π=== ///
@@ -33,6 +34,8 @@ namespace Math {
 	float GetYAngle(const Quaternion& quaternion);
 	// QuaternionをEulerAngles(Vector3)に変換する関数
 	Vector3 QuaternionToEuler(const Quaternion& quaternion);
+	// ある方向（forward）を向くクォータニオン（回転）を作る
+	Quaternion LookRotation(Vector3 forward, Vector3 up);
 }
 
 

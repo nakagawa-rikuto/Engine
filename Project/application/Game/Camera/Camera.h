@@ -7,7 +7,8 @@ enum class FollowCameraType {
 	FixedOffset,        // 固定オフセット型（一定のオフセット距離で追従）
 	Interpolated,       // スムージング追従型（補間で滑らかに追従）
 	Orbiting,           // 回転可能型（対象の周りを回るカメラ）
-	CollisionAvoidance  // 衝突回避型（障害物を避ける）
+	CollisionAvoidance, // 衝突回避型（障害物を避ける）
+	TopDown,           // 上からの視点
 };
 
 ///=====================================================/// 
@@ -117,5 +118,7 @@ private:
 	void FollowOrbiting();
 	// 衝突回避型カメラの処理 
 	void FollowCollisionAvoidance();
+	// 上からの見下ろし追従カメラの処理
+	void FollowTopDown();
 };
 

@@ -36,8 +36,7 @@ void GameScene::Initialize() {
 
 	/// ===Player=== ///
 	player_ = std::make_unique<Player>();
-	player_->Initialize();
-	player_->SetCamera(cameraManager_->GetActiveCamera().get());
+	player_->Init(cameraManager_->GetActiveCamera().get());
 
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();
@@ -71,8 +70,6 @@ void GameScene::Update() {
 	ground_->Update();
 
 	/// ===Cameraの更新=== ///
-	camera_->SetTranslate(cameraInfo_.translate);
-	camera_->SetRotate(cameraInfo_.rotate);
 	cameraManager_->UpdateAllCameras();
 }
 
