@@ -5,6 +5,7 @@
 #include "application/Game/Camera/Camera.h"
 #include "application/Game/Entity/Player/Player.h"
 #include "application/Game/Object/Ground/Ground.h"
+#include "application/Game/Entity/Enemy/Enemy.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -30,6 +31,8 @@ private:/// ===メンバ変数=== ///
 	/// ===Classの宣言=== /// 
 	// Player
 	std::unique_ptr<Player> player_;
+	// Enemy
+	std::unique_ptr<Enemy> enemy_;
 	// Ground
 	std::unique_ptr<Ground> ground_;
 	// Camera

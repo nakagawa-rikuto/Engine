@@ -261,5 +261,5 @@ void Camera::FollowTopDown() {
 
 	// 対象を見下ろすように回転（常に真下を向く）
 	Vector3 forward = *targetPos_ - transform_.translate;
-	transform_.rotate = Math::LookRotation(forward, { 0.0f, 1.0f, 0.0f });
+	//transform_.rotate = Math::LookRotation(forward, { 0.0f, 1.0f, 0.0f });
 }

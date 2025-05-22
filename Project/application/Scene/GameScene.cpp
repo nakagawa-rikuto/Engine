@@ -15,6 +15,8 @@ GameScene::~GameScene() {
 	player_.reset();
 	// Ground
 	ground_.reset();
+	// Enemy
+	enemy_.reset();
 }
 
 ///-------------------------------------------/// 
@@ -38,6 +40,10 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Init(cameraManager_->GetActiveCamera().get());
 
+	/// ===Enemy=== ///
+	enemy_ = std::make_unique<Enemy>();
+	enemy_->Init(cameraManager_->GetActiveCamera().get());
+
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize();
@@ -59,11 +65,18 @@ void GameScene::Update() {
 	// Player
 	player_->UpdateImGui();
 
+	// Enemy
+	//enemy_->UpdateImGui();
+
 #endif // USE_IMGUI
 
 	/// ===Playerの更新=== ///
 	player_->SetCamera(cameraManager_->GetActiveCamera().get());
 	player_->Update();
+
+	/// ===Enemy=== ///
+	//enemy_->SetCamera(cameraManager_->GetActiveCamera().get());
+	//enemy_->Update();
 
 	/// ===Groundの更新=== ///
 	ground_->SetCamera(cameraManager_->GetActiveCamera().get());
@@ -84,6 +97,8 @@ void GameScene::Draw() {
 #pragma region モデル描画
 	// Ground
 	ground_->Draw();
+	// Enemy
+	//enemy_->Draw();
 	// Player
 	player_->Draw();
 #pragma endregion
