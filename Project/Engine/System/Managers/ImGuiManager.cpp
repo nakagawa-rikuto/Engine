@@ -72,7 +72,10 @@ void ImGuiManager::Begin() {
 	//ImGui::ShowDemoWindow();
 
 	// Dock付きUI描画
-	DrawMainDockWindow();
+	//DrawMainDockWindow();
+	// ドッキング設定
+	ImGui::DockSpaceOverViewport
+	(ImGui::GetMainViewport()->ID, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
 
 #endif // USE_IMGUI
 }
@@ -83,8 +86,6 @@ void ImGuiManager::Begin() {
 ///-------------------------------------------///
 void ImGuiManager::End() {
 #ifdef USE_IMGUI
-	
-
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	// ImGuiの内部コマンドを生成する
@@ -102,6 +103,9 @@ void ImGuiManager::Draw() {
 	// 描画用のDescriptorHeapの設定
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	srvManager_->PreDraw();
+
+	// 各ウィンドウを描画
+	if (sceneView_) sceneView_->Draw();
 }
 
 ///-------------------------------------------/// 
