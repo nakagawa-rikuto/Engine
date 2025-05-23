@@ -566,6 +566,10 @@ void DebugScene::Update() {
 	// 全てのカメラの更新
 	cameraManager_->UpdateAllCameras();
 #pragma endregion
+
+
+	/// ===ISceneのの更新=== ///
+	IScene::Update();
 }
 
 ///-------------------------------------------/// 
@@ -599,6 +603,10 @@ void DebugScene::Draw() {
 	}
 	/// ===Particle=== ///
 	particleManager_->Draw(BlendMode::kBlendModeAdd);
+
+
+	/// ===ISceneの描画=== ///
+	IScene::Draw();
 
 #pragma endregion
 

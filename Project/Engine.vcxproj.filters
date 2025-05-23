@@ -126,6 +126,8 @@
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
+    <ClCompile Include="application\Drawing\3d\Line.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -239,6 +241,8 @@
     <ClInclude Include="Engine\Graphics\Particle\Derivative\CylinderParticle.h" />
     <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
     <ClInclude Include="Engine\DataInfo\LineObjectData.h" />
+    <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
+    <ClInclude Include="application\Drawing\3d\Line.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

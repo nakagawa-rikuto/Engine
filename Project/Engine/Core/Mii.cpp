@@ -65,6 +65,10 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// CSVManagerの生成
 	csvManager_ = std::make_unique<CSVManager>();
 
+	// LineObject3Dの生成
+	lineObject3D_ = std::make_unique<LineObject3D>();
+	lineObject3D_->Initialize();
+
 	// InputCommonの生成
 	inputCommon_ = std::make_unique<InputCommon>();
 	inputCommon_->Initialize(winApp_.get());
@@ -161,9 +165,6 @@ void Mii::BeginFrame() {
 	// コマンドを積む
 	dXCommon_->BeginCommand();
 
-	// プリミティブトポロジーをセット
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	// ディスクリプタヒープをバインド
 	srvManager_->PreDraw();
 }
@@ -173,6 +174,7 @@ void Mii::BeginFrame() {
 /// フレーム終了処理
 ///=====================================================///
 void Mii::EndFrame() {
+
 	// ImGuiの開始処理
 	//NOTE:ここはswapChainで設定
 	dXCommon_->PreDrawImGui(rtvManager_.get());
@@ -223,6 +225,8 @@ CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
 // OffScreenRenderer
 OffScreenRenderer* Mii::GetOffScreenRenderer() { return offScreenRenderer_.get(); }
+// LineObject3D
+LineObject3D* Mii::GetLineObject3D() { return lineObject3D_.get(); }
 // Keyboard
 Keyboard* Mii::GetKeyboard() { return keyboard_.get(); }
 // Mouse
