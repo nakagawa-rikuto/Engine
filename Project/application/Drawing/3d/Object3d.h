@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Graphics/3d/Model.h"
-#include "Engine/Graphics/3d/AnimationModel.h"
+#include "Engine/Graphics/3d/Model/Model.h"
+#include "Engine/Graphics/3d/Model/AnimationModel.h"
 
 /// ===オブジェクトのタイプ=== ///
 enum class ObjectType {
