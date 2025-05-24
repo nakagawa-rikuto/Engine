@@ -31,10 +31,8 @@ void LineObject3D::SetCamera(Camera* camera) { camera_ = camera; }
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void LineObject3D::Initialize() {
-	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Getter::GetDXDevice();
-
+void LineObject3D::Initialize(ID3D12Device* device) {
+	
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
 	wvp_ = std::make_unique<Transform3D>();
@@ -64,17 +62,17 @@ void LineObject3D::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void LineObject3D::Update() {
-	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	//Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
 	/// ===Matrixの作成=== ///
 	if (camera_) {
 		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+		worldViewProjectionMatrix = viewProjectionMatrix;
 	} else {
 		Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
 		Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
-		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+		worldViewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
 	}
 
 	// Dataの代入
@@ -90,12 +88,12 @@ void LineObject3D::Draw() {
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Render::SetPSO(commandList, PipelineType::Obj3D, BlendMode::KBlendModeNormal, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	Render::SetPSO(commandList, PipelineType::Line3D, BlendMode::KBlendModeNormal, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	// vertexBufferの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	// wvpMatrixBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, wvp_->GetBuffer()->GetGPUVirtualAddress());
 	// DrawCall
 	commandList->DrawInstanced(lineIndex_, lineIndex_ / kLineVertexCount_, 0, 0);
 

@@ -67,7 +67,7 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 
 	// LineObject3Dの生成
 	lineObject3D_ = std::make_unique<LineObject3D>();
-	lineObject3D_->Initialize();
+	lineObject3D_->Initialize(dXCommon_->GetDevice());
 
 	// InputCommonの生成
 	inputCommon_ = std::make_unique<InputCommon>();
@@ -105,6 +105,8 @@ void Mii::Finalize() {
 	// 読み込んだ音声データの一括停止・解放
 	audioManager_->StopAll();
 	audioManager_->UnloadAll();
+	// LineObject3D
+	lineObject3D_->Reset();
 	// ImGuiの終了処理
 	imGuiManager_->Finalize();
 	// ゲームウィンドウの破棄
@@ -122,6 +124,8 @@ void Mii::Finalize() {
 	animationManager_.reset();	// AnimationManager
 	modelManager_.reset();		// Modelmanager
 	textureManager_.reset();	// TextrureManager
+	// LineObject3D
+	lineObject3D_.reset();
 	// SceneView
 	sceneView_.reset();
 	// OffScreen

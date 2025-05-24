@@ -133,11 +133,11 @@ void Line::DrawSphere(const Sphere& sphere, const Vector4 & color) {
 ///-------------------------------------------/// 
 /// Grid
 ///-------------------------------------------///
-void Line::DrawGrid(const Vector3 & center, const Vector3 & size, uint32_t division) {
+void Line::DrawGrid(const Vector3 & center, const Vector3 & size, uint32_t division, const Vector4& mainColor) {
 	Vector3 halfSize = size * 0.5f;
 	Vector3 start = center + Vector3(-halfSize.x, 0.0f, -halfSize.z);
 	Vector3 end = center + Vector3(halfSize.x, 0.0f, -halfSize.z);
-	Vector4 color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	Vector4 color = mainColor;
 	// 横線
 	for (uint32_t i = 0; i <= division; i++) {
 		float t = float(i) / float(division);

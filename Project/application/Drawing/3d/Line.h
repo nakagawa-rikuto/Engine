@@ -20,7 +20,7 @@ public:
 	// Sphere
 	void DrawSphere(const Sphere& sphere, const Vector4& color);
 	// Grid
-	void DrawGrid(const Vector3& center, const Vector3& size, uint32_t division);
+	void DrawGrid(const Vector3& center, const Vector3& size, uint32_t division, const Vector4& color);
 	// 1方向に対して分割グリッド線を描画するユーティリティ関数
 	void DrawGridLines(const Vector3& start, const Vector3& end, const Vector3& offset, uint32_t division, const Vector4& color);
 };

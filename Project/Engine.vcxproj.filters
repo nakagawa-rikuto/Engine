@@ -22,6 +22,8 @@
     <FxCompile Include="Resource\Shaders\OffScreen\Dissolve.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\3D\Skybox.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\3D\Skybox.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\LIne3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\LIne3D.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -251,6 +253,7 @@
     <None Include="Resource\Shaders\3D\SkinningObj3D.hlsli" />
     <None Include="Resource\Shaders\OffScreen\Fullscreen.hlsli" />
     <None Include="Resource\Shaders\3D\Skybox.hlsli" />
+    <None Include="Resource\Shaders\3D\LIne3D.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

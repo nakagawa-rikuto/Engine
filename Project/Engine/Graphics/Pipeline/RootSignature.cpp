@@ -89,6 +89,35 @@ namespace {
 		return rootSignature;
 	}
 
+	/// ===Line3D=== ///
+	ComPtr<ID3D12RootSignature> TypeLine3D(ID3D12Device* device) {
+		D3D12_ROOT_PARAMETER rootParameters[1] = {};
+		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters[0].Descriptor.ShaderRegister = 0;
+
+		D3D12_ROOT_SIGNATURE_DESC desc{};
+		desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+		desc.pParameters = rootParameters;
+		desc.NumParameters = _countof(rootParameters);
+		desc.pStaticSamplers = nullptr;
+		desc.NumStaticSamplers = 0;
+
+		ComPtr<ID3DBlob> signatureBlob;
+		ComPtr<ID3DBlob> errorBlob;
+		HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+		if (FAILED(hr)) {
+			if (errorBlob) OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+			assert(false);
+			return nullptr;
+		}
+
+		ComPtr<ID3D12RootSignature> rootSignature;
+		hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+		assert(SUCCEEDED(hr));
+		return rootSignature;
+	}
+
 	/// ===3D=== ///
 	ComPtr<ID3D12RootSignature> Type3D(ID3D12Device* device) {
 		// DescriptroRangeの生成
@@ -393,6 +422,7 @@ namespace {
 		{ PipelineType::BackGround2D, Type2D },
 		{ PipelineType::Particle,     TypeParticle },
 		{ PipelineType::Skinning3D,   TypeSkinning3D  },
+		{ PipelineType::Line3D,       TypeLine3D },
 		{ PipelineType::OffScreen,    TypeOffScreen },
 		{ PipelineType::Grayscale,    TypeOffScreen },
 		{ PipelineType::Vignette ,    TypeOffScreen },

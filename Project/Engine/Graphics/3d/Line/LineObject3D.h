@@ -22,7 +22,7 @@ public:
 	~LineObject3D();
 
 	// 初期化
-	void Initialize();
+	void Initialize(ID3D12Device* device);
 	// 更新
 	void Update();
 	// 描画
