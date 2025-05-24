@@ -1,10 +1,10 @@
 #pragma once
 /// ===include=== ///
 // Buffer
-#include "Material3D.h"
-#include "Transform3D.h"
-#include "Light.h"
-#include "Camera3D.h"
+#include "Engine/Graphics/3d/Base/Material3D.h"
+#include "Engine/Graphics/3d/Base/Transform3D.h"
+#include "Engine/Graphics/3d/Base/Light.h"
+#include "Engine/Graphics/3d/Base/Camera3D.h"
 // c++
 #include <memory>
 

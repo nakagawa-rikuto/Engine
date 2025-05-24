@@ -146,9 +146,13 @@ void DebugScene::Initialize() {
 #pragma region OffScreen
 	isGrayscale = false;
 #pragma endregion
-	
+
 	/// ===Particle=== ///
 	particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+
+#pragma region Line
+	line_ = std::make_unique<Line>();
+#pragma endregion
 }
 
 ///-------------------------------------------/// 
@@ -346,7 +350,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Ring", particleTranslate_);
+			particleManager_->Emit("Explosion", particleTranslate_);
 			particleManager_->SetTexture("Ring", "gradationLine");
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
@@ -413,6 +417,13 @@ void DebugScene::Update() {
 	/// ===OffScreen=== ///
 	ImGui::Begin("OffScreen");
 	ImGui::Checkbox("Grayscale", &isGrayscale);
+	ImGui::End();
+
+	/// ===Line=== ///
+	ImGui::Begin("Line");
+	ImGui::DragFloat3("Start", &lineInfo_.startPos.x, 0.01f);
+	ImGui::DragFloat3("End", &lineInfo_.endPos.x, 0.01f);
+	ImGui::DragFloat4("Color", &lineInfo_.color.x, 0.01f);
 	ImGui::End();
 
 #endif // USE_IMGUI
@@ -566,6 +577,13 @@ void DebugScene::Update() {
 	// 全てのカメラの更新
 	cameraManager_->UpdateAllCameras();
 #pragma endregion
+
+	line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
+	line_->DrawSphere({ modelTranslate_, 5.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
+	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 100, {1.0f, 1.0f, 1.0f, 1.0f});
+
+	/// ===ISceneのの更新=== ///
+	IScene::Update();
 }
 
 ///-------------------------------------------/// 
@@ -599,6 +617,10 @@ void DebugScene::Draw() {
 	}
 	/// ===Particle=== ///
 	particleManager_->Draw(BlendMode::kBlendModeAdd);
+
+
+	/// ===ISceneの描画=== ///
+	IScene::Draw();
 
 #pragma endregion
 

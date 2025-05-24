@@ -15,6 +15,7 @@ class PipelineManager;
 class AnimationManager;
 class CSVManager;
 class OffScreenRenderer;
+class LineObject3D;
 class Keyboard;
 class Mouse;
 class Controller;
@@ -32,6 +33,7 @@ struct ServiceRegister {
 	AudioManager* audioManager = nullptr;
 	CSVManager* csvManager = nullptr;
 	OffScreenRenderer* offScreenRenderer = nullptr;
+	LineObject3D* lineObject3D = nullptr;
 	Keyboard* keyboard = nullptr;
 	Mouse* mouse = nullptr;
 	Controller* controller = nullptr;
@@ -71,6 +73,8 @@ public:
 	static AudioManager* GetAudioManager();
 	// OffScreenRenderer
 	static OffScreenRenderer* GetOffScreenRenderer();
+	// LineObject3D
+	static LineObject3D* GetLineObject3D();
 	// Input (Keyboard, Mouse, Controller)
 	static Keyboard* GetKeyboard();
 	static Mouse* GetMouse();
@@ -89,6 +93,7 @@ private:
 	static inline CSVManager* csvManager_ = nullptr;
 	static inline AudioManager* audioManager_ = nullptr;
 	static inline OffScreenRenderer* offScreenRenderer_ = nullptr;
+	static inline LineObject3D* lineObject3D_ = nullptr;
 	static inline Keyboard* keyboard_ = nullptr;
 	static inline Mouse* mouse_ = nullptr;
 	static inline Controller* controller_ = nullptr;

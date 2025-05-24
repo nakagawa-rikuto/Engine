@@ -19,6 +19,27 @@ namespace {
 		inputElementDescs2[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 	}
 
+	/// ===Line3D用=== ///
+	static D3D12_INPUT_ELEMENT_DESC inputElementDescsLine[2] = {};
+	// デスクに対応した設定
+	void InitLayoutLine3D() {
+		inputElementDescsLine[0].SemanticName = "POSITION";
+		inputElementDescsLine[0].SemanticIndex = 0;
+		inputElementDescsLine[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		inputElementDescsLine[0].InputSlot = 0;
+		inputElementDescsLine[0].AlignedByteOffset = 0;
+		inputElementDescsLine[0].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+		inputElementDescsLine[0].InstanceDataStepRate = 0;
+
+		inputElementDescsLine[1].SemanticName = "COLOR";
+		inputElementDescsLine[1].SemanticIndex = 0;
+		inputElementDescsLine[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		inputElementDescsLine[1].InputSlot = 0;
+		inputElementDescsLine[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+		inputElementDescsLine[1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+		inputElementDescsLine[1].InstanceDataStepRate = 0;
+	}
+
 	/// ===配列が3つ=== ///
 	static D3D12_INPUT_ELEMENT_DESC inputElementDescs3[3] = {};
 	void InitLayout3Array() {
@@ -79,15 +100,17 @@ namespace {
 	// テーブル
 	const std::unordered_map<PipelineType, LayoutInfo> kLayoutTable_ = [] {
 		InitLayout2Array();
+		InitLayoutLine3D();
 		InitLayout3Array();
 		InitLayout5Array();
 		// タイプに応じて設定
 		return std::unordered_map<PipelineType, LayoutInfo>{
-			{ PipelineType::ForGround2D, { inputElementDescs2,       _countof(inputElementDescs2) } },
+			{ PipelineType::ForGround2D,  { inputElementDescs2,      _countof(inputElementDescs2) } },
 			{ PipelineType::BackGround2D, { inputElementDescs2,      _countof(inputElementDescs2) } },
 			{ PipelineType::Obj3D,        { inputElementDescs3,      _countof(inputElementDescs3) } },
 			{ PipelineType::Particle,     { inputElementDescs3,      _countof(inputElementDescs3) } },
 			{ PipelineType::Skinning3D,   { inputElementDescs5,		 _countof(inputElementDescs5) } },
+			{ PipelineType::Line3D,       { inputElementDescsLine,   _countof(inputElementDescsLine) } },
 			{ PipelineType::OffScreen,    { nullptr,                  0 } },
 			{ PipelineType::Grayscale,    { nullptr,                  0 } },
 			{ PipelineType::Vignette,     { nullptr,                  0 } },

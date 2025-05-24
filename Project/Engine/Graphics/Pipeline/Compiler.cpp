@@ -29,6 +29,7 @@ namespace {
 	{ PipelineType::BackGround2D, { L"2D/Obj2D.VS.hlsl",			  L"2D/Obj2D.PS.hlsl" } },
 	{ PipelineType::Particle,     { L"Particle/Particle.VS.hlsl",     L"Particle/Particle.PS.hlsl" } },
 	{ PipelineType::Skinning3D,   { L"3D/SkinningObj3D.VS.hlsl",      L"3D/SkinningObj3D.PS.hlsl" } },
+	{ PipelineType::Line3D,       { L"3D/Line3D.VS.hlsl",             L"3D/Line3D.PS.hlsl"}},
 	{ PipelineType::OffScreen,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/CopyImage.PS.hlsl" } },
 	{ PipelineType::Grayscale,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/Grayscale.PS.hlsl" } },
 	{ PipelineType::Vignette ,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/Vignette.Ps.hlsl" } },

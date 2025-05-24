@@ -5,6 +5,8 @@
 #include "application/Drawing/2d/Sprite.h"
 #include "application/Drawing/3d/Object3d.h"
 #include "application/Drawing/3d/Camera.h"
+// Line
+#include "application/Drawing/3d/Line.h"
 // Math
 #include "Math/sMath.h"
 
@@ -83,6 +85,8 @@ private:/// ===メンバ変数=== ///
 	std::unique_ptr<Object3d> cloud_;
 	// モデルライト
 	std::unique_ptr<Object3d> modelLight_;
+	// Line
+	std::unique_ptr<Line> line_;
 #pragma endregion
 
 	/// ===変数=== ///
@@ -122,5 +126,13 @@ private:/// ===メンバ変数=== ///
 	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
 	// OffScreen
 	bool isGrayscale = false;
+	// Line
+	struct LineInfo {
+		Vector3 startPos = { 0.0f, 0.0f, 0.0f };
+		Vector3 endPos = { 10.0f, 0.0f, 0.0f };
+		Vector4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	};
+	LineInfo lineInfo_;
+	
 #pragma endregion
 };

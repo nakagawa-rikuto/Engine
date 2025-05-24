@@ -3,7 +3,7 @@
 // buffer
 #include "Engine/Graphics/3d/Base/VertexBuffer3D.h"
 #include "Engine/Graphics/3d/Base/IndexBuffer3D.h"
-#include "Engine/Graphics/3d/Base/ModelCommon.h"
+#include "Engine/Graphics/3d/Model/ModelCommon.h"
 // Pipeline
 #include "Engine/DataInfo/PipelineStateObjectType.h"
 // c++

@@ -171,10 +171,10 @@ bool ColliderManager::AABBToOBBCollsision(AABBCollider* aabb, OBBCollider* obb) 
 	// AABBをOBBに変換
 	OBB fakeAABB;
 	fakeAABB.center = (aabbCol.min + aabbCol.max) * 0.5f;
-	fakeAABB.size = (aabbCol.max - aabbCol.min) * 0.5f;
-	fakeAABB.orientations[0] = { 1.0f, 0.0f, 0.0f };
-	fakeAABB.orientations[1] = { 0.0f, 1.0f, 0.0f };
-	fakeAABB.orientations[2] = { 0.0f, 0.0f, 1.0f };
+	fakeAABB.halfSize = (aabbCol.max - aabbCol.min) * 0.5f;
+	fakeAABB.axis[0] = { 1.0f, 0.0f, 0.0f };
+	fakeAABB.axis[1] = { 0.0f, 1.0f, 0.0f };
+	fakeAABB.axis[2] = { 0.0f, 0.0f, 1.0f };
 
 	return OBBSATCollision(fakeAABB, oobbColbb);
 }
@@ -190,14 +190,14 @@ bool ColliderManager::SphereToOBBCollisison(SphereCollider* sphere, OBBCollider*
 	for (int i = 0; i < 3; ++i) {
 		float axisExtent = 0.0f;
 
-		if (i == 0) axisExtent = obbCol.size.x;
-		else if (i == 1) axisExtent = obbCol.size.y;
-		else if (i == 2) axisExtent = obbCol.size.z;
+		if (i == 0) axisExtent = obbCol.halfSize.x;
+		else if (i == 1) axisExtent = obbCol.halfSize.y;
+		else if (i == 2) axisExtent = obbCol.halfSize.z;
 
-		float dist = Dot(dir, obbCol.orientations[i]);
+		float dist = Dot(dir, obbCol.axis[i]);
 		dist = std::clamp(dist, -axisExtent, axisExtent);
 
-		closest += obbCol.orientations[i] * dist;
+		closest += obbCol.axis[i] * dist;
 	}
 
 	Vector3 diff = sphereCol.center - closest;
@@ -221,14 +221,14 @@ bool ColliderManager::OBBSATCollision(const OBB& a, const OBB& b) {
 
 	// 3軸 + 3軸
 	for (int i = 0; i < 3; ++i) {
-		axes[axisCount++] = a.orientations[i];
-		axes[axisCount++] = b.orientations[i];
+		axes[axisCount++] = a.axis[i];
+		axes[axisCount++] = b.axis[i];
 	}
 
 	// 交差軸
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
-			Vector3 cross = Math::Cross(a.orientations[i], b.orientations[j]);
+			Vector3 cross = Math::Cross(a.axis[i], b.axis[j]);
 			if (Dot(cross) > EPSILON) {
 				axes[axisCount++] = Normalize(cross);
 			}
@@ -253,9 +253,9 @@ void ColliderManager::ProjectOBBOntoAxis(const OBB& obb, const Vector3& axis, fl
 	float centerProjection = Dot(obb.center, axis);
 
 	float extents =
-		std::abs(Dot(obb.orientations[0] * obb.size.x, axis)) +
-		std::abs(Dot(obb.orientations[1] * obb.size.y, axis)) +
-		std::abs(Dot(obb.orientations[2] * obb.size.z, axis));
+		std::abs(Dot(obb.axis[0] * obb.halfSize.x, axis)) +
+		std::abs(Dot(obb.axis[1] * obb.halfSize.y, axis)) +
+		std::abs(Dot(obb.axis[2] * obb.halfSize.z, axis));
 
 	outMin = centerProjection - extents;
 	outMax = centerProjection + extents;

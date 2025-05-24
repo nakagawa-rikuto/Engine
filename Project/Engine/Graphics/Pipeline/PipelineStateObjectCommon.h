@@ -50,5 +50,5 @@ private:/// ===変数=== ///
 private:/// ===関数=== ///
 
 	// PipelineStateの生成
-	void CreatePipelineState(DXCommon* dxCommon);
+	void CreatePipelineState(DXCommon* dxCommon, PipelineType type);
 };
