@@ -4,6 +4,8 @@
 #include "Engine/System/Service/Render.h"
 // Camera
 #include "application/Drawing/3d/Camera.h"
+// DXCommon
+#include "Engine/Core/DXCommon.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"
