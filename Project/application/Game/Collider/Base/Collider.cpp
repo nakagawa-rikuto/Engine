@@ -15,7 +15,7 @@ std::string Collider::GetColliderName() { return colliderName_; }
 ///-------------------------------------------///
 // Object3D
 void Collider::SetTranslate(const Vector3& translate) { object3d_->SetTranslate(translate); }
-void Collider::SetRotate(const Vector3& rotate) { object3d_->SetRotate(rotate); }
+void Collider::SetRotate(const Quaternion& rotate) { object3d_->SetRotate(rotate); }
 void Collider::SetScale(const Vector3& scale) { object3d_->SetScale(scale); }
 void Collider::SetColor(const Vector4& color) { object3d_->SetColor(color); }
 // Camera

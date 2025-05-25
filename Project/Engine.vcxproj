@@ -109,6 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application\Game\Collider\AABBCollider.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\Enemy.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Model\AnimationModel.cpp" />
     <ClCompile Include="application\Game\Collider\Base\Collider.cpp" />
@@ -119,6 +120,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\Getter.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
+    <ClCompile Include="application\Game\Object\Ground\Ground.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -133,7 +135,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Managers\AudioManager.cpp" />
     <ClCompile Include="application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\System\Managers\CameraManager.cpp" />
-    <ClCompile Include="application\Drawing\3d\Camera.cpp" />
+    <ClCompile Include="application\Game\Camera\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
     <ClCompile Include="Engine\System\Service\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
@@ -211,10 +213,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\ImGui\SceneView.cpp" />
     <ClCompile Include="Engine\System\Service\Setter.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\Enemy.h" />
     <ClInclude Include="Engine\DataInfo\LineObjectData.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\CylinderParticle.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\AnimationModel.h" />
@@ -226,6 +230,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\Getter.h" />
     <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
     <ClInclude Include="application\Drawing\3d\Line.h" />
+    <ClInclude Include="application\Game\Object\Ground\Ground.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
@@ -243,7 +248,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\AudioManager.h" />
     <ClInclude Include="application\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\System\Managers\CameraManager.h" />
-    <ClInclude Include="application\Drawing\3d\Camera.h" />
+    <ClInclude Include="application\Game\Camera\Camera.h" />
     <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\System\Service\Input.h" />
@@ -327,6 +332,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\Setter.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
     <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
+    <ClInclude Include="application\Game\Entity\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
