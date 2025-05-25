@@ -9,6 +9,7 @@
 GameScene::~GameScene() {
 	// ISceneのデストラクタ
 	IScene::~IScene();
+
 	// Camera
 	camera_.reset();
 	// Player

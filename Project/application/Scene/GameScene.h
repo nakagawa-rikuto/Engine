@@ -44,5 +44,6 @@ private:/// ===メンバ変数=== ///
 		Quaternion rotate = { 0.9f, 0.0f, 0.0f, 1.0f };
 	};
 	CameraInfo cameraInfo_;
+
 };
 
