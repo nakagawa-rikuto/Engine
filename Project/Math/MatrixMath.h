@@ -46,6 +46,9 @@ namespace Math {
 	Vector3 TransformVector(const Vector3& vector, const Matrix4x4& matrix);
 	// 法線ベクトルの変換
 	Vector3 TransformNormal(const Vector3& normal, const Matrix4x4& matrix);
+
+	/// ===行列を変換する為の関数=== ///
+	Quaternion MatrixToQuaternion(const Matrix4x4& matrix);
 }
 
 

@@ -3,7 +3,7 @@
 #include "Engine/System/Service/Getter.h"
 #include "Engine/System/Service/Render.h"
 // Camera
-#include "application/Drawing/3d/Camera.h"
+#include "application/Game/Camera/camera.h"
 // DXCommon
 #include "Engine/Core/DXCommon.h"
 // Math

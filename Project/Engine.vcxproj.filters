@@ -36,7 +36,7 @@
     <ClCompile Include="Engine\System\Managers\AudioManager.cpp" />
     <ClCompile Include="application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\System\Managers\CameraManager.cpp" />
-    <ClCompile Include="application\Drawing\3d\Camera.cpp" />
+    <ClCompile Include="application\Game\Camera\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
     <ClCompile Include="Engine\System\Service\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
@@ -143,7 +143,7 @@
     <ClInclude Include="Engine\System\Managers\AudioManager.h" />
     <ClInclude Include="application\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\System\Managers\CameraManager.h" />
-    <ClInclude Include="application\Drawing\3d\Camera.h" />
+    <ClInclude Include="application\Game\Camera\Camera.h" />
     <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\System\Service\Input.h" />
