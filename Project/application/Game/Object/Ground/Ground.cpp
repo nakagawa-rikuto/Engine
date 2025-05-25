@@ -17,7 +17,7 @@ void Ground::Initialize() {
 
 	// object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
-	object3d_->Init(ObjectType::Model, "Ground");
+	object3d_->Init(ObjectType::Model, "GameGround");
 	SetScale({ 0.5f, 0.5f, 0.5f });
 	object3d_->Update();
 }

@@ -114,10 +114,9 @@ void MyGame::LoadModel() {
 	Loader::LoadModel("plane", "plane.obj");
 	Loader::LoadModel("Particle", "Particle.obj");
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
-	Loader::LoadModel("Ground", "Ground.obj");
 
 	// Game
-	Loader::LoadModel("Ground", "Ground.obj");
+	Loader::LoadModel("GameGround", "Ground.obj");
 	Loader::LoadModel("skydome", "skydome.obj");
 	Loader::LoadModel("sky", "sky.gltf");
 	Loader::LoadModel("cloud", "cloud.gltf");
