@@ -18,6 +18,7 @@ public:
 	void Draw()override;
 
 public:
+	// 衝突時の処理
 	void OnCollision(Collider* collider)override;
 };
 

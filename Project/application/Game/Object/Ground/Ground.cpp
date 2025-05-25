@@ -15,6 +15,7 @@ void Ground::Initialize() {
 	//aabb_.min = {};
 	//aabb_.max = {};
 
+	// object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "Ground");
 	SetScale({ 0.5f, 0.5f, 0.5f });
@@ -25,6 +26,7 @@ void Ground::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void Ground::Update() {
+	// 更新
 	object3d_->Update();
 }
 
@@ -32,6 +34,7 @@ void Ground::Update() {
 /// 描画
 ///-------------------------------------------///
 void Ground::Draw() {
+	// 描画
 	object3d_->Draw();
 }
 
