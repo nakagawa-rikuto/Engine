@@ -9,14 +9,6 @@
 GameScene::~GameScene() {
 	// ISceneのデストラクタ
 	IScene::~IScene();
-	// Camera
-	camera_.reset();
-	// Player
-	player_.reset();
-	// Ground
-	ground_.reset();
-	// Enemy
-	enemy_.reset();
 }
 
 ///-------------------------------------------/// 
@@ -25,28 +17,6 @@ GameScene::~GameScene() {
 void GameScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
-
-	/// ===Camera=== ///
-	camera_ = std::make_shared<Camera>();
-	camera_->Initialize();
-	camera_->SetTranslate(cameraInfo_.translate);
-	camera_->SetRotate(cameraInfo_.rotate);
-	// Managerに追加,アクティブに
-	cameraManager_->Add("Game", camera_);
-	cameraManager_->SetActiveCamera("Game");
-	cameraManager_->UpdateAllCameras();
-
-	/// ===Player=== ///
-	player_ = std::make_unique<Player>();
-	player_->Init(cameraManager_->GetActiveCamera().get());
-
-	/// ===Enemy=== ///
-	enemy_ = std::make_unique<Enemy>();
-	enemy_->Init(cameraManager_->GetActiveCamera().get());
-
-	/// ===Ground=== ///
-	ground_ = std::make_unique<Ground>();
-	ground_->Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -57,33 +27,9 @@ void GameScene::Update() {
 #ifdef USE_IMGUI
 	ImGui::Begin("GameScene");
 	ImGui::End();
-	// Camera
-	ImGui::Begin("Camera");
-	ImGui::DragFloat3("Translate", &cameraInfo_.translate.x, 0.01f);
-	ImGui::DragFloat4("Rotate", &cameraInfo_.rotate.x, 0.001f);
-	ImGui::End();
-	// Player
-	player_->UpdateImGui();
-
-	// Enemy
-	//enemy_->UpdateImGui();
 
 #endif // USE_IMGUI
 
-	/// ===Playerの更新=== ///
-	player_->SetCamera(cameraManager_->GetActiveCamera().get());
-	player_->Update();
-
-	/// ===Enemy=== ///
-	//enemy_->SetCamera(cameraManager_->GetActiveCamera().get());
-	//enemy_->Update();
-
-	/// ===Groundの更新=== ///
-	ground_->SetCamera(cameraManager_->GetActiveCamera().get());
-	ground_->Update();
-
-	/// ===Cameraの更新=== ///
-	cameraManager_->UpdateAllCameras();
 }
 
 ///-------------------------------------------/// 
@@ -95,12 +41,7 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	// Ground
-	ground_->Draw();
-	// Enemy
-	//enemy_->Draw();
-	// Player
-	player_->Draw();
+	
 #pragma endregion
 
 #pragma region 前景スプライト描画
