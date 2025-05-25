@@ -63,7 +63,7 @@ const Vector3& Object3d::GetTranslate() const {
 	}
 }
 // Rotate
-const Vector3& Object3d::GetRotate() const {
+const Quaternion& Object3d::GetRotate() const {
 	if (type_ == ObjectType::Model) {
 		return model_->GetRotate();
 	} else {
@@ -99,7 +99,7 @@ void Object3d::SetTranslate(const Vector3& translate) {
 	}
 }
 // Rotate
-void Object3d::SetRotate(const Vector3& rotate) {
+void Object3d::SetRotate(const Quaternion& rotate) {
 	if (type_ == ObjectType::Model) {
 		model_->SetRotate(rotate);
 	} else {
