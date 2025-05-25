@@ -73,7 +73,7 @@ private: /// ===変数の宣言=== ///
 
 	/// ===突進情報=== ///
 	struct ChargeInfo {
-		float speed;				  // 突進時の移動速度
+		float speed = 0.0f;				  // 突進時の移動速度
 		float activeTime = 0.2f;     // 突進の有効時間
 		float cooltime = 0.5f;		  // 突進のクールタイム
 		float invincibleTime = 0.1f;  // 突進時の無敵時間
@@ -91,9 +91,9 @@ private: /// ===変数の宣言=== ///
 		float reachTime = 0.1f;               // 攻撃の最終座標までの到達時間
 		float ratio = 0.0f;                   // 攻撃の移動割合
 		const float freezeTime = 0.3f;		  // 攻撃完了から爆破までの時間
-		float freezeTimer;					  // 
-		Vector3 startPos;					  // 攻撃の最初の座標
-		Vector3 endPos;						  // 攻撃の最終の座標
+		float freezeTimer = 0.0f;					  // 
+		Vector3 startPos = {0.0f, 0.0f, 0.0f};					  // 攻撃の最初の座標
+		Vector3 endPos = { 0.0f, 0.0f, 0.0f };						  // 攻撃の最終の座標
 		bool isFlag = false;				  // 攻撃のフラグ
 		bool isSetTarget = false;			  // ターゲットのフラグ
 	};

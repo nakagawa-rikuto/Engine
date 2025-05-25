@@ -45,6 +45,7 @@ private: /// ===変数の宣言=== ///
 	BaseInfo baseInfo_;
 
 private: 
+	// 移動処理
 	void Move();
 };
 

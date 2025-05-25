@@ -17,8 +17,10 @@ void Enemy::Init(Camera * camera) {
 
 	// 初期化
 	Initialize();
+	// Cameraの設定
 	SetCamera(camera_);
 
+	// object3dの更新を一回行う
 	object3d_->Update();
 }
 
@@ -28,8 +30,10 @@ void Enemy::Initialize() {
 	sphere_.center = baseInfo_.translate;
 	sphere_.radius = 1.0f;
 
+	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "MonsterBall");
+	// Object3dの初期設定
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
 	SetScale(baseInfo_.scale);
@@ -38,6 +42,7 @@ void Enemy::Initialize() {
 
 void Enemy::Update() {
 
+	// 移動処理
 	Move();
 
 	/// ===移動量の反映=== ///

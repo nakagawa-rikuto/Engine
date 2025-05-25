@@ -30,6 +30,7 @@ void Player::Init(Camera* camera) {
 
 	// 初期化
 	Initialize();
+	// Cameraの設定
 	SetCamera(camera_);
 	camera_->SetFollowCamera(FollowCameraType::TopDown);
 	camera_->SetOffset({ 0.0f, 70.0f, 0.0f });
@@ -47,6 +48,7 @@ void Player::Initialize() {
 	sphere_.center = baseInfo_.translate;
 	sphere_.radius = 1.0f;
 
+	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "MonsterBall");
 	SetTranslate(baseInfo_.translate);
