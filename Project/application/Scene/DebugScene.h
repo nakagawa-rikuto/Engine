@@ -4,10 +4,9 @@
 // Game
 #include "application/Drawing/2d/Sprite.h"
 #include "application/Drawing/3d/Object3d.h"
+#include "application/Game/Camera/camera.h"
 // Line
 #include "application/Drawing/3d/Line.h"
-// Camera
-#include "application/Game/Camera/Camera.h"
 // Math
 #include "Math/sMath.h"
 

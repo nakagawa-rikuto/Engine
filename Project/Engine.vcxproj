@@ -109,7 +109,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application\Game\Collider\AABBCollider.cpp" />
-    <ClCompile Include="application\Game\Entity\Enemy\Enemy.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Model\AnimationModel.cpp" />
     <ClCompile Include="application\Game\Collider\Base\Collider.cpp" />
