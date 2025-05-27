@@ -1,5 +1,4 @@
 #include "Framework.h"
-
 // Service
 #include "Engine/System/Service/ServiceLocator.h"
 

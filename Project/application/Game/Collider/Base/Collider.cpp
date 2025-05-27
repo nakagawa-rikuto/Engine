@@ -9,7 +9,6 @@ ColliderType Collider::GetColliderType() { return type_; }
 std::string Collider::GetColliderName() { return colliderName_; }
 
 
-
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
@@ -23,3 +22,29 @@ void Collider::SetCamera(Camera* camera) { object3d_->SetCamera(camera); }
 // Light
 void Collider::SetLight(LightType type) { object3d_->SetLight(type); }
 void Collider::SetLightData(LightInfo light) { object3d_->SetLightData(light); }
+
+// IsCollision
+void Collider::SetIsCollisison() { isCollision_ = true; }
+
+///-------------------------------------------/// 
+/// 更新処理
+///-------------------------------------------///
+void Collider::Update() {
+	// Object3Dの更新
+	object3d_->Update();
+
+	// 線の色を更新
+	if (isCollision_) {
+		lineColor_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+	} else {
+		lineColor_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+}
+
+///-------------------------------------------/// 
+/// 描画処理
+///-------------------------------------------///
+void Collider::Draw(BlendMode mode) {
+	// Object3Dの描画
+	object3d_->Draw(mode);
+}

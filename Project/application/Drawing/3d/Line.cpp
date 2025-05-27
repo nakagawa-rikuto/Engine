@@ -49,14 +49,14 @@ void Line::DrawOBB(const OBB& obb, const Vector4& color) {
 ///-------------------------------------------/// 
 /// AABB
 ///-------------------------------------------///
-void Line::DrawAABB(const AABB & aabb, uint32_t division, const Vector3 & center) {
+void Line::DrawAABB(const AABB & aabb, const Vector4& color) {
 	// グリッドを6面描画
 	Vector3 size = aabb.max - aabb.min;
 	Vector3 halfSize = size * 0.5f;
-	Vector4 color = Vector4(1.0f, 1.0f, 0.2f, 1.0f);
+	uint32_t division = 10;
 
-	// 中心を基準に座標を調整
-	Vector3 offset = center;
+	// AABBの中心を算出
+	Vector3 offset = (aabb.min + aabb.max) * 0.5f;
 
 	// 前面
 	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
@@ -164,6 +164,66 @@ void Line::DrawGrid(const Vector3 & center, const Vector3 & size, uint32_t divis
 
 	color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
 	DrawLine(center, center + Vector3(0.0f, size.y, 0.0f), color);
+}
+
+///-------------------------------------------/// 
+/// GridBox
+///-------------------------------------------///
+void Line::DrawGirdBox(const AABB& aabb, uint32_t division, const Vector3& center, const Vector4& color) {
+	// グリッドを6面描画
+	Vector3 size = aabb.max - aabb.min;
+	Vector3 halfSize = size * 0.5f;
+
+	// 中心を基準に座標を調整
+	Vector3 offset = center;
+
+	// 前面
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(halfSize.x, -halfSize.y, -halfSize.z),
+		Vector3(0.0f, halfSize.y * 2, 0.0f), division, color);
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(-halfSize.x, halfSize.y, -halfSize.z),
+		Vector3(halfSize.x * 2, 0.0f, 0.0f), division, color);
+
+	// 後面
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, halfSize.z),
+		offset + Vector3(halfSize.x, -halfSize.y, halfSize.z),
+		Vector3(0.0f, halfSize.y * 2, 0.0f), division, color);
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, halfSize.z),
+		offset + Vector3(-halfSize.x, halfSize.y, halfSize.z),
+		Vector3(halfSize.x * 2, 0.0f, 0.0f), division, color);
+
+	// 左面
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(-halfSize.x, halfSize.y, -halfSize.z),
+		Vector3(0.0f, 0.0f, halfSize.z * 2), division, color);
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(-halfSize.x, -halfSize.y, halfSize.z),
+		Vector3(0.0f, halfSize.y * 2, 0.0f), division, color);
+
+	// 右面
+	DrawGridLines(offset + Vector3(halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(halfSize.x, halfSize.y, -halfSize.z),
+		Vector3(0.0f, 0.0f, halfSize.z * 2), division, color);
+	DrawGridLines(offset + Vector3(halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(halfSize.x, -halfSize.y, halfSize.z),
+		Vector3(0.0f, halfSize.y * 2, 0.0f), division, color);
+
+	// 上面
+	DrawGridLines(offset + Vector3(-halfSize.x, halfSize.y, -halfSize.z),
+		offset + Vector3(halfSize.x, halfSize.y, -halfSize.z),
+		Vector3(0.0f, 0.0f, halfSize.z * 2), division, color);
+	DrawGridLines(offset + Vector3(-halfSize.x, halfSize.y, -halfSize.z),
+		offset + Vector3(-halfSize.x, halfSize.y, halfSize.z),
+		Vector3(halfSize.x * 2, 0.0f, 0.0f), division, color);
+
+	// 下面
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(halfSize.x, -halfSize.y, -halfSize.z),
+		Vector3(0.0f, 0.0f, halfSize.z * 2), division, color);
+	DrawGridLines(offset + Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+		offset + Vector3(-halfSize.x, -halfSize.y, halfSize.z),
+		Vector3(halfSize.x * 2, 0.0f, 0.0f), division, color);
 }
 
 ///-------------------------------------------/// 

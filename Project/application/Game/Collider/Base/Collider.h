@@ -7,6 +7,8 @@
 #include "application/Drawing/3d/Object3d.h"
 // Math
 #include "Engine/DataInfo/ColliderData.h"
+// Line
+#include "application/Drawing/3d/Line.h"
 
  // ColliderType
 enum class ColliderType {
@@ -29,6 +31,10 @@ public:
 
     // 初期化
     virtual void Initialize() = 0;
+    // 更新処理
+    virtual void Update();
+	// 描画処理
+    virtual void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
 
 public: /// ===衝突=== ///
     // 衝突時の応答処理
@@ -41,17 +47,22 @@ public: /// ===Getter=== ///
     std::string GetColliderName();
 
 public: /// ===Setter=== ///
-    //NOTE:定点用のセッター
-	// Object3D
+
+    /// ===Object3D=== ///
+    // Transform
     void SetTranslate(const Vector3& translate);
 	void SetRotate(const Quaternion& rotate);
 	void SetScale(const Vector3& scale);
+    // color
 	void SetColor(const Vector4& color);
     // Camera
     void SetCamera(Camera* camera);
 	// Light
 	void SetLight(LightType type);
 	void SetLightData(LightInfo light);
+
+    /// ===isCollision=== ///
+    void SetIsCollisison();
 
 protected:
     // Type
@@ -61,5 +72,15 @@ protected:
 
 	// Object3D
 	std::unique_ptr<Object3d> object3d_;
+
+    // 衝突フラグ
+    bool isCollision_ = false;
+
+    /// ===Debug用=== ///
+#ifdef _DEBUG
+    // Line
+    std::unique_ptr<Line> line_;
+    Vector4 lineColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+#endif // _DEBUG
 };
 
