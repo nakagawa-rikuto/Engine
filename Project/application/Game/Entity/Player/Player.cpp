@@ -46,7 +46,7 @@ void Player::Initialize() {
 	// Sphereの設定
 	SphereCollider::Initialize();
 	sphere_.center = baseInfo_.translate;
-	sphere_.radius = 1.0f;
+	sphere_.radius = 1.5f;
 
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
@@ -121,15 +121,18 @@ void Player::Update() {
 	/// ===Object3dの更新=== ///
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
-	object3d_->Update();
+
+	// SphereColliderの更新
+	SphereCollider::Update();
 }
 
 
 ///-------------------------------------------///  
 /// 描画
 ///-------------------------------------------///
-void Player::Draw() {
-	object3d_->Draw();
+void Player::Draw(BlendMode mode) {
+	// SphereCollider
+	SphereCollider::Draw(mode);
 }
 
 

@@ -27,15 +27,15 @@ void Ground::Initialize() {
 ///-------------------------------------------///
 void Ground::Update() {
 	// 更新
-	object3d_->Update();
+	AABBCollider::Update();
 }
 
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void Ground::Draw() {
+void Ground::Draw(BlendMode mode) {
 	// 描画
-	object3d_->Draw();
+	AABBCollider::Draw(mode);
 }
 
 ///-------------------------------------------/// 

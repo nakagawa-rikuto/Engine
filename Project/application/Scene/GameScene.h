@@ -1,6 +1,11 @@
 #pragma once
 /// ===Includ=== ///
 #include "application/Scene/IScene.h"
+// Game
+#include "application/Game/Camera/Camera.h"
+#include "application/Game/Entity/Player/Player.h"
+#include "application/Game/Object/Ground/Ground.h"
+#include "application/Game/Entity/Enemy/Enemy.h"
 
 ///=====================================================/// 
 /// ゲームシーン

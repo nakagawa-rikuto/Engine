@@ -51,11 +51,13 @@ void Enemy::Update() {
 	/// ===Object3dの更新=== ///
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
-	object3d_->Update();
+	
+	// SphereColliderの更新
+	SphereCollider::Update();
 }
 
-void Enemy::Draw() {
-	object3d_->Draw();
+void Enemy::Draw(BlendMode mode) {
+	SphereCollider::Draw(mode);
 }
 
 void Enemy::UpdateImGui() {

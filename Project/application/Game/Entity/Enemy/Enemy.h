@@ -18,7 +18,7 @@ public:
 	// 更新
 	void Update()override;
 	// 描画
-	void Draw()override;
+	void Draw(BlendMode mode = BlendMode::KBlendModeNormal)override;
 	// ImGui
 	void UpdateImGui();
 
