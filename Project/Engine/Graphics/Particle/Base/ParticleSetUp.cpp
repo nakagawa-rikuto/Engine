@@ -119,8 +119,8 @@ void ParticleSetUp::Darw(const uint32_t instance, BlendMode mode) {
 void ParticleSetUp::SetVertexBufferCircle() {
 	// 変数の宣言
 	const uint32_t kRingDivide = 32; // 円の分割数
-	const float kOuterRadius = 1.0f; // 外半径
-	const float kInnerRadius = 0.2f; // 内半径
+	const float kOuterRadius = 4.5f; // 外半径
+	const float kInnerRadius = 1.0f; // 内半径
 	const float radianPerDivide = 2.0f * std::numbers::pi_v<float> / float(kRingDivide); // 円の分割角度
 
 	for (uint32_t index = 0; index < kRingDivide; ++index) {

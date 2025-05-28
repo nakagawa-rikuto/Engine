@@ -17,7 +17,7 @@ HitEffectParticle::~HitEffectParticle() {
 ///-------------------------------------------///
 void HitEffectParticle::Initialze(const Vector3& translate, Camera* camera) {
     /// ===初期化=== ///
-    ParticleGroup::InstancingInit("ParticlePlane", translate, 8, camera);
+    ParticleGroup::InstancingInit("ParticlePlane", translate, 16, camera);
 
 	/// ===フラグと設定の初期化=== ///
     hasExploded_ = false;
@@ -87,9 +87,9 @@ ParticleData HitEffectParticle::MakeParticle(std::mt19937& randomEngine, const V
 	particleData.transform.rotate = { 0.0f, 0.0f, distRotate(randomEngine)};
 	particleData.transform.translate = translate;
     particleData.velocity = { 0.0f, 0.0f, 0.0f };
-    particleData.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    particleData.color = { 1.0f, 1.0f, 0.0f, 1.0f };
     particleData.currentTime = 0;
-	particleData.lifeTime = 0.5f; // 寿命を1秒に設定
+	particleData.lifeTime = 1.0f; // 寿命を1秒に設定
     return particleData;
 }
 
