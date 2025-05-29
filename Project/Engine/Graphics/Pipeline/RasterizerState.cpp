@@ -10,6 +10,7 @@ namespace {
 	{ PipelineType::Obj3D,        D3D12_CULL_MODE_BACK },
 	{ PipelineType::Particle,     D3D12_CULL_MODE_NONE },
 	{ PipelineType::Skinning3D,   D3D12_CULL_MODE_BACK },
+	{ PipelineType::Line3D,       D3D12_CULL_MODE_NONE },
 	{ PipelineType::OffScreen,    D3D12_CULL_MODE_NONE },
 	{ PipelineType::Grayscale,    D3D12_CULL_MODE_NONE },
 	{ PipelineType::Vignette,     D3D12_CULL_MODE_NONE },

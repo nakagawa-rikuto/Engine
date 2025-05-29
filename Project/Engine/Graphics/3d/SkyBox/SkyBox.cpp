@@ -6,7 +6,7 @@
 #include "Engine/System/Service/Getter.h"
 #include "Engine/System/Service/Render.h"
 // camera
-#include "application/Drawing/3d/Camera.h"
+#include "application/Game/Camera/camera.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"

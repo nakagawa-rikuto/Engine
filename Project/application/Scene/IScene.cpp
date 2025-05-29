@@ -1,11 +1,19 @@
 #include "IScene.h"
+#include "Engine/System/Service/ServiceLocator.h"
+#include "Engine/Graphics/3d/Line/LineObject3D.h"
 
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
 IScene::~IScene() {
 	defaultCamera_.reset();
 	cameraManager_.reset();
 	particleManager_.reset();
 }
 
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
 void IScene::Initialize() {
 
 	/// ===デフォルトカメラの生成=== ///
@@ -22,6 +30,21 @@ void IScene::Initialize() {
 
 	/// ===Particlemanagerの生成=== ///
 	particleManager_ = std::make_unique<ParticleManager>();
+}
+
+///-------------------------------------------/// 
+/// 更新
+///-------------------------------------------///
+void IScene::Update() {
+	ServiceLocator::GetLineObject3D()->SetCamera(cameraManager_->GetActiveCamera().get());
+	ServiceLocator::GetLineObject3D()->Update();
+}
+
+///-------------------------------------------/// 
+/// 描画
+///-------------------------------------------///
+void IScene::Draw() {
+	ServiceLocator::GetLineObject3D()->Draw();
 }
 
 ///-------------------------------------------/// 

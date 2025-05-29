@@ -17,9 +17,9 @@ void BlendState::Create(BlendMode mode) {
 		blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
 		// a値の設定
-		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ZERO;
 		blendDesc_.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
 	} else if (mode == BlendMode::kBlendModeSubtract) {
 		blendDesc_.RenderTarget[0].BlendEnable = TRUE;
 
@@ -29,9 +29,9 @@ void BlendState::Create(BlendMode mode) {
 		blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
 		// a値の設定
-		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ZERO;
 		blendDesc_.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
 	} else if (mode == BlendMode::kBlendModeMultily) {
 		blendDesc_.RenderTarget[0].BlendEnable = TRUE;
 
@@ -41,9 +41,9 @@ void BlendState::Create(BlendMode mode) {
 		blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 
 		// a値の設定
-		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ZERO;
 		blendDesc_.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
 	} else if (mode == BlendMode::kBlendModeScreen) {
 		blendDesc_.RenderTarget[0].BlendEnable = TRUE;
 
@@ -53,9 +53,9 @@ void BlendState::Create(BlendMode mode) {
 		blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
 		// a値の設定
-		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ZERO;
 		blendDesc_.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
 	} else if (mode == BlendMode::KBlendModeNormal) {
 		blendDesc_.RenderTarget[0].BlendEnable = TRUE;
 
@@ -65,9 +65,9 @@ void BlendState::Create(BlendMode mode) {
 		blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 
 		// a値の設定
-		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+		blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ZERO;
 		blendDesc_.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+		blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
 	}
 }
 

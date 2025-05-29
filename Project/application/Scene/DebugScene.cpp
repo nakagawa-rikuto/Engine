@@ -146,9 +146,13 @@ void DebugScene::Initialize() {
 #pragma region OffScreen
 	isGrayscale = false;
 #pragma endregion
-	
+
 	/// ===Particle=== ///
 	particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+
+#pragma region Line
+	line_ = std::make_unique<Line>();
+#pragma endregion
 }
 
 ///-------------------------------------------/// 
@@ -229,7 +233,7 @@ void DebugScene::Update() {
 		if (isImgui_.Model) {
 			// Model
 			ImGui::DragFloat3("Tranlate", &modelTranslate_.x, 0.1f);
-			ImGui::DragFloat3("Rotate", &modelRotate_.x, 0.1f);
+			ImGui::DragFloat4("Rotate", &modelRotate_.x, 0.1f);
 			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
 			ImGui::ColorEdit4("Color", &modelColor_.x);
 			if (!lightType_.Lambert && ImGui::Button("Lambert")) {
@@ -326,8 +330,10 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Cylinder", particleTranslate_);
-			particleManager_->SetTexture("Cylinder", "gradationLine");
+			particleManager_->Emit("Ring", particleTranslate_);
+			particleManager_->Emit("HitEffect", particleTranslate_);
+			particleManager_->SetTexture("Ring", "gradationLine");
+			particleManager_->SetTexture("HitEffect", "circle2");
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle1 = false;
@@ -346,8 +352,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Ring", particleTranslate_);
-			particleManager_->SetTexture("Ring", "gradationLine");
+			particleManager_->Emit("Explosion", particleTranslate_);
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle2 = false;
@@ -389,7 +394,7 @@ void DebugScene::Update() {
 	ImGui::Begin("Camera");
 	ImGui::Checkbox("Flag", &SetCamera);
 	ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
-	ImGui::DragFloat3("Rotate", &cameraRotate.x, 0.001f);
+	ImGui::DragFloat4("Rotate", &cameraRotate.x, 0.001f);
 	ImGui::End();
 	/// ===Keybord=== ///
 	/*ImGui::Begin("Keybord");
@@ -413,6 +418,13 @@ void DebugScene::Update() {
 	/// ===OffScreen=== ///
 	ImGui::Begin("OffScreen");
 	ImGui::Checkbox("Grayscale", &isGrayscale);
+	ImGui::End();
+
+	/// ===Line=== ///
+	ImGui::Begin("Line");
+	ImGui::DragFloat3("Start", &lineInfo_.startPos.x, 0.01f);
+	ImGui::DragFloat3("End", &lineInfo_.endPos.x, 0.01f);
+	ImGui::DragFloat4("Color", &lineInfo_.color.x, 0.01f);
 	ImGui::End();
 
 #endif // USE_IMGUI
@@ -566,6 +578,13 @@ void DebugScene::Update() {
 	// 全てのカメラの更新
 	cameraManager_->UpdateAllCameras();
 #pragma endregion
+
+	line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
+	line_->DrawSphere({ modelTranslate_, 5.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
+	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 100, {1.0f, 1.0f, 1.0f, 1.0f});
+
+	/// ===ISceneのの更新=== ///
+	IScene::Update();
 }
 
 ///-------------------------------------------/// 
@@ -599,6 +618,10 @@ void DebugScene::Draw() {
 	}
 	/// ===Particle=== ///
 	particleManager_->Draw(BlendMode::kBlendModeAdd);
+
+
+	/// ===ISceneの描画=== ///
+	IScene::Draw();
 
 #pragma endregion
 
