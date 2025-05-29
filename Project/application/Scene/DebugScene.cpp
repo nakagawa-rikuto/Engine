@@ -352,9 +352,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Ring", particleTranslate_);
 			particleManager_->Emit("Explosion", particleTranslate_);
-			particleManager_->SetTexture("Ring", "gradationLine");
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle2 = false;
