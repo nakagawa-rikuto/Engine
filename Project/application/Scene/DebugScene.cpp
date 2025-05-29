@@ -329,14 +329,11 @@ void DebugScene::Update() {
 	}
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
-		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
+		if (ImGui::Button("Draw")) {
 			particleManager_->Emit("Ring", particleTranslate_);
 			particleManager_->Emit("HitEffect", particleTranslate_);
 			particleManager_->SetTexture("Ring", "gradationLine");
 			particleManager_->SetTexture("HitEffect", "circle2");
-			isDisplay_.Particle1 = true;
-		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
-			isDisplay_.Particle1 = false;
 		}
 		if (!isImgui_.Particle1 && ImGui::Button("Info")) {
 			isImgui_.Particle1 = true;
@@ -351,11 +348,8 @@ void DebugScene::Update() {
 	}
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
-		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
+		if (ImGui::Button("Draw")) {
 			particleManager_->Emit("Explosion", particleTranslate_);
-			isDisplay_.Particle2 = true;
-		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
-			isDisplay_.Particle2 = false;
 		}
 		if (!isImgui_.Particle2 && ImGui::Button("Info")) {
 			isImgui_.Particle2 = true;
@@ -370,12 +364,9 @@ void DebugScene::Update() {
 	}
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
-		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
+		if (ImGui::Button("Draw")) {
 			particleManager_->Emit("Confetti", particleTranslate_);
 			particleManager_->SetTexture("Confetti", "monsterBall");
-			isDisplay_.Particle3 = true;
-		} else if (isDisplay_.Particle3 && ImGui::Button("UnDraw")) {
-			isDisplay_.Particle3 = false;
 		}
 		if (!isImgui_.Particle3 && ImGui::Button("Info")) {
 			isImgui_.Particle3 = true;
@@ -567,22 +558,29 @@ void DebugScene::Update() {
 
 	/// ===Particle=== ///
 #pragma region Particle
-	particleManager_->Update();
-	particleManager_->SetCamera(cameraManager_->GetActiveCamera().get());
+	// パーティクルの生成
+	if (Input::TriggerKey(DIK_SPACE)) {
+		particleManager_->Emit("Ring", particleTranslate_);
+		particleManager_->Emit("HitEffect", particleTranslate_);
+		particleManager_->SetTexture("Ring", "gradationLine");
+		particleManager_->SetTexture("HitEffect", "circle2");
+	}
 #pragma endregion
 
 	/// ===カメラの更新=== ///
 #pragma region カメラの更新
 	camera_->SetRotate(cameraRotate);
 	camera_->SetTranslate(cameraPos);
-	// 全てのカメラの更新
-	cameraManager_->UpdateAllCameras();
 #pragma endregion
 
-	line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
-	line_->DrawSphere({ modelTranslate_, 5.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
-	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 100, {1.0f, 1.0f, 1.0f, 1.0f});
-
+	/// ===Lineの更新=== ///
+#pragma region Lineの更新
+#ifdef _DEBUG
+	//line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
+	line_->DrawSphere({ modelTranslate_, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
+	//line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 100, {1.0f, 1.0f, 1.0f, 1.0f});
+#endif // _DEBUG
+#pragma endregion
 	/// ===ISceneのの更新=== ///
 	IScene::Update();
 }
@@ -601,23 +599,20 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	// 二重天球
+	/// ===二重天球=== ///
 	//sky_->Draw();
 	//cloud_->Draw();
 
-	// アニーメーションモデル
-	//modelLight_->Draw();
-	animationModel_->Draw();
+	/// ===アニーメーションモデル=== ///
+	//animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
-		
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
-		
+
+		//modelLight_->Draw();
 	}
-	/// ===Particle=== ///
-	particleManager_->Draw(BlendMode::kBlendModeAdd);
 
 
 	/// ===ISceneの描画=== ///

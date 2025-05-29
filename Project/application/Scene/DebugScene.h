@@ -45,9 +45,6 @@ private:/// ===メンバ変数=== ///
 	struct Display {
 		bool Sprite;
 		bool Model;
-		bool Particle1;
-		bool Particle2;
-		bool Particle3;
 	};
 	struct Imgui {
 		bool Sprite;

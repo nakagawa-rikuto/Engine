@@ -33,12 +33,15 @@ void Collider::Update() {
 	// Object3Dの更新
 	object3d_->Update();
 
+#ifdef _DEBUG
 	// 線の色を更新
 	if (isCollision_) {
 		lineColor_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 	} else {
 		lineColor_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	}
+#endif // _DEBUG	
+	
 }
 
 ///-------------------------------------------/// 

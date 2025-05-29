@@ -36,14 +36,26 @@ void IScene::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void IScene::Update() {
+	// ParticleManagerの更新
+	particleManager_->SetCamera(cameraManager_->GetActiveCamera().get());
+	particleManager_->Update();
+
+	// Line更新
 	ServiceLocator::GetLineObject3D()->SetCamera(cameraManager_->GetActiveCamera().get());
 	ServiceLocator::GetLineObject3D()->Update();
+
+	// カメラの更新
+	cameraManager_->UpdateAllCameras();
 }
 
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
 void IScene::Draw() {
+	// ParticleManagerの描画
+	particleManager_->Draw();
+
+	// Lineの描画
 	ServiceLocator::GetLineObject3D()->Draw();
 }
 
