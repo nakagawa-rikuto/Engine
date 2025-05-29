@@ -41,13 +41,16 @@ void PipelineManager::Initialize(DXCommon* dxCommon) {
 /// パイプラインの登録
 ///-------------------------------------------///
 void PipelineManager::SetPipeline(
-	ID3D12GraphicsCommandList * commandList, PipelineType type, BlendMode mode) {
+	ID3D12GraphicsCommandList * commandList, PipelineType type, BlendMode mode, D3D12_PRIMITIVE_TOPOLOGY topology) {
 	// パイプラインの取得
 	PipelineStateObjectCommon* pipeline = GetPipeline(type, mode);
 	assert(pipeline != nullptr);
 
 	// PSO を設定
 	pipeline->SetPSO(commandList);
+
+	//プリミティブトポロジー設定
+	commandList->IASetPrimitiveTopology(topology);
 }
 
 ///-------------------------------------------/// 

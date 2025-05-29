@@ -20,6 +20,10 @@
     <FxCompile Include="Resource\Shaders\OffScreen\LuminanceBasedOutline.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\RadialBlur.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\Dissolve.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\Skybox.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\Skybox.PS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\LIne3D.VS.hlsl" />
+    <FxCompile Include="Resource\Shaders\3D\LIne3D.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
@@ -32,7 +36,7 @@
     <ClCompile Include="Engine\System\Managers\AudioManager.cpp" />
     <ClCompile Include="application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\System\Managers\CameraManager.cpp" />
-    <ClCompile Include="application\Drawing\3d\Camera.cpp" />
+    <ClCompile Include="application\Game\Camera\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
     <ClCompile Include="Engine\System\Service\Input.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
@@ -77,10 +81,10 @@
     <ClCompile Include="Engine\Graphics\2d\VertexBuffer2D.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\VertexBuffer3D.cpp" />
     <ClCompile Include="Engine\System\Managers\SRVManager.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Model.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Model\Model.cpp" />
     <ClCompile Include="Engine\System\Managers\ModelManager.cpp" />
     <ClCompile Include="Engine\System\Managers\PiplineManager.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\ModelCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Model\ModelCommon.cpp" />
     <ClCompile Include="Engine\Graphics\2d\SpriteCommon.cpp" />
     <ClCompile Include="application\Scene\MyGame.cpp" />
     <ClCompile Include="Engine\System\Managers\SceneManager.cpp" />
@@ -100,7 +104,7 @@
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\AnimationModel.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Model\AnimationModel.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
     <ClCompile Include="Engine\System\Service\Render.cpp" />
@@ -123,6 +127,9 @@
     <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
+    <ClCompile Include="application\Drawing\3d\Line.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -136,7 +143,7 @@
     <ClInclude Include="Engine\System\Managers\AudioManager.h" />
     <ClInclude Include="application\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\System\Managers\CameraManager.h" />
-    <ClInclude Include="application\Drawing\3d\Camera.h" />
+    <ClInclude Include="application\Game\Camera\Camera.h" />
     <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\System\Service\Input.h" />
@@ -184,11 +191,11 @@
     <ClInclude Include="Engine\Graphics\2d\VertexBuffer2D.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\VertexBuffer3D.h" />
     <ClInclude Include="Engine\System\Managers\SRVManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Model.h" />
+    <ClInclude Include="Engine\Graphics\3d\Model\Model.h" />
     <ClInclude Include="Engine\System\Managers\ModelManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\Light.h" />
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\ModelCommon.h" />
+    <ClInclude Include="Engine\Graphics\3d\Model\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />
     <ClInclude Include="application\Scene\MyGame.h" />
     <ClInclude Include="Engine\System\Managers\SceneManager.h" />
@@ -211,7 +218,7 @@
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\AnimationModel.h" />
+    <ClInclude Include="Engine\Graphics\3d\Model\AnimationModel.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
     <ClInclude Include="Engine\System\Service\Render.h" />
@@ -234,6 +241,10 @@
     <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\CylinderParticle.h" />
+    <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
+    <ClInclude Include="Engine\DataInfo\LineObjectData.h" />
+    <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
+    <ClInclude Include="application\Drawing\3d\Line.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />
@@ -241,6 +252,8 @@
     <None Include="Resource\Shaders\3D\Obj3D.hlsli" />
     <None Include="Resource\Shaders\3D\SkinningObj3D.hlsli" />
     <None Include="Resource\Shaders\OffScreen\Fullscreen.hlsli" />
+    <None Include="Resource\Shaders\3D\Skybox.hlsli" />
+    <None Include="Resource\Shaders\3D\LIne3D.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

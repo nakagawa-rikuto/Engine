@@ -2,6 +2,7 @@
 // SceneManager
 #include "Engine/System/Managers/SceneManager.h"
 
+
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -26,7 +27,11 @@ void GameScene::Update() {
 #ifdef USE_IMGUI
 	ImGui::Begin("GameScene");
 	ImGui::End();
+
 #endif // USE_IMGUI
+
+	/// ===ISceneの更新=== ///
+	IScene::Update();
 }
 
 ///-------------------------------------------/// 
@@ -34,9 +39,13 @@ void GameScene::Update() {
 ///-------------------------------------------///
 void GameScene::Draw() {
 #pragma region 背景スプライト描画
+	
 #pragma endregion
 
 #pragma region モデル描画
+
+	/// ===ISceneの描画=== ///
+	IScene::Draw();
 #pragma endregion
 
 #pragma region 前景スプライト描画

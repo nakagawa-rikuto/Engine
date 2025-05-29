@@ -9,8 +9,8 @@
 /// Pipeline
 ///-------------------------------------------///
 // PSOの取得
-void Render::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode) { 
-	ServiceLocator::GetPipelineManager()->SetPipeline(commandList, type, mode);
+void Render::SetPSO(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode, D3D12_PRIMITIVE_TOPOLOGY topology) {
+	ServiceLocator::GetPipelineManager()->SetPipeline(commandList, type, mode, topology);
 }
 
 ///-------------------------------------------/// 

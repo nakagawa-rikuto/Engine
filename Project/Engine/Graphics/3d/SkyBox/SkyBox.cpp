@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "SkyBox.h"
 // c++
 #include <cassert>
 #include <fstream>
@@ -6,80 +6,22 @@
 #include "Engine/System/Service/Getter.h"
 #include "Engine/System/Service/Render.h"
 // camera
-#include "application/Drawing/3d/Camera.h"
+#include "application/Game/Camera/camera.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"
 
-
 ///-------------------------------------------/// 
-/// コンストラクタ、デストラクタ
+/// デストラクタ
 ///-------------------------------------------///
-Model::Model() = default;
-Model::~Model() {
-	vertex_.reset();
-	index_.reset();
-	common_.reset();
-}
-
-///-------------------------------------------/// 
-/// Getter
-///-------------------------------------------///
-/// ===モデル=== ///
-const Vector3& Model::GetTranslate() const { return worldTransform_.translate; }
-const Vector3& Model::GetRotate() const { return worldTransform_.rotate; }
-const Vector3& Model::GetScale() const { return worldTransform_.scale; }
-const Vector4& Model::GetColor() const { return color_; }
-
-///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-/// ===モデル=== ///
-void Model::SetTranslate(const Vector3& position) { worldTransform_.translate = position; }
-void Model::SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
-void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
-void Model::SetColor(const Vector4& color) { color_ = color; }
-/// ===Light=== ///
-void Model::SetLight(LightType type) { common_->SetLightType(type); }
-// LightInfo
-void Model::SetLightData(LightInfo light) {
-	/*light_.shininess = light.shininess;
-	if (common_->GetLightType() == LightType::Lambert ||
-		common_->GetLightType() == LightType::HalfLambert) {
-		light_.directional.direction = light.directional.direction;
-		light_.directional.intensity = light.directional.intensity;
-		light_.directional.color = light.directional.color;
-	} else if (common_->GetLightType() == LightType::PointLight) {
-		light_.point.position = light.point.position;
-		light_.directional.intensity = light.directional.intensity;
-		light_.directional.color = light.directional.color;
-		light_.point.radius = light.point.radius;
-		light_.point.decay = light.point.decay;
-	} else if (common_->GetLightType() == LightType::SpotLight) {
-		light_.spot.position = light.spot.position;
-		light_.spot.direction = light.spot.direction;
-		light_.spot.intensity = light.spot.intensity;
-		light_.spot.color = light.spot.color;
-		light_.spot.distance = light.spot.distance;
-		light_.spot.decay = light.spot.decay;
-		light_.spot.cosAngle = light.spot.cosAngle;
-	}*/
-	light_ = light;
-}
-/// ===カメラ=== ///
-void Model::SetCamera(Camera* camera) { camera_ = camera; }
+SkyBox::~SkyBox() {}
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-// オブジェクトを読み込む場合
-void Model::Initialize(const std::string& filename, LightType type) {
-
+void SkyBox::Initialize(const std::string & fileName, LightType type) {
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = Getter::GetDXDevice();
-
-	/// ===モデル読み込み=== ///
-	modelData_ = Getter::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
@@ -101,6 +43,8 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
 	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
 	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
+	// 頂点情報の設定
+	VertexDataWrite();
 
 	/// ===index=== ///
 	index_->Create(device, sizeof(uint32_t) * modelData_.indices.size());
@@ -119,8 +63,9 @@ void Model::Initialize(const std::string& filename, LightType type) {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void Model::Update() {
+void SkyBox::Update() {
 	/// ===データの書き込み=== ///
+	VertexDataWrite();
 	MateialDataWrite();
 	TransformDataWrite();
 	LightDataWrite();
@@ -130,8 +75,7 @@ void Model::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void Model::Draw(BlendMode mode) {
-
+void SkyBox::Draw(BlendMode mode) {
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
 
@@ -150,9 +94,45 @@ void Model::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
+/// VertrexDataの書き込み
+///-------------------------------------------///
+void SkyBox::VertexDataWrite() {
+	// 右面。描画インデックスは[0,1,2][2,1,3]で内側を向く
+	vertexData_[0].position = { 1.0f, 1.0f, 1.0f, 1.0f };
+	vertexData_[1].position = { 1.0f, 1.0f, -1.0f, 1.0f };
+	vertexData_[2].position = { 1.0f, -1.0f, 1.0f, 1.0f };
+	vertexData_[3].position = { 1.0f, -1.0f, -1.0f, 1.0f };
+	// 左面。描画インデックスは[4,5,6][6,5,7]
+	vertexData_[4].position = { -1.0f, 1.0f, -1.0f, 1.0f };
+	vertexData_[5].position = { -1.0f, 1.0f, 1.0f, 1.0f };
+	vertexData_[6].position = { -1.0f, -1.0f, -1.0f, 1.0f };
+	vertexData_[7].position = { -1.0f, -1.0f, 1.0f, 1.0f };
+	// 前面。描画インデックスは[8,9,10][10,9,11]
+	vertexData_[8].position = { -1.0f, 1.0f, 1.0f, 1.0f };
+	vertexData_[9].position = { 1.0f, 1.0f, 1.0f, 1.0f };
+	vertexData_[10].position = { -1.0f, -1.0f, 1.0f, 1.0f };
+	vertexData_[11].position = { 1.0f, -1.0f, 1.0f, 1.0f };
+	// 後面
+	vertexData_[12].position = { 1.0f, 1.0f, -1.0f, 1.0f };
+	vertexData_[13].position = { -1.0f, 1.0f, -1.0f, 1.0f };
+	vertexData_[14].position = { 1.0f, -1.0f, -1.0f, 1.0f };
+	vertexData_[15].position = { -1.0f, -1.0f, -1.0f, 1.0f };
+	// 上面
+	vertexData_[16].position = { -1.0f, 1.0f, -1.0f, 1.0f };
+	vertexData_[17].position = { 1.0f, 1.0f, -1.0f, 1.0f };
+	vertexData_[18].position = { -1.0f, 1.0f, 1.0f, 1.0f };
+	vertexData_[19].position = { 1.0f, 1.0f, 1.0f, 1.0f };
+	// 下面
+	vertexData_[20].position = { -1.0f, -1.0f, 1.0f, 1.0f };
+	vertexData_[21].position = { 1.0f, -1.0f, 1.0f, 1.0f };
+	vertexData_[22].position = { -1.0f, -1.0f, -1.0f, 1.0f };
+	vertexData_[23].position = { 1.0f, -1.0f, -1.0f, 1.0f };
+}
+
+///-------------------------------------------/// 
 /// MaterialDataの書き込み
 ///-------------------------------------------///
-void Model::MateialDataWrite() {
+void SkyBox::MateialDataWrite() {
 	/// ===Matrixの作成=== ///
 	Matrix4x4 uvTransformMatrix = Math::MakeScaleMatrix(uvTransform_.scale);
 	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, Math::MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -166,10 +146,9 @@ void Model::MateialDataWrite() {
 }
 
 ///-------------------------------------------/// 
-/// Transform情報の書き込み
+/// WVPDataの書き込み
 ///-------------------------------------------///
-void Model::TransformDataWrite() {
-
+void SkyBox::TransformDataWrite() {
 	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
@@ -190,10 +169,10 @@ void Model::TransformDataWrite() {
 	);
 }
 
-///-------------------------------------------///  
-///　ライトの書き込み
+///-------------------------------------------/// 
+/// LightDataの書き込み
 ///-------------------------------------------///
-void Model::LightDataWrite() {
+void SkyBox::LightDataWrite() {
 	common_->SetDirectionLight(
 		light_.directional.color,
 		light_.directional.direction,
@@ -218,9 +197,9 @@ void Model::LightDataWrite() {
 }
 
 ///-------------------------------------------/// 
-/// カメラの書き込み
+/// CameraDataの書き込み
 ///-------------------------------------------///
-void Model::CameraDataWrite() {
+void SkyBox::CameraDataWrite() {
 	if (camera_) {
 		common_->SetCameraForGPU(camera_->GetTranslate());
 	} else {

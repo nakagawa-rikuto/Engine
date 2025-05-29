@@ -103,6 +103,7 @@ void MyGame::LoadTexture() {
 	Loader::LoadTexture("uvChecker", "uvChecker.png");
 	Loader::LoadTexture("monsterBall", "monsterBall.png");
 	Loader::LoadTexture("circle", "circle.png");
+	Loader::LoadTexture("circle2", "circle2.png");
 	Loader::LoadTexture("gradationLine", "gradationLine.png");
 }
 // モデル
@@ -116,7 +117,6 @@ void MyGame::LoadModel() {
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 
 	// Game
-	Loader::LoadModel("Ground", "Ground.obj");
 	Loader::LoadModel("skydome", "skydome.obj");
 	Loader::LoadModel("sky", "sky.gltf");
 	Loader::LoadModel("cloud", "cloud.gltf");

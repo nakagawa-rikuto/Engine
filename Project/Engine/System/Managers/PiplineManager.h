@@ -36,7 +36,7 @@ public:
     // 初期化
     void Initialize(DXCommon* dxCommon);
     // PSOの設定
-    void SetPipeline(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode);
+    void SetPipeline(ID3D12GraphicsCommandList* commandList, PipelineType type, BlendMode mode, D3D12_PRIMITIVE_TOPOLOGY topology);
 
 private:/// ===変数=== ///
     /// パイプラインの管理
