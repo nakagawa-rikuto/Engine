@@ -578,7 +578,7 @@ void DebugScene::Update() {
 #ifdef _DEBUG
 	//line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
 	line_->DrawSphere({ modelTranslate_, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
-	//line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 100, {1.0f, 1.0f, 1.0f, 1.0f});
+	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 50, {1.0f, 1.0f, 1.0f, 1.0f});
 #endif // _DEBUG
 #pragma endregion
 	/// ===ISceneのの更新=== ///
@@ -604,14 +604,14 @@ void DebugScene::Draw() {
 	//cloud_->Draw();
 
 	/// ===アニーメーションモデル=== ///
-	//animationModel_->Draw();
+	animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
 
-		//modelLight_->Draw();
+		modelLight_->Draw();
 	}
 
 
