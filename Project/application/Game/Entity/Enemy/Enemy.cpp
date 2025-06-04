@@ -25,11 +25,7 @@ void Enemy::Init(Camera * camera) {
 }
 
 void Enemy::Initialize() {
-	// Sphereの設定
-	SphereCollider::Initialize();
-	sphere_.center = baseInfo_.translate;
-	sphere_.radius = 1.0f;
-
+	
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "MonsterBall");
@@ -38,6 +34,11 @@ void Enemy::Initialize() {
 	SetRotate(baseInfo_.rotate);
 	SetScale(baseInfo_.scale);
 	SetColor(baseInfo_.color);
+
+	// Sphereの設定
+	SphereCollider::Initialize();
+	sphere_.center = baseInfo_.translate;
+	sphere_.radius = 1.0f;
 }
 
 void Enemy::Update() {

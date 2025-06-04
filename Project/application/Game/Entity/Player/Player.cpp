@@ -36,6 +36,8 @@ void Player::Init(Camera* camera) {
 	camera_->SetOffset({ 0.0f, 70.0f, 0.0f });
 	camera_->SetFollowSpeed(0.1f);
 	
+
+
 	object3d_->Update();
 }
 
@@ -43,10 +45,6 @@ void Player::Init(Camera* camera) {
 /// 初期化
 ///-------------------------------------------///
 void Player::Initialize() {
-	// Sphereの設定
-	SphereCollider::Initialize();
-	sphere_.center = baseInfo_.translate;
-	sphere_.radius = 1.5f;
 
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
@@ -55,6 +53,10 @@ void Player::Initialize() {
 	SetRotate(baseInfo_.rotate);
 	SetScale(baseInfo_.scale);
 	SetColor(baseInfo_.color);
+
+	// Sphereの設定
+	SphereCollider::Initialize();
+	sphere_.radius = 1.5f;
 }
 
 
