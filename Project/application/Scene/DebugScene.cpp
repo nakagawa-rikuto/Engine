@@ -24,11 +24,8 @@ DebugScene::~DebugScene() {
 	camera_.reset();
 	camera2_.reset();
 	// model
-	model_.reset();
 	model2_.reset();
 	modelLight_.reset();
-	// animationModel
-	animationModel_.reset();
 
 	// ISceneのデストラクタ
 	IScene::~IScene();
@@ -86,14 +83,8 @@ void DebugScene::Initialize() {
 
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
-	model_ = std::make_unique<Object3d>();
-	model_->Init(ObjectType::Model, "MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
-	model2_ = std::make_unique<Object3d>();
-	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
-	modelLight_ = std::make_unique<Object3d>();
-	modelLight_->Init(ObjectType::Model, "Particle");
-	// modelLight_->SetTransform({ spot_.position }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
-	/* // モデルの使い方
+	
+	/* モデルの使い方
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetScale(Vector3(0.0f, 0.0f, 0.0f));                 // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
@@ -105,6 +96,17 @@ void DebugScene::Initialize() {
 	model_->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
+	// DebugModelの初期化
+	debugModel_ = std::make_unique<DebugModel>();
+	debugModel_->Initialize();
+
+	// モデルの初期化
+	model2_ = std::make_unique<Object3d>();
+	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
+	modelLight_ = std::make_unique<Object3d>();
+	modelLight_->Init(ObjectType::Model, "Particle");
+
+
 	// 球
 	sky_ = std::make_unique<Object3d>();
 	sky_->Init(ObjectType::Model, "sky", LightType::HalfLambert);
@@ -114,11 +116,10 @@ void DebugScene::Initialize() {
 	cloud_->SetTranslate({ 0.0f, 0.0f, 0.0f });
 
 	// ポイントライトの位置と半径の変更
-	light_.point.position = { 0.0f, 0.0f, -10.0f };
+	light_.point.position = { 0.0f, 0.0f, -30.0f };
 	light_.point.radius = 500.0f;
 
 	// 一回更新をかける
-	model_->Update();
 	model2_->Update();
 	modelLight_->Update();
 	sky_->Update();
@@ -127,10 +128,10 @@ void DebugScene::Initialize() {
 
 	/// ===アニメーションモデルの初期化=== ///
 #pragma region AnimationModelの初期化
-	animationModel_ = std::make_unique<Object3d>();
-	animationModel_->Init(ObjectType::AnimationModel, "human", LightType::Lambert);
-	// アニメーションを登録しないとアニメーションが再生されない
-	animationModel_->SetAnimation("Armature|mixamo.com|Layer0");
+
+	debugAnimationModel_ = std::make_unique<DebugAnimationModel>();
+	debugAnimationModel_->Initialize();
+
 #pragma endregion
 
 	/// ===ライト=== ///
@@ -144,11 +145,11 @@ void DebugScene::Initialize() {
 
 	/// ===OffScreen=== ///
 #pragma region OffScreen
-	isGrayscale = false;
+	offScreenInfo_.isGrayscale = false;
 #pragma endregion
 
 	/// ===Particle=== ///
-	particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+	particleInofo_.Translate = { 0.0f, 0.0f, 0.0f };
 
 #pragma region Line
 	line_ = std::make_unique<Line>();
@@ -211,10 +212,10 @@ void DebugScene::Update() {
 		/// ===Info=== ///
 		if (isImgui_.Sprite) {
 			// Sprite
-			ImGui::DragFloat2("Tranlate", &spriteTranslate_.x, 0.1f);
-			ImGui::DragFloat("Rotate", &spriteRotate_, 0.1f);
-			ImGui::DragFloat2("Size", &spriteSize_.x, 0.1f);
-			ImGui::ColorEdit4("Color", &spriteColor_.x);
+			ImGui::DragFloat2("Tranlate", &spriteInfo_.Translate.x, 0.1f);
+			ImGui::DragFloat("Rotate", &spriteInfo_.Rotate, 0.1f);
+			ImGui::DragFloat2("Size", &spriteInfo_.Size.x, 0.1f);
+			ImGui::ColorEdit4("Color", &spriteInfo_.Color.x);
 		}
 	}
 	/// ===Model=== ///
@@ -232,13 +233,13 @@ void DebugScene::Update() {
 		/// ===Info=== ///
 		if (isImgui_.Model) {
 			// Model
-			ImGui::DragFloat3("Tranlate", &modelTranslate_.x, 0.1f);
-			ImGui::DragFloat4("Rotate", &modelRotate_.x, 0.1f);
-			ImGui::DragFloat3("Size", &modelScale_.x, 0.1f);
-			ImGui::ColorEdit4("Color", &modelColor_.x);
+			ImGui::DragFloat3("Tranlate", &modelInfo_.Translate.x, 0.1f);
+			ImGui::DragFloat4("Rotate", &modelInfo_.Rotate.x, 0.1f);
+			ImGui::DragFloat3("Size", &modelInfo_.Scale.x, 0.1f);
+			ImGui::ColorEdit4("Color", &modelInfo_.Color.x);
 			if (!lightType_.Lambert && ImGui::Button("Lambert")) {
-				animationModel_->SetLight(LightType::Lambert);
-				model_->SetLight(LightType::Lambert);
+				debugAnimationModel_->SetLight(LightType::Lambert);
+				debugModel_->SetLight(LightType::Lambert);
 				model2_->SetLight(LightType::Lambert);
 				lightType_.Lambert = true;
 				lightType_.HalfLambert = false;
@@ -247,8 +248,8 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.HalfLambert && ImGui::Button("HalfLambert")) {
-				animationModel_->SetLight(LightType::HalfLambert);
-				model_->SetLight(LightType::HalfLambert);
+				debugAnimationModel_->SetLight(LightType::HalfLambert);
+				debugModel_->SetLight(LightType::HalfLambert);
 				model2_->SetLight(LightType::HalfLambert);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = true;
@@ -257,8 +258,8 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.PointLight && ImGui::Button("PointLight")) {
-				animationModel_->SetLight(LightType::PointLight);
-				model_->SetLight(LightType::PointLight);
+				debugAnimationModel_->SetLight(LightType::PointLight);
+				debugModel_->SetLight(LightType::PointLight);
 				model2_->SetLight(LightType::PointLight);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = false;
@@ -267,8 +268,8 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.SpotLight && ImGui::Button("SpotLight")) {
-				animationModel_->SetLight(LightType::SpotLight);
-				model_->SetLight(LightType::SpotLight);
+				debugAnimationModel_->SetLight(LightType::SpotLight);
+				debugModel_->SetLight(LightType::SpotLight);
 				model2_->SetLight(LightType::SpotLight);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = false;
@@ -277,8 +278,8 @@ void DebugScene::Update() {
 				lightType_.None = false;
 			}
 			if (!lightType_.None && ImGui::Button("None")) {
-				animationModel_->SetLight(LightType::None);
-				model_->SetLight(LightType::None);
+				debugAnimationModel_->SetLight(LightType::None);
+				debugModel_->SetLight(LightType::None);
 				model2_->SetLight(LightType::None);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = false;
@@ -330,8 +331,8 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (ImGui::Button("Draw")) {
-			particleManager_->Emit("Ring", particleTranslate_);
-			particleManager_->Emit("HitEffect", particleTranslate_);
+			particleManager_->Emit("Ring", particleInofo_.Translate);
+			particleManager_->Emit("HitEffect", particleInofo_.Translate);
 			particleManager_->SetTexture("Ring", "gradationLine");
 			particleManager_->SetTexture("HitEffect", "circle2");
 		}
@@ -343,13 +344,13 @@ void DebugScene::Update() {
 		/// ===Info=== ///
 		if (isImgui_.Particle1) {
 			// Particle
-			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+			ImGui::DragFloat3("Tranlate", &particleInofo_.Translate.x, 0.1f);
 		}
 	}
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (ImGui::Button("Draw")) {
-			particleManager_->Emit("Explosion", particleTranslate_);
+			particleManager_->Emit("Explosion", particleInofo_.Translate);
 		}
 		if (!isImgui_.Particle2 && ImGui::Button("Info")) {
 			isImgui_.Particle2 = true;
@@ -359,13 +360,13 @@ void DebugScene::Update() {
 		/// ===Info=== ///
 		if (isImgui_.Particle2) {
 			// Particle
-			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+			ImGui::DragFloat3("Tranlate", &particleInofo_.Translate.x, 0.1f);
 		}
 	}
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
 		if (ImGui::Button("Draw")) {
-			particleManager_->Emit("Confetti", particleTranslate_);
+			particleManager_->Emit("Confetti", particleInofo_.Translate);
 			particleManager_->SetTexture("Confetti", "monsterBall");
 		}
 		if (!isImgui_.Particle3 && ImGui::Button("Info")) {
@@ -376,16 +377,16 @@ void DebugScene::Update() {
 		/// ===Info=== ///
 		if (isImgui_.Particle3) {
 			// Particle
-			ImGui::DragFloat3("Tranlate", &particleTranslate_.x, 0.1f);
+			ImGui::DragFloat3("Tranlate", &particleInofo_.Translate.x, 0.1f);
 		}
 	}
 	ImGui::End();
 
 	/// ===Camera=== ///
 	ImGui::Begin("Camera");
-	ImGui::Checkbox("Flag", &SetCamera);
-	ImGui::DragFloat3("Translate", &cameraPos.x, 0.1f);
-	ImGui::DragFloat4("Rotate", &cameraRotate.x, 0.001f);
+	ImGui::Checkbox("Flag", &cameraInfo_.Set);
+	ImGui::DragFloat3("Translate", &cameraInfo_.Translate.x, 0.1f);
+	ImGui::DragFloat4("Rotate", &cameraInfo_.Rotate.x, 0.001f);
 	ImGui::End();
 	/// ===Keybord=== ///
 	/*ImGui::Begin("Keybord");
@@ -402,13 +403,13 @@ void DebugScene::Update() {
 	ImGui::End();*/
 	/// ===Audio=== ///
 	ImGui::Begin("Audio");
-	ImGui::Checkbox("play", &playAudio);
-	ImGui::DragFloat("Volume", &volume, 0.01f);
-	ImGui::DragFloat("Ptich", &pitch, 0.01f);
+	ImGui::Checkbox("play", &audioInfo_.play);
+	ImGui::DragFloat("Volume", &audioInfo_.volume, 0.01f);
+	ImGui::DragFloat("Ptich", &audioInfo_.pitch, 0.01f);
 	ImGui::End();
 	/// ===OffScreen=== ///
 	ImGui::Begin("OffScreen");
-	ImGui::Checkbox("Grayscale", &isGrayscale);
+	ImGui::Checkbox("Grayscale", &offScreenInfo_.isGrayscale);
 	ImGui::End();
 
 	/// ===Line=== ///
@@ -418,11 +419,14 @@ void DebugScene::Update() {
 	ImGui::DragFloat4("Color", &lineInfo_.color.x, 0.01f);
 	ImGui::End();
 
+	debugAnimationModel_->ImGuiInfo();
+	debugModel_->ImGuiInfo();
+
 #endif // USE_IMGUI
 
 #pragma region OffScreen
 	/// ===OffScreen=== ///
-	if (isGrayscale) {
+	if (offScreenInfo_.isGrayscale) {
 		Setter::SetOffScreenType(OffScreenType::Grayscale);
 	} else {
 		Setter::SetOffScreenType(OffScreenType::CopyImage);
@@ -431,7 +435,7 @@ void DebugScene::Update() {
 
 	/// ===カメラの変更=== ///
 #pragma region カメラの変更
-	if (SetCamera) {
+	if (cameraInfo_.Set) {
 		cameraManager_->SetActiveCamera("Debug2");
 	} else {
 		cameraManager_->SetActiveCamera("Debug");
@@ -441,42 +445,38 @@ void DebugScene::Update() {
 	/// ===キーボード関連の処理=== ///
 #pragma region キーボード関連の処理
 	if (Input::PushKey(DIK_D)) {
-		cameraPos.x += 0.01f;
+		cameraInfo_.Translate.x += 0.01f;
 	} else if (Input::PushKey(DIK_A)) {
-		cameraPos.x -= 0.01f;
+		cameraInfo_.Translate.x -= 0.01f;
 	}
 	if (Input::PushKey(DIK_W)) {
-		cameraPos.y += 0.01f;
+		cameraInfo_.Translate.y += 0.01f;
 	} else if (Input::PushKey(DIK_S)) {
-		cameraPos.y -= 0.01f;
+		cameraInfo_.Translate.y -= 0.01f;
 	}
 	if (Input::PushKey(DIK_UP)) {
-		cameraPos.z += 0.01f;
+		cameraInfo_.Translate.z += 0.01f;
 	} else if (Input::PushKey(DIK_DOWN)) {
-		cameraPos.z -= 0.01f;
+		cameraInfo_.Translate.z -= 0.01f;
 	}
 #pragma endregion
 
 	/// ===マウス関連の処理=== ///
 #pragma region マウス関連の処理
 	if (Input::PushMouse(MouseButtonType::Left)) {
-		PushLeft_ = true;
+		mouseInfo_.PushLeft_ = true;
 	} else {
-		PushLeft_ = false;
+		mouseInfo_.PushLeft_ = false;
 	}
 	if (Input::TriggerMouse(MouseButtonType::Right)) {
-		if (TriggerRight_) {
-			TriggerRight_ = false;
-			// アニメーションのループを無効化
-			animationModel_->SetAnimation("Armature|mixamo.com|Layer0", false);
+		if (mouseInfo_.TriggerRight_) {
+			mouseInfo_.TriggerRight_ = false;
 		} else {
-			TriggerRight_ = true;
-			// アニメーションのループを有効化
-			animationModel_->SetAnimation("Armature|mixamo.com|Layer0", true);
+			mouseInfo_.TriggerRight_ = true;
 		}
 	}
-	mousePosition_.x = static_cast<float>(Input::GetMousePosition().x);
-	mousePosition_.y = static_cast<float>(Input::GetMousePosition().y);
+	mouseInfo_.Position_.x = static_cast<float>(Input::GetMousePosition().x);
+	mouseInfo_.Position_.y = static_cast<float>(Input::GetMousePosition().y);
 #pragma endregion
 
 	/// ===コントローラーの処理=== ///
@@ -487,21 +487,21 @@ void DebugScene::Update() {
 	StickState rightStick = Input::GetRightStickState(0);
 
 	// モデルの移動処理
-	modelTranslate_.x += leftStick.x * 0.01f;
-	modelTranslate_.y += leftStick.y * 0.01f;
+	modelInfo_.Translate.x += leftStick.x * 0.01f;
+	modelInfo_.Translate.y += leftStick.y * 0.01f;
 
 	// カメラの移動処理
-	cameraPos.x += rightStick.x * 0.01f;
-	cameraPos.y += rightStick.y * 0.01f;
+	cameraInfo_.Translate.x += rightStick.x * 0.01f;
+	cameraInfo_.Translate.y += rightStick.y * 0.01f;
 
 #pragma endregion
 
 	/// ===Audioのセット=== ///
 #pragma region Audioのセット
-	if (playAudio) {
+	if (audioInfo_.play) {
 		Audio::PlayeSound("fanfare", false);
-		Audio::VolumeSound("fanfare", volume);
-		Audio::PitchSound("fanfare", pitch);
+		Audio::VolumeSound("fanfare", audioInfo_.volume);
+		Audio::PitchSound("fanfare", audioInfo_.pitch);
 	} else {
 		Audio::StopSound("fanfare");
 		Audio::StopSound("fanfare");
@@ -510,24 +510,21 @@ void DebugScene::Update() {
 
 	/// ===スプライトの更新=== ///
 #pragma region スプライトの更新
-	sprite_->SetPosition(spriteTranslate_);
-	sprite_->SetRotation(spriteRotate_);
-	sprite_->SetSize(spriteSize_);
-	sprite_->SetColor(spriteColor_);
+	sprite_->SetPosition(spriteInfo_.Translate);
+	sprite_->SetRotation(spriteInfo_.Rotate);
+	sprite_->SetSize(spriteInfo_.Size);
+	sprite_->SetColor(spriteInfo_.Color);
 	sprite_->Update();
 #pragma endregion
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	model_->SetTranslate(modelTranslate_);
-	model_->SetRotate(modelRotate_);
-	model_->SetScale(modelScale_);
-	model_->SetColor(modelColor_);
-	model_->SetLightData(light_);
-	model_->SetCamera(cameraManager_->GetActiveCamera().get());
-	model_->Update();
+	debugModel_->SetLightData(light_);
+	debugModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+	debugModel_->Update();
 
-	model2_->SetTranslate(modelTranslate_);
+	model2_->SetTranslate(modelInfo_.Translate);
+	model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
 	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
 	model2_->Update();
@@ -548,20 +545,17 @@ void DebugScene::Update() {
 
 	/// ===AnimaitonModelの更新=== ///
 #pragma region Animationモデルの更新
-	animationModel_->SetTranslate(modelTranslate_);
-	animationModel_->SetRotate(modelRotate_);
-	animationModel_->SetColor(modelColor_);
-	animationModel_->SetLightData(light_);
-	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
-	animationModel_->Update();
+	debugAnimationModel_->SetLightData(light_);
+	debugAnimationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+	debugAnimationModel_->Update();
 #pragma endregion
 
 	/// ===Particle=== ///
 #pragma region Particle
 	// パーティクルの生成
 	if (Input::TriggerKey(DIK_SPACE)) {
-		particleManager_->Emit("Ring", particleTranslate_);
-		particleManager_->Emit("HitEffect", particleTranslate_);
+		particleManager_->Emit("Ring", particleInofo_.Translate);
+		particleManager_->Emit("HitEffect", particleInofo_.Translate);
 		particleManager_->SetTexture("Ring", "gradationLine");
 		particleManager_->SetTexture("HitEffect", "circle2");
 	}
@@ -569,16 +563,16 @@ void DebugScene::Update() {
 
 	/// ===カメラの更新=== ///
 #pragma region カメラの更新
-	camera_->SetRotate(cameraRotate);
-	camera_->SetTranslate(cameraPos);
+	camera_->SetRotate(cameraInfo_.Rotate);
+	camera_->SetTranslate(cameraInfo_.Translate);
 #pragma endregion
 
 	/// ===Lineの更新=== ///
 #pragma region Lineの更新
 #ifdef _DEBUG
 	//line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
-	line_->DrawSphere({ modelTranslate_, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
-	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 50, {1.0f, 1.0f, 1.0f, 1.0f});
+	//line_->DrawSphere({ modelInfo_.Translate, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
+	//line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 50, {1.0f, 1.0f, 1.0f, 1.0f});
 #endif // _DEBUG
 #pragma endregion
 	/// ===ISceneのの更新=== ///
@@ -603,12 +597,13 @@ void DebugScene::Draw() {
 	//sky_->Draw();
 	//cloud_->Draw();
 
-	/// ===アニーメーションモデル=== ///
-	animationModel_->Draw();
 
-	/// ===Model=== ///
 	if (isDisplay_.Model) {
-		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+		/// ===アニーメーションモデル=== ///
+		debugAnimationModel_->Draw();
+
+		/// ===Model=== ///
+		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
 
 		modelLight_->Draw();

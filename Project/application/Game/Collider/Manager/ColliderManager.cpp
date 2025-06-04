@@ -73,6 +73,10 @@ void ColliderManager::CheckPairCollision(Collider* colliderA, Collider* collider
 		isHit = SphereToOBBCollisison(static_cast<SphereCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
 	}
 
+	// Colliderが持っているフラグを変更
+	colliderA->SetIsCollisison(isHit);
+	colliderB->SetIsCollisison(isHit);
+
 	if (isHit) {
 		colliderA->OnCollision(colliderB);
 		colliderB->OnCollision(colliderA);

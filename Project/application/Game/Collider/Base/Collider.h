@@ -10,11 +10,22 @@
 // Line
 #include "application/Drawing/3d/Line.h"
 
- // ColliderType
+// ColliderType
 enum class ColliderType {
     AABB,      // 軸整合バウンディングボックス（矩形）
     Sphere,    // 球体
     OBB        // 任意方向のバウンディングボックス
+};
+
+enum class ColliderName {
+    Player,    // プレイヤー
+    Enemy,     // 敵
+	PlayerBullet, // プレイヤーの弾
+    EnemyBullet,  // 敵の弾
+    Wall,      // 壁
+    Floor,     // 床
+    Ceiling,   // 天井
+	None       // 無し
 };
 
 /// ===前方宣言=== ///
@@ -30,11 +41,11 @@ public:
     virtual ~Collider() = default;
 
     // 初期化
-    virtual void Initialize() = 0;
+    virtual void Initialize();
     // 更新処理
     virtual void Update();
 	// 描画処理
-    virtual void Draw(BlendMode mode = BlendMode::KBlendModeNormal);
+    virtual void Draw(BlendMode mode);
 
 public: /// ===衝突=== ///
     // 衝突時の応答処理
@@ -44,7 +55,7 @@ public: /// ===Getter=== ///
     // Type
     ColliderType GetColliderType();
     // CollsisionName
-    std::string GetColliderName();
+    ColliderName GetColliderName();
 
 public: /// ===Setter=== ///
 
@@ -62,13 +73,13 @@ public: /// ===Setter=== ///
 	void SetLightData(LightInfo light);
 
     /// ===isCollision=== ///
-    void SetIsCollisison();
+    void SetIsCollisison(bool flag);
 
 protected:
     // Type
     ColliderType type_;
     // ColliderName
-    std::string colliderName_;
+    ColliderName name_;
 
 	// Object3D
 	std::unique_ptr<Object3d> object3d_;

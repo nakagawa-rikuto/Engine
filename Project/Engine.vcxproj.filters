@@ -130,6 +130,8 @@
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
+    <ClCompile Include="Engine\Debug\DebugModel.cpp" />
+    <ClCompile Include="Engine\Debug\DebugAnimationModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
@@ -245,6 +247,8 @@
     <ClInclude Include="Engine\DataInfo\LineObjectData.h" />
     <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
     <ClInclude Include="application\Drawing\3d\Line.h" />
+    <ClInclude Include="Engine\Debug\DebugModel.h" />
+    <ClInclude Include="Engine\Debug\DebugAnimationModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />
