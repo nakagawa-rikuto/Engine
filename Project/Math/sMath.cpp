@@ -21,6 +21,7 @@ Vector3 Math::Cross(const Vector3& v1, const Vector3& v2) {
 ///-------------------------------------------/// 
 /// Quaternion
 ///-------------------------------------------///
+#pragma region
 // QuaternionのNormを返す
 float Math::Norm(const Quaternion& quaternion) {
     return sqrtf(quaternion.x * quaternion.x +
@@ -142,4 +143,16 @@ Quaternion Math::LookRotation(Vector3 forward, Vector3 up) {
 
     // 行列をクォータニオンに変換して返す
     return MatrixToQuaternion(rotationMatrix);
+}
+#pragma endregion
+
+///-------------------------------------------/// 
+/// 
+///-------------------------------------------///
+// 
+float Math::NormalizeAngle(float angle) {
+    // 角度を [-π, π] に正規化
+    while (angle > std::numbers::pi_v<float>) angle -= 2.0f * std::numbers::pi_v<float>;
+    while (angle < -std::numbers::pi_v<float>) angle += 2.0f * std::numbers::pi_v<float>;
+    return angle;
 }

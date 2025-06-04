@@ -3,6 +3,9 @@
 #include "application/Game/Camera/Camera.h"
 // Service
 #include "Engine/System/Service/Input.h"
+// Math
+#include "Math/sMath.h"
+
 // ImGui
 #ifdef USE_IMGUI
 #include "imgui.h"
@@ -56,7 +59,7 @@ void Player::Initialize() {
 
 	// Sphereの設定
 	SphereCollider::Initialize();
-	sphere_.radius = 1.5f;
+	sphere_.radius = 1.2f;
 }
 
 
@@ -123,6 +126,7 @@ void Player::Update() {
 	/// ===Object3dの更新=== ///
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
+	SetColor(baseInfo_.color);
 
 	// SphereColliderの更新
 	SphereCollider::Update();
@@ -147,6 +151,7 @@ void Player::UpdateImGui() {
 	ImGui::DragFloat3("Translate", &baseInfo_.translate.x, 0.1f);
 	ImGui::DragFloat4("Rotate", &baseInfo_.rotate.x, 0.1f);
 	ImGui::DragFloat3("Velocity", &baseInfo_.velocity.x, 0.1f);
+	ImGui::ColorEdit4("Color", &baseInfo_.color.x);
 	ImGui::End();
 #endif // USE_IMGUI
 }
@@ -220,6 +225,25 @@ void Player::UpdateMove() {
 
 	// Velcotiyに反映
 	baseInfo_.velocity = moveInfo_.direction * moveInfo_.speed;
+
+	/// ===移動方向に沿って回転=== ///
+	// 方向が変更されたら
+	if (Length(moveInfo_.direction) > 0.01f) {
+		// 現在のYaw角（Y軸の回転）を取得
+		float currentYaw = Math::GetYAngle(baseInfo_.rotate);
+
+		// 入力方向から目標のYaw角を取得
+		float targetYaw = std::atan2(moveInfo_.direction.x, moveInfo_.direction.z);
+
+		// 差分を [-π, π] に正規化
+		float diff = Math::NormalizeAngle(targetYaw - currentYaw);
+
+		// イージング補間（短い方向へ回転）
+		float easedYaw = currentYaw + diff * (deltaTime_ * 5.0f);
+
+		// Quaternionに再変換
+		baseInfo_.rotate = Math::MakeRotateAxisAngle({ 0, 1, 0 }, easedYaw);
+	}
 
 	/// ===Behaviorの変更=== ///
 	if (std::abs(leftStick.x) < 0.1f && std::abs(leftStick.y) < 0.1f) {
