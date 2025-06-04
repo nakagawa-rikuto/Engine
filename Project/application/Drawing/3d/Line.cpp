@@ -4,6 +4,7 @@
 
 #include "Math/MatrixMath.h"
 #include "Math/EasingMath.h"
+#include "Math/sMath.h"
 
 ///-------------------------------------------/// 
 /// Line
@@ -49,7 +50,7 @@ void Line::DrawOBB(const OBB& obb, const Vector4& color) {
 ///-------------------------------------------/// 
 /// AABB
 ///-------------------------------------------///
-void Line::DrawAABB(const AABB & aabb, const Vector4& color) {
+void Line::DrawAABB(const AABB& aabb, const Vector4& color) {
 	// グリッドを6面描画
 	Vector3 size = aabb.max - aabb.min;
 	Vector3 halfSize = size * 0.5f;
@@ -110,30 +111,49 @@ void Line::DrawAABB(const AABB & aabb, const Vector4& color) {
 ///-------------------------------------------/// 
 /// Sphere
 ///-------------------------------------------///
-void Line::DrawSphere(const Sphere& sphere, const Vector4 & color) {
-	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(Vector3(sphere.radius, sphere.radius, sphere.radius), Vector3(0.0f, 0.0f, 0.0f), sphere.center);
-	std::vector<Vector3> spheres = ServiceLocator::GetLineObject3D()->GetSphereData();
+void Line::DrawSphere(const Sphere& sphere, const Vector4& color) {
+	const uint32_t div = 8;
+	const float lonStep = 2.0f * Math::Pi() / float(div);
+	const float latStep = Math::Pi() / float(div);
 
-	for (uint32_t i = 0; i < spheres.size(); i += 3) {
-		Vector3 a = spheres[i];
-		Vector3 b = spheres[i + 1];
-		Vector3 c = spheres[i + 2];
+	for (uint32_t lat = 0; lat < div; ++lat) {
+		for (uint32_t lon = 0; lon < div; ++lon) {
+			Vector3 a, b, c;
 
-		a = Math::TransformVector(a, worldMatrix);
-		b = Math::TransformVector(b, worldMatrix);
-		c = Math::TransformVector(c, worldMatrix);
+			float lat1 = -Math::Pi() / 2.0f + latStep * lat;
+			float lon1 = lonStep * lon;
 
-		// 線描画
-		DrawLine(a, b, color);
-		//DrawLine(b, c, color);
-		DrawLine(a, c, color); // 三角形を完成させるための線を追加
+			a = {
+				cos(lat1) * cos(lon1),
+				sin(lat1),
+				cos(lat1) * sin(lon1)
+			};
+			b = {
+				cos(lat1 + latStep) * cos(lon1),
+				sin(lat1 + latStep),
+				cos(lat1 + latStep) * sin(lon1)
+			};
+			c = {
+				cos(lat1) * cos(lon1 + lonStep),
+				sin(lat1),
+				cos(lat1) * sin(lon1 + lonStep)
+			};
+
+			// スケール & 中心変換
+			a = a * sphere.radius + sphere.center;
+			b = b * sphere.radius + sphere.center;
+			c = c * sphere.radius + sphere.center;
+
+			DrawLine(a, b, color);
+			DrawLine(a, c, color);
+		}
 	}
 }
 
 ///-------------------------------------------/// 
 /// Grid
 ///-------------------------------------------///
-void Line::DrawGrid(const Vector3 & center, const Vector3 & size, uint32_t division, const Vector4& mainColor) {
+void Line::DrawGrid(const Vector3& center, const Vector3& size, uint32_t division, const Vector4& mainColor) {
 	Vector3 halfSize = size * 0.5f;
 	Vector3 start = center + Vector3(-halfSize.x, 0.0f, -halfSize.z);
 	Vector3 end = center + Vector3(halfSize.x, 0.0f, -halfSize.z);
@@ -229,7 +249,7 @@ void Line::DrawGirdBox(const AABB& aabb, uint32_t division, const Vector3& cente
 ///-------------------------------------------/// 
 /// GridLine
 ///-------------------------------------------///
-void Line::DrawGridLines(const Vector3 & start, const Vector3 & end, const Vector3 & offset, uint32_t division, const Vector4 & color) {
+void Line::DrawGridLines(const Vector3& start, const Vector3& end, const Vector3& offset, uint32_t division, const Vector4& color) {
 	for (uint32_t i = 0; i <= division; i++) {
 		float t = float(i) / float(division);
 		Vector3 startPos = Math::Lerp(start, end, t);

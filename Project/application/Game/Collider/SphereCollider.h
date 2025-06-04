@@ -16,7 +16,7 @@ public:
 	// 更新
 	virtual void Update() override;
 	// 描画
-	virtual void Draw(BlendMode mode = BlendMode::KBlendModeNormal) override;
+	virtual void Draw(BlendMode mode) override;
 
 public: /// ===衝突=== ///
 	virtual void OnCollision(Collider* collider) override = 0;

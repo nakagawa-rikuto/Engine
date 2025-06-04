@@ -5,6 +5,10 @@
 ///-------------------------------------------///
 void SphereCollider::Initialize() {
 	type_ = ColliderType::Sphere;
+
+	sphere_.center = object3d_->GetTranslate();
+
+	Collider::Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -12,12 +16,8 @@ void SphereCollider::Initialize() {
 ///-------------------------------------------///
 void SphereCollider::Update() {
 
-	// Line
-#ifdef _DEBUG
-	// デバッグ時のみ描画
-	line_->DrawSphere(sphere_, lineColor_);
-
-#endif // DEBUG
+	// センター座標を更新
+	sphere_.center = object3d_->GetTranslate();
 
 	// Colliderの更新処理
 	Collider::Update();
@@ -27,6 +27,13 @@ void SphereCollider::Update() {
 /// 描画
 ///-------------------------------------------///
 void SphereCollider::Draw(BlendMode mode) {
+
+	// Line
+#ifdef _DEBUG
+	// デバッグ時のみ描画
+	line_->DrawSphere(sphere_, lineColor_);
+#endif // DEBUG
+
 	// Colliderの描画処理
 	Collider::Draw(mode);
 }
