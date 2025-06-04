@@ -5,6 +5,10 @@
 #include "application/Drawing/2d/Sprite.h"
 #include "application/Drawing/3d/Object3d.h"
 #include "application/Game/Camera/camera.h"
+// DebugModel
+#include "Engine/Debug/DebugModel.h"
+#include "Engine/Debug/DebugAnimationModel.h"
+
 // Line
 #include "application/Drawing/3d/Line.h"
 // Math
@@ -74,9 +78,7 @@ private:/// ===メンバ変数=== ///
 	std::shared_ptr<Camera> camera_;
 	std::shared_ptr<Camera> camera2_;
 	// モデル
-	std::unique_ptr<Object3d> model_;
 	std::unique_ptr<Object3d> model2_;
-	std::unique_ptr<Object3d> animationModel_;
 	// 球
 	std::unique_ptr<Object3d> sky_;
 	std::unique_ptr<Object3d> cloud_;
@@ -84,21 +86,34 @@ private:/// ===メンバ変数=== ///
 	std::unique_ptr<Object3d> modelLight_;
 	// Line
 	std::unique_ptr<Line> line_;
+	// DebugModel
+	std::unique_ptr<DebugModel> debugModel_;
+	// DebugAnimationModel
+	std::unique_ptr<DebugAnimationModel> debugAnimationModel_;
+
 #pragma endregion
 
 	/// ===変数=== ///
 #pragma region 変数
 	// モデル
-	Vector3 modelTranslate_ = { 0.0f, -1.3f, 0.0f };
-	Quaternion modelRotate_ = { 0.0f, 0.0f, 0.0f, 1.0f };
-	Vector3 modelScale_ = { 1.0f, 1.0f, 1.0f };
-	Vector4 modelColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	bool isRotate = false;
+	struct ModelInfo {
+		Vector3 Translate = { 0.0f, -1.3f, 0.0f };
+		Quaternion Rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
+		Vector3 Scale = { 1.0f, 1.0f, 1.0f };
+		Vector4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		bool isRotate = false;
+	};
+	ModelInfo modelInfo_;
+
 	// sprite
-	Vector2 spriteTranslate_ = { 0.0f, 0.0f };
-	float spriteRotate_ = 0.0f;
-	Vector2 spriteSize_ = { 100.0f, 100.0f };
-	Vector4 spriteColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+	struct SpriteInfo {
+		Vector2 Translate = { 0.0f, 0.0f };
+		float Rotate = 0.0f;
+		Vector2 Size = { 100.0f, 100.0f };
+		Vector4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	};
+	SpriteInfo spriteInfo_;
+
 	// ライト
 	LightInfo light_ = {
 		{ 48.5f } ,
@@ -106,23 +121,45 @@ private:/// ===メンバ変数=== ///
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 2.0f, 0.0f } , 1.0f, 10.0f, 1.0f},
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 2.0f, 1.25f, 0.0f } , 4.0f, Normalize(Vector3{ -1.0f, -1.0f, 0.0f }), 7.0f, 2.0f, std::cos(std::numbers::pi_v<float> / 3.0f)}
 	};
+
+
 	// カメラ
-	Vector3 cameraPos = { 0.0f, 0.0f, -13.0f };
-	Quaternion cameraRotate = { 0.0f, 0.0f, 0.0f, 1.0f };
-	bool SetCamera = false;
+	struct CameraInfo {
+		Vector3 Translate = { 0.0f, 0.0f, -13.0f };
+		Quaternion Rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
+		bool Set = false;
+	};
+	CameraInfo cameraInfo_;
+
 	// Audio
-	bool playAudio = false;
-	float volume = 1.0f;
-	float pitch = 1.0f;
+	struct AudioInfo {
+		bool play = false;
+		float volume = 1.0f;
+		float pitch = 1.0f;
+	};
+	AudioInfo audioInfo_;
+
 	// マウス
-	bool PushLeft_ = false;
-	bool TriggerRight_ = false;
-	Vector2 mousePosition_ = { 0.0f, 0.0f };
+	struct MouseInfo {
+		bool PushLeft_ = false;
+		bool TriggerRight_ = false;
+		Vector2 Position_ = { 0.0f, 0.0f };
+	};
+	MouseInfo mouseInfo_;
+	
 	// Particle
-	bool start_ = false;
-	Vector3 particleTranslate_ = { 0.0f, 0.0f, 0.0f };
+	struct ParticleInfo {
+		bool start_ = false;
+		Vector3 Translate = { 0.0f, 0.0f, 0.0f };
+	};
+	ParticleInfo particleInofo_;
+	
 	// OffScreen
-	bool isGrayscale = false;
+	struct OffScreenInfo {
+		bool isGrayscale = false;
+	};
+	OffScreenInfo offScreenInfo_;
+	
 	// Line
 	struct LineInfo {
 		Vector3 startPos = { 0.0f, 0.0f, 0.0f };

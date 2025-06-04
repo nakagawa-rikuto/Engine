@@ -43,7 +43,11 @@ const Vector4& AnimationModel::GetColor() const { return color_; }
 ///-------------------------------------------///
 /// ===モデル=== ///
 void AnimationModel::SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
-void AnimationModel::SetRotate(const Quaternion& rotate) { worldTransform_.rotate = rotate; }
+void AnimationModel::SetRotate(const Quaternion& rotate) { 
+	worldTransform_.rotate = rotate; 
+	// 正規化を入れる
+	Normalize(worldTransform_.rotate);
+}
 void AnimationModel::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void AnimationModel::SetColor(const Vector4& color) { color_ = color; }
 /// ===Light=== ///
