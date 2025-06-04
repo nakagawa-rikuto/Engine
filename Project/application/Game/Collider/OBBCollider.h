@@ -29,6 +29,6 @@ protected:
 
 private:
     // OBBのAxisをQuaternionから設定
-    void SetOBBAxisFromQuaternion(const OBB& obb, Quaternion rotate);
+    void SetOBBAxisFromQuaternion(OBB& obb, Quaternion rotate);
 };
 

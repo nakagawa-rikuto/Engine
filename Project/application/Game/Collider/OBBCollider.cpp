@@ -55,7 +55,7 @@ OBB OBBCollider::GetOBB() const {
 ///-------------------------------------------/// 
 /// OBBのAxisをQuaternionから設定
 ///-------------------------------------------///
-void OBBCollider::SetOBBAxisFromQuaternion(const OBB& obb, Quaternion rotate) {
+void OBBCollider::SetOBBAxisFromQuaternion(OBB& obb, Quaternion rotate) {
 	// 回転行列に変換
 	Matrix4x4 rotMatrix = Math::MakeRotateQuaternionMatrix(rotate);
 
