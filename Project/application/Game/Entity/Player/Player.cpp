@@ -51,7 +51,7 @@ void Player::Initialize() {
 
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
-	object3d_->Init(ObjectType::Model, "MonsterBall");
+	object3d_->Init(ObjectType::Model, "player");
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
 	SetScale(baseInfo_.scale);
@@ -59,7 +59,7 @@ void Player::Initialize() {
 
 	// Sphereの設定
 	SphereCollider::Initialize();
-	sphere_.radius = 1.2f;
+	sphere_.radius = 2.0f;
 }
 
 
