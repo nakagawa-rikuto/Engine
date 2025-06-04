@@ -10,6 +10,9 @@ GameScene::~GameScene() {
 	// ISceneのデストラクタ
 	IScene::~IScene();
 
+	// Colliderのリセット
+	colliderManager_->Reset();
+
 	// Camera
 	camera_.reset();
 	// Player
@@ -48,6 +51,12 @@ void GameScene::Initialize() {
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize();
+
+	/// ===ColliderManager=== ///
+	colliderManager_ = std::make_unique<ColliderManager>();
+	// Colliderの追加
+	colliderManager_->AddCollider(player_.get());
+	colliderManager_->AddCollider(enemy_.get());
 }
 
 ///-------------------------------------------/// 
@@ -77,8 +86,8 @@ void GameScene::Update() {
 	player_->Update();
 
 	/// ===Enemy=== ///
-	//enemy_->SetCamera(cameraManager_->GetActiveCamera().get());
-	//enemy_->Update();
+	enemy_->SetCamera(cameraManager_->GetActiveCamera().get());
+	enemy_->Update();
 
 	/// ===Groundの更新=== ///
 	ground_->SetCamera(cameraManager_->GetActiveCamera().get());
@@ -86,6 +95,9 @@ void GameScene::Update() {
 
 	/// ===Cameraの更新=== ///
 	cameraManager_->UpdateAllCameras();
+
+	/// ===ColliderManager=== ///
+	colliderManager_->CheckAllCollisions();
 
 	/// ===ISceneの更新=== ///
 	IScene::Update();
@@ -103,7 +115,7 @@ void GameScene::Draw() {
 	// Ground
 	ground_->Draw();
 	// Enemy
-	//enemy_->Draw();
+	enemy_->Draw();
 	// Player
 	player_->Draw();
 

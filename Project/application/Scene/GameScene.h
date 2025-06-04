@@ -3,6 +3,7 @@
 #include "application/Scene/IScene.h"
 // Game
 #include "application/Game/Camera/Camera.h"
+#include "application/Game/Collider/Manager/Collidermanager.h"
 #include "application/Game/Entity/Player/Player.h"
 #include "application/Game/Object/Ground/Ground.h"
 #include "application/Game/Entity/Enemy/Enemy.h"
@@ -27,8 +28,12 @@ private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
 	/// </summary>
+
 	
+
 	/// ===Classの宣言=== /// 
+	// ColliderManager
+	std::unique_ptr<ColliderManager> colliderManager_;
 	// Player
 	std::unique_ptr<Player> player_;
 	// Enemy

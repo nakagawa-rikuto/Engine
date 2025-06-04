@@ -164,12 +164,13 @@ void Player::OnCollision(Collider* collider) {}
 void Player::InitRoot() {}
 void Player::UpdateRoot() {
 
-	// 左スティック入力取得（移動用）
+	/// === 左スティック入力取得（移動用）=== ///
 	StickState leftStick = Input::GetLeftStickState(0);
 
-	// 減速率（数値を下げればゆっくり止まる）
+	/// === 減速率（数値を下げればゆっくり止まる）=== ///
 	const float deceleration = 0.75f;
 
+	/// === 徐々に止まる処理 === ///
 	// Velocityが0でないなら徐々に0にする
 	if (baseInfo_.velocity.x != 0.0f) {
 		// 各軸に対して減速適用
@@ -186,7 +187,7 @@ void Player::UpdateRoot() {
 		}
 	}
 
-	/// ===Behaviorの遷移=== ///
+	/// === Behaviorの遷移 === ///
 	// 移動があれば移動状態へ
 	if (std::abs(leftStick.x) > 0.1f || std::abs(leftStick.y) > 0.1f) {
 		behaviorRequest_ = Behavior::kMove;
@@ -209,9 +210,10 @@ void Player::InitMove() {
 }
 void Player::UpdateMove() {
 
-	// 左スティック入力取得（移動用）
+	/// === 左スティック入力取得（移動用）=== ///
 	StickState leftStick = Input::GetLeftStickState(0);
 
+	/// ===移動処理=== ///
 	// 方向の設定
 	moveInfo_.direction.x = leftStick.x;
 	moveInfo_.direction.z = leftStick.y;

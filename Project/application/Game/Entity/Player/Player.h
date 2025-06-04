@@ -39,6 +39,7 @@ private: /// ===変数の宣言=== ///
 	enum class Behavior {
 		kRoot,
 		kMove,
+		/*kAvoidance,*/
 		kCharge,
 		kAttack
 	};
@@ -73,8 +74,8 @@ private: /// ===変数の宣言=== ///
 
 	/// ===突進情報=== ///
 	struct ChargeInfo {
-		float speed = 0.0f;				  // 突進時の移動速度
-		float activeTime = 0.2f;     // 突進の有効時間
+		float speed = 0.0f;			  // 突進時の移動速度
+		float activeTime = 0.15f;      // 突進の有効時間
 		float cooltime = 0.5f;		  // 突進のクールタイム
 		float invincibleTime = 0.1f;  // 突進時の無敵時間
 		float timer = 0.0f;           // 突進のタイマー
@@ -83,6 +84,18 @@ private: /// ===変数の宣言=== ///
 		bool isFlag = false;		  // 突進のフラグ
 	};
 	ChargeInfo chargeInfo_;
+
+	/// ===回避情報=== ///
+	struct AvoidanceInfo {
+		float speed = 0.0f;			  // 回避時の移動速度
+		float activeTime = 0.3f;      // 回避の有効時間
+		float cooltime = 0.8f;		  // 回避のクールタイム
+		float invincibleTime = 0.3f;  // 回避時の無敵時間
+		float timer = 0.0f;           // 回避のタイマー
+		float acceleration = 0.0f;    // 回避の加速度
+		Vector3 direction = { 0.0f, 0.0f, 0.0f };
+		bool isFlag = false;		  // 回避のフラグ
+	};
 
 	/// ===攻撃情報=== ///
 	struct AttackInfo {
@@ -108,6 +121,9 @@ private:
 	// Move
 	void InitMove();
 	void UpdateMove();
+	// Avoidance
+	/*void InitAvoidance();
+	void UpdateAvoidance();*/
 	// Charge
 	void InitCharge();
 	void UpdateCharge();
