@@ -39,7 +39,7 @@ private: /// ===変数の宣言=== ///
 	enum class Behavior {
 		kRoot,
 		kMove,
-		/*kAvoidance,*/
+		kAvoidance,
 		kCharge,
 		kAttack
 	};
@@ -96,6 +96,7 @@ private: /// ===変数の宣言=== ///
 		Vector3 direction = { 0.0f, 0.0f, 0.0f };
 		bool isFlag = false;		  // 回避のフラグ
 	};
+	AvoidanceInfo avoidanceInfo_;
 
 	/// ===攻撃情報=== ///
 	struct AttackInfo {
@@ -122,8 +123,8 @@ private:
 	void InitMove();
 	void UpdateMove();
 	// Avoidance
-	/*void InitAvoidance();
-	void UpdateAvoidance();*/
+	void InitAvoidance();
+	void UpdateAvoidance();
 	// Charge
 	void InitCharge();
 	void UpdateCharge();

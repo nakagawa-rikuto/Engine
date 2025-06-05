@@ -39,8 +39,6 @@ void Player::Init(Camera* camera) {
 	camera_->SetOffset({ 0.0f, 70.0f, 0.0f });
 	camera_->SetFollowSpeed(0.1f);
 	
-
-
 	object3d_->Update();
 }
 
@@ -88,6 +86,9 @@ void Player::Update() {
 		case Player::Behavior::kMove:
 			InitMove();
 			break;
+		case Player::Behavior::kAvoidance:
+			InitAvoidance();
+			break;
 			// 突進
 		case Player::Behavior::kCharge:
 			InitCharge();
@@ -108,6 +109,9 @@ void Player::Update() {
 		break;
 	case Player::Behavior::kMove:
 		UpdateMove();
+		break;
+	case Player::Behavior::kAvoidance:
+		UpdateAvoidance();
 		break;
 	case Player::Behavior::kCharge:
 		UpdateCharge();
@@ -164,7 +168,7 @@ void Player::OnCollision(Collider* collider) {}
 
 
 ///-------------------------------------------/// 
-/// Root
+/// Root（通常）
 ///-------------------------------------------///
 void Player::InitRoot() {}
 void Player::UpdateRoot() {
@@ -204,11 +208,17 @@ void Player::UpdateRoot() {
 			behaviorRequest_ = Behavior::kCharge;
 			chargeInfo_.direction = Normalize(baseInfo_.velocity);
 		}
+	// 回避状態へ
+	} else if (Input::TriggerButton(0, ControllerButtonType::LeftStick)) {
+		if (avoidanceInfo_.isFlag) {
+			behaviorRequest_ = Behavior::kAvoidance;
+			avoidanceInfo_.direction = Normalize(moveInfo_.direction);
+		}
 	}
 }
 
 ///-------------------------------------------/// 
-/// Move
+/// Move（移動）
 ///-------------------------------------------///
 void Player::InitMove() {
 	moveInfo_.speed = 0.4f;
@@ -254,11 +264,42 @@ void Player::UpdateMove() {
 			behaviorRequest_ = Behavior::kCharge;
 			chargeInfo_.direction = Normalize(moveInfo_.direction);
 		}
+	} 
+}
+
+///-------------------------------------------/// 
+/// Avoidance（回避）
+///-------------------------------------------///
+void Player::InitAvoidance() {
+	// 回避スピードの設定
+	avoidanceInfo_.acceleration = 0.3f;
+	// 回避時間を0にする
+	avoidanceInfo_.timer = avoidanceInfo_.activeTime;
+}
+void Player::UpdateAvoidance() {
+
+	/// ===フラグがtruenなら=== ///
+	// 無敵時間の変更
+	invicibleInfo_.timer = invicibleInfo_.time - avoidanceInfo_.invincibleTime;
+
+	// 加速度の減少
+	avoidanceInfo_.acceleration -= deltaTime_ * avoidanceInfo_.activeTime;
+	// 速度の設定
+	avoidanceInfo_.speed = moveInfo_.speed * avoidanceInfo_.acceleration;
+
+	// Velocityに反映
+	baseInfo_.velocity += avoidanceInfo_.direction * avoidanceInfo_.speed;
+
+	/// ===タイマーが回避の有効期限を超えていたら=== ///
+	if (avoidanceInfo_.timer <= 0.0f) {
+		behaviorRequest_ = Behavior::kRoot;
+		avoidanceInfo_.isFlag = false;
+		avoidanceInfo_.timer = avoidanceInfo_.cooltime;
 	}
 }
 
 ///-------------------------------------------/// 
-/// Charge
+/// Charge（突進マーク付け）
 ///-------------------------------------------///
 void Player::InitCharge() {
 	// 突進スピードの設定
@@ -290,7 +331,7 @@ void Player::UpdateCharge() {
 }
 
 ///-------------------------------------------/// 
-/// Attack
+/// Attack（攻撃）
 ///-------------------------------------------///
 void Player::InitAttack() {}
 void Player::UpdateAttack() {}
@@ -309,4 +350,10 @@ void Player::advanceTimer() {
 		chargeInfo_.isFlag = true;
 	}
 
+	// 回避用タイマーを進める
+	if (avoidanceInfo_.timer > 0.0f) {
+		avoidanceInfo_.timer -= deltaTime_;
+	} else {
+		avoidanceInfo_.isFlag = true;
+	}
 }
