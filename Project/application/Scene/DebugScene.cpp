@@ -494,6 +494,14 @@ void DebugScene::Update() {
 	cameraInfo_.Translate.x += rightStick.x * 0.01f;
 	cameraInfo_.Translate.y += rightStick.y * 0.01f;
 
+	if (Input::FlickLeftStick(0, 0.5f)) {
+		if (cameraInfo_.Set) {
+			cameraInfo_.Set = false;
+		} else {
+			cameraInfo_.Set = true;
+		}
+	}
+
 #pragma endregion
 
 	/// ===Audioのセット=== ///
