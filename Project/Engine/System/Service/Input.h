@@ -50,5 +50,12 @@ public: // メンバ関数
 	static StickState GetLeftStickState(int stickNo);
 	static StickState GetRightStickState(int stickNo);
 	static float GetStickValue(int stickNo, ControllerValueType valueType);
+	// スティックの前フレーム状態を取得する関数
+	static StickState GetLeftStickStatePrevious(int stickNo);
+	static StickState GetRightStickStatePrevious(int stickNo);
+	// スティックのはじき（ Flick ）を検出する関数
+	static bool FlickLeftStick(int stickNo, float threshold = 0.7f);
+	static bool FlickRightStick(int stickNo, float threshold = 0.7f);
+
 };
 

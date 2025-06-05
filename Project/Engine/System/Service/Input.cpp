@@ -97,3 +97,17 @@ StickState Input::GetRightStickState(int stickNo) {
 float Input::GetStickValue(int stickNo, ControllerValueType valueType) { 
 	return ServiceLocator::GetController()->GetStickValue(stickNo, valueType);
 }
+// スティックの前フレーム状態を取得する関数
+StickState Input::GetLeftStickStatePrevious(int stickNo) {
+	return ServiceLocator::GetController()->GetLeftStickStatePrevious(0);
+}
+StickState Input::GetRightStickStatePrevious(int stickNo) {
+	return ServiceLocator::GetController()->GetRightStickStatePrevious(0);
+}
+// スティックのはじき（ Flick ）を検出する関数
+bool Input::FlickLeftStick(int stickNo, float threshold) {
+	return ServiceLocator::GetController()->FlickLeftStick(0, threshold);
+}
+bool Input::FlickRightStick(int stickNo, float threshold) {
+	return ServiceLocator::GetController()->FlickRightStick(0, threshold);
+}
