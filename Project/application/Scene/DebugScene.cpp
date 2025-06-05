@@ -502,6 +502,14 @@ void DebugScene::Update() {
 	cameraPos.x += rightStick.x * 0.01f;
 	cameraPos.y += rightStick.y * 0.01f;
 
+	if (Input::FlickLeftStick(0, 0.5f)) {
+		if (SetCamera) {
+			SetCamera = false;
+		} else {
+			SetCamera = true;
+		}
+	}
+
 #pragma endregion
 
 	/// ===Audioのセット=== ///

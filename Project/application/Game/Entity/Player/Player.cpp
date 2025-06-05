@@ -202,14 +202,14 @@ void Player::UpdateRoot() {
 		behaviorRequest_ = Behavior::kMove;
 	}
 	// Aボタンが押されたら進んでいる突進状態へ
-	if (Input::TriggerButton(0, ControllerButtonType::A)) {
+	if (Input::TriggerButton(0, ControllerButtonType::RB)) {
 		// タイマーがクールタイムより高ければ、
 		if (chargeInfo_.isFlag) {
 			behaviorRequest_ = Behavior::kCharge;
 			chargeInfo_.direction = Normalize(baseInfo_.velocity);
 		}
 	// 回避状態へ
-	} else if (Input::TriggerButton(0, ControllerButtonType::LeftStick)) {
+	} else if (Input::TriggerButton(0, ControllerButtonType::A)) {
 		if (avoidanceInfo_.isFlag) {
 			behaviorRequest_ = Behavior::kAvoidance;
 			avoidanceInfo_.direction = Normalize(moveInfo_.direction);
@@ -259,12 +259,17 @@ void Player::UpdateMove() {
 	if (std::abs(leftStick.x) < 0.1f && std::abs(leftStick.y) < 0.1f) {
 		behaviorRequest_ = Behavior::kRoot;
 	}
-	if (Input::TriggerButton(0, ControllerButtonType::A)) {
+	if (Input::TriggerButton(0, ControllerButtonType::RB)) {
 		if (chargeInfo_.isFlag) {
 			behaviorRequest_ = Behavior::kCharge;
 			chargeInfo_.direction = Normalize(moveInfo_.direction);
 		}
-	} 
+	} else if (Input::TriggerButton(0, ControllerButtonType::A)) {
+		if (avoidanceInfo_.isFlag) {
+			behaviorRequest_ = Behavior::kAvoidance;
+			avoidanceInfo_.direction = Normalize(moveInfo_.direction);
+		}
+	}
 }
 
 ///-------------------------------------------/// 
