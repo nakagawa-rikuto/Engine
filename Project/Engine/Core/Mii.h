@@ -25,6 +25,8 @@
 #include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
 // ImGui
 #include "Engine/System/ImGui/SceneView.h"
+// LineObject
+#include "Engine/Graphics/3d/Line/LineObject3D.h"
 
 ///=====================================================///
 /// システム
@@ -75,6 +77,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	AnimationManager* GetAnimationManager();
 	// OffScreenRendererの取得
 	OffScreenRenderer* GetOffScreenRenderer();
+	// LineObject3Dの取得
+	LineObject3D* GetLineObject3D();
 	// Keyboardの取得
 	Keyboard* GetKeyboard();
 	// Mouseの取得
@@ -103,9 +107,11 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<CSVManager> csvManager_;             // CSVManager
 	std::unique_ptr<AnimationManager> animationManager_; // AnimationManager
 	// OffScreen
-	std::unique_ptr<OffScreenRenderer> offScreenRenderer_; // OffScreen
+	std::unique_ptr<OffScreenRenderer> offScreenRenderer_;// OffScreen
 	// ImGui
-	std::unique_ptr<SceneView> sceneView_;               // SceneView
+	std::unique_ptr<SceneView> sceneView_;                // SceneView
+	// Line
+	std::unique_ptr<LineObject3D> lineObject3D_;          // LineObject3D
 
 private:
 	///=====================================================/// 

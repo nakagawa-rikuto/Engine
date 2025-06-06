@@ -1,6 +1,7 @@
 #include "sMath.h"
 #include <cassert>
 #include <numbers>
+#include "MatrixMath.h"
 
 ///=====================================================///
 /// π（πを使用する際に用いる関数）
@@ -121,4 +122,24 @@ Vector3 Math::QuaternionToEuler(const Quaternion& quaternion) {
     euler.z = std::atan2(2.0f * (quaternion.w * quaternion.z + quaternion.x * quaternion.y), 1.0f - 2.0f * (quaternion.x * quaternion.x + quaternion.z * quaternion.z));
 
     return euler;
+}
+// ある方向（forward）を向くクォータニオン（回転）を作る
+Quaternion Math::LookRotation(Vector3 forward, Vector3 up) {
+    // Z軸（前方ベクトル）
+    Vector3 z = Normalize(forward);
+    // X軸（右方向）: forward と up の外積
+    Vector3 x = Normalize(Cross(up, z));
+    // Y軸（上方向）: Z と X の外積（修正された up）
+    Vector3 y = Cross(z, x);
+
+    // 回転行列を作成
+    Matrix4x4 rotationMatrix = {
+        x.x, y.x, z.x, 0.0f,
+        x.y, y.y, z.y, 0.0f,
+        x.z, y.z, z.z, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    // 行列をクォータニオンに変換して返す
+    return MatrixToQuaternion(rotationMatrix);
 }

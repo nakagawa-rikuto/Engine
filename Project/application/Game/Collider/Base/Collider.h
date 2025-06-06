@@ -7,12 +7,25 @@
 #include "application/Drawing/3d/Object3d.h"
 // Math
 #include "Engine/DataInfo/ColliderData.h"
+// Line
+#include "application/Drawing/3d/Line.h"
 
- // ColliderType
+// ColliderType
 enum class ColliderType {
     AABB,      // 軸整合バウンディングボックス（矩形）
     Sphere,    // 球体
     OBB        // 任意方向のバウンディングボックス
+};
+
+enum class ColliderName {
+    Player,    // プレイヤー
+    Enemy,     // 敵
+	PlayerBullet, // プレイヤーの弾
+    EnemyBullet,  // 敵の弾
+    Wall,      // 壁
+    Floor,     // 床
+    Ceiling,   // 天井
+	None       // 無し
 };
 
 /// ===前方宣言=== ///
@@ -28,7 +41,11 @@ public:
     virtual ~Collider() = default;
 
     // 初期化
-    virtual void Initialize() = 0;
+    virtual void Initialize();
+    // 更新処理
+    virtual void Update();
+	// 描画処理
+    virtual void Draw(BlendMode mode);
 
 public: /// ===衝突=== ///
     // 衝突時の応答処理
@@ -38,13 +55,16 @@ public: /// ===Getter=== ///
     // Type
     ColliderType GetColliderType();
     // CollsisionName
-    std::string GetColliderName();
+    ColliderName GetColliderName();
 
 public: /// ===Setter=== ///
-	// Object3D
+
+    /// ===Object3D=== ///
+    // Transform
     void SetTranslate(const Vector3& translate);
-	void SetRotate(const Vector3& rotate);
+	void SetRotate(const Quaternion& rotate);
 	void SetScale(const Vector3& scale);
+    // color
 	void SetColor(const Vector4& color);
     // Camera
     void SetCamera(Camera* camera);
@@ -52,16 +72,26 @@ public: /// ===Setter=== ///
 	void SetLight(LightType type);
 	void SetLightData(LightInfo light);
 
+    /// ===isCollision=== ///
+    void SetIsCollisison(bool flag);
+
 protected:
     // Type
     ColliderType type_;
     // ColliderName
-    std::string colliderName_;
-
-    // Camera
-    Camera* camera_ = nullptr;
+    ColliderName name_;
 
 	// Object3D
 	std::unique_ptr<Object3d> object3d_;
+
+    // 衝突フラグ
+    bool isCollision_ = false;
+
+    /// ===Debug用=== ///
+#ifdef _DEBUG
+    // Line
+    std::unique_ptr<Line> line_;
+    Vector4 lineColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+#endif // _DEBUG
 };
 

@@ -43,7 +43,7 @@ const Quaternion& Camera::GetRotate() const { return transform_.rotate; }
 // Translate
 void Camera::SetTranslate(const Vector3& translate) { addTransform_.translate = translate; }
 // Rotate
-void Camera::SetRotate(const Vector3& rotate) { addTransform_.rotate = {rotate.x, rotate.y, rotate.z, 1.0f}; }
+void Camera::SetRotate(const Quaternion& rotate) { addTransform_.rotate = rotate; }
 // ForY
 void Camera::SetForY(const float& forY) { horizontalView_ = forY; }
 // AspectRatio
@@ -71,7 +71,7 @@ void Camera::SetStick(const Vector2& stickValue) { stickValue_ = stickValue; }
 /// 初期化
 ///-------------------------------------------///
 void Camera::Initialize() {
-	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
+	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f} };
 	addTransform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
 	horizontalView_ = 0.45f;
 	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());
@@ -127,6 +127,9 @@ void Camera::UpdateFollowCamera() {
 	case FollowCameraType::CollisionAvoidance:
 		FollowCollisionAvoidance();
 		break;
+	case FollowCameraType::TopDown:
+		FollowTopDown();
+		break;
 	}
 }
 // 回転軸がY座標だけの追従処理
@@ -162,7 +165,7 @@ void Camera::FollowInterpolated() {
 	transform_.translate = Math::Lerp(transform_.translate, targetCameraPos, followSpeed_);
 
 	// カメラの回転をスムーズに補間（Slerp を使用）
-	transform_.rotate = Math::SLerp(transform_.rotate, targetRotation, rotationLerpSpeed_);
+	//transform_.rotate = Math::SLerp(transform_.rotate, targetRotation, rotationLerpSpeed_);
 }
 // 自分の周りをまわるカメラの追従処理
 void Camera::FollowOrbiting() {
@@ -226,4 +229,37 @@ void Camera::FollowCollisionAvoidance() {
 
 	// カメラの向きをプレイヤーの回転に合わせる
 	transform_.rotate = *targetRot_;
+}
+
+///-------------------------------------------/// 
+/// 上からの見下ろしカメラの追従処理
+///-------------------------------------------///
+void Camera::FollowTopDown() {
+
+	const float deadzone = 0.1f;
+	const float radius = 15.0f; // 回転半径（お好みで）
+
+	Vector3 desiredPosition = *targetPos_ + offset_; // デフォルト位置（追従対象の真上）
+
+	// スティック入力がある場合はカメラを円運動させる
+	if (fabsf(stickValue_.x) > deadzone || fabsf(stickValue_.y) > deadzone) {
+		// 入力ベクトルの正規化（方向ベクトル）
+		Vector2 norm = Normalize(stickValue_);
+
+		// 円上の位置を計算
+		Vector3 offsetCircle = {
+			norm.x * radius,
+			offset_.y,           // Y（高さ）は固定
+			norm.y * radius
+		};
+
+		desiredPosition = *targetPos_ + offsetCircle;
+	}
+
+	// カメラの位置を補間で滑らかに移動
+	transform_.translate = Math::Lerp(transform_.translate, desiredPosition, followSpeed_);
+
+	// 対象を見下ろすように回転（常に真下を向く）
+	Vector3 forward = *targetPos_ - transform_.translate;
+	//transform_.rotate = Math::LookRotation(forward, { 0.0f, 1.0f, 0.0f });
 }

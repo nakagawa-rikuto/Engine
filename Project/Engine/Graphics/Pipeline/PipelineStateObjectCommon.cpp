@@ -53,7 +53,7 @@ void PipelineStateObjectCommon::Create(DXCommon* dxCommon, Compiler* compiler, P
 	compiler_ = compiler;
 
 	// PipelineState
-	CreatePipelineState(dxCommon);
+	CreatePipelineState(dxCommon, Type);
 }
 
 ///-------------------------------------------/// 
@@ -75,7 +75,7 @@ void PipelineStateObjectCommon::SetPSO(ID3D12GraphicsCommandList* commandList) {
 ///-------------------------------------------/// 
 /// パイプラインの作成
 ///-------------------------------------------///
-void PipelineStateObjectCommon::CreatePipelineState(DXCommon* dxCommon) {
+void PipelineStateObjectCommon::CreatePipelineState(DXCommon* dxCommon, PipelineType type) {
 	HRESULT hr;
 
 	// PSOの取得
@@ -97,7 +97,13 @@ void PipelineStateObjectCommon::CreatePipelineState(DXCommon* dxCommon) {
 	graphicsPipelineStateDesc_.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// 利用するトポロジ(形状)のタイプ。三角形
-	graphicsPipelineStateDesc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	if (type == PipelineType::Line3D) {
+		graphicsPipelineStateDesc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	} else {
+		graphicsPipelineStateDesc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	}
+	
 
 	// どのように画面に色を打ち込むかの設定(気にしなくて良い)
 	graphicsPipelineStateDesc_.SampleDesc.Count = 1;

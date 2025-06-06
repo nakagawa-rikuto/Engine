@@ -16,8 +16,8 @@ public:
 	virtual ~IScene();
 
 	virtual void Initialize();
-	virtual void Update() = 0;
-	virtual void Draw() = 0;
+	virtual void Update();
+	virtual void Draw();
 
 public:/// ===Setter=== ///
 

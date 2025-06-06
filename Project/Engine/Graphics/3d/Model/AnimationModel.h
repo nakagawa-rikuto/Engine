@@ -1,10 +1,10 @@
 #pragma once
-/// ===include=== ///
 // buffer
 #include "Engine/Graphics/3d/Base/VertexBuffer3D.h"
 #include "Engine/Graphics/3d/Base/IndexBuffer3D.h"
-#include "Engine/Graphics/3d/Base/ModelCommon.h"
-// Pipeline
+#include "Engine/Graphics/3d/Model/ModelCommon.h"
+// Data
+#include "Engine/DataInfo/AnimationData.h"
 #include "Engine/DataInfo/PipelineStateObjectType.h"
 // c++
 #include <memory>
@@ -13,16 +13,16 @@
 class Camera;
 
 ///=====================================================/// 
-/// モデル
+/// アニメーションモデル
 ///=====================================================///
-class Model {
-public: /// ===基本的な関数=== ///
+class AnimationModel {
+public:
 
-	Model();
-	~Model();
+	AnimationModel();
+	~AnimationModel();
 
 	// 初期化
-	void Initialize(const std::string& filename, LightType type); // オブジェクトを読み込まない場合の初期化
+	void Initialize(const std::string& filename, LightType type);
 	// 更新
 	void Update();
 	// 描画
@@ -32,7 +32,7 @@ public: /// ===Getter=== ///
 	// モデル座標
 	const Vector3& GetTranslate() const;
 	// モデル回転
-	const Vector3& GetRotate() const;
+	const Quaternion& GetRotate() const;
 	// モデル拡縮
 	const Vector3& GetScale() const;
 	// モデルカラー
@@ -40,17 +40,19 @@ public: /// ===Getter=== ///
 
 public: /// ===Setter=== ///
 	// モデルTransform
-	void SetTranslate(const Vector3& position);
-	void SetRotate(const Vector3& rotate);
+	void SetTranslate(const Vector3& translate);
+	void SetRotate(const Quaternion& rotate);
 	void SetScale(const Vector3& scale);
-	// モデルカラー
+	// モデルColor
 	void SetColor(const Vector4& color);
 	// Light
 	void SetLight(LightType type);
 	// LightData
 	void SetLightData(LightInfo light);
-	// カメラ
+	// Camera
 	void SetCamera(Camera* camera);
+	// Animation
+	void SetAnimation(const std::string& animationName, bool isLoop);
 
 private: /// ===Variables(変数)=== ///
 
@@ -59,7 +61,7 @@ private: /// ===Variables(変数)=== ///
 	std::unique_ptr<IndexBuffer3D> index_;
 	std::unique_ptr<ModelCommon> common_;
 
-	/// ===バッファリソース内のデータを指すポインタ=== ///
+	/// ===バッファリソース内のデータを指すポイント=== ///
 	VertexData3D* vertexData_ = nullptr;
 	uint32_t* indexData_ = nullptr;
 
@@ -76,16 +78,24 @@ private: /// ===Variables(変数)=== ///
 	EulerTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
-	EulerTransform worldTransform_;
+	QuaternionTransform worldTransform_;
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
-	LightInfo light_ = { 
-		40.0f, 
+	LightInfo light_ = {
+		40.0f,
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f},
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f},
-		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f} 
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f}
 	};
+
+	/// ===Animation=== ///
+	float animationTime_;
+	std::map<std::string, Animation> animation_;
+	std::string animationName_;
+	Skeleton skeleton_;
+	SkinCluster skinCluster_;
+	bool isLoop_;
 
 private: /// ===Functions(関数)=== ///
 
@@ -97,5 +107,21 @@ private: /// ===Functions(関数)=== ///
 	void LightDataWrite();
 	// CameraData書き込み
 	void CameraDataWrite();
+	// 任意の時刻を取得する関数(Vector3)
+	Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
+	// 任意の時刻を取得する関数(Quaternion)
+	Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
+	// Nodeの階層構造からSkeletonを作る関数
+	Skeleton CreateSkeleton(const Node& rootNode);
+	// NodeからJointを作る関数
+	int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
+	// Skeletonに対してAnimationの適用を行う関数
+	void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
+	// Skeletonの更新関数
+	void SkeletonUpdate(Skeleton& skeleton);
+	// SkinClusterの生成関数
+	SkinCluster CreateSkinCluster(const ComPtr<ID3D12Device>& device, const Skeleton& skeleton, const ModelData& modelData);
+	// SkinClusterの更新関数
+	void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
 };
 

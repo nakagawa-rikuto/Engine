@@ -14,9 +14,9 @@ public:
     // 初期化
     virtual void Initialize() override;
     // 更新
-    virtual void Update() = 0;
+    virtual void Update() override;
     // 描画
-    virtual void Draw() = 0;
+    virtual void Draw(BlendMode mode) override;
 
 public: /// ===衝突=== ///
     virtual void OnCollision(Collider* collider) override = 0;
@@ -26,5 +26,9 @@ public: /// ===Getter=== ///
 
 protected:
     OBB obb_;
+
+private:
+	// OBBのAxisをQuaternionから設定
+    void SetOBBAxisFromQuaternion(OBB& obb, Quaternion rotate);
 };
 
