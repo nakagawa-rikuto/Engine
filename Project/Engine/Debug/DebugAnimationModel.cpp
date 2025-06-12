@@ -43,13 +43,17 @@ void DebugAnimationModel::Initialize() {
 void DebugAnimationModel::Update() {
 
 	/// ===Animationの切り替え=== ///
-	//if (Input::TriggerMouse(MouseButtonType::Right)) {
-	//	// アニメーションのループを無効化
-	//	object3d_->SetAnimation("Armature|mixamo.com|Layer0", true);
-	//} else if (Input::TriggerMouse(MouseButtonType::Left)) {
-	//	// アニメーションのループを有効化
-	//	object3d_->SetAnimation("Armature|mixamo.com|Layer0", false);
-	//}
+	if (Input::TriggerKey(DIK_SPACE)) {
+		if (isChagAnimation_) {
+			// アニメーションのループを有効化
+			object3d_->SetAnimation("Armature|mixamo.com|Layer0", false);
+			isChagAnimation_ = false;
+		} else {
+			// アニメーションのループを無効化
+			object3d_->SetAnimation("Armature|mixamo.com|Layer0", true);
+			isChagAnimation_ = true;
+		}
+	}
 
 	SetTranslate(base_.translate);
 	SetRotate(base_.rotate);

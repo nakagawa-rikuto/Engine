@@ -34,5 +34,8 @@ private:
 		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	};
 	BaseData base_;
+
+	// アニメーションのループ再生の切り替え
+	bool isChagAnimation_ = false;
 };
 
