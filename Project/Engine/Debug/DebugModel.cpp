@@ -64,7 +64,7 @@ void DebugModel::ImGuiInfo() {
 	ImGui::Begin("DebugModel");
 	ImGui::DragFloat3("Transform", &base_.translate.x, 0.1f);
 	ImGui::DragFloat4("Rotate", &base_.rotate.x, 0.01f);
-	ImGui::DragFloat4("Color", &base_.color.x, 0.1f);
+	ImGui::ColorEdit4("Color", &base_.color.x);
 	ImGui::DragFloat3("haflSize", &obb_.halfSize.x, 0.1f);
 	ImGui::End();
 #endif // USE_IMGUI
