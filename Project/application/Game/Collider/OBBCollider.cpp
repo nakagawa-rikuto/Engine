@@ -58,9 +58,9 @@ void OBBCollider::SetOBBAxisFromQuaternion(OBB& obb, Quaternion rotate) {
 	Matrix4x4 rotMatrix = Math::MakeRotateQuaternionMatrix(rotate);
 
 	// 各軸を行列の列ベクトルから取得
-	obb.axis[0] = Vector3(rotMatrix.m[0][0], rotMatrix.m[1][0], rotMatrix.m[2][0]); // X軸
-	obb.axis[1] = Vector3(rotMatrix.m[0][1], rotMatrix.m[1][1], rotMatrix.m[2][1]); // Y軸
-	obb.axis[2] = Vector3(rotMatrix.m[0][2], rotMatrix.m[1][2], rotMatrix.m[2][2]); // Z軸
+	obb.axis[0] = Vector3(rotMatrix.m[0][0], rotMatrix.m[0][1], rotMatrix.m[0][2]); // X軸
+	obb.axis[1] = Vector3(rotMatrix.m[1][0], rotMatrix.m[1][1], rotMatrix.m[1][2]); // Y軸
+	obb.axis[2] = Vector3(rotMatrix.m[2][0], rotMatrix.m[2][1], rotMatrix.m[2][2]); // Z軸
 
 	// 念のため正規化（回転行列が正しければ不要）
 	obb.axis[0] = Normalize(obb.axis[0]);
