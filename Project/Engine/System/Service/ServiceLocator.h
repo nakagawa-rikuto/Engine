@@ -3,6 +3,7 @@
 #include <memory>
 
 /// ===前方宣言=== ///
+// Engine
 class WinApp;
 class DXCommon;
 class SRVManager;
@@ -15,10 +16,13 @@ class PipelineManager;
 class AnimationManager;
 class CSVManager;
 class OffScreenRenderer;
+// Game
 class LineObject3D;
 class Keyboard;
 class Mouse;
 class Controller;
+class CameraManager;
+class ParticleManager;
 
 struct ServiceRegister {
 	WinApp* winApp = nullptr;
@@ -37,6 +41,8 @@ struct ServiceRegister {
 	Keyboard* keyboard = nullptr;
 	Mouse* mouse = nullptr;
 	Controller* controller = nullptr;
+	CameraManager* cameraManager = nullptr;
+	ParticleManager* particleManager = nullptr;
 };
 
 ///=====================================================/// 
@@ -79,6 +85,10 @@ public:
 	static Keyboard* GetKeyboard();
 	static Mouse* GetMouse();
 	static Controller* GetController();
+	// CameraManager
+	static CameraManager* GetCameraManager();
+	// ParticleManager
+	static ParticleManager* GetParticleManager();
 
 private:
 	static inline WinApp* winApp_ = nullptr;
@@ -97,5 +107,7 @@ private:
 	static inline Keyboard* keyboard_ = nullptr;
 	static inline Mouse* mouse_ = nullptr;
 	static inline Controller* controller_ = nullptr;
+	static inline CameraManager* cameraManager_ = nullptr;
+	static inline ParticleManager* particleManager_ = nullptr;
 };
 

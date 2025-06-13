@@ -21,6 +21,7 @@ void ParticleManager::AddParticle(const std::string & name, std::unique_ptr<Part
 /// 発生
 ///-------------------------------------------///
 void ParticleManager::Emit(const std::string& name, const Vector3& translate) {
+	
 	auto it = prototype_.find(name);
 	if (it == prototype_.end()) return;
 

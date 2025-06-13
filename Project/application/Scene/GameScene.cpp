@@ -1,6 +1,16 @@
 #include "GameScene.h"
 // SceneManager
 #include "Engine/System/Managers/SceneManager.h"
+#include "Engine/System/Service/ServiceCamera.h"
+#include "Engine/System/Service/ServiceParticle.h"
+
+// Particle
+#include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
+#include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
+#include "Engine/Graphics/Particle/Derivative/WindParticle.h"
+#include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
+#include "Engine/Graphics/Particle/Derivative/RingParticle.h"
+#include "Engine/Graphics/Particle/Derivative/CylinderParticle.h"
 
 
 ///-------------------------------------------/// 
@@ -36,17 +46,16 @@ void GameScene::Initialize() {
 	camera_->SetTranslate(cameraInfo_.translate);
 	camera_->SetRotate(cameraInfo_.rotate);
 	// Managerに追加,アクティブに
-	cameraManager_->Add("Game", camera_);
-	cameraManager_->SetActiveCamera("Game");
-	cameraManager_->UpdateAllCameras();
+	ServiceCamera::Add("Game", camera_);
+	ServiceCamera::SetActiveCamera("Game");
 
 	/// ===Player=== ///
 	player_ = std::make_unique<Player>();
-	player_->Init(cameraManager_->GetActiveCamera().get());
+	player_->Init(ServiceCamera::GetActiveCamera().get());
 
 	/// ===Enemy=== ///
 	enemy_ = std::make_unique<Enemy>();
-	enemy_->Init(cameraManager_->GetActiveCamera().get(), player_.get());
+	enemy_->Init(ServiceCamera::GetActiveCamera().get(), player_.get());
 
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();
@@ -57,6 +66,14 @@ void GameScene::Initialize() {
 	// Colliderの追加
 	colliderManager_->AddCollider(player_.get());
 	colliderManager_->AddCollider(enemy_.get());
+
+	// Particleの追加
+	ServiceParticle::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
+	ServiceParticle::AddParticle("Explosion", std::make_unique<ExplosionParticle>());
+	ServiceParticle::AddParticle("Wind", std::make_unique<WindParticle>());
+	ServiceParticle::AddParticle("Ring", std::make_unique<RingParticle>());
+	ServiceParticle::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
+	ServiceParticle::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
 }
 
 ///-------------------------------------------/// 
@@ -82,19 +99,16 @@ void GameScene::Update() {
 #endif // USE_IMGUI
 
 	/// ===Playerの更新=== ///
-	player_->SetCamera(cameraManager_->GetActiveCamera().get());
+	player_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	player_->Update();
 
 	/// ===Enemy=== ///
-	enemy_->SetCamera(cameraManager_->GetActiveCamera().get());
+	enemy_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	enemy_->Update();
 
 	/// ===Groundの更新=== ///
-	ground_->SetCamera(cameraManager_->GetActiveCamera().get());
+	ground_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	ground_->Update();
-
-	/// ===Cameraの更新=== ///
-	cameraManager_->UpdateAllCameras();
 
 	/// ===ColliderManager=== ///
 	colliderManager_->CheckAllCollisions();

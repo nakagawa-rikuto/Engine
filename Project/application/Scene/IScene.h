@@ -28,7 +28,5 @@ protected:
 	SceneManager* sceneManager_ = nullptr;
 	// Camera
 	std::shared_ptr<Camera> defaultCamera_;
-	std::unique_ptr<CameraManager> cameraManager_;
-	std::unique_ptr<ParticleManager> particleManager_;
 };
 

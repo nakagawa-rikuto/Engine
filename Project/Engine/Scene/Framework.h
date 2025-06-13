@@ -2,6 +2,10 @@
 /// ===Include=== ///
 // MiiEngine
 #include "Engine/Core/Mii.h"
+// CameraManager
+#include "Engine/System/Managers/CameraManager.h"
+// ParticleManager
+#include "Engine/System/Managers/ParticleManager.h"
 // SceneFactory
 #include "Engine/Scene/AbstractSceneFactory.h"
 // ｃ++
@@ -38,6 +42,11 @@ public:/// ===メンバ関数=== ///
 private:
 	// MiiEngine
 	std::unique_ptr<Mii> MiiEngine_;
+	// CameraManager
+	std::unique_ptr<CameraManager> cameraManager_;
+	// ParticleManager
+	std::unique_ptr<ParticleManager> particleManager_;
+
 protected:
 	// ゲーム終了フラグ
 	bool endRequst_ = false;

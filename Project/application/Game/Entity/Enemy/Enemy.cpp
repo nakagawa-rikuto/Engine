@@ -5,6 +5,7 @@
 #include "application/Game/Entity/Player/Player.h"
 // Service
 #include "Engine/System/Service/Input.h"
+#include "Engine/System/Service/ServiceParticle.h"
 // ImGui
 #ifdef USE_IMGUI
 #include "imgui.h"
@@ -107,11 +108,10 @@ void Enemy::OnCollision(Collider * collider) {
 		// Playerの突進に対しての衝突処理
 		if (player_->GetCargeFlag()) {
 			// パーティクルを発生
-
-			// カラーを青にカエル
-			baseInfo_.color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+			// 現状課題ようで設定
+			ServiceParticle::Emit("Explosion", baseInfo_.translate);
+			//ServiceParticle::SetTexture("Cylinder", "gradationLine");
 		}
-
 	}
 }
 

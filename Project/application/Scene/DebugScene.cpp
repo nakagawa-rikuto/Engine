@@ -5,6 +5,9 @@
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
 #include "Engine/System/Service/Setter.h"
+#include "Engine/System/Service/ServiceCamera.h"
+#include "Engine/System/Service/ServiceParticle.h"
+
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -54,19 +57,19 @@ void DebugScene::Initialize() {
 	camera2_->SetTranslate({ 0.0f, 0.0f, -30.0f });
 	camera2_->SetRotate({ 0.0f, 0.0f, 0.0f });
 	// カメラマネージャにカメラを追加
-	cameraManager_->Add("Debug", camera_);
-	cameraManager_->Add("Debug2", camera2_);
+	ServiceCamera::Add("Debug", camera_);
+	ServiceCamera::Add("Debug2", camera2_);
 #pragma endregion
 
 	/// ===ParticleManager=== ///
 #pragma region Particleの追加
 	// Particleの追加
-	particleManager_->AddParticle("Confetti", std::make_unique<ConfettiParticle>());
-	particleManager_->AddParticle("Explosion", std::make_unique<ExplosionParticle>());
-	particleManager_->AddParticle("Wind", std::make_unique<WindParticle>());
-	particleManager_->AddParticle("Ring", std::make_unique<RingParticle>());
-	particleManager_->AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
-	particleManager_->AddParticle("Cylinder", std::make_unique<CylinderParticle>());
+	ServiceParticle::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
+	ServiceParticle::AddParticle("Explosion", std::make_unique<ExplosionParticle>());
+	ServiceParticle::AddParticle("Wind", std::make_unique<WindParticle>());
+	ServiceParticle::AddParticle("Ring", std::make_unique<RingParticle>());
+	ServiceParticle::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
+	ServiceParticle::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -102,7 +105,7 @@ void DebugScene::Initialize() {
 	model_->SetLightIntensity(1.0f);                             // Lightの明るさの設定(初期値は {1.0f})
 	model_->SetLightColor(Vector4(1.0f, 1.0f, 1.0f, 1.0));       // Lightカラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f})
 	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
-	model_->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
+	model_->SetCamera(ServiceCamera::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
 	// 球
@@ -330,8 +333,8 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (!isDisplay_.Particle1 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Cylinder", particleTranslate_);
-			particleManager_->SetTexture("Cylinder", "gradationLine");
+			ServiceParticle::Emit("Cylinder", particleTranslate_);
+			ServiceParticle::SetTexture("Cylinder", "gradationLine");
 			isDisplay_.Particle1 = true;
 		} else if (isDisplay_.Particle1 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle1 = false;
@@ -350,8 +353,8 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (!isDisplay_.Particle2 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Explosion", particleTranslate_);
-			particleManager_->SetTexture("Ring", "gradationLine");
+			ServiceParticle::Emit("Explosion", particleTranslate_);
+			ServiceParticle::SetTexture("Ring", "gradationLine");
 			isDisplay_.Particle2 = true;
 		} else if (isDisplay_.Particle2 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle2 = false;
@@ -370,8 +373,8 @@ void DebugScene::Update() {
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
 		if (!isDisplay_.Particle3 && ImGui::Button("Draw")) {
-			particleManager_->Emit("Confetti", particleTranslate_);
-			particleManager_->SetTexture("Confetti", "monsterBall");
+			ServiceParticle::Emit("Confetti", particleTranslate_);
+			ServiceParticle::SetTexture("Confetti", "monsterBall");
 			isDisplay_.Particle3 = true;
 		} else if (isDisplay_.Particle3 && ImGui::Button("UnDraw")) {
 			isDisplay_.Particle3 = false;
@@ -440,9 +443,9 @@ void DebugScene::Update() {
 	/// ===カメラの変更=== ///
 #pragma region カメラの変更
 	if (SetCamera) {
-		cameraManager_->SetActiveCamera("Debug2");
+		ServiceCamera::SetActiveCamera("Debug2");
 	} else {
-		cameraManager_->SetActiveCamera("Debug");
+		ServiceCamera::SetActiveCamera("Debug");
 	}
 #pragma endregion
 
@@ -540,25 +543,25 @@ void DebugScene::Update() {
 	model_->SetScale(modelScale_);
 	model_->SetColor(modelColor_);
 	model_->SetLightData(light_);
-	model_->SetCamera(cameraManager_->GetActiveCamera().get());
+	model_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	model_->Update();
 
 	model2_->SetTranslate(modelTranslate_);
 	model2_->SetLightData(light_);
-	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
+	model2_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	model2_->Update();
 
 	modelLight_->SetTranslate(light_.point.position);
-	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());
+	modelLight_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	modelLight_->Update();
 
 
 	sky_->SetLightData(light_);
-	sky_->SetCamera(cameraManager_->GetActiveCamera().get());
+	sky_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	sky_->Update();
 
 	cloud_->SetLightData(light_);
-	cloud_->SetCamera(cameraManager_->GetActiveCamera().get());
+	cloud_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	cloud_->Update();
 #pragma endregion
 
@@ -568,22 +571,19 @@ void DebugScene::Update() {
 	animationModel_->SetRotate(modelRotate_);
 	animationModel_->SetColor(modelColor_);
 	animationModel_->SetLightData(light_);
-	animationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+	animationModel_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	animationModel_->Update();
 #pragma endregion
 
 	/// ===Particle=== ///
 #pragma region Particle
-	particleManager_->Update();
-	particleManager_->SetCamera(cameraManager_->GetActiveCamera().get());
+	ServiceParticle::SetCamera(ServiceCamera::GetActiveCamera().get());
 #pragma endregion
 
 	/// ===カメラの更新=== ///
 #pragma region カメラの更新
 	camera_->SetRotate(cameraRotate);
 	camera_->SetTranslate(cameraPos);
-	// 全てのカメラの更新
-	cameraManager_->UpdateAllCameras();
 #pragma endregion
 
 	line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
@@ -623,8 +623,6 @@ void DebugScene::Draw() {
 		model2_->Draw();
 		
 	}
-	/// ===Particle=== ///
-	particleManager_->Draw(BlendMode::kBlendModeAdd);
 
 
 	/// ===ISceneの描画=== ///
