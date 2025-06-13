@@ -81,6 +81,7 @@ Matrix4x4 Math::MakeRotateQuaternionMatrix(const Quaternion q) {
 	float xx = q.x * q.x;
 	float yy = q.y * q.y;
 	float zz = q.z * q.z;
+	float ww = q.w * q.w;
 	float xy = q.x * q.y;
 	float xz = q.x * q.z;
 	float yz = q.y * q.z;
@@ -89,19 +90,19 @@ Matrix4x4 Math::MakeRotateQuaternionMatrix(const Quaternion q) {
 	float wz = q.w * q.z;
 
 	Matrix4x4 result;
-	result.m[0][0] = 1.0f - 2.0f * (yy + zz);
+	result.m[0][0] = ww + xx - yy - zz;
 	result.m[0][1] = 2.0f * (xy + wz);
 	result.m[0][2] = 2.0f * (xz - wy);
 	result.m[0][3] = 0.0f;
 
 	result.m[1][0] = 2.0f * (xy - wz);
-	result.m[1][1] = 1.0f - 2.0f * (xx + zz);
+	result.m[1][1] = ww - xx + yy - zz;
 	result.m[1][2] = 2.0f * (yz + wx);
 	result.m[1][3] = 0.0f;
 
 	result.m[2][0] = 2.0f * (xz + wy);
 	result.m[2][1] = 2.0f * (yz - wx);
-	result.m[2][2] = 1.0f - 2.0f * (xx + yy);
+	result.m[2][2] = ww - xx - yy + zz;
 	result.m[2][3] = 0.0f;
 
 	result.m[3][0] = 0.0f;
@@ -110,6 +111,40 @@ Matrix4x4 Math::MakeRotateQuaternionMatrix(const Quaternion q) {
 	result.m[3][3] = 1.0f;
 
 	return result;
+
+	/*float xx = q.x * q.x;
+	float yy = q.y * q.y;
+	float zz = q.z * q.z;
+	float ww = q.w * q.w;
+	float xy = q.x * q.y;
+	float xz = q.x * q.z;
+	float yz = q.y * q.z;
+	float wx = q.w * q.x;
+	float wy = q.w * q.y;
+	float wz = q.w * q.z;
+
+	Matrix4x4 result;
+	result.m[0][0] = ww + xx - yy - zz;
+	result.m[0][1] = 2.0f * (xy + wz);
+	result.m[0][2] = 2.0f * (xz - wy);
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = 2.0f * (xy - wz);
+	result.m[1][1] = ww - xx + yy - zz;
+	result.m[1][2] = 2.0f * (yz + wx);
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = 2.0f * (xz + wy);
+	result.m[2][1] = 2.0f * (yz - wx);
+	result.m[2][2] = ww - xx - yy + zz;
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+
+	return result;*/
 }
 
 ///=====================================================///

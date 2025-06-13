@@ -1,6 +1,8 @@
 #include "Enemy.h"
 // Camera
 #include "application/Game/Camera/Camera.h"
+// Player
+#include "application/Game/Entity/Player/Player.h"
 // Service
 #include "Engine/System/Service/Input.h"
 // ImGui
@@ -8,12 +10,25 @@
 #include "imgui.h"
 #endif // USE_IMGUI
 
+///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
 Enemy::~Enemy() {
 	object3d_.reset();
 }
 
-void Enemy::Init(Camera * camera) {
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+Vector3 Enemy::GetTranslate() const { return baseInfo_.translate; }
+Quaternion Enemy::GetRotate() const { return baseInfo_.rotate; }
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void Enemy::Init(Camera * camera, Player* player) {
 	camera_ = camera;
+	player_ = player;
 
 	// 初期化
 	Initialize();
@@ -23,7 +38,6 @@ void Enemy::Init(Camera * camera) {
 	// object3dの更新を一回行う
 	object3d_->Update();
 }
-
 void Enemy::Initialize() {
 	
 	// Object3dの初期化
@@ -38,13 +52,21 @@ void Enemy::Initialize() {
 	// Sphereの設定
 	SphereCollider::Initialize();
 	sphere_.center = baseInfo_.translate;
-	sphere_.radius = 1.0f;
+	sphere_.radius = 2.0f;
 }
 
+///-------------------------------------------/// 
+/// 更新
+///-------------------------------------------///
 void Enemy::Update() {
 
+
+	//baseInfo_.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+
 	// 移動処理
-	Move();
+	//Move();
+
 
 	/// ===移動量の反映=== ///
 	baseInfo_.translate += baseInfo_.velocity;
@@ -52,15 +74,22 @@ void Enemy::Update() {
 	/// ===Object3dの更新=== ///
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
+	SetColor(baseInfo_.color);
 	
 	// SphereColliderの更新
 	SphereCollider::Update();
 }
 
+///-------------------------------------------/// 
+/// 描画
+///-------------------------------------------///
 void Enemy::Draw(BlendMode mode) {
 	SphereCollider::Draw(mode);
 }
 
+///-------------------------------------------/// 
+/// 更新（ImGui）
+///-------------------------------------------///
 void Enemy::UpdateImGui() {
 	ImGui::Begin("Enemy");
 	ImGui::DragFloat3("Translate", &baseInfo_.translate.x, 0.1f);
@@ -69,12 +98,26 @@ void Enemy::UpdateImGui() {
 	ImGui::End();
 }
 
-void Enemy::OnCollision(Collider * collider) {}
+///-------------------------------------------/// 
+/// 衝突判定
+///-------------------------------------------///
+void Enemy::OnCollision(Collider * collider) {
+	// Playerとの当たり判定
+	if (collider->GetColliderName() == ColliderName::Player) {
+		// Playerの突進に対しての衝突処理
+		if (player_->GetCargeFlag()) {
+			// パーティクルを発生
 
-Vector3 Enemy::GetTranslate() const { return baseInfo_.translate; }
+			// カラーを青にカエル
+			baseInfo_.color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+		}
 
-Quaternion Enemy::GetRotate() const { return baseInfo_.rotate; }
+	}
+}
 
+///-------------------------------------------/// 
+/// 移動処理
+///-------------------------------------------///
 void Enemy::Move() {
 	// 左スティック入力取得（移動用）
 	StickState leftStick = Input::GetRightStickState(0);

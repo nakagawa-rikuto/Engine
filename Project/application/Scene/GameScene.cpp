@@ -46,7 +46,7 @@ void GameScene::Initialize() {
 
 	/// ===Enemy=== ///
 	enemy_ = std::make_unique<Enemy>();
-	enemy_->Init(cameraManager_->GetActiveCamera().get());
+	enemy_->Init(cameraManager_->GetActiveCamera().get(), player_.get());
 
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();

@@ -23,6 +23,9 @@ Player::~Player() {
 ///-------------------------------------------///
 Vector3 Player::GetTranslate() const { return baseInfo_.translate; }
 Quaternion Player::GetRotate() const { return baseInfo_.rotate; }
+// フラグ
+bool Player::GetCargeFlag() { return chargeInfo_.isFlag; }
+bool Player::GetAvoidanceFlag() { return avoidanceInfo_.isFlag; }
 
 ///-------------------------------------------/// 
 /// 初期化（GameScene用）
@@ -57,7 +60,7 @@ void Player::Initialize() {
 
 	// Sphereの設定
 	SphereCollider::Initialize();
-	sphere_.radius = 2.0f;
+	sphere_.radius = 1.5f;
 }
 
 
@@ -204,13 +207,13 @@ void Player::UpdateRoot() {
 	// Aボタンが押されたら進んでいる突進状態へ
 	if (Input::TriggerButton(0, ControllerButtonType::RB)) {
 		// タイマーがクールタイムより高ければ、
-		if (chargeInfo_.isFlag) {
+		if (chargeInfo_.isPreparation) {
 			behaviorRequest_ = Behavior::kCharge;
 			chargeInfo_.direction = Normalize(baseInfo_.velocity);
 		}
 	// 回避状態へ
 	} else if (Input::TriggerButton(0, ControllerButtonType::A)) {
-		if (avoidanceInfo_.isFlag) {
+		if (avoidanceInfo_.isPreparation) {
 			behaviorRequest_ = Behavior::kAvoidance;
 			avoidanceInfo_.direction = Normalize(moveInfo_.direction);
 		}
@@ -260,12 +263,12 @@ void Player::UpdateMove() {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 	if (Input::TriggerButton(0, ControllerButtonType::RB)) {
-		if (chargeInfo_.isFlag) {
+		if (chargeInfo_.isPreparation) {
 			behaviorRequest_ = Behavior::kCharge;
 			chargeInfo_.direction = Normalize(moveInfo_.direction);
 		}
 	} else if (Input::TriggerButton(0, ControllerButtonType::A)) {
-		if (avoidanceInfo_.isFlag) {
+		if (avoidanceInfo_.isPreparation) {
 			behaviorRequest_ = Behavior::kAvoidance;
 			avoidanceInfo_.direction = Normalize(moveInfo_.direction);
 		}
@@ -280,6 +283,8 @@ void Player::InitAvoidance() {
 	avoidanceInfo_.acceleration = 0.3f;
 	// 回避時間を0にする
 	avoidanceInfo_.timer = avoidanceInfo_.activeTime;
+	avoidanceInfo_.isPreparation = false;
+	avoidanceInfo_.isFlag = true;
 }
 void Player::UpdateAvoidance() {
 
@@ -311,6 +316,8 @@ void Player::InitCharge() {
 	chargeInfo_.acceleration = 0.2f;
 	// 突進時間を0にする
 	chargeInfo_.timer = chargeInfo_.activeTime;
+	chargeInfo_.isPreparation = false;
+	chargeInfo_.isFlag = true;
 }
 void Player::UpdateCharge() {
 
@@ -352,13 +359,13 @@ void Player::advanceTimer() {
 	if (chargeInfo_.timer > 0.0f) {
 		chargeInfo_.timer -= deltaTime_;
 	} else {
-		chargeInfo_.isFlag = true;
+		chargeInfo_.isPreparation = true;
 	}
 
 	// 回避用タイマーを進める
 	if (avoidanceInfo_.timer > 0.0f) {
 		avoidanceInfo_.timer -= deltaTime_;
 	} else {
-		avoidanceInfo_.isFlag = true;
+		avoidanceInfo_.isPreparation = true;
 	}
 }

@@ -237,7 +237,7 @@ void Camera::FollowCollisionAvoidance() {
 void Camera::FollowTopDown() {
 
 	const float deadzone = 0.1f;
-	const float radius = 15.0f; // 回転半径（お好みで）
+	const float radius = 15.0f; // 回転半径
 
 	Vector3 desiredPosition = *targetPos_ + offset_; // デフォルト位置（追従対象の真上）
 

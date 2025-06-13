@@ -2,6 +2,9 @@
 /// ===Include=== ///
 #include "application/Game/Collider/SphereCollider.h"
 
+/// ===前方宣言=== ///
+class Player;
+
 ///=====================================================/// 
 /// Enemy
 ///=====================================================///
@@ -11,7 +14,7 @@ public:
 	~Enemy();
 
 	// 初期化（GameScene用）
-	void Init(Camera* camera);
+	void Init(Camera* camera, Player* player);
 
 	// 初期化
 	void Initialize()override;
@@ -33,6 +36,8 @@ public: /// ===Getter=== ///
 private: /// ===変数の宣言=== ///
 
 	Camera* camera_ = nullptr; // カメラ
+
+	Player* player_ = nullptr;
 
 	/// ===基本情報=== ///
 	struct BaseInfo {

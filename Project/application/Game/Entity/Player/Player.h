@@ -31,6 +31,10 @@ public: /// ===Getter=== ///
 	Vector3 GetTranslate()const;
 	Quaternion GetRotate()const;
 
+	// フラグ
+	bool GetCargeFlag();
+	bool GetAvoidanceFlag();
+
 private: /// ===変数の宣言=== ///
 
 	Camera* camera_ = nullptr; // カメラ
@@ -82,6 +86,7 @@ private: /// ===変数の宣言=== ///
 		float acceleration = 0.0f;    // 突進の加速度
 		Vector3 direction = { 0.0f, 0.0f, 0.0f };
 		bool isFlag = false;		  // 突進のフラグ
+		bool isPreparation = false;   // 準備フラグ
 	};
 	ChargeInfo chargeInfo_;
 
@@ -95,6 +100,7 @@ private: /// ===変数の宣言=== ///
 		float acceleration = 0.0f;    // 回避の加速度
 		Vector3 direction = { 0.0f, 0.0f, 0.0f };
 		bool isFlag = false;		  // 回避のフラグ
+		bool isPreparation = false;   // 準備フラグ
 	};
 	AvoidanceInfo avoidanceInfo_;
 
