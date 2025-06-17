@@ -18,6 +18,9 @@ public:
 	// 描画
 	virtual void Draw(BlendMode mode) override;
 
+	// Sphere情報のImGui
+	void SphereInfo();
+
 public: /// ===衝突=== ///
 	virtual void OnCollision(Collider* collider) override = 0;
 

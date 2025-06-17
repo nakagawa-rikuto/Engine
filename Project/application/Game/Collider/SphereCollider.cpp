@@ -1,4 +1,8 @@
 #include "SphereCollider.h"
+#ifdef USE_IMGUI
+#include <imgui.h>
+#endif // USE_IMGUI
+
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -39,9 +43,20 @@ void SphereCollider::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
+/// スフィア情報のImGui
+///-------------------------------------------///
+void SphereCollider::SphereInfo() {
+#ifdef USE_IMGUI
+	ImGui::Text("SphereInfo");
+	ImGui::DragFloat("radius", &sphere_.radius, 0.1f);
+#endif // USE_IMGUI
+}
+
+///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
 // Radius
 Sphere SphereCollider::GetSphere() const {
 	return sphere_;
 }
+

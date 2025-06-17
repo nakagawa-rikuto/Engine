@@ -1,4 +1,7 @@
 #include "AABBCollider.h"
+#ifdef USE_IMGUI
+#include <imgui.h>
+#endif // USE_IMGUI
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -31,6 +34,15 @@ void AABBCollider::Draw(BlendMode mode) {
 
 	// Colliderの描画処理
 	Collider::Draw(mode);
+}
+
+///-------------------------------------------/// 
+/// AABB情報のImGui
+///-------------------------------------------///
+void AABBCollider::AABBInfo() {
+	ImGui::Text("AABBInfo");
+	ImGui::DragFloat3("Min", &aabb_.min.x, 0.1f);
+	ImGui::DragFloat3("Max", &aabb_.max.x, 0.1f);
 }
 
 ///-------------------------------------------/// 

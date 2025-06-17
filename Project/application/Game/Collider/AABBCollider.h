@@ -18,6 +18,9 @@ public:
 	// 描画
 	virtual void Draw(BlendMode mode) override;
 
+	// AABB情報のImGui
+	void AABBInfo();
+
 public: /// ===衝突=== ///
 	virtual void OnCollision(Collider* collider) override = 0;
 
