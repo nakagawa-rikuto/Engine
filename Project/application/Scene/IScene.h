@@ -1,7 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/System/Managers/CameraManager.h"
-#include "Engine/System/Managers/ParticleManager.h"
+#include "application/Game/Camera/Camera.h"
 
 /// ===前方宣言=== ///
 class SceneManager;
@@ -28,7 +27,5 @@ protected:
 	SceneManager* sceneManager_ = nullptr;
 	// Camera
 	std::shared_ptr<Camera> defaultCamera_;
-	std::unique_ptr<CameraManager> cameraManager_;
-	std::unique_ptr<ParticleManager> particleManager_;
 };
 

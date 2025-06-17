@@ -3,22 +3,32 @@
 #include <memory>
 
 /// ===前方宣言=== ///
+/// Engine
 class WinApp;
 class DXCommon;
 class SRVManager;
 class RTVManager;
 class DSVManager;
-class AudioManager;
+// Managers
+class PipelineManager;
 class TextureManager;
 class ModelManager;
-class PipelineManager;
 class AnimationManager;
+class AudioManager;
 class CSVManager;
+// OffScreen
 class OffScreenRenderer;
+/// Game
+// Line
 class LineObject3D;
+// Input
 class Keyboard;
 class Mouse;
 class Controller;
+// Camera
+class CameraManager;
+// Particle
+class ParticleManager;
 
 struct ServiceRegister {
 	WinApp* winApp = nullptr;
@@ -33,10 +43,13 @@ struct ServiceRegister {
 	AudioManager* audioManager = nullptr;
 	CSVManager* csvManager = nullptr;
 	OffScreenRenderer* offScreenRenderer = nullptr;
+
 	LineObject3D* lineObject3D = nullptr;
 	Keyboard* keyboard = nullptr;
 	Mouse* mouse = nullptr;
 	Controller* controller = nullptr;
+	CameraManager* cameraManager = nullptr;
+	ParticleManager* particleManager = nullptr;
 };
 
 ///=====================================================/// 
@@ -79,6 +92,10 @@ public:
 	static Keyboard* GetKeyboard();
 	static Mouse* GetMouse();
 	static Controller* GetController();
+	// CameraManagerAdd commentMore actions
+	static CameraManager* GetCameraManager();
+	// ParticleManager
+	static ParticleManager* GetParticleManager();
 
 private:
 	static inline WinApp* winApp_ = nullptr;
@@ -97,5 +114,7 @@ private:
 	static inline Keyboard* keyboard_ = nullptr;
 	static inline Mouse* mouse_ = nullptr;
 	static inline Controller* controller_ = nullptr;
+	static inline CameraManager* cameraManager_ = nullptr;
+	static inline ParticleManager* particleManager_ = nullptr;
 };
 
