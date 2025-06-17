@@ -215,6 +215,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\Setter.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Engine\System\Service\ServiceCamera.cpp" />
+    <ClCompile Include="Engine\System\Service\ServiceParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
@@ -333,6 +335,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\Setter.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
     <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
+    <ClInclude Include="Engine\System\Service\ServiceCamera.h" />
+    <ClInclude Include="Engine\System\Service\ServiceParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

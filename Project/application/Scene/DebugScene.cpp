@@ -5,6 +5,8 @@
 #include "Engine/System/Service/Input.h"
 #include "Engine/System/Service/Audio.h"
 #include "Engine/System/Service/Setter.h"
+#include "Engine/System/Service/ServiceCamera.h"
+#include "Engine/System/Service/ServiceParticle.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -51,19 +53,19 @@ void DebugScene::Initialize() {
 	camera2_->SetTranslate({ 0.0f, 0.0f, -30.0f });
 	camera2_->SetRotate({ 0.0f, 0.0f, 0.0f });
 	// カメラマネージャにカメラを追加
-	cameraManager_->Add("Debug", camera_);
-	cameraManager_->Add("Debug2", camera2_);
+	ServiceCamera::Add("Debug", camera_);
+	ServiceCamera::Add("Debug2", camera2_);
 #pragma endregion
 
 	/// ===ParticleManager=== ///
 #pragma region Particleの追加
 	// Particleの追加
-	particleManager_->AddParticle("Confetti", std::make_unique<ConfettiParticle>());
-	particleManager_->AddParticle("Explosion", std::make_unique<ExplosionParticle>());
-	particleManager_->AddParticle("Wind", std::make_unique<WindParticle>());
-	particleManager_->AddParticle("Ring", std::make_unique<RingParticle>());
-	particleManager_->AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
-	particleManager_->AddParticle("Cylinder", std::make_unique<CylinderParticle>());
+	ServiceParticle::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
+	ServiceParticle::AddParticle("Explosion", std::make_unique<ExplosionParticle>());
+	ServiceParticle::AddParticle("Wind", std::make_unique<WindParticle>());
+	ServiceParticle::AddParticle("Ring", std::make_unique<RingParticle>());
+	ServiceParticle::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
+	ServiceParticle::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -93,7 +95,7 @@ void DebugScene::Initialize() {
 	model_->SetLightIntensity(1.0f);                             // Lightの明るさの設定(初期値は {1.0f})
 	model_->SetLightColor(Vector4(1.0f, 1.0f, 1.0f, 1.0));       // Lightカラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f})
 	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
-	model_->SetCamera(cameraManager_->GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
+	model_->SetCamera(ServiceCamera::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
 	// DebugModelの初期化
@@ -331,10 +333,10 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (ImGui::Button("Draw")) {
-			particleManager_->Emit("Ring", particleInofo_.Translate);
-			particleManager_->Emit("HitEffect", particleInofo_.Translate);
-			particleManager_->SetTexture("Ring", "gradationLine");
-			particleManager_->SetTexture("HitEffect", "circle2");
+			ServiceParticle::Emit("Ring", particleInofo_.Translate);
+			ServiceParticle::Emit("HitEffect", particleInofo_.Translate);
+			ServiceParticle::SetTexture("Ring", "gradationLine");
+			ServiceParticle::SetTexture("HitEffect", "circle2");
 		}
 		if (!isImgui_.Particle1 && ImGui::Button("Info")) {
 			isImgui_.Particle1 = true;
@@ -350,7 +352,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (ImGui::Button("Draw")) {
-			particleManager_->Emit("Explosion", particleInofo_.Translate);
+			ServiceParticle::Emit("Explosion", particleInofo_.Translate);
 		}
 		if (!isImgui_.Particle2 && ImGui::Button("Info")) {
 			isImgui_.Particle2 = true;
@@ -366,8 +368,8 @@ void DebugScene::Update() {
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
 		if (ImGui::Button("Draw")) {
-			particleManager_->Emit("Confetti", particleInofo_.Translate);
-			particleManager_->SetTexture("Confetti", "monsterBall");
+			ServiceParticle::Emit("Confetti", particleInofo_.Translate);
+			ServiceParticle::SetTexture("Confetti", "monsterBall");
 		}
 		if (!isImgui_.Particle3 && ImGui::Button("Info")) {
 			isImgui_.Particle3 = true;
@@ -436,9 +438,9 @@ void DebugScene::Update() {
 	/// ===カメラの変更=== ///
 #pragma region カメラの変更
 	if (cameraInfo_.Set) {
-		cameraManager_->SetActiveCamera("Debug2");
+		ServiceCamera::SetActiveCamera("Debug2");
 	} else {
-		cameraManager_->SetActiveCamera("Debug");
+		ServiceCamera::SetActiveCamera("Debug");
 	}
 #pragma endregion
 
@@ -528,33 +530,33 @@ void DebugScene::Update() {
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
 	debugModel_->SetLightData(light_);
-	debugModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+	debugModel_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	debugModel_->Update();
 
 	model2_->SetTranslate(modelInfo_.Translate);
 	model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
-	model2_->SetCamera(cameraManager_->GetActiveCamera().get());
+	model2_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	model2_->Update();
 
 	modelLight_->SetTranslate(light_.point.position);
-	modelLight_->SetCamera(cameraManager_->GetActiveCamera().get());
+	modelLight_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	modelLight_->Update();
 
 
 	sky_->SetLightData(light_);
-	sky_->SetCamera(cameraManager_->GetActiveCamera().get());
+	sky_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	sky_->Update();
 
 	cloud_->SetLightData(light_);
-	cloud_->SetCamera(cameraManager_->GetActiveCamera().get());
+	cloud_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	cloud_->Update();
 #pragma endregion
 
 	/// ===AnimaitonModelの更新=== ///
 #pragma region Animationモデルの更新
 	debugAnimationModel_->SetLightData(light_);
-	debugAnimationModel_->SetCamera(cameraManager_->GetActiveCamera().get());
+	debugAnimationModel_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	debugAnimationModel_->Update();
 #pragma endregion
 
@@ -562,10 +564,10 @@ void DebugScene::Update() {
 #pragma region Particle
 	// パーティクルの生成
 	if (Input::TriggerKey(DIK_SPACE)) {
-		particleManager_->Emit("Ring", particleInofo_.Translate);
-		particleManager_->Emit("HitEffect", particleInofo_.Translate);
-		particleManager_->SetTexture("Ring", "gradationLine");
-		particleManager_->SetTexture("HitEffect", "circle2");
+		ServiceParticle::Emit("Ring", particleInofo_.Translate);
+		ServiceParticle::Emit("HitEffect", particleInofo_.Translate);
+		ServiceParticle::SetTexture("Ring", "gradationLine");
+		ServiceParticle::SetTexture("HitEffect", "circle2");
 	}
 #pragma endregion
 

@@ -35,6 +35,10 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	assert(registry.keyboard);
 	assert(registry.mouse);
 	assert(registry.controller);
+	// CameraManager
+	assert(registry.cameraManager);
+	// ParticleManager
+	assert(registry.particleManager);
 
 	// WinApp
 	winApp_ = registry.winApp;
@@ -64,6 +68,10 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	keyboard_ = registry.keyboard;
 	mouse_ = registry.mouse;
 	controller_ = registry.controller;
+	// CameraManager
+	cameraManager_ = registry.cameraManager;
+	// ParticleManager
+	particleManager_ = registry.particleManager;
 }
 
 ///-------------------------------------------/// 
@@ -159,3 +167,13 @@ WinApp* ServiceLocator::GetWinApp() { return winApp_; }
 Keyboard* ServiceLocator::GetKeyboard() { return keyboard_; }
 Mouse* ServiceLocator::GetMouse() { return mouse_; }
 Controller* ServiceLocator::GetController() { return controller_; }
+
+///-------------------------------------------/// 
+/// CameraManager
+///-------------------------------------------///
+CameraManager* ServiceLocator::GetCameraManager() { return cameraManager_; }
+
+///-------------------------------------------/// 
+/// particleManager
+///-------------------------------------------///
+ParticleManager* ServiceLocator::GetParticleManager() { return particleManager_; }
