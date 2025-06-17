@@ -92,11 +92,13 @@ void Enemy::Draw(BlendMode mode) {
 /// 更新（ImGui）
 ///-------------------------------------------///
 void Enemy::UpdateImGui() {
+#ifdef _DEBUG
 	ImGui::Begin("Enemy");
 	ImGui::DragFloat3("Translate", &baseInfo_.translate.x, 0.1f);
 	ImGui::DragFloat4("Rotate", &baseInfo_.rotate.x, 0.1f);
 	ImGui::DragFloat3("Velocity", &baseInfo_.velocity.x, 0.1f);
 	ImGui::End();
+#endif // _DEBUG
 }
 
 ///-------------------------------------------/// 
