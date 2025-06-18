@@ -44,18 +44,18 @@ private: /// ===変数=== ///
 private: /// ===関数=== ///
 
 	// 球と球の当たり判定
-	bool SphereToSpherCollision(class SphereCollider* a, class SphereCollider* b);
+	bool SphereToSphereCollision(class SphereCollider* a, class SphereCollider* b);
 	// AABBとAABBの当たり判定
-	bool AABBToAABBCollisison(class AABBCollider* a, class AABBCollider* b);
+	bool AABBToAABBCollision(class AABBCollider* a, class AABBCollider* b);
 	// OBBとOBBの当たり判定
-	bool OBBToOBBCollisison(class OBBCollider* a, class OBBCollider* b);
+	bool OBBToOBBCollision(class OBBCollider* a, class OBBCollider* b);
 
 	// 球とAABBの当たり判定
-	bool SphereToAABBCollisison(class SphereCollider* sphere, class AABBCollider* aabb);
+	bool SphereToAABBCollision(class SphereCollider* sphere, class AABBCollider* aabb);
 	// AABBとOBBの当たり判定
-	bool AABBToOBBCollsision(class AABBCollider* aabb, class OBBCollider* obb);
+	bool AABBToOBBCollision(class AABBCollider* aabb, class OBBCollider* obb);
 	// 球とOBBの当たり判定
-	bool SphereToOBBCollisison(class SphereCollider* sphere, class OBBCollider* obb);
+	bool SphereToOBBCollision(class SphereCollider* sphere, class OBBCollider* obb);
 
 	// SATによる OBB vs OBB 判定
 	bool OBBSATCollision(const OBB& a, const OBB& b);

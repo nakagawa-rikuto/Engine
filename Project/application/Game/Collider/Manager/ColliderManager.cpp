@@ -60,17 +60,17 @@ void ColliderManager::CheckPairCollision(Collider* colliderA, Collider* collider
 	bool isHit = false;
 
 	if (typeA == ColliderType::Sphere && typeB == ColliderType::Sphere) {
-		isHit = SphereToSpherCollision(static_cast<SphereCollider*>(colliderA), static_cast<SphereCollider*>(colliderB));
+		isHit = SphereToSphereCollision(static_cast<SphereCollider*>(colliderA), static_cast<SphereCollider*>(colliderB));
 	} else if (typeA == ColliderType::AABB && typeB == ColliderType::AABB) {
-		isHit = AABBToAABBCollisison(static_cast<AABBCollider*>(colliderA), static_cast<AABBCollider*>(colliderB));
+		isHit = AABBToAABBCollision(static_cast<AABBCollider*>(colliderA), static_cast<AABBCollider*>(colliderB));
 	} else if (typeA == ColliderType::OBB && typeB == ColliderType::OBB) {
-		isHit = OBBToOBBCollisison(static_cast<OBBCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
+		isHit = OBBToOBBCollision(static_cast<OBBCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
 	} else if (typeA == ColliderType::Sphere && typeB == ColliderType::AABB) {
-		isHit = SphereToAABBCollisison(static_cast<SphereCollider*>(colliderA), static_cast<AABBCollider*>(colliderB));
+		isHit = SphereToAABBCollision(static_cast<SphereCollider*>(colliderA), static_cast<AABBCollider*>(colliderB));
 	} else if (typeA == ColliderType::AABB && typeB == ColliderType::OBB) {
-		isHit = AABBToOBBCollsision(static_cast<AABBCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
+		isHit = AABBToOBBCollision(static_cast<AABBCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
 	} else if (typeA == ColliderType::Sphere && typeB == ColliderType::OBB) {
-		isHit = SphereToOBBCollisison(static_cast<SphereCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
+		isHit = SphereToOBBCollision(static_cast<SphereCollider*>(colliderA), static_cast<OBBCollider*>(colliderB));
 	}
 
 	// Colliderが持っているフラグを変更
@@ -100,7 +100,7 @@ void ColliderManager::CheckAllCollisions() {
 /// 当たり判定の関数
 ///-------------------------------------------///
 // 球と球
-bool ColliderManager::SphereToSpherCollision(SphereCollider* a, SphereCollider* b) {
+bool ColliderManager::SphereToSphereCollision(SphereCollider* a, SphereCollider* b) {
 	Sphere s1 = a->GetSphere();
 	Sphere s2 = b->GetSphere();
 
@@ -116,7 +116,7 @@ bool ColliderManager::SphereToSpherCollision(SphereCollider* a, SphereCollider* 
 	}
 }
 // AABBとAABB
-bool ColliderManager::AABBToAABBCollisison(AABBCollider* a, AABBCollider* b) {
+bool ColliderManager::AABBToAABBCollision(AABBCollider* a, AABBCollider* b) {
 	AABB aabb1 = a->GetAABB();
 	AABB aabb2 = b->GetAABB();
 
@@ -141,14 +141,14 @@ bool ColliderManager::AABBToAABBCollisison(AABBCollider* a, AABBCollider* b) {
 	return true;
 }
 // OBBとOBB
-bool ColliderManager::OBBToOBBCollisison(OBBCollider* a, OBBCollider* b) {
+bool ColliderManager::OBBToOBBCollision(OBBCollider* a, OBBCollider* b) {
 	OBB aCol = a->GetOBB();
 	OBB bCol = b->GetOBB();
 
 	return OBBSATCollision(aCol, bCol);
 }
 // 球とAABB
-bool ColliderManager::SphereToAABBCollisison(SphereCollider* sphere, AABBCollider* aabb) {
+bool ColliderManager::SphereToAABBCollision(SphereCollider* sphere, AABBCollider* aabb) {
 	Sphere spherecol = sphere->GetSphere();
 	AABB aabbcol = aabb->GetAABB();
 
@@ -168,7 +168,7 @@ bool ColliderManager::SphereToAABBCollisison(SphereCollider* sphere, AABBCollide
 	}
 }
 // AABBとOBB
-bool ColliderManager::AABBToOBBCollsision(AABBCollider* aabb, OBBCollider* obb) {
+bool ColliderManager::AABBToOBBCollision(AABBCollider* aabb, OBBCollider* obb) {
 	AABB aabbCol = aabb->GetAABB();
 	OBB oobbColbb = obb->GetOBB();
 
@@ -183,7 +183,7 @@ bool ColliderManager::AABBToOBBCollsision(AABBCollider* aabb, OBBCollider* obb) 
 	return OBBSATCollision(fakeAABB, oobbColbb);
 }
 // 球とOBB
-bool ColliderManager::SphereToOBBCollisison(SphereCollider* sphere, OBBCollider* obb) {
+bool ColliderManager::SphereToOBBCollision(SphereCollider* sphere, OBBCollider* obb) {
 	Sphere sphereCol = sphere->GetSphere();
 	OBB obbCol = obb->GetOBB();
 
