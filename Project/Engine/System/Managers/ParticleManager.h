@@ -26,6 +26,8 @@ public:
     void SetTexture(const std::string& name, const std::string& textureName);
     // カメラの設定
     void SetCamera(Camera* camera);
+    // パーティクルの削除
+    void RemoveParticle(const std::string& name);
 
     // パーティクルの全体更新
     void Update();
