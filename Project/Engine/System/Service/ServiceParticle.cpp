@@ -8,6 +8,10 @@
 void ServiceParticle::AddParticle(const std::string& name, std::unique_ptr<ParticleGroup> particle) {
 	ServiceLocator::GetParticleManager()->AddParticle(name, std::move(particle));
 }
+// 削除
+void ServiceParticle::RemoveParticle(const std::string& name) {
+	ServiceLocator::GetParticleManager()->RemoveParticle(name);
+}
 // エミっと
 void ServiceParticle::Emit(const std::string& name, const Vector3& translate) {
 	ServiceLocator::GetParticleManager()->Emit(name, translate);
