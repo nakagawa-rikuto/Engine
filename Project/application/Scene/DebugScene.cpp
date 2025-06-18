@@ -108,7 +108,6 @@ void DebugScene::Initialize() {
 	modelLight_ = std::make_unique<Object3d>();
 	modelLight_->Init(ObjectType::Model, "Particle");
 
-
 	// 球
 	sky_ = std::make_unique<Object3d>();
 	sky_->Init(ObjectType::Model, "sky", LightType::HalfLambert);
@@ -130,11 +129,17 @@ void DebugScene::Initialize() {
 
 	/// ===アニメーションモデルの初期化=== ///
 #pragma region AnimationModelの初期化
-
 	debugAnimationModel_ = std::make_unique<DebugAnimationModel>();
 	debugAnimationModel_->Initialize();
-
 #pragma endregion
+
+	/// ===ColliderManagerの初期化=== ///
+#pragma region ColliderManagerの初期化
+	colliderManager_ = std::make_unique<ColliderManager>();
+	// コライダーの追加
+	colliderManager_->AddCollider(debugModel_.get());
+	colliderManager_->AddCollider(debugAnimationModel_.get());
+#pragma endregion 
 
 	/// ===ライト=== ///
 #pragma region Lightの情報
@@ -390,19 +395,6 @@ void DebugScene::Update() {
 	ImGui::DragFloat3("Translate", &cameraInfo_.Translate.x, 0.1f);
 	ImGui::DragFloat4("Rotate", &cameraInfo_.Rotate.x, 0.001f);
 	ImGui::End();
-	/// ===Keybord=== ///
-	/*ImGui::Begin("Keybord");
-	ImGui::Text("WSADデカメラのポジションを移動");
-	ImGui::End();*/
-	/// ===Mouse=== ///
-	/*ImGui::Begin("Mouse");
-	ImGui::Checkbox("PushLeft", &PushLeft_);
-	ImGui::Checkbox("TriggerRight", &TriggerRight_);
-	ImGui::DragFloat2("MousePosition", &mousePosition_.x, 0.1f);
-	ImGui::End();*/
-	/// ===Controller=== ///
-	/*ImGui::Begin("Controller");
-	ImGui::End();*/
 	/// ===Audio=== ///
 	ImGui::Begin("Audio");
 	ImGui::Checkbox("play", &audioInfo_.play);
@@ -529,10 +521,6 @@ void DebugScene::Update() {
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	debugModel_->SetLightData(light_);
-	debugModel_->SetCamera(ServiceCamera::GetActiveCamera().get());
-	debugModel_->Update();
-
 	model2_->SetTranslate(modelInfo_.Translate);
 	model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
@@ -543,7 +531,6 @@ void DebugScene::Update() {
 	modelLight_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	modelLight_->Update();
 
-
 	sky_->SetLightData(light_);
 	sky_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	sky_->Update();
@@ -551,12 +538,13 @@ void DebugScene::Update() {
 	cloud_->SetLightData(light_);
 	cloud_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	cloud_->Update();
+
+	// デバッグモデルの更新(LightDataとCameraの設定はColliderManagerで行う)
+	debugModel_->Update();
 #pragma endregion
 
 	/// ===AnimaitonModelの更新=== ///
 #pragma region Animationモデルの更新
-	debugAnimationModel_->SetLightData(light_);
-	debugAnimationModel_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	debugAnimationModel_->Update();
 #pragma endregion
 
@@ -585,6 +573,13 @@ void DebugScene::Update() {
 	//line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 50, {1.0f, 1.0f, 1.0f, 1.0f});
 #endif // _DEBUG
 #pragma endregion
+
+#pragma region ColliderManagerの更新
+	colliderManager_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	colliderManager_->SetLightData(light_);
+	colliderManager_->CheckAllCollisions();
+#pragma endregion
+
 	/// ===ISceneのの更新=== ///
 	IScene::Update();
 }

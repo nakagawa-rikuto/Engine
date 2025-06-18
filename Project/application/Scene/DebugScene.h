@@ -7,6 +7,8 @@
 // DebugModel
 #include "Engine/Debug/DebugModel.h"
 #include "Engine/Debug/DebugAnimationModel.h"
+// ColliderManager
+#include "application/Game/Collider/Manager/ColliderManager.h"
 
 // Line
 #include "application/Drawing/3d/Line.h"
@@ -89,6 +91,8 @@ private:/// ===メンバ変数=== ///
 	std::unique_ptr<DebugModel> debugModel_;
 	// DebugAnimationModel
 	std::unique_ptr<DebugAnimationModel> debugAnimationModel_;
+	// ColliderManager
+	std::unique_ptr<ColliderManager> colliderManager_;
 
 #pragma endregion
 
