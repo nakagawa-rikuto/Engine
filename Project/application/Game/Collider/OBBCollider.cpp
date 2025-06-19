@@ -1,5 +1,9 @@
 #include "OBBCollider.h"
 #include "Math/MatrixMath.h"
+#ifdef USE_IMGUI
+#include "imgui.h"
+#endif // USE_IMGUI
+
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -41,6 +45,17 @@ void OBBCollider::Draw(BlendMode mode) {
 
 	// Colliderの描画処理
 	Collider::Draw(mode);
+}
+
+///-------------------------------------------/// 
+/// 情報
+///-------------------------------------------///
+void OBBCollider::Info() {
+#ifdef USE_IMGUI
+	ImGui::Text("OBBInfo");
+	ImGui::DragFloat3("Center", &obb_.center.x, 0.1f);
+	ImGui::SliderFloat3("HalfSize", &obb_.halfSize.x, 0.1f, 10.0f);
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 

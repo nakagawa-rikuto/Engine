@@ -1,4 +1,7 @@
 #include "SphereCollider.h"
+#ifdef USE_IMGUI
+#include "imgui.h"
+#endif // USE_IMGUI
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -37,6 +40,16 @@ void SphereCollider::Draw(BlendMode mode) {
 
 	// Colliderの描画処理
 	Collider::Draw(mode);
+}
+
+///-------------------------------------------/// 
+/// 情報
+///-------------------------------------------///
+void SphereCollider::Info() {
+#ifdef USE_IMGUI
+	ImGui::Text("SphereInfo");
+	ImGui::DragFloat("Radius", &sphere_.radius, 0.1f, 0.0f);
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 

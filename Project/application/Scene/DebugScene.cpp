@@ -136,6 +136,7 @@ void DebugScene::Initialize() {
 	/// ===ColliderManagerの初期化=== ///
 #pragma region ColliderManagerの初期化
 	colliderManager_ = std::make_unique<ColliderManager>();
+	colliderManager_->Initialize(); // コライダーの組み合わせを作成
 	// コライダーの追加
 	colliderManager_->AddCollider(debugModel_.get());
 	colliderManager_->AddCollider(debugAnimationModel_.get());

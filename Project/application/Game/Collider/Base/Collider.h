@@ -14,7 +14,8 @@
 enum class ColliderType {
     AABB,      // 軸整合バウンディングボックス（矩形）
     Sphere,    // 球体
-    OBB        // 任意方向のバウンディングボックス
+    OBB,       // 任意方向のバウンディングボックス
+    Count      // 配列サイズ用
 };
 
 enum class ColliderName {

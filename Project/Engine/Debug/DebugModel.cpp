@@ -65,7 +65,7 @@ void DebugModel::ImGuiInfo() {
 	ImGui::DragFloat3("Transform", &base_.translate.x, 0.1f);
 	ImGui::DragFloat4("Rotate", &base_.rotate.x, 0.01f);
 	ImGui::ColorEdit4("Color", &base_.color.x);
-	ImGui::DragFloat3("haflSize", &obb_.halfSize.x, 0.1f);
+	OBBCollider::Info();
 	ImGui::End();
 #endif // USE_IMGUI
 }
@@ -75,6 +75,6 @@ void DebugModel::ImGuiInfo() {
 ///-------------------------------------------///
 void DebugModel::OnCollision(Collider * collider) {
 	if (collider->GetColliderName() == ColliderName::Player) {
-		base_.color = { 0.0f, 0.0f, 1.0f, 1.0f }; // 赤色に変更
+		//base_.color = { 0.0f, 0.0f, 1.0f, 1.0f }; // 赤色に変更
 	}
 }
