@@ -76,7 +76,7 @@ void DebugScene::Initialize() {
 #pragma region Spriteの初期化
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize("uvChecker");                   // 初期化(const std::string& spriteNameが必須)
-	/* // テクスチャの使い方
+	/* テクスチャの使い方
 	sprite->SetPosition(Vector2(0.0f, 0.0f));           // 場所の設定(初期値は0,0)
 	sprite->SetRotation(0.0f);                          // 回転の設定(初期値は0.0);
 	sprite->SetSize(Vector2(100.0f, 100.f));            // サイズの設定(初期値は640, 360)
@@ -90,24 +90,20 @@ void DebugScene::Initialize() {
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
 	model_ = std::make_unique<Object3d>();
-	model_->Init(ObjectType::Model, "MonsterBall", LightType::PointLight);          // 初期化(const std::string& modelNameが必須)
+	model_->Init(ObjectType::Model, "MonsterBall", LightType::PointLight); // 初期化(const std::string& modelNameが必須)
 	model2_ = std::make_unique<Object3d>();
 	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
 	modelLight_ = std::make_unique<Object3d>();
 	modelLight_->Init(ObjectType::Model, "Particle");
-	// modelLight_->SetTransform({ spot_.position }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
-	/* // モデルの使い方
-	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
-	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
-	model_->SetScale(Vector3(0.0f, 0.0f, 0.0f));                 // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
-	model_->SetColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));           // カラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f} )
-	model_->SetLightDirection(Vector3(0.0f, -1.0f, 0.0f));       // Lightの向き設定(初期値は {0.0f, -1.0f, 0.0f})
-	model_->SetLightIntensity(1.0f);                             // Lightの明るさの設定(初期値は {1.0f})
-	model_->SetLightColor(Vector4(1.0f, 1.0f, 1.0f, 1.0));       // Lightカラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f})
-	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
-	model_->SetCamera(ServiceCamera::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
+	/* モデルの使い方
+	model_->SetTranslate(Vector3);							     // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
+	model_->SetRotate(Quaternion);								 // 回転の設定(初期値は {0.0f, 0.0f, 0.0f, 1.0f} )
+	model_->SetScale(Vector3);								     // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
+	model_->SetColor(Vector4);									 // カラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f} )
+	model_->SetLight(LightType);								 // Lightの向き設定(初期値は {0.0f, -1.0f, 0.0f})
+	model_->SetLightData(LightInfo);                             // Lightの明るさの設定(初期値は {1.0f})
+	model_->SetCamera(ServiceCamera::GetActiveCamera().get());   // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
-
 
 	// ポイントライトの位置と半径の変更
 	light_.point.position = { 0.0f, 0.0f, -10.0f };
@@ -125,6 +121,18 @@ void DebugScene::Initialize() {
 	animationModel_->Init(ObjectType::AnimationModel, "human", LightType::Lambert);
 	// アニメーションを登録しないとアニメーションが再生されない
 	animationModel_->SetAnimation("Armature|mixamo.com|Layer0");
+	/* アニメーションモデルの使い方。
+	animationModel_->SetTranslate(Vector3);							      // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
+	animationModel_->SetRotate(Quaternion);								  // 回転の設定(初期値は {0.0f, 0.0f, 0.0f, 1.0f} )
+	animationModel_->SetScale(Vector3);								      // スケールの設定(初期値は {1.0f, 1.0f, 1.0f} )
+	animationModel_->SetColor(Vector4);									  // カラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f} )
+	animationModel_->SetLight(LightType);								  // Lightの向き設定(初期値は {0.0f, -1.0f, 0.0f})
+	animationModel_->SetLightData(LightInfo);                             // Lightの明るさの設定(初期値は {1.0f})
+	animationModel_->SetCamera(ServiceCamera::GetActiveCamera().get());   // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
+	animationModel_->SetAnimation("Animationの名前");                      // アニメーションの設定。(アニメーションの名前)
+	*/
+
+	// 一回更新を書ける
 	animationModel_->Update();
 #pragma endregion
 
