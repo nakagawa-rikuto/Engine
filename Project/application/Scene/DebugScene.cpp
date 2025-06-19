@@ -108,13 +108,6 @@ void DebugScene::Initialize() {
 	model_->SetCamera(ServiceCamera::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
-	// 球
-	sky_ = std::make_unique<Object3d>();
-	sky_->Init(ObjectType::Model, "sky", LightType::HalfLambert);
-	sky_->SetTranslate({ 0.0f, 0.0f, 0.0f });
-	cloud_ = std::make_unique<Object3d>();
-	cloud_->Init(ObjectType::Model, "cloud", LightType::HalfLambert);
-	cloud_->SetTranslate({ 0.0f, 0.0f, 0.0f });
 
 	// ポイントライトの位置と半径の変更
 	light_.point.position = { 0.0f, 0.0f, -10.0f };
@@ -124,8 +117,6 @@ void DebugScene::Initialize() {
 	model_->Update();
 	model2_->Update();
 	modelLight_->Update();
-	sky_->Update();
-	cloud_->Update();
 #pragma endregion
 
 	/// ===アニメーションモデルの初期化=== ///
@@ -134,6 +125,7 @@ void DebugScene::Initialize() {
 	animationModel_->Init(ObjectType::AnimationModel, "human", LightType::Lambert);
 	// アニメーションを登録しないとアニメーションが再生されない
 	animationModel_->SetAnimation("Armature|mixamo.com|Layer0");
+	animationModel_->Update();
 #pragma endregion
 
 	/// ===ライト=== ///
@@ -554,15 +546,6 @@ void DebugScene::Update() {
 	modelLight_->SetTranslate(light_.point.position);
 	modelLight_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	modelLight_->Update();
-
-
-	sky_->SetLightData(light_);
-	sky_->SetCamera(ServiceCamera::GetActiveCamera().get());
-	sky_->Update();
-
-	cloud_->SetLightData(light_);
-	cloud_->SetCamera(ServiceCamera::GetActiveCamera().get());
-	cloud_->Update();
 #pragma endregion
 
 	/// ===AnimaitonModelの更新=== ///
@@ -586,10 +569,6 @@ void DebugScene::Update() {
 	camera_->SetTranslate(cameraPos);
 #pragma endregion
 
-	line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
-	line_->DrawSphere({ modelTranslate_, 5.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
-	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 100, {1.0f, 1.0f, 1.0f, 1.0f});
-
 	/// ===ISceneのの更新=== ///
 	IScene::Update();
 }
@@ -608,20 +587,15 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	// 二重天球
-	//sky_->Draw();
-	//cloud_->Draw();
 
 	// アニーメーションモデル
-	//modelLight_->Draw();
 	animationModel_->Draw();
 
 	/// ===Model=== ///
 	if (isDisplay_.Model) {
-		
 		model_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
-		
+		modelLight_->Draw();
 	}
 
 

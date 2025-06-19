@@ -29,8 +29,6 @@ private:/// ===メンバ変数=== ///
 	/// シーン用
 	/// </summary>
 
-	
-
 	/// ===Classの宣言=== /// 
 	// ColliderManager
 	std::unique_ptr<ColliderManager> colliderManager_;

@@ -46,11 +46,11 @@ private:
 	std::unique_ptr<CameraManager> cameraManager_;
 	// ParticleManager
 	std::unique_ptr<ParticleManager> particleManager_;
-
 protected:
 	// ゲーム終了フラグ
 	bool endRequst_ = false;
 	// シーンファクトリー
 	std::unique_ptr<AbstractSceneFactory> sceneFactory_;
+	
 };
 

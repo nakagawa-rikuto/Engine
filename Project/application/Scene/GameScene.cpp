@@ -63,6 +63,7 @@ void GameScene::Initialize() {
 
 	/// ===ColliderManager=== ///
 	colliderManager_ = std::make_unique<ColliderManager>();
+	colliderManager_->Initialize();
 	// Colliderの追加
 	colliderManager_->AddCollider(player_.get());
 	colliderManager_->AddCollider(enemy_.get());

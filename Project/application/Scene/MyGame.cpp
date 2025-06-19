@@ -52,7 +52,7 @@ void MyGame::Initialize(const wchar_t* title) {
 	// シーンマネージャの初期化
 	sceneManager_ = std::make_unique<SceneManager>();
 	sceneManager_->SetSceneFactory(sceneFactory_.get());
-	sceneManager_->ChangeScene(SceneType::Game);
+	sceneManager_->ChangeScene(SceneType::Debug);
 }
  
 ///-------------------------------------------/// 
@@ -103,6 +103,7 @@ void MyGame::LoadTexture() {
 	Loader::LoadTexture("uvChecker", "uvChecker.png");
 	Loader::LoadTexture("monsterBall", "monsterBall.png");
 	Loader::LoadTexture("circle", "circle.png");
+	Loader::LoadTexture("circle2", "circle2.png");
 	Loader::LoadTexture("gradationLine", "gradationLine.png");
 }
 // モデル
@@ -116,11 +117,12 @@ void MyGame::LoadModel() {
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 
 	// Game
-	Loader::LoadModel("GameGround", "Ground.obj");
+	
 	Loader::LoadModel("skydome", "skydome.obj");
 	Loader::LoadModel("sky", "sky.gltf");
 	Loader::LoadModel("cloud", "cloud.gltf");
 	Loader::LoadModel("player", "player.gltf");
+	Loader::LoadModel("GameGround", "Ground.obj");
 }
 // アニメーション
 void MyGame::LoadAnimation() {
@@ -128,7 +130,6 @@ void MyGame::LoadAnimation() {
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
 	Loader::LoadAnimation("human", "sneakWalk.gltf");
 	Loader::LoadAnimation("player_animation", "player_animation.gltf");
-	
 	// 上記の二つが読み込め対理由は,キーがDirectぽ明日になっている為、それがあっていないと読み込めない
 	// ダイレクトパスまで書いてしまえばいい。
 	//Loader::LoadAnimationdifferentModel("human", "walk.gltf", "running.gltf");

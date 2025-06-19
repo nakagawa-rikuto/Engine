@@ -1,3 +1,4 @@
+
 #pragma once
 /// ===Include=== ///
 // c++
@@ -18,6 +19,9 @@ public:
 
 	ColliderManager() = default;
 	~ColliderManager();
+
+	// 初期化
+	void Initialize();
 
 	// リセット
 	void Reset();
@@ -41,7 +45,24 @@ private: /// ===変数=== ///
 	// コライダーのリスト
 	std::list<Collider*> colliders_;
 
+	// 衝突判定関数の型定義
+	using CollisionFunc = bool (ColliderManager::*)(Collider*, Collider*);
+	// 衝突関数ディスパッチテーブル
+	static constexpr int TypeCount = (int)ColliderType::Count;
+	CollisionFunc collisionTable_[TypeCount][TypeCount];
+
 private: /// ===関数=== ///
+
+	// 各当たり判定関数（Collider*を受け取るラッパー）
+	bool Sphere_Sphere(Collider* a, Collider* b);
+	bool AABB_AABB(Collider* a, Collider* b);
+	bool OBB_OBB(Collider* a, Collider* b);
+	bool Sphere_AABB(Collider* a, Collider* b);
+	bool AABB_Sphere(Collider* a, Collider* b);
+	bool AABB_OBB(Collider* a, Collider* b);
+	bool OBB_AABB(Collider* a, Collider* b);
+	bool Sphere_OBB(Collider* a, Collider* b);
+	bool OBB_Sphere(Collider* a, Collider* b);
 
 	// 球と球の当たり判定
 	bool SphereToSphereCollision(class SphereCollider* a, class SphereCollider* b);
@@ -49,11 +70,10 @@ private: /// ===関数=== ///
 	bool AABBToAABBCollision(class AABBCollider* a, class AABBCollider* b);
 	// OBBとOBBの当たり判定
 	bool OBBToOBBCollision(class OBBCollider* a, class OBBCollider* b);
-
 	// 球とAABBの当たり判定
 	bool SphereToAABBCollision(class SphereCollider* sphere, class AABBCollider* aabb);
 	// AABBとOBBの当たり判定
-	bool AABBToOBBCollsision(class AABBCollider* aabb, class OBBCollider* obb);
+	bool AABBToOBBCollision(class AABBCollider* aabb, class OBBCollider* obb);
 	// 球とOBBの当たり判定
 	bool SphereToOBBCollision(class SphereCollider* sphere, class OBBCollider* obb);
 
@@ -61,4 +81,3 @@ private: /// ===関数=== ///
 	bool OBBSATCollision(const OBB& a, const OBB& b);
 	void ProjectOBBOntoAxis(const OBB& obb, const Vector3& axis, float& outMin, float& outMax);
 };
-
