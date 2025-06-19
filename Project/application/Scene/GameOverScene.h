@@ -1,7 +1,7 @@
 #pragma once
 /// ===Include=== ///
 // IScene
-#include "application/Scene/IScene.h"
+#include "Engine/Scene/IScene.h"
 
 ///=====================================================/// 
 /// ゲームオーバーシーン
