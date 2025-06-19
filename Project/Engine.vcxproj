@@ -189,7 +189,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Managers\PiplineManager.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Model\ModelCommon.cpp" />
     <ClCompile Include="Engine\Graphics\2d\SpriteCommon.cpp" />
-    <ClCompile Include="application\Scene\MyGame.cpp" />
+    <ClCompile Include="Engine\Scene\MyGame.cpp" />
     <ClCompile Include="Engine\System\Managers\SceneManager.cpp" />
     <ClCompile Include="application\Scene\SelectScene.cpp" />
     <ClCompile Include="application\Scene\TitleScene.cpp" />
@@ -309,7 +309,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />
-    <ClInclude Include="application\Scene\MyGame.h" />
+    <ClInclude Include="Engine\Scene\MyGame.h" />
     <ClInclude Include="Engine\System\Managers\SceneManager.h" />
     <ClInclude Include="application\Scene\SelectScene.h" />
     <ClInclude Include="application\Scene\TitleScene.h" />
