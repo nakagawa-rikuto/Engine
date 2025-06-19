@@ -19,10 +19,8 @@
 GameScene::~GameScene() {
 	// ISceneのデストラクタ
 	IScene::~IScene();
-
 	// Colliderのリセット
 	colliderManager_->Reset();
-
 	// Camera
 	camera_.reset();
 	// Player
