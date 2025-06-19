@@ -27,7 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
-    <ClCompile Include="application\Scene\DebugScene.cpp" />
+    <ClCompile Include="Engine\Scene\DebugScene.cpp" />
     <ClCompile Include="Engine\System\Managers\CSVManager.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
@@ -42,7 +42,7 @@
     <ClCompile Include="Engine\Core\Logger.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\Material3D.cpp" />
     <ClCompile Include="Engine\System\Managers\ImGuiManager.cpp" />
-    <ClCompile Include="application\Scene\IScene.cpp" />
+    <ClCompile Include="Engine\Scene\IScene.cpp" />
     <ClCompile Include="Engine\System\Service\Loader.cpp" />
     <ClCompile Include="Math\Matrix3x3.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
@@ -138,7 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\Audio.h" />
-    <ClInclude Include="application\Scene\DebugScene.h" />
+    <ClInclude Include="Engine\Scene\DebugScene.h" />
     <ClInclude Include="Engine\System\Managers\CSVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\Camera3D.h" />
     <ClInclude Include="Engine\DataInfo\ParticleData.h" />
@@ -155,7 +155,7 @@
     <ClInclude Include="Engine\Core\Logger.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\Material3D.h" />
     <ClInclude Include="Engine\System\Managers\ImGuiManager.h" />
-    <ClInclude Include="application\Scene\IScene.h" />
+    <ClInclude Include="Engine\Scene\IScene.h" />
     <ClInclude Include="Engine\System\Service\Loader.h" />
     <ClInclude Include="Engine\DataInfo\ColliderData.h" />
     <ClInclude Include="Math\Matrix3x3.h" />

@@ -125,7 +125,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="Engine\System\Service\Audio.cpp" />
-    <ClCompile Include="application\Scene\DebugScene.cpp" />
+    <ClCompile Include="Engine\Scene\DebugScene.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\ConfettiParticle.cpp" />
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
     <ClCompile Include="Engine\System\Managers\CSVManager.cpp" />
@@ -142,7 +142,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Core\Logger.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\Material3D.cpp" />
     <ClCompile Include="Engine\System\Managers\ImGuiManager.cpp" />
-    <ClCompile Include="application\Scene\IScene.cpp" />
+    <ClCompile Include="Engine\Scene\IScene.cpp" />
     <ClCompile Include="Engine\System\Service\Loader.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\ExplosionParticle.cpp" />
     <ClCompile Include="Engine\System\Input\InputCommon.cpp" />
@@ -238,7 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
     <ClInclude Include="Engine\System\Service\Audio.h" />
-    <ClInclude Include="application\Scene\DebugScene.h" />
+    <ClInclude Include="Engine\Scene\DebugScene.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\ConfettiParticle.h" />
     <ClInclude Include="Engine\DataInfo\InputData.h" />
     <ClInclude Include="Engine\System\Input\Controller.h" />
@@ -258,7 +258,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Core\Logger.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\Material3D.h" />
     <ClInclude Include="Engine\System\Managers\ImGuiManager.h" />
-    <ClInclude Include="application\Scene\IScene.h" />
+    <ClInclude Include="Engine\Scene\IScene.h" />
     <ClInclude Include="Engine\DataInfo\SceneType.h" />
     <ClInclude Include="Engine\System\Service\Loader.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\ExplosionParticle.h" />
