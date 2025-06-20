@@ -1,5 +1,5 @@
 #include "DebugAnimationModel.h"
-#include "Engine/System/Service/Input.h"
+#include "Engine/System/Service/InputService.h"
 
 #ifdef USE_IMGUI
 #include "imgui.h"
@@ -43,7 +43,7 @@ void DebugAnimationModel::Initialize() {
 void DebugAnimationModel::Update() {
 
 	/// ===Animationの切り替え=== ///
-	if (Input::TriggerKey(DIK_SPACE)) {
+	if (InputService::TriggerKey(DIK_SPACE)) {
 		if (isChagAnimation_) {
 			// アニメーションのループを有効化
 			object3d_->SetAnimation("Armature|mixamo.com|Layer0", false);

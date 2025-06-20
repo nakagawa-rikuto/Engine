@@ -1,4 +1,4 @@
-#include "Input.h"
+#include "InputService.h"
 // c++
 #include <cassert>
 // Input
@@ -11,7 +11,7 @@
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void Input::Update() {
+void InputService::Update() {
 	ServiceLocator::GetKeyboard()->Update();
 	ServiceLocator::GetMouse()->Update();
 	ServiceLocator::GetController()->Update();
@@ -21,11 +21,11 @@ void Input::Update() {
 /// キーボード処理
 ///-------------------------------------------///
 // キーの押下をチェック
-bool Input::PushKey(BYTE keyNum) { 
+bool InputService::PushKey(BYTE keyNum) {
 	return ServiceLocator::GetKeyboard()->PushKey(keyNum);
 }
 // キーのトリガーをチェック
-bool Input::TriggerKey(BYTE keyNum) { 
+bool InputService::TriggerKey(BYTE keyNum) {
 	return ServiceLocator::GetKeyboard()->TriggerKey(keyNum);
 }
 
@@ -33,27 +33,27 @@ bool Input::TriggerKey(BYTE keyNum) {
 /// マウス処理
 ///-------------------------------------------///
 // マウスの押下をチェック
-bool Input::PushMouse(MouseButtonType button) {
+bool InputService::PushMouse(MouseButtonType button) {
 	return ServiceLocator::GetMouse()->PushMaouseButton(button);
 }
 // マウスのトリガーをチェック
-bool Input::TriggerMouse(MouseButtonType button) { 
+bool InputService::TriggerMouse(MouseButtonType button) {
 	return ServiceLocator::GetMouse()->TriggerMouseButton(button);
 }
 // マウスカーソルの位置を取得（スクリーン座標系）
-POINT Input::GetMousePosition() { 
+POINT InputService::GetMousePosition() {
 	return ServiceLocator::GetMouse()->GetMouseCursorPosition();
 }
 // マウスのX軸移動量を取得
-LONG Input::GetMouseDeltaX() { 
+LONG InputService::GetMouseDeltaX() {
 	return ServiceLocator::GetMouse()->GetMouseDeltaX();
 }
 // マウスのY軸移動量を取得
-LONG Input::GetMouseDeltaY() { 
+LONG InputService::GetMouseDeltaY() {
 	return ServiceLocator::GetMouse()->GetMouseDeltaY();
 }
 // マウスのスクロール量を取得
-LONG Input::GetMouseDeltaScroll() { 
+LONG InputService::GetMouseDeltaScroll() {
 	return ServiceLocator::GetMouse()->GetMouseDeltaScroll();
 }
 
@@ -61,53 +61,53 @@ LONG Input::GetMouseDeltaScroll() {
 /// コントローラー処理
 ///-------------------------------------------///
 // コントローラースティックの取得
-bool Input::GetJoystickState(int stickNo, XINPUT_STATE& out) { 
+bool InputService::GetJoystickState(int stickNo, XINPUT_STATE& out) {
 	return ServiceLocator::GetController()->GetJoystickState(stickNo, out);
 }
-bool Input::GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out) { 
+bool InputService::GetJoystickStatePrevious(int stickNo, XINPUT_STATE& out) {
 	return ServiceLocator::GetController()->GetJoystickStatePrevious(stickNo, out);
 }
-bool Input::GetJoystickState(int stickNo, DIJOYSTATE2& out) { 
+bool InputService::GetJoystickState(int stickNo, DIJOYSTATE2& out) {
 	return ServiceLocator::GetController()->GetJoystickState(stickNo, out);
 }
-bool Input::GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) { 
+bool InputService::GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) {
 	return ServiceLocator::GetController()->GetJoystickStatePrevious(stickNo, out);
 }
 // コントローラーの押下チェック
-bool Input::PushButton(int stickNo, ControllerButtonType button) { 
+bool InputService::PushButton(int stickNo, ControllerButtonType button) {
 	return ServiceLocator::GetController()->PushButton(stickNo, button);
 }
-bool Input::TriggerButton(int stickNo, ControllerButtonType button) { 
+bool InputService::TriggerButton(int stickNo, ControllerButtonType button) {
 	return ServiceLocator::GetController()->TriggerButton(stickNo, button);
 }
-bool Input::ReleaseButton(int stickNo, ControllerButtonType button) { 
+bool InputService::ReleaseButton(int stickNo, ControllerButtonType button) {
 	return ServiceLocator::GetController()->ReleaseButton(stickNo, button);
 }
 // ボタンの押し込み量を取得
-float Input::GetTriggerValue(int stickNo, ControllerButtonType button) { 
+float InputService::GetTriggerValue(int stickNo, ControllerButtonType button) {
 	return ServiceLocator::GetController()->GetTriggerValue(stickNo, button);
 }
 // スティックの状況を取得
-StickState Input::GetLeftStickState(int stickNo) { 
+StickState InputService::GetLeftStickState(int stickNo) {
 	return ServiceLocator::GetController()->GetLeftStickState(stickNo);
 }
-StickState Input::GetRightStickState(int stickNo) { 
+StickState InputService::GetRightStickState(int stickNo) {
 	return ServiceLocator::GetController()->GetRightStickState(stickNo);
 }
-float Input::GetStickValue(int stickNo, ControllerValueType valueType) { 
+float InputService::GetStickValue(int stickNo, ControllerValueType valueType) {
 	return ServiceLocator::GetController()->GetStickValue(stickNo, valueType);
 }
 // スティックの前フレーム状態を取得する関数
-StickState Input::GetLeftStickStatePrevious(int stickNo) {
+StickState InputService::GetLeftStickStatePrevious(int stickNo) {
 	return ServiceLocator::GetController()->GetLeftStickStatePrevious(0);
 }
-StickState Input::GetRightStickStatePrevious(int stickNo) {
+StickState InputService::GetRightStickStatePrevious(int stickNo) {
 	return ServiceLocator::GetController()->GetRightStickStatePrevious(0);
 }
 // スティックのはじき（ Flick ）を検出する関数
-bool Input::FlickLeftStick(int stickNo, float threshold) {
+bool InputService::FlickLeftStick(int stickNo, float threshold) {
 	return ServiceLocator::GetController()->FlickLeftStick(0, threshold);
 }
-bool Input::FlickRightStick(int stickNo, float threshold) {
+bool InputService::FlickRightStick(int stickNo, float threshold) {
 	return ServiceLocator::GetController()->FlickRightStick(0, threshold);
 }

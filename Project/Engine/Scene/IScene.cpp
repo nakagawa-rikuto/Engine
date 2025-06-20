@@ -1,7 +1,7 @@
 #include "IScene.h"
 #include "Engine/System/Service/ServiceLocator.h"
 #include "Engine/Graphics/3d/Line/LineObject3D.h"
-#include "Engine/System/Service/ServiceCamera.h"
+#include "Engine/System/Service/CameraService.h"
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -22,8 +22,8 @@ void IScene::Initialize() {
 	defaultCamera_->SetRotate({ 0.0f, 0.0f, 0.0f });
 
 	// デフォルトカメラの設定
-	ServiceCamera::Add("Default", defaultCamera_);
-	ServiceCamera::SetActiveCamera("Default");
+	CameraService::Add("Default", defaultCamera_);
+	CameraService::SetActiveCamera("Default");
 }
 
 ///-------------------------------------------/// 
@@ -32,7 +32,7 @@ void IScene::Initialize() {
 void IScene::Update() {
 
 	// Line更新
-	ServiceLocator::GetLineObject3D()->SetCamera(ServiceCamera::GetActiveCamera().get());
+	ServiceLocator::GetLineObject3D()->SetCamera(CameraService::GetActiveCamera().get());
 	ServiceLocator::GetLineObject3D()->Update();
 }
 

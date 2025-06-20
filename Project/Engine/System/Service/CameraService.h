@@ -8,9 +8,9 @@
 class Camera;
 
 ///=====================================================/// 
-/// ServiceCamera
+/// CameraService
 ///=====================================================///
-class ServiceCamera {
+class CameraService {
 public:
 	static void Add(const std::string& name, std::shared_ptr<Camera> camera);
 	static void Remove(const std::string& name);

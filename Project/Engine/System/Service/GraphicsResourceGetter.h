@@ -10,9 +10,9 @@
 #include "Engine/DataInfo/AnimationData.h"
 
 ///=====================================================/// 
-/// Getterのサービスロケータ
+/// GraphicsResourceGetter
 ///=====================================================///
-class Getter {
+class GraphicsResourceGetter {
 public: /// ===DescriptorHandle=== ///
 	// RTVの指定番号のCPUでスクリプタハンドルを取得する
 	static D3D12_CPU_DESCRIPTOR_HANDLE GetRTVCPUDescriptorHandle(uint32_t index);

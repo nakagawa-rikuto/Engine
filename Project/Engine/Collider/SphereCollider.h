@@ -1,15 +1,15 @@
 #pragma once
 /// ===Include=== ///
-#include "application/Game/Collider/Base/Collider.h"
+#include "Engine/Collider/Base/Collider.h"
 
 ///=====================================================/// 
-/// AABB
+/// SphereCollider
 ///=====================================================///
-class AABBCollider : public Collider {
+class SphereCollider : public Collider {
 public:
 
-	AABBCollider() = default;
-	~AABBCollider() = default;
+	SphereCollider() = default;
+	~SphereCollider() = default;
 
 	// 初期化
 	virtual void Initialize() override;
@@ -25,9 +25,9 @@ public: /// ===衝突=== ///
 	virtual void OnCollision(Collider* collider) override = 0;
 
 public: /// ===Getter=== ///
-	AABB GetAABB() const;
+	Sphere GetSphere()const;
 
 protected:
-	AABB aabb_;
+	Sphere sphere_;
 };
 
