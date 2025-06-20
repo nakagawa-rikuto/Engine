@@ -220,6 +220,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
+    <ClInclude Include="Engine\DataInfo\OffScreenTypeData.h" />
     <ClInclude Include="Engine\Debug\DebugAnimationModel.h" />
     <ClInclude Include="Engine\Debug\DebugModel.h" />
     <ClInclude Include="Engine\DataInfo\LineObjectData.h" />

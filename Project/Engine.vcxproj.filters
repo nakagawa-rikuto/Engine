@@ -255,6 +255,7 @@
     <ClInclude Include="Engine\Debug\DebugAnimationModel.h" />
     <ClInclude Include="Engine\System\Service\CameraService.h" />
     <ClInclude Include="Engine\System\Service\ParticleService.h" />
+    <ClInclude Include="Engine\DataInfo\OffScreenTypeData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

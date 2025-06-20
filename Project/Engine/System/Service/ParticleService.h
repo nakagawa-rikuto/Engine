@@ -4,8 +4,12 @@
 #include <map>
 #include <memory>
 #include <string>
-// PartlceGroup
-#include "Engine/Graphics/Particle/Base/ParticleGroup.h"
+// Math
+#include "Math/Vector3.h"
+
+/// ===前方宣言=== ///
+class ParticleGroup;
+class Camera;
 
 ///=====================================================/// 
 /// ParticleService

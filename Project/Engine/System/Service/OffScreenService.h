@@ -5,8 +5,9 @@
 #include <d3d12.h>
 // DirectXTex
 #include "DirectXTex.h"
-// Engine
-#include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
+// Data
+#include "Engine/DataInfo/OffScreenTypeData.h"
+
 
 ///=====================================================/// 
 /// OffScreenService

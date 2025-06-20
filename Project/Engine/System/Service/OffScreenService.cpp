@@ -1,6 +1,8 @@
 #include "OffScreenService.h"
 // c++
 #include <cassert>
+// Engine
+#include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
 // ServiceLocator
 #include "ServiceLocator.h"
 
