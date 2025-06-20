@@ -115,7 +115,7 @@
     <ClCompile Include="Engine\Collider\Base\Collider.cpp" />
     <ClCompile Include="Engine\Collider\AABBCollider.cpp" />
     <ClCompile Include="Engine\Collider\SphereCollider.cpp" />
-    <ClCompile Include="Engine\Collider\Manager\ColliderManager.cpp" />
+    <ClCompile Include="Engine\System\Managers\ColliderManager.cpp" />
     <ClCompile Include="Engine\Collider\OBBCollider.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
@@ -135,6 +135,7 @@
     <ClCompile Include="Engine\Debug\DebugAnimationModel.cpp" />
     <ClCompile Include="Engine\System\Service\CameraService.cpp" />
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
+    <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -234,7 +235,7 @@
     <ClInclude Include="Engine\Collider\Base\Collider.h" />
     <ClInclude Include="Engine\Collider\AABBCollider.h" />
     <ClInclude Include="Engine\Collider\SphereCollider.h" />
-    <ClInclude Include="Engine\Collider\Manager\ColliderManager.h" />
+    <ClInclude Include="Engine\System\Managers\ColliderManager.h" />
     <ClInclude Include="Engine\Collider\OBBCollider.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
@@ -256,6 +257,8 @@
     <ClInclude Include="Engine\System\Service\CameraService.h" />
     <ClInclude Include="Engine\System\Service\ParticleService.h" />
     <ClInclude Include="Engine\DataInfo\OffScreenTypeData.h" />
+    <ClInclude Include="Engine\System\Service\ColliderService.h" />
+    <ClInclude Include="Engine\DataInfo\LightData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

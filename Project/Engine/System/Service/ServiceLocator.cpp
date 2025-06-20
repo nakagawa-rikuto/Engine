@@ -39,7 +39,10 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	assert(registry.cameraManager);
 	// ParticleManager
 	assert(registry.particleManager);
+	// ColliderManager
+	assert(registry.colliderManager);
 
+	/// ===代入=== ///
 	// WinApp
 	winApp_ = registry.winApp;
 	// DXCommon
@@ -72,12 +75,17 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	cameraManager_ = registry.cameraManager;
 	// ParticleManager
 	particleManager_ = registry.particleManager;
+	// ColliderManager
+	colliderManager_ = registry.colliderManager;
 }
 
 ///-------------------------------------------/// 
 /// 全てのサービスを終了
 ///-------------------------------------------///
 void ServiceLocator::Finalize() {
+	colliderManager_ = nullptr;
+	particleManager_ = nullptr;
+	cameraManager_ = nullptr;
 	controller_ = nullptr;
 	mouse_ = nullptr;
 	keyboard_ = nullptr;
@@ -177,3 +185,8 @@ CameraManager* ServiceLocator::GetCameraManager() { return cameraManager_; }
 /// particleManager
 ///-------------------------------------------///
 ParticleManager* ServiceLocator::GetParticleManager() { return particleManager_; }
+
+///-------------------------------------------/// 
+/// ColliderManager
+///-------------------------------------------///
+ColliderManager* ServiceLocator::GetColliderManager() { return colliderManager_; }

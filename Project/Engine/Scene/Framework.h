@@ -6,6 +6,8 @@
 #include "Engine/System/Managers/CameraManager.h"
 // ParticleManager
 #include "Engine/System/Managers/ParticleManager.h"
+// ColliderManager
+#include "Engine/System/Managers/ColliderManager.h"
 // SceneFactory
 #include "Engine/Scene/AbstractSceneFactory.h"
 // ｃ++
@@ -46,11 +48,12 @@ private:
 	std::unique_ptr<CameraManager> cameraManager_;
 	// ParticleManager
 	std::unique_ptr<ParticleManager> particleManager_;
+	// ColliderManager
+	std::unique_ptr<ColliderManager> colliderManager_;
 protected:
 	// ゲーム終了フラグ
 	bool endRequst_ = false;
 	// シーンファクトリー
 	std::unique_ptr<AbstractSceneFactory> sceneFactory_;
-	
 };
 

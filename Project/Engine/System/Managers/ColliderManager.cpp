@@ -68,6 +68,14 @@ void ColliderManager::Reset() {
 }
 
 ///-------------------------------------------/// 
+/// 削除
+///-------------------------------------------///
+void ColliderManager::RemoveCollider(Collider* collider) {
+	//引数コライダーを削除
+	colliders_.remove(collider);
+}
+
+///-------------------------------------------/// 
 /// コライダーの追加
 ///-------------------------------------------///
 void ColliderManager::AddCollider(Collider* collider) {

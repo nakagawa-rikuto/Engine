@@ -7,6 +7,7 @@
 #include "Engine/System/Service/OffScreenService.h"
 #include "Engine/System/Service/CameraService.h"
 #include "Engine/System/Service/ParticleService.h"
+#include "Engine/System/Service/ColliderService.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -135,11 +136,9 @@ void DebugScene::Initialize() {
 
 	/// ===ColliderManagerの初期化=== ///
 #pragma region ColliderManagerの初期化
-	colliderManager_ = std::make_unique<ColliderManager>();
-	colliderManager_->Initialize(); // コライダーの組み合わせを作成
 	// コライダーの追加
-	colliderManager_->AddCollider(debugModel_.get());
-	colliderManager_->AddCollider(debugAnimationModel_.get());
+	ColliderService::AddCollider(debugModel_.get());
+	ColliderService::AddCollider(debugAnimationModel_.get());
 #pragma endregion 
 
 	/// ===ライト=== ///
@@ -249,6 +248,7 @@ void DebugScene::Update() {
 				debugAnimationModel_->SetLight(LightType::Lambert);
 				debugModel_->SetLight(LightType::Lambert);
 				model2_->SetLight(LightType::Lambert);
+				ColliderService::SetLight(LightType::Lambert);
 				lightType_.Lambert = true;
 				lightType_.HalfLambert = false;
 				lightType_.PointLight = false;
@@ -259,6 +259,7 @@ void DebugScene::Update() {
 				debugAnimationModel_->SetLight(LightType::HalfLambert);
 				debugModel_->SetLight(LightType::HalfLambert);
 				model2_->SetLight(LightType::HalfLambert);
+				ColliderService::SetLight(LightType::HalfLambert);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = true;
 				lightType_.PointLight = false;
@@ -269,6 +270,7 @@ void DebugScene::Update() {
 				debugAnimationModel_->SetLight(LightType::PointLight);
 				debugModel_->SetLight(LightType::PointLight);
 				model2_->SetLight(LightType::PointLight);
+				ColliderService::SetLight(LightType::PointLight);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = false;
 				lightType_.PointLight = true;
@@ -279,6 +281,7 @@ void DebugScene::Update() {
 				debugAnimationModel_->SetLight(LightType::SpotLight);
 				debugModel_->SetLight(LightType::SpotLight);
 				model2_->SetLight(LightType::SpotLight);
+				ColliderService::SetLight(LightType::SpotLight);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = false;
 				lightType_.PointLight = false;
@@ -289,6 +292,7 @@ void DebugScene::Update() {
 				debugAnimationModel_->SetLight(LightType::None);
 				debugModel_->SetLight(LightType::None);
 				model2_->SetLight(LightType::None);
+				ColliderService::SetLight(LightType::None);
 				lightType_.Lambert = false;
 				lightType_.HalfLambert = false;
 				lightType_.PointLight = false;
@@ -579,9 +583,8 @@ void DebugScene::Update() {
 #pragma endregion
 
 #pragma region ColliderManagerの更新
-	colliderManager_->SetCamera(CameraService::GetActiveCamera().get());
-	colliderManager_->SetLightData(light_);
-	colliderManager_->CheckAllCollisions();
+	ColliderService::SetCamera(CameraService::GetActiveCamera().get());
+	ColliderService::SetLightData(light_);
 #pragma endregion
 
 	/// ===ISceneのの更新=== ///
