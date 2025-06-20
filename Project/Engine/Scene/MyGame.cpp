@@ -52,7 +52,7 @@ void MyGame::Initialize(const wchar_t* title) {
 	// シーンマネージャの初期化
 	sceneManager_ = std::make_unique<SceneManager>();
 	sceneManager_->SetSceneFactory(sceneFactory_.get());
-	sceneManager_->ChangeScene(SceneType::Debug);
+	sceneManager_->ChangeScene(SceneType::Game);
 }
  
 ///-------------------------------------------/// 
@@ -93,45 +93,44 @@ void MyGame::Draw() {
 ///-------------------------------------------///
 // 音
 void MyGame::LoadAudio() {
-	// Wave
+#pragma region Wave
 	Loader::LoadWave("fanfare", "fanfare.wav");
-	// MP3
+#pragma endregion
+
+#pragma region MP3
 	Loader::LoadMP3("clear", "clear.mp3");
+#pragma endregion
 }
 // テクスチャ
 void MyGame::LoadTexture() {
+	// DebugSceneで使用。
 	Loader::LoadTexture("uvChecker", "uvChecker.png");
 	Loader::LoadTexture("monsterBall", "monsterBall.png");
+	// Particleで使用。
 	Loader::LoadTexture("circle", "circle.png");
 	Loader::LoadTexture("circle2", "circle2.png");
 	Loader::LoadTexture("gradationLine", "gradationLine.png");
 }
 // モデル
 void MyGame::LoadModel() {
-	Loader::LoadModel("GlTF", "GlTF.gltf");
+	// DebugSceneで使用。
 	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
 	Loader::LoadModel("terrain", "terrain.obj");
-	Loader::LoadModel("axis", "axis.obj");
 	Loader::LoadModel("plane", "plane.obj");
+	// Particleで使用。
 	Loader::LoadModel("Particle", "Particle.obj");
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 
 	// Game
-	Loader::LoadModel("skydome", "skydome.obj");
-	Loader::LoadModel("sky", "sky.gltf");
-	Loader::LoadModel("cloud", "cloud.gltf");
+	Loader::LoadModel("player", "player.gltf");
+	Loader::LoadModel("GameGround", "GameGround.gltf");
 }
 // アニメーション
 void MyGame::LoadAnimation() {
-	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
+	// DebugSceneで使用。
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
 	Loader::LoadAnimation("human", "sneakWalk.gltf");
-	Loader::LoadAnimation("player_animation", "player_animation.gltf");
 	// 上記の二つが読み込め対理由は,キーがDirectぽ明日になっている為、それがあっていないと読み込めない
 	// ダイレクトパスまで書いてしまえばいい。
 	//Loader::LoadAnimationdifferentModel("human", "walk.gltf", "running.gltf");
-	// sneakWalk
-	// walk
-
-	//　行いたいこと
 }

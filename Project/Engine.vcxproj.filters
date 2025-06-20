@@ -136,6 +136,9 @@
     <ClCompile Include="Engine\System\Service\CameraService.cpp" />
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\Enemy.cpp" />
+    <ClCompile Include="application\Game\Object\Ground\Ground.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -259,6 +262,9 @@
     <ClInclude Include="Engine\DataInfo\OffScreenTypeData.h" />
     <ClInclude Include="Engine\System\Service\ColliderService.h" />
     <ClInclude Include="Engine\DataInfo\LightData.h" />
+    <ClInclude Include="application\Game\Entity\Player\Player.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\Enemy.h" />
+    <ClInclude Include="application\Game\Object\Ground\Ground.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

@@ -36,6 +36,10 @@ namespace Math {
 	Vector3 QuaternionToEuler(const Quaternion& quaternion);
 	// ある方向（forward）を向くクォータニオン（回転）を作る
 	Quaternion LookRotation(Vector3 forward, Vector3 up);
+
+	/// ====== ///
+	// 
+	float NormalizeAngle(float angle);
 }
 
 
