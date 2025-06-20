@@ -2,9 +2,9 @@
 // c++
 #include <algorithm>
 // ColliderType
-#include "application/Game/Collider/SphereCollider.h"
-#include "application/Game/Collider/AABBCollider.h"
-#include "application/Game/Collider/OBBCollider.h"
+#include "Engine/Collider/SphereCollider.h"
+#include "Engine/Collider/AABBCollider.h"
+#include "Engine/Collider/OBBCollider.h"
 // Math
 #include "Math/sMath.h"
 

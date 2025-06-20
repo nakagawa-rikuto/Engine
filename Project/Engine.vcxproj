@@ -108,13 +108,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="application\Game\Collider\AABBCollider.cpp" />
+    <ClCompile Include="Engine\Collider\AABBCollider.cpp" />
     <ClCompile Include="Engine\Debug\DebugAnimationModel.cpp" />
     <ClCompile Include="Engine\Debug\DebugModel.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Model\AnimationModel.cpp" />
-    <ClCompile Include="application\Game\Collider\Base\Collider.cpp" />
-    <ClCompile Include="application\Game\Collider\Manager\ColliderManager.cpp" />
+    <ClCompile Include="Engine\Collider\Base\Collider.cpp" />
+    <ClCompile Include="Engine\Collider\Manager\ColliderManager.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
@@ -204,8 +204,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\Render.cpp" />
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
     <ClCompile Include="Engine\System\Managers\RTVManager.cpp" />
-    <ClCompile Include="application\Game\Collider\SphereCollider.cpp" />
-    <ClCompile Include="application\Game\Collider\OBBCollider.cpp" />
+    <ClCompile Include="Engine\Collider\SphereCollider.cpp" />
+    <ClCompile Include="Engine\Collider\OBBCollider.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
@@ -219,15 +219,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application\Game\Collider\AABBCollider.h" />
+    <ClInclude Include="Engine\Collider\AABBCollider.h" />
     <ClInclude Include="Engine\DataInfo\OffScreenTypeData.h" />
     <ClInclude Include="Engine\Debug\DebugAnimationModel.h" />
     <ClInclude Include="Engine\Debug\DebugModel.h" />
     <ClInclude Include="Engine\DataInfo\LineObjectData.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\CylinderParticle.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\AnimationModel.h" />
-    <ClInclude Include="application\Game\Collider\Base\Collider.h" />
-    <ClInclude Include="application\Game\Collider\Manager\ColliderManager.h" />
+    <ClInclude Include="Engine\Collider\Base\Collider.h" />
+    <ClInclude Include="Engine\Collider\Manager\ColliderManager.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
@@ -325,8 +325,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\Render.h" />
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
     <ClInclude Include="Engine\System\Managers\RTVManager.h" />
-    <ClInclude Include="application\Game\Collider\SphereCollider.h" />
-    <ClInclude Include="application\Game\Collider\OBBCollider.h" />
+    <ClInclude Include="Engine\Collider\SphereCollider.h" />
+    <ClInclude Include="Engine\Collider\OBBCollider.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
