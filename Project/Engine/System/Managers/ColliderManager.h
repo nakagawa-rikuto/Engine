@@ -2,7 +2,6 @@
 /// ===Include=== ///
 // c++
 #include <list>
-#include <functional>
 // Collider
 #include "Engine/Collider/Base/Collider.h"
 
@@ -22,10 +21,12 @@ public:
 	~ColliderManager();
 
 	// 初期化
-	void Initialize();
+	void Initialize();	
 
 	// リセット
 	void Reset();
+	// 削除
+	void RemoveCollider(Collider* collider);
 	// 追加
 	void AddCollider(Collider* collider);
 	// 二つのColliderの当たり判定

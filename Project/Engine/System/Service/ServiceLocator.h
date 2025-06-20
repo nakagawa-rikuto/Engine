@@ -29,6 +29,8 @@ class Controller;
 class CameraManager;
 // Particle
 class ParticleManager;
+// ColliderManager
+class ColliderManager;
 
 struct ServiceRegister {
 	WinApp* winApp = nullptr;
@@ -50,6 +52,7 @@ struct ServiceRegister {
 	Controller* controller = nullptr;
 	CameraManager* cameraManager = nullptr;
 	ParticleManager* particleManager = nullptr;
+	ColliderManager* colliderManager = nullptr;
 };
 
 ///=====================================================/// 
@@ -92,10 +95,12 @@ public:
 	static Keyboard* GetKeyboard();
 	static Mouse* GetMouse();
 	static Controller* GetController();
-	// CameraManagerAdd commentMore actions
+	// CameraManager
 	static CameraManager* GetCameraManager();
 	// ParticleManager
 	static ParticleManager* GetParticleManager();
+	// ColliderManager
+	static ColliderManager* GetColliderManager();
 
 private:
 	static inline WinApp* winApp_ = nullptr;
@@ -116,5 +121,6 @@ private:
 	static inline Controller* controller_ = nullptr;
 	static inline CameraManager* cameraManager_ = nullptr;
 	static inline ParticleManager* particleManager_ = nullptr;
+	static inline ColliderManager* colliderManager_ = nullptr;
 };
 

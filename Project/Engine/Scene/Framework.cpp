@@ -14,6 +14,9 @@ void Framework::Initialize(const wchar_t* title) {
 	cameraManager_ = std::make_unique<CameraManager>();
 	// ParticleManager
 	particleManager_ = std::make_unique<ParticleManager>();
+	// ColliderManager
+	colliderManager_ = std::make_unique<ColliderManager>();
+	colliderManager_->Initialize();
 
 	// ServiceLocator
 	ServiceLocator::ProvideAll({
@@ -34,7 +37,8 @@ void Framework::Initialize(const wchar_t* title) {
 		MiiEngine_->GetMouse(),
 		MiiEngine_->GetController(),
 		cameraManager_.get(),
-		particleManager_.get()
+		particleManager_.get(),
+		colliderManager_.get()
 		}
 	);
 }
@@ -50,6 +54,8 @@ void Framework::Finalize() {
 	cameraManager_.reset();
 	// ParticleManager
 	particleManager_.reset();
+	// ColliderManager
+	colliderManager_.reset();
 	// MiiEngine
 	MiiEngine_->Finalize();
 	MiiEngine_.reset();
@@ -66,6 +72,8 @@ void Framework::Update() {
 	particleManager_->Update();
 	// CameraManager
 	cameraManager_->UpdateAllCameras();
+	// ColliderManager
+	colliderManager_->CheckAllCollisions();
 }
 
 ///-------------------------------------------/// 

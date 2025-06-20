@@ -1,15 +1,7 @@
 #pragma once
 /// ===include=== ///
 #include "Engine/DataInfo/FunctionData.h"
-
-/// ===Lightの種類のenum=== ///
-enum class LightType {
-	Lambert,
-	HalfLambert,
-	PointLight,
-	SpotLight,
-	None
-};
+#include "Engine/DataInfo/LightData.h"
 
 ///=====================================================/// 
 /// Light
