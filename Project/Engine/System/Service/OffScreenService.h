@@ -6,13 +6,12 @@
 // DirectXTex
 #include "DirectXTex.h"
 // Engine
-#include "Engine/DataInfo/CData.h"
 #include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
 
 ///=====================================================/// 
-/// Setter
+/// OffScreenService
 ///=====================================================///
-class Setter {
+class OffScreenService {
 public: /// ===OffScreen=== ///
 	static void SetOffScreenType(OffScreenType type);
 

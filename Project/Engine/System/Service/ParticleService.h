@@ -8,9 +8,9 @@
 #include "Engine/Graphics/Particle/Base/ParticleGroup.h"
 
 ///=====================================================/// 
-/// ServiceParticle
+/// ParticleService
 ///=====================================================///
-class ServiceParticle {
+class ParticleService {
 public:
 
     // パーティクルの追加

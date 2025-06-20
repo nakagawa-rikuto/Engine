@@ -2,11 +2,11 @@
 // SceneManager
 #include "Engine/System/Managers/SceneManager.h"
 // Service
-#include "Engine/System/Service/Input.h"
-#include "Engine/System/Service/Audio.h"
-#include "Engine/System/Service/Setter.h"
-#include "Engine/System/Service/ServiceCamera.h"
-#include "Engine/System/Service/ServiceParticle.h"
+#include "Engine/System/Service/InputService.h"
+#include "Engine/System/Service/AudioService.h"
+#include "Engine/System/Service/OffScreenService.h"
+#include "Engine/System/Service/CameraService.h"
+#include "Engine/System/Service/ParticleService.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -53,19 +53,19 @@ void DebugScene::Initialize() {
 	camera2_->SetTranslate({ 0.0f, 0.0f, -30.0f });
 	camera2_->SetRotate({ 0.0f, 0.0f, 0.0f });
 	// カメラマネージャにカメラを追加
-	ServiceCamera::Add("Debug", camera_);
-	ServiceCamera::Add("Debug2", camera2_);
+	CameraService::Add("Debug", camera_);
+	CameraService::Add("Debug2", camera2_);
 #pragma endregion
 
 	/// ===ParticleManager=== ///
 #pragma region Particleの追加
 	// Particleの追加
-	ServiceParticle::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
-	ServiceParticle::AddParticle("Explosion", std::make_unique<ExplosionParticle>());
-	ServiceParticle::AddParticle("Wind", std::make_unique<WindParticle>());
-	ServiceParticle::AddParticle("Ring", std::make_unique<RingParticle>());
-	ServiceParticle::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
-	ServiceParticle::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
+	ParticleService::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
+	ParticleService::AddParticle("Explosion", std::make_unique<ExplosionParticle>());
+	ParticleService::AddParticle("Wind", std::make_unique<WindParticle>());
+	ParticleService::AddParticle("Ring", std::make_unique<RingParticle>());
+	ParticleService::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
+	ParticleService::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -95,7 +95,7 @@ void DebugScene::Initialize() {
 	model_->SetLightIntensity(1.0f);                             // Lightの明るさの設定(初期値は {1.0f})
 	model_->SetLightColor(Vector4(1.0f, 1.0f, 1.0f, 1.0));       // Lightカラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f})
 	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
-	model_->SetCamera(ServiceCamera::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
+	model_->SetCamera(CameraService::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
 	// DebugModelの初期化
@@ -148,7 +148,7 @@ void DebugScene::Initialize() {
 
 	/// ===音=== ///
 #pragma region Audio
-	//audio_->PlayeSound("clear", false);
+	//AudioService::PlayeSound("clear", false);
 #pragma endregion
 
 	/// ===OffScreen=== ///
@@ -339,10 +339,10 @@ void DebugScene::Update() {
 	/// ===Particle1=== ///
 	if (isSetting_.Particle1) {
 		if (ImGui::Button("Draw")) {
-			ServiceParticle::Emit("Ring", particleInofo_.Translate);
-			ServiceParticle::Emit("HitEffect", particleInofo_.Translate);
-			ServiceParticle::SetTexture("Ring", "gradationLine");
-			ServiceParticle::SetTexture("HitEffect", "circle2");
+			ParticleService::Emit("Ring", particleInofo_.Translate);
+			ParticleService::Emit("HitEffect", particleInofo_.Translate);
+			ParticleService::SetTexture("Ring", "gradationLine");
+			ParticleService::SetTexture("HitEffect", "circle2");
 		}
 		if (!isImgui_.Particle1 && ImGui::Button("Info")) {
 			isImgui_.Particle1 = true;
@@ -358,7 +358,7 @@ void DebugScene::Update() {
 	/// ===Particle2=== ///
 	if (isSetting_.Particle2) {
 		if (ImGui::Button("Draw")) {
-			ServiceParticle::Emit("Explosion", particleInofo_.Translate);
+			ParticleService::Emit("Explosion", particleInofo_.Translate);
 		}
 		if (!isImgui_.Particle2 && ImGui::Button("Info")) {
 			isImgui_.Particle2 = true;
@@ -374,8 +374,8 @@ void DebugScene::Update() {
 	/// ===Particle3=== ///
 	if (isSetting_.Particle3) {
 		if (ImGui::Button("Draw")) {
-			ServiceParticle::Emit("Confetti", particleInofo_.Translate);
-			ServiceParticle::SetTexture("Confetti", "monsterBall");
+			ParticleService::Emit("Confetti", particleInofo_.Translate);
+			ParticleService::SetTexture("Confetti", "monsterBall");
 		}
 		if (!isImgui_.Particle3 && ImGui::Button("Info")) {
 			isImgui_.Particle3 = true;
@@ -422,64 +422,64 @@ void DebugScene::Update() {
 #pragma region OffScreen
 	/// ===OffScreen=== ///
 	if (offScreenInfo_.isGrayscale) {
-		Setter::SetOffScreenType(OffScreenType::Grayscale);
+		OffScreenService::SetOffScreenType(OffScreenType::Grayscale);
 	} else {
-		Setter::SetOffScreenType(OffScreenType::CopyImage);
+		OffScreenService::SetOffScreenType(OffScreenType::CopyImage);
 	}
 #pragma endregion
 
 	/// ===カメラの変更=== ///
 #pragma region カメラの変更
 	if (cameraInfo_.Set) {
-		ServiceCamera::SetActiveCamera("Debug2");
+		CameraService::SetActiveCamera("Debug2");
 	} else {
-		ServiceCamera::SetActiveCamera("Debug");
+		CameraService::SetActiveCamera("Debug");
 	}
 #pragma endregion
 
 	/// ===キーボード関連の処理=== ///
 #pragma region キーボード関連の処理
-	if (Input::PushKey(DIK_D)) {
+	if (InputService::PushKey(DIK_D)) {
 		cameraInfo_.Translate.x += 0.01f;
-	} else if (Input::PushKey(DIK_A)) {
+	} else if (InputService::PushKey(DIK_A)) {
 		cameraInfo_.Translate.x -= 0.01f;
 	}
-	if (Input::PushKey(DIK_W)) {
+	if (InputService::PushKey(DIK_W)) {
 		cameraInfo_.Translate.y += 0.01f;
-	} else if (Input::PushKey(DIK_S)) {
+	} else if (InputService::PushKey(DIK_S)) {
 		cameraInfo_.Translate.y -= 0.01f;
 	}
-	if (Input::PushKey(DIK_UP)) {
+	if (InputService::PushKey(DIK_UP)) {
 		cameraInfo_.Translate.z += 0.01f;
-	} else if (Input::PushKey(DIK_DOWN)) {
+	} else if (InputService::PushKey(DIK_DOWN)) {
 		cameraInfo_.Translate.z -= 0.01f;
 	}
 #pragma endregion
 
 	/// ===マウス関連の処理=== ///
 #pragma region マウス関連の処理
-	if (Input::PushMouse(MouseButtonType::Left)) {
+	if (InputService::PushMouse(MouseButtonType::Left)) {
 		mouseInfo_.PushLeft_ = true;
 	} else {
 		mouseInfo_.PushLeft_ = false;
 	}
-	if (Input::TriggerMouse(MouseButtonType::Right)) {
+	if (InputService::TriggerMouse(MouseButtonType::Right)) {
 		if (mouseInfo_.TriggerRight_) {
 			mouseInfo_.TriggerRight_ = false;
 		} else {
 			mouseInfo_.TriggerRight_ = true;
 		}
 	}
-	mouseInfo_.Position_.x = static_cast<float>(Input::GetMousePosition().x);
-	mouseInfo_.Position_.y = static_cast<float>(Input::GetMousePosition().y);
+	mouseInfo_.Position_.x = static_cast<float>(InputService::GetMousePosition().x);
+	mouseInfo_.Position_.y = static_cast<float>(InputService::GetMousePosition().y);
 #pragma endregion
 
 	/// ===コントローラーの処理=== ///
 #pragma region コントローラの処理
 
 	// スティックの入力処理を取得
-	StickState leftStick = Input::GetLeftStickState(0);
-	StickState rightStick = Input::GetRightStickState(0);
+	StickState leftStick = InputService::GetLeftStickState(0);
+	StickState rightStick = InputService::GetRightStickState(0);
 
 	// モデルの移動処理
 	modelInfo_.Translate.x += leftStick.x * 0.01f;
@@ -489,7 +489,7 @@ void DebugScene::Update() {
 	cameraInfo_.Translate.x += rightStick.x * 0.01f;
 	cameraInfo_.Translate.y += rightStick.y * 0.01f;
 
-	if (Input::FlickLeftStick(0, 0.5f)) {
+	if (InputService::FlickLeftStick(0, 0.5f)) {
 		if (cameraInfo_.Set) {
 			cameraInfo_.Set = false;
 		} else {
@@ -502,12 +502,12 @@ void DebugScene::Update() {
 	/// ===Audioのセット=== ///
 #pragma region Audioのセット
 	if (audioInfo_.play) {
-		Audio::PlayeSound("fanfare", false);
-		Audio::VolumeSound("fanfare", audioInfo_.volume);
-		Audio::PitchSound("fanfare", audioInfo_.pitch);
+		AudioService::PlayeSound("fanfare", false);
+		AudioService::VolumeSound("fanfare", audioInfo_.volume);
+		AudioService::PitchSound("fanfare", audioInfo_.pitch);
 	} else {
-		Audio::StopSound("fanfare");
-		Audio::StopSound("fanfare");
+		AudioService::StopSound("fanfare");
+		AudioService::StopSound("fanfare");
 	}
 #pragma endregion
 
@@ -525,19 +525,19 @@ void DebugScene::Update() {
 	model2_->SetTranslate(modelInfo_.Translate);
 	model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
-	model2_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	model2_->SetCamera(CameraService::GetActiveCamera().get());
 	model2_->Update();
 
 	modelLight_->SetTranslate(light_.point.position);
-	modelLight_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	modelLight_->SetCamera(CameraService::GetActiveCamera().get());
 	modelLight_->Update();
 
 	sky_->SetLightData(light_);
-	sky_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	sky_->SetCamera(CameraService::GetActiveCamera().get());
 	sky_->Update();
 
 	cloud_->SetLightData(light_);
-	cloud_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	cloud_->SetCamera(CameraService::GetActiveCamera().get());
 	cloud_->Update();
 
 	// デバッグモデルの更新(LightDataとCameraの設定はColliderManagerで行う)
@@ -552,11 +552,11 @@ void DebugScene::Update() {
 	/// ===Particle=== ///
 #pragma region Particle
 	// パーティクルの生成
-	if (Input::TriggerKey(DIK_SPACE)) {
-		ServiceParticle::Emit("Ring", particleInofo_.Translate);
-		ServiceParticle::Emit("HitEffect", particleInofo_.Translate);
-		ServiceParticle::SetTexture("Ring", "gradationLine");
-		ServiceParticle::SetTexture("HitEffect", "circle2");
+	if (InputService::TriggerKey(DIK_SPACE)) {
+		ParticleService::Emit("Ring", particleInofo_.Translate);
+		ParticleService::Emit("HitEffect", particleInofo_.Translate);
+		ParticleService::SetTexture("Ring", "gradationLine");
+		ParticleService::SetTexture("HitEffect", "circle2");
 	}
 #pragma endregion
 
@@ -576,7 +576,7 @@ void DebugScene::Update() {
 #pragma endregion
 
 #pragma region ColliderManagerの更新
-	colliderManager_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	colliderManager_->SetCamera(CameraService::GetActiveCamera().get());
 	colliderManager_->SetLightData(light_);
 	colliderManager_->CheckAllCollisions();
 #pragma endregion

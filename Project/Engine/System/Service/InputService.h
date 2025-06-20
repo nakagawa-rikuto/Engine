@@ -2,11 +2,10 @@
 /// ===Includ=== ///
 #include "Engine/DataInfo/InputData.h"
 
-
 ///=====================================================/// 
-/// 入力
+/// InputService
 ///=====================================================///
-class Input {
+class InputService {
 public: // メンバ関数
 	// 更新
 	static void Update();

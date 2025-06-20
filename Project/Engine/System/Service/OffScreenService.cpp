@@ -1,4 +1,4 @@
-#include "Setter.h"
+#include "OffScreenService.h"
 // c++
 #include <cassert>
 // ServiceLocator
@@ -8,6 +8,6 @@
 /// Setter
 ///-------------------------------------------///
 // OffScreenTypeの設定
-void Setter::SetOffScreenType(OffScreenType type) {
+void OffScreenService::SetOffScreenType(OffScreenType type) {
 	return ServiceLocator::GetOffScreenRenderer()->SetType(type);
 }

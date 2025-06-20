@@ -124,7 +124,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
-    <ClCompile Include="Engine\System\Service\Audio.cpp" />
+    <ClCompile Include="Engine\System\Service\AudioService.cpp" />
     <ClCompile Include="Engine\Scene\DebugScene.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\ConfettiParticle.cpp" />
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
@@ -138,7 +138,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Managers\CameraManager.cpp" />
     <ClCompile Include="application\Game\Camera\Camera.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
-    <ClCompile Include="Engine\System\Service\Input.cpp" />
+    <ClCompile Include="Engine\System\Service\InputService.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\Material3D.cpp" />
     <ClCompile Include="Engine\System\Managers\ImGuiManager.cpp" />
@@ -212,11 +212,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
     <ClCompile Include="Engine\System\ImGui\SceneView.cpp" />
-    <ClCompile Include="Engine\System\Service\Setter.cpp" />
+    <ClCompile Include="Engine\System\Service\OffScreenService.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
-    <ClCompile Include="Engine\System\Service\ServiceCamera.cpp" />
-    <ClCompile Include="Engine\System\Service\ServiceParticle.cpp" />
+    <ClCompile Include="Engine\System\Service\CameraService.cpp" />
+    <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Collider\AABBCollider.h" />
@@ -237,7 +237,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
-    <ClInclude Include="Engine\System\Service\Audio.h" />
+    <ClInclude Include="Engine\System\Service\AudioService.h" />
     <ClInclude Include="Engine\Scene\DebugScene.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\ConfettiParticle.h" />
     <ClInclude Include="Engine\DataInfo\InputData.h" />
@@ -254,7 +254,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="application\Game\Camera\Camera.h" />
     <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
-    <ClInclude Include="Engine\System\Service\Input.h" />
+    <ClInclude Include="Engine\System\Service\InputService.h" />
     <ClInclude Include="Engine\Core\Logger.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\Material3D.h" />
     <ClInclude Include="Engine\System\Managers\ImGuiManager.h" />
@@ -332,11 +332,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
     <ClInclude Include="Engine\System\ImGui\SceneView.h" />
-    <ClInclude Include="Engine\System\Service\Setter.h" />
+    <ClInclude Include="Engine\System\Service\OffScreenService.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
     <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
-    <ClInclude Include="Engine\System\Service\ServiceCamera.h" />
-    <ClInclude Include="Engine\System\Service\ServiceParticle.h" />
+    <ClInclude Include="Engine\System\Service\CameraService.h" />
+    <ClInclude Include="Engine\System\Service\ParticleService.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

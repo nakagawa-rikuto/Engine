@@ -3,9 +3,9 @@
 #include <string>
 
 ///=====================================================/// 
-/// Audio
+/// AudioService
 ///=====================================================///
-class Audio {
+class AudioService {
 public:
 	// サウンドの再生
 	static void PlayeSound(const std::string& key, bool loop);
