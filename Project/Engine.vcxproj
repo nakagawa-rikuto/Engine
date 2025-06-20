@@ -118,7 +118,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
-    <ClCompile Include="Engine\System\Service\Getter.cpp" />
+    <ClCompile Include="Engine\System\Service\GraphicsResourceGetter.cpp" />
     <ClCompile Include="Engine\System\Level\LevelLoader.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
@@ -230,7 +230,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\Particle\Derivative\HitEffectParticle.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
-    <ClInclude Include="Engine\System\Service\Getter.h" />
+    <ClInclude Include="Engine\System\Service\GraphicsResourceGetter.h" />
     <ClInclude Include="Engine\System\Level\LevelLoader.h" />
     <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
     <ClInclude Include="application\Drawing\3d\Line.h" />

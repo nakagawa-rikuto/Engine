@@ -108,7 +108,7 @@
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\DataInfo\FunctionData.cpp" />
     <ClCompile Include="Engine\System\Service\Render.cpp" />
-    <ClCompile Include="Engine\System\Service\Getter.cpp" />
+    <ClCompile Include="Engine\System\Service\GraphicsResourceGetter.cpp" />
     <ClCompile Include="Engine\System\Service\ServiceLocator.cpp" />
     <ClCompile Include="Engine\System\Managers\RTVManager.cpp" />
     <ClCompile Include="Engine\System\Managers\DSVManager.cpp" />
@@ -227,7 +227,7 @@
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\DataInfo\FunctionData.h" />
     <ClInclude Include="Engine\System\Service\Render.h" />
-    <ClInclude Include="Engine\System\Service\Getter.h" />
+    <ClInclude Include="Engine\System\Service\GraphicsResourceGetter.h" />
     <ClInclude Include="Engine\System\Service\ServiceLocator.h" />
     <ClInclude Include="Engine\System\Managers\RTVManager.h" />
     <ClInclude Include="Engine\System\Managers\DSVManager.h" />

@@ -558,6 +558,9 @@ void DebugScene::Update() {
 		ParticleService::SetTexture("Ring", "gradationLine");
 		ParticleService::SetTexture("HitEffect", "circle2");
 	}
+
+	// Cameraを設定
+	ParticleService::SetCamera(CameraService::GetActiveCamera().get());
 #pragma endregion
 
 	/// ===カメラの更新=== ///

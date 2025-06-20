@@ -1,4 +1,4 @@
-#include "Getter.h"
+#include "GraphicsResourceGetter.h"
 // c++
 #include <cassert>
 // Engine
@@ -18,34 +18,34 @@
 /// DescriptorHandle
 ///-------------------------------------------///
 // RTV
-D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetRTVCPUDescriptorHandle(uint32_t index) { 
+D3D12_CPU_DESCRIPTOR_HANDLE GraphicsResourceGetter::GetRTVCPUDescriptorHandle(uint32_t index) {
 	return ServiceLocator::GetRTVManager()->GetCPUDescriptorHandle(index);
 }
-D3D12_GPU_DESCRIPTOR_HANDLE Getter::GetRTVGPUDescriptorHandle(uint32_t index) { 
+D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceGetter::GetRTVGPUDescriptorHandle(uint32_t index) {
 	return ServiceLocator::GetRTVManager()->GetGPUDescriptorHandle(index);
 }
 // DSV
-D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetDSVCPUDescriptorHandle(uint32_t index) { 
+D3D12_CPU_DESCRIPTOR_HANDLE GraphicsResourceGetter::GetDSVCPUDescriptorHandle(uint32_t index) {
 	return ServiceLocator::GetDSVManager()->GetCPUDescriptorHandle(index);
 }
-D3D12_GPU_DESCRIPTOR_HANDLE Getter::GetDSVGPUDescriptorHandle(uint32_t index) { 
+D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceGetter::GetDSVGPUDescriptorHandle(uint32_t index) {
 	return ServiceLocator::GetDSVManager()->GetGPUDescriptorHandle(index);
 }
 // SRV
-D3D12_CPU_DESCRIPTOR_HANDLE Getter::GetSRVCPUDescriptorHandle(uint32_t index) { 
+D3D12_CPU_DESCRIPTOR_HANDLE GraphicsResourceGetter::GetSRVCPUDescriptorHandle(uint32_t index) {
 	return ServiceLocator::GetSRVManager()->GetCPUDescriptorHandle(index);
 }
-D3D12_GPU_DESCRIPTOR_HANDLE Getter::GetSRVGPUDescriptorHandle(uint32_t index) { 
+D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceGetter::GetSRVGPUDescriptorHandle(uint32_t index) {
 	return ServiceLocator::GetSRVManager()->GetGPUDescriptorHandle(index);
 }
 
 ///-------------------------------------------/// 
 /// WinApp
 ///-------------------------------------------///
-const int Getter::GetWindowWidth() { 
+const int GraphicsResourceGetter::GetWindowWidth() {
 	return ServiceLocator::GetWinApp()->GetWindowWidth();
 }
-const int Getter::GetWindowHeight() { 
+const int GraphicsResourceGetter::GetWindowHeight() {
 	return ServiceLocator::GetWinApp()->GetWindowHeight();
 }
 
@@ -53,15 +53,15 @@ const int Getter::GetWindowHeight() {
 /// Data
 ///-------------------------------------------///
 // メタデータの取得
-const DirectX::TexMetadata& Getter::GetMetaData(const std::string& key) { 
+const DirectX::TexMetadata& GraphicsResourceGetter::GetMetaData(const std::string& key) {
 	return ServiceLocator::GetTextureManager()->GetMetaData(key);
 }
 // モデルデータの取得
-ModelData Getter::GetModelData(const std::string& directorPath) { 
+ModelData GraphicsResourceGetter::GetModelData(const std::string& directorPath) {
 	return ServiceLocator::GetModelManager()->GetModelData(directorPath);
 }
 // アニメーションの取得
-std::map<std::string, Animation> Getter::GetAnimationData(const std::string& directorPath) {
+std::map<std::string, Animation> GraphicsResourceGetter::GetAnimationData(const std::string& directorPath) {
 	return ServiceLocator::GetAnimationManager()->GetAnimation(directorPath);
 }
 
@@ -69,10 +69,10 @@ std::map<std::string, Animation> Getter::GetAnimationData(const std::string& dir
 /// DXCommon
 ///-------------------------------------------///
 // Deviceの取得
-ID3D12Device* Getter::GetDXDevice() { 
+ID3D12Device* GraphicsResourceGetter::GetDXDevice() {
 	return ServiceLocator::GetDXCommon()->GetDevice();
 }
 // CommandListの取得
-ID3D12GraphicsCommandList* Getter::GetDXCommandList() { 
+ID3D12GraphicsCommandList* GraphicsResourceGetter::GetDXCommandList() {
 	return ServiceLocator::GetDXCommon()->GetCommandList();
 }

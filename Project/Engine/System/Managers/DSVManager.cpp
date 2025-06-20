@@ -2,7 +2,7 @@
 // Engine
 #include "Engine/Core/DXCommon.h"
 // Service
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ、デストラクタ
@@ -70,8 +70,8 @@ bool DSVManager::AssertAllocate() { return useIndex_ < kMaxDSVCount_; }
 ///-------------------------------------------///
 void DSVManager::CreateDepthBuffer(uint32_t index) {
     D3D12_RESOURCE_DESC desc{};
-    desc.Width = Getter::GetWindowWidth();
-    desc.Height = Getter::GetWindowHeight();
+    desc.Width = GraphicsResourceGetter::GetWindowWidth();
+    desc.Height = GraphicsResourceGetter::GetWindowHeight();
     desc.MipLevels = 1;
     desc.DepthOrArraySize = 1;
     desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;

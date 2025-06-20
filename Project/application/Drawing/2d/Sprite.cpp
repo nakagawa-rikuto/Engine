@@ -2,7 +2,7 @@
 // c++
 #include <cassert>
 // Engine
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
 // Math
 #include "Math/MatrixMath.h"
@@ -59,7 +59,7 @@ void Sprite::SetTextureSize(const Vector2& textureSize) { textureSize_ = texture
 void Sprite::Initialize(const std::string textureFilePath) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Getter::GetDXDevice();
+	ID3D12Device* device = GraphicsResourceGetter::GetDXDevice();
 
 	/// ===テクスチャ=== ///
 	filePath_ = textureFilePath;
@@ -121,7 +121,7 @@ void Sprite::Update() {
 void Sprite::Draw(GroundType type, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = GraphicsResourceGetter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
@@ -201,7 +201,7 @@ void Sprite::TransformDataWrite() {
 	// ViewMatrix
 	Matrix4x4 viewMatrix = Math::MakeIdentity4x4();
 	// ProjectionMatrix
-	Matrix4x4 projectionMatrix = Math::MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(Getter::GetWindowWidth()), static_cast<float>(Getter::GetWindowHeight()), 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = Math::MakeOrthographicMatrix(0.0f, 0.0f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()), static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.0f, 100.0f);
 
 	// データの書き込み
 	common_->SetWVPData(Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix)));
@@ -245,7 +245,7 @@ void Sprite::UpdateVertexDataWrite() {
 /// テクスチャ範囲指定
 ///-------------------------------------------///
 void Sprite::SpecifyRange() {
-	const DirectX::TexMetadata& metadata = Getter::GetMetaData(filePath_);
+	const DirectX::TexMetadata& metadata = GraphicsResourceGetter::GetMetaData(filePath_);
 	float tex_left = textureLeftTop_.x / metadata.width;
 	float tex_right = (textureLeftTop_.x + textureSize_.x) / metadata.width;
 	float tex_top = textureLeftTop_.y / metadata.height;
@@ -264,7 +264,7 @@ void Sprite::SpecifyRange() {
 ///-------------------------------------------///
 void Sprite::AdjustTextureSize(const std::string& filePath) {
 	// テクスチャメタデータを取得
-	const DirectX::TexMetadata& metadata = Getter::GetMetaData(filePath);
+	const DirectX::TexMetadata& metadata = GraphicsResourceGetter::GetMetaData(filePath);
 
 	textureSize_.x = static_cast<float>(metadata.width);
 	textureSize_.y = static_cast<float>(metadata.height);
