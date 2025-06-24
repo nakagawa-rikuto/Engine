@@ -29,6 +29,14 @@ GameScene::~GameScene() {
 	ground_.reset();
 	// Enemy
 	enemy_.reset();
+}
+
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void GameScene::Initialize() {
+	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
+	IScene::Initialize();
 
 	/// ===Camera=== ///
 	camera_ = std::make_shared<Camera>();
@@ -62,14 +70,6 @@ GameScene::~GameScene() {
 	ParticleService::AddParticle("Ring", std::make_unique<RingParticle>());
 	ParticleService::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
 	ParticleService::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
-}
-
-///-------------------------------------------/// 
-/// 初期化
-///-------------------------------------------///
-void GameScene::Initialize() {
-	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
-	IScene::Initialize();
 }
 
 ///-------------------------------------------/// 
