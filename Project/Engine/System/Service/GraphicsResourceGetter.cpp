@@ -11,6 +11,7 @@
 #include "Engine/System/Managers/TextureManager.h"
 #include "Engine/System/Managers/ModelManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
+#include "Engine/System/Managers/LevelManager.h"
 // ServiceLocator
 #include "ServiceLocator.h"
 
@@ -64,6 +65,11 @@ ModelData GraphicsResourceGetter::GetModelData(const std::string& directorPath) 
 std::map<std::string, Animation> GraphicsResourceGetter::GetAnimationData(const std::string& directorPath) {
 	return ServiceLocator::GetAnimationManager()->GetAnimation(directorPath);
 }
+// LevelDataの取得
+LevelData* GraphicsResourceGetter::GetLevelData(const std::string& file_name) {
+	return ServiceLocator::GetLevelManager()->GetLevelData(file_name);
+}
+
 
 ///-------------------------------------------/// 
 /// DXCommon

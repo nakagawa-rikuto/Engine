@@ -22,7 +22,7 @@ public: /// ===基本的な関数=== ///
 	~Model();
 
 	// 初期化
-	void Initialize(const std::string& filename, LightType type); // オブジェクトを読み込まない場合の初期化
+	void Initialize(const std::string& filename, LightType type = LightType::None); // オブジェクトを読み込まない場合の初期化
 	// 更新
 	void Update();
 	// 描画

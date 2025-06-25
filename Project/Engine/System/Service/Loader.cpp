@@ -5,6 +5,7 @@
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
+#include "Engine/system/Managers/LevelManager.h"
 // ServiceLocator
 #include "ServiceLocator.h"
 
@@ -31,6 +32,13 @@ void Loader::LoadModel(const std::string& directorPath, const std::string& filen
 ///-------------------------------------------///
 void Loader::LoadCSV(const std::string& filename) {
 	ServiceLocator::GetCSVManager()->Load(filename);
+}
+
+///-------------------------------------------/// 
+/// Json
+///-------------------------------------------///
+void Loader::LoadJson(const std::string& filename) {
+	ServiceLocator::GetLevelManager()->LoadJSON(filename);
 }
 
 ///-------------------------------------------/// 
