@@ -1,13 +1,32 @@
 #include "IScene.h"
+// Service
 #include "Engine/System/Service/ServiceLocator.h"
-#include "Engine/Graphics/3d/Line/LineObject3D.h"
 #include "Engine/System/Service/CameraService.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
+// Object3d
+#include "Engine/Graphics/3d/Model/Model.h"
+// Line
+#include "Engine/Graphics/3d/Line/LineObject3D.h"
+// Math
+#include "Math/sMath.h"
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 IScene::~IScene() {
 	defaultCamera_.reset();
+
+	if (IsLevelLoaded_) {
+		for (auto obj : objects_) {
+			delete obj;
+		}
+		objects_.clear();
+
+		for (auto& [key, model] : models_) {
+			delete model;
+		}
+		models_.clear();
+	}
 }
 
 ///-------------------------------------------/// 
@@ -31,6 +50,13 @@ void IScene::Initialize() {
 ///-------------------------------------------///
 void IScene::Update() {
 
+	// レベルが読み込まれている場合
+	if (IsLevelLoaded_) {
+		for (Model* model : objects_) {
+			model->Update();
+		}
+	}
+
 	// Line更新
 	ServiceLocator::GetLineObject3D()->SetCamera(CameraService::GetActiveCamera().get());
 	ServiceLocator::GetLineObject3D()->Update();
@@ -41,8 +67,70 @@ void IScene::Update() {
 ///-------------------------------------------///
 void IScene::Draw() {
 
+	// レベルが読み込まれている場合
+	if (IsLevelLoaded_) {
+		for (Model* model : objects_) {
+			model->Draw(BlendMode::kBlendModeNone);
+		}
+	}
+
 	// Lineの描画
 	ServiceLocator::GetLineObject3D()->Draw();
+}
+
+///-------------------------------------------/// 
+/// モデルデータの先読み
+///-------------------------------------------///
+void IScene::LoadModelsForLevel(const std::string& file_name) {
+
+	levelData_ = GraphicsResourceGetter::GetLevelData(file_name);
+
+	for (const auto& obj : levelData_->objects) {
+		const std::string& fileName = obj.fileName;
+		if (models_.find(fileName) == models_.end()) {
+			Model* model = new Model();
+			model->Initialize(fileName); // ModelManager経由
+			models_[fileName] = model;
+		}
+	}
+
+	// フラグをtrueに設定
+	IsLevelLoaded_ = true;
+}
+
+///-------------------------------------------/// 
+/// レベルオブジェクトの配置
+///-------------------------------------------///
+void IScene::PlaceLevelObjects() {
+
+	// 早期リターン
+	if (!IsLevelLoaded_) {
+		return;
+	}
+
+
+	std::vector<Model*> objects; // 配置済みオブジェクト格納先
+
+	for (const auto& objectData : levelData_->objects) {
+		Model* model = nullptr;
+
+		// モデルキャッシュから取得
+		auto it = models_.find(objectData.fileName);
+		if (it != models_.end()) {
+			model = it->second;
+		}
+
+		// モデルから新しいインスタンスを生成
+		Model* newObject = model->Clone();
+		newObject->SetTranslate(objectData.translation);
+		newObject->SetRotate(Math::QuaternionFromVector(objectData.rotation));
+		newObject->SetScale(objectData.scaling);
+
+		objects.push_back(newObject);
+	}
+
+	// 一括格納
+	objects_ = std::move(objects);
 }
 
 ///-------------------------------------------/// 
