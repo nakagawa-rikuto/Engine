@@ -65,6 +65,9 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// CSVManagerの生成
 	csvManager_ = std::make_unique<CSVManager>();
 
+	// LevelManagerの生成
+	levelManager_ = std::make_unique<LevelManager>();
+
 	// LineObject3Dの生成
 	lineObject3D_ = std::make_unique<LineObject3D>();
 	lineObject3D_->Initialize(dXCommon_->GetDevice());
@@ -118,14 +121,16 @@ void Mii::Finalize() {
 	mouse_.reset();				// Mouse
 	keyboard_.reset();			// Keyboard
 	inputCommon_.reset();		// InputCommon
+	lineObject3D_.reset();      // LineObject3D
+
 	// Manager
+	levelManager_.reset();		// LevelManager
 	csvManager_.reset();		// CSVManager
 	audioManager_.reset();		// AudioManager
 	animationManager_.reset();	// AnimationManager
 	modelManager_.reset();		// Modelmanager
 	textureManager_.reset();	// TextrureManager
-	// LineObject3D
-	lineObject3D_.reset();
+	
 	// SceneView
 	sceneView_.reset();
 	// OffScreen
@@ -225,6 +230,8 @@ ModelManager* Mii::GetModelManager() { return modelManager_.get(); }
 AudioManager* Mii::GetAudioManager() { return audioManager_.get(); }
 // CSVManager
 CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
+// LevelManager
+LevelManager* Mii::GetLevelManager() { return levelManager_.get(); }
 // AnimationManager
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
 // OffScreenRenderer

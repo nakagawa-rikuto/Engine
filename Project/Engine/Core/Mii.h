@@ -21,12 +21,14 @@
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
+#include "Engine/System/Managers/LevelManager.h"
 // OffScreenRender
 #include "Engine/Graphics/OffScreen/OffScreenRenderer.h"
 // ImGui
 #include "Engine/System/ImGui/SceneView.h"
 // LineObject
 #include "Engine/Graphics/3d/Line/LineObject3D.h"
+
 
 ///=====================================================///
 /// システム
@@ -73,6 +75,8 @@ public:/// ===開発者用関数(Getter)=== ///
 	AudioManager* GetAudioManager();
 	// CSVManagerの取得
 	CSVManager* GetCSVManager();
+	// LevelManagerの取得
+	LevelManager* GetLevelManager();
 	// AnimationManagerの取得
 	AnimationManager* GetAnimationManager();
 	// OffScreenRendererの取得
@@ -112,6 +116,8 @@ private:/// ===Variables(変数)=== ///
 	std::unique_ptr<SceneView> sceneView_;                // SceneView
 	// Line
 	std::unique_ptr<LineObject3D> lineObject3D_;          // LineObject3D
+	// Level
+	std::unique_ptr<LevelManager> levelManager_;			  // LevelLoader
 
 private:
 	///=====================================================/// 
