@@ -154,34 +154,6 @@ void Model::Draw(BlendMode mode) {
 }
 
 ///-------------------------------------------/// 
-/// クローン
-///-------------------------------------------///
-Model* Model::Clone() {
-	Model* clone = new Model();
-	/// ===モデルデータのクローン=== ///
-	clone->modelData_ = this->modelData_;
-	/// ===Transformのクローン=== ///
-	clone->worldTransform_ = this->worldTransform_;
-	clone->cameraTransform_ = this->cameraTransform_;
-	clone->uvTransform_ = this->uvTransform_;
-	/// ===カラーのクローン=== ///
-	clone->color_ = this->color_;
-	/// ===Lightのクローン=== ///
-	clone->light_ = this->light_;
-	/// ===カメラのクローン=== ///
-	clone->camera_ = this->camera_;
-	/// ===バッファリソースのクローン=== ///
-	clone->vertex_ = std::make_unique<VertexBuffer3D>(*this->vertex_);
-	clone->index_ = std::make_unique<IndexBuffer3D>(*this->index_);
-	clone->common_ = std::make_unique<ModelCommon>(*this->common_);
-	/// ===バッファビューのクローン=== ///
-	clone->vertexBufferView_ = this->vertexBufferView_;
-	clone->indexBufferView_ = this->indexBufferView_;
-
-	return clone;
-}
-
-///-------------------------------------------/// 
 /// MaterialDataの書き込み
 ///-------------------------------------------///
 void Model::MateialDataWrite() {

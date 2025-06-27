@@ -21,8 +21,8 @@ public:
 	virtual void Draw();
 
 	// 配置関数(Level)
-	void LoadModelsForLevel(const std::string& file_name);
-	void PlaceLevelObjects();
+	//void LoadModelsForLevel(const std::string& file_name);
+	//void PlaceLevelObjects();
 
 public:/// ===Setter=== ///
 
@@ -36,6 +36,7 @@ protected:
 
 private:
 
+	/*
 	// レベルオブジェクトのインスタンス一覧
 	std::vector<Model*> objects_;
 	// モデルのキャッシュ（fileNameごとに1つ）
@@ -44,5 +45,6 @@ private:
 	LevelData* levelData_ = nullptr; 
 	// レベルが読み込まれたかどうか
 	bool IsLevelLoaded_ = false; 
+	*/
 };
 

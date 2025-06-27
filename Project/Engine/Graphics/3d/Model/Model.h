@@ -28,9 +28,6 @@ public: /// ===基本的な関数=== ///
 	// 描画
 	void Draw(BlendMode mode);
 
-	// クローン
-	Model* Clone();
-
 public: /// ===Getter=== ///
 	// モデル座標
 	const Vector3& GetTranslate() const;
