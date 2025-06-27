@@ -2,6 +2,9 @@
 /// ===Include=== ///
 #include "application/Game/Camera/Camera.h"
 #include "Engine/DataInfo/LevelData.h"
+#include "Engine/DataInfo/BlendModeData.h"
+
+#include <vector>
 
 /// ===前方宣言=== ///
 class SceneManager;
@@ -20,10 +23,6 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
-	// 配置関数(Level)
-	//void LoadModelsForLevel(const std::string& file_name);
-	//void PlaceLevelObjects();
-
 public:/// ===Setter=== ///
 
 	void SetSceneManager(SceneManager* sceneManager);
@@ -34,17 +33,12 @@ protected:
 	// Camera
 	std::shared_ptr<Camera> defaultCamera_;
 
-private:
+	// 共有モデル群
+	std::vector<std::unique_ptr<Model>> models_;
 
-	/*
-	// レベルオブジェクトのインスタンス一覧
-	std::vector<Model*> objects_;
-	// モデルのキャッシュ（fileNameごとに1つ）
-	std::map<std::string, Model*> models_;
-	// レベルデータ
-	LevelData* levelData_ = nullptr; 
-	// レベルが読み込まれたかどうか
-	bool IsLevelLoaded_ = false; 
-	*/
+	// 配置関数(Level)
+	void GenerateModelsFromLevelData(const std::string& file_name);
+	void UpdateLevelModels();
+	void DrawLevelModels(BlendMode mode = BlendMode::kBlendModeNone);
 };
 

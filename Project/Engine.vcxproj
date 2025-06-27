@@ -220,6 +220,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
     <ClInclude Include="Engine\DataInfo\LevelData.h" />
     <ClInclude Include="Engine\System\Service\ColliderService.h" />
     <ClInclude Include="Engine\Collider\AABBCollider.h" />

@@ -28,6 +28,9 @@ public: /// ===基本的な関数=== ///
 	// 描画
 	void Draw(BlendMode mode);
 
+	// クローン
+	std::shared_ptr<Model> Clone() const;
+
 public: /// ===Getter=== ///
 	// モデル座標
 	const Vector3& GetTranslate() const;
@@ -55,9 +58,9 @@ public: /// ===Setter=== ///
 private: /// ===Variables(変数)=== ///
 
 	/// ===バッファリソース=== ///
-	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<IndexBuffer3D> index_;
-	std::unique_ptr<ModelCommon> common_;
+	std::shared_ptr<VertexBuffer3D> vertex_;
+	std::shared_ptr<IndexBuffer3D> index_;
+	std::shared_ptr<ModelCommon> common_;
 
 	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;

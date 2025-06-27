@@ -8,14 +8,17 @@
 ///-------------------------------------------/// 
 /// Jsonの読み込み関数
 ///-------------------------------------------///
-void LevelManager::LoadJSON(const std::string& file_path) {
+void LevelManager::LoadLevelJson(const std::string& basePath, const std::string& file_path) {
 
     /// ===JSONファイルを読み込んでみる=== ///
     // ファイルストリーム
     std::ifstream file;
 
+	// basePath`と`file_path`を結合して完全なパスを作成
+	std::string full_path = basePath + "/" + file_path;
+
     // ファイルを開く
-    file.open(file_path);
+    file.open(full_path);
 
     // ファイルオープン失敗をチェック
     if (file.fail()) {

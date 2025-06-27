@@ -16,11 +16,7 @@
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
 Model::Model() = default;
-Model::~Model() {
-	vertex_.reset();
-	index_.reset();
-	common_.reset();
-}
+Model::~Model() = default;
 
 ///-------------------------------------------/// 
 /// Getter
@@ -86,9 +82,9 @@ void Model::Initialize(const std::string& filename, LightType type) {
 	modelData_ = GraphicsResourceGetter::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
-	vertex_ = std::make_unique<VertexBuffer3D>();
-	index_ = std::make_unique<IndexBuffer3D>();
-	common_ = std::make_unique<ModelCommon>();
+	vertex_ = std::make_shared<VertexBuffer3D>();
+	index_ = std::make_shared<IndexBuffer3D>();
+	common_ = std::make_shared<ModelCommon>();
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
@@ -151,6 +147,27 @@ void Model::Draw(BlendMode mode) {
 	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+}
+
+///-------------------------------------------/// 
+/// クローン
+///-------------------------------------------///
+std::shared_ptr<Model> Model::Clone() const {
+	std::shared_ptr<Model> clone = std::make_shared<Model>();
+
+	clone->modelData_ = this->modelData_;
+	clone->worldTransform_ = this->worldTransform_;
+	clone->cameraTransform_ = this->cameraTransform_;
+	clone->uvTransform_ = this->uvTransform_;
+	clone->color_ = this->color_;
+	clone->light_ = this->light_;
+	clone->camera_ = this->camera_;
+
+	clone->vertex_ = this->vertex_;
+	clone->index_ = this->index_;
+	clone->common_ = this->common_;
+
+	return clone;
 }
 
 ///-------------------------------------------/// 
