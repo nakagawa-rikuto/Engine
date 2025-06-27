@@ -25,7 +25,7 @@ void ModelManager::Initialize(TextureManager* texture) {
 ///-------------------------------------------/// 
 /// ファイルの読み込み
 ///-------------------------------------------///
-void ModelManager::Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename) {
+void ModelManager::Load(const std::string& Key, const std::string& baseDirectoryPath, const std::string& filename) {
 	// 読み込み済みモデルを検索
 	if (modelDatas_.contains(filename)) {
 		// 読み込み済みなら早期return
@@ -35,7 +35,7 @@ void ModelManager::Load(const std::string& baseDirectoryPath, const std::string&
 	// Dataの宣言
 	ModelData modeldata;
 	// モデル読み込み
-	modeldata = LoadObjFile(baseDirectoryPath + "/" + directorPath, filename);
+	modeldata = LoadObjFile(baseDirectoryPath, filename);
 
 	// テクスチャの読み込みとインデックス設定
 	if (!modeldata.material.textureFilePath.empty()) { // 空でなければ
@@ -44,7 +44,7 @@ void ModelManager::Load(const std::string& baseDirectoryPath, const std::string&
 	}
 
 	// モデルをMapコンテナに格納
-	modelDatas_[directorPath] = modeldata;
+	modelDatas_[Key] = modeldata;
 }
 
 ///-------------------------------------------/// 

@@ -20,7 +20,7 @@ public:
 
 public:
 	// ファイル読み込み
-	void Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename);
+	void Load(const std::string& Key, const std::string& baseDirectoryPath, const std::string& filename);
 
 	// Animationの取得
 	std::map<std::string, Animation> GetAnimation(const std::string& filename);

@@ -12,7 +12,7 @@ AnimationManager::~AnimationManager() {
 ///-------------------------------------------/// 
 /// ファイル読み込み
 ///-------------------------------------------///
-void AnimationManager::Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename) {
+void AnimationManager::Load(const std::string& Key, const std::string& baseDirectoryPath, const std::string& filename) {
 	// 読み込み済みアニメーションを検索
 	if (animationDatas_.contains(filename)) {
 		// 読み込み済みなら早期return
@@ -22,10 +22,10 @@ void AnimationManager::Load(const std::string& baseDirectoryPath, const std::str
 	// Dataの宣言
 	std::map<std::string, Animation> animationData;
 	// アニメーションの読み込み
-	animationData = LoadAnimation(baseDirectoryPath + "/" + directorPath, filename);
+	animationData = LoadAnimation(baseDirectoryPath, filename);
 
 	// アニメーションをMapコンテナに格納
-	animationDatas_[directorPath] = animationData;
+	animationDatas_[Key] = animationData;
 }
 
 ///-------------------------------------------/// 

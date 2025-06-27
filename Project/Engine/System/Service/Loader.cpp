@@ -21,10 +21,10 @@ void Loader::LoadTexture(const std::string& key, const std::string& filePath) {
 ///-------------------------------------------/// 
 /// モデル
 ///-------------------------------------------///
-void Loader::LoadModel(const std::string& directorPath, const std::string& filename) {
+void Loader::LoadModel(const std::string& Key, const std::string& filename) {
 	// ベースのディレクトリパス
 	const std::string& baseDirectorPath = "./Resource/Models";
-	ServiceLocator::GetModelManager()->Load(baseDirectorPath, directorPath, filename);
+	ServiceLocator::GetModelManager()->Load(Key, baseDirectorPath, filename);
 }
 
 ///-------------------------------------------/// 
@@ -47,14 +47,14 @@ void Loader::LoadJson(const std::string& filename) {
 void Loader::LoadAnimation(const std::string& key, const std::string& filename) {
 	// ベースのディレクトリパス
 	const std::string& baseDirectorPath = "./Resource/Animations";
-	ServiceLocator::GetModelManager()->Load(baseDirectorPath, key, filename);
-	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, key, filename);
+	ServiceLocator::GetModelManager()->Load(key, baseDirectorPath, filename);
+	ServiceLocator::GetAnimationManager()->Load(key, baseDirectorPath, filename);
 }
 void Loader::LoadAnimationdifferentModel(const std::string& key, const std::string& ModelFilename, const std::string& AnimationFilename) {
 	// ベースのディレクトリパス
 	const std::string& baseDirectorPath = "./Resource/Animations";
-	ServiceLocator::GetModelManager()->Load(baseDirectorPath, key, ModelFilename);
-	ServiceLocator::GetAnimationManager()->Load(baseDirectorPath, key, AnimationFilename);
+	ServiceLocator::GetModelManager()->Load(key, baseDirectorPath, ModelFilename);
+	ServiceLocator::GetAnimationManager()->Load(key, baseDirectorPath, AnimationFilename);
 }
 
 ///-------------------------------------------/// 

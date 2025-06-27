@@ -109,14 +109,6 @@ void DebugScene::Initialize() {
 	modelLight_ = std::make_unique<Object3d>();
 	modelLight_->Init(ObjectType::Model, "Particle");
 
-	// 球
-	sky_ = std::make_unique<Object3d>();
-	sky_->Init(ObjectType::Model, "sky", LightType::HalfLambert);
-	sky_->SetTranslate({ 0.0f, 0.0f, 0.0f });
-	cloud_ = std::make_unique<Object3d>();
-	cloud_->Init(ObjectType::Model, "cloud", LightType::HalfLambert);
-	cloud_->SetTranslate({ 0.0f, 0.0f, 0.0f });
-
 	// ポイントライトの位置と半径の変更
 	light_.point.position = { 0.0f, 0.0f, -30.0f };
 	light_.point.radius = 500.0f;
@@ -124,8 +116,6 @@ void DebugScene::Initialize() {
 	// 一回更新をかける
 	model2_->Update();
 	modelLight_->Update();
-	sky_->Update();
-	cloud_->Update();
 #pragma endregion
 
 	/// ===アニメーションモデルの初期化=== ///
@@ -536,14 +526,6 @@ void DebugScene::Update() {
 	modelLight_->SetCamera(CameraService::GetActiveCamera().get());
 	modelLight_->Update();
 
-	sky_->SetLightData(light_);
-	sky_->SetCamera(CameraService::GetActiveCamera().get());
-	sky_->Update();
-
-	cloud_->SetLightData(light_);
-	cloud_->SetCamera(CameraService::GetActiveCamera().get());
-	cloud_->Update();
-
 	// デバッグモデルの更新(LightDataとCameraの設定はColliderManagerで行う)
 	debugModel_->Update();
 #pragma endregion
@@ -605,10 +587,6 @@ void DebugScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-	/// ===二重天球=== ///
-	//sky_->Draw();
-	//cloud_->Draw();
-
 
 	if (isDisplay_.Model) {
 		/// ===アニーメーションモデル=== ///

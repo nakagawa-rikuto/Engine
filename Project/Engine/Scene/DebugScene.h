@@ -78,9 +78,6 @@ private:/// ===メンバ変数=== ///
 	std::shared_ptr<Camera> camera2_;
 	// モデル
 	std::unique_ptr<Object3d> model2_;
-	// 球
-	std::unique_ptr<Object3d> sky_;
-	std::unique_ptr<Object3d> cloud_;
 	// モデルライト
 	std::unique_ptr<Object3d> modelLight_;
 	// Line

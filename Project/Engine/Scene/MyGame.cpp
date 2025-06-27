@@ -108,30 +108,15 @@ void MyGame::LoadTexture() {
 }
 // モデル
 void MyGame::LoadModel() {
-	Loader::LoadModel("GlTF", "GlTF.gltf");
-	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
-	Loader::LoadModel("terrain", "terrain.obj");
-	Loader::LoadModel("axis", "axis.obj");
-	Loader::LoadModel("plane", "plane.obj");
-	Loader::LoadModel("Particle", "Particle.obj");
-	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
-
+	Loader::LoadModel("MonsterBall", "./MonsterBall/MonsterBall.obj");
+	Loader::LoadModel("terrain", "./terrain/terrain.obj");
+	Loader::LoadModel("plane", "./plane/plane.obj");
+	Loader::LoadModel("Particle", "/Particle/Particle.obj");
+	Loader::LoadModel("ParticlePlane", "./ParticlePlane/ParticlePlane.gltf");
 	// Game
-	Loader::LoadModel("skydome", "skydome.obj");
-	Loader::LoadModel("sky", "sky.gltf");
-	Loader::LoadModel("cloud", "cloud.gltf");
 }
 // アニメーション
 void MyGame::LoadAnimation() {
-	Loader::LoadAnimation("AnimatedCube", "AnimatedCube.gltf");
-	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
-	Loader::LoadAnimation("human", "sneakWalk.gltf");
-	Loader::LoadAnimation("player_animation", "player_animation.gltf");
-	// 上記の二つが読み込め対理由は,キーがDirectぽ明日になっている為、それがあっていないと読み込めない
-	// ダイレクトパスまで書いてしまえばいい。
-	//Loader::LoadAnimationdifferentModel("human", "walk.gltf", "running.gltf");
-	// sneakWalk
-	// walk
-
-	//　行いたいこと
+	Loader::LoadAnimation("simpleSkin", "./simpleSkin/simpleSkin.gltf");
+	Loader::LoadAnimation("human", "./human/sneakWalk.gltf");
 }
