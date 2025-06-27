@@ -108,15 +108,15 @@ void MyGame::LoadTexture() {
 }
 // モデル
 void MyGame::LoadModel() {
-	Loader::LoadModel("MonsterBall", "./MonsterBall/MonsterBall.obj");
-	Loader::LoadModel("terrain", "./terrain/terrain.obj");
-	Loader::LoadModel("plane", "./plane/plane.obj");
-	Loader::LoadModel("Particle", "/Particle/Particle.obj");
-	Loader::LoadModel("ParticlePlane", "./ParticlePlane/ParticlePlane.gltf");
+	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
+	Loader::LoadModel("terrain", "terrain.obj");
+	Loader::LoadModel("plane", "plane.obj");
+	Loader::LoadModel("Particle", "Particle.obj");
+	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 	// Game
 }
 // アニメーション
 void MyGame::LoadAnimation() {
-	Loader::LoadAnimation("simpleSkin", "./simpleSkin/simpleSkin.gltf");
-	Loader::LoadAnimation("human", "./human/sneakWalk.gltf");
+	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
+	Loader::LoadAnimation("human", "sneakWalk.gltf");
 }
