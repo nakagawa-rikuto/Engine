@@ -18,6 +18,10 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
+	// 配置関数(Level)
+	void LoadModelsForLevel(const std::string& file_name);
+	void PlaceLevelObjects();
+
 public:/// ===Setter=== ///
 
 	void SetSceneManager(SceneManager* sceneManager);
@@ -27,5 +31,16 @@ protected:
 	SceneManager* sceneManager_ = nullptr;
 	// Camera
 	std::shared_ptr<Camera> defaultCamera_;
+
+private:
+
+	// レベルオブジェクトのインスタンス一覧
+	std::vector<Model*> objects_;
+	// モデルのキャッシュ（fileNameごとに1つ）
+	std::map<std::string, Model*> models_;
+	// レベルデータ
+	LevelData* levelData_ = nullptr; 
+	// レベルが読み込まれたかどうか
+	bool IsLevelLoaded_ = false; 
 };
 
