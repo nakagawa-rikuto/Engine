@@ -1,9 +1,11 @@
 #pragma once
 /// ===Include=== ///
 #include "application/Game/Camera/Camera.h"
+#include "Engine/DataInfo/LevelData.h"
 
 /// ===前方宣言=== ///
 class SceneManager;
+class Model;
 
 ///=====================================================/// 
 /// シーンの基底クラス
