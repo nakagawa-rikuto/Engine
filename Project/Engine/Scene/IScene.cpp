@@ -12,23 +12,18 @@
 #include "Math/sMath.h"
 
 ///-------------------------------------------/// 
-/// 初期化
+/// デストラクタ
 ///-------------------------------------------///
 IScene::~IScene() {
 	defaultCamera_.reset();
-
-	/*if (IsLevelLoaded_) {
-		for (auto obj : objects_) {
-			delete obj;
-		}
-		objects_.clear();
-
-		for (auto& [key, model] : models_) {
-			delete model;
-		}
-		models_.clear();
-	}*/
+	models_.clear();
 }
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void IScene::SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
+
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -51,13 +46,6 @@ void IScene::Initialize() {
 ///-------------------------------------------///
 void IScene::Update() {
 
-	// レベルが読み込まれている場合
-	/*if (IsLevelLoaded_) {
-		for (Model* model : objects_) {
-			model->Update();
-		}
-	}*/
-
 	// Line更新
 	ServiceLocator::GetLineObject3D()->SetCamera(CameraService::GetActiveCamera().get());
 	ServiceLocator::GetLineObject3D()->Update();
@@ -68,70 +56,54 @@ void IScene::Update() {
 ///-------------------------------------------///
 void IScene::Draw() {
 
-	// レベルが読み込まれている場合
-	/*if (IsLevelLoaded_) {
-		for (Model* model : objects_) {
-			model->Draw(BlendMode::kBlendModeNone);
-		}
-	}*/
-
 	// Lineの描画
 	ServiceLocator::GetLineObject3D()->Draw();
 }
 
 ///-------------------------------------------/// 
-/// モデルデータの先読み
+/// LevelDataからModelを生成して配置する
 ///-------------------------------------------///
-//void IScene::LoadModelsForLevel(const std::string& file_name) {
-//
-//	levelData_ = GraphicsResourceGetter::GetLevelData(file_name);
-//
-//	for (const auto& obj : levelData_->objects) {
-//		const std::string& fileName = obj.fileName;
-//		Loader::LoadModel(fileName, fileName);
-//	}
-//
-//	// フラグをtrueに設定
-//	IsLevelLoaded_ = true;
-//}
+void IScene::GenerateModelsFromLevelData(const std::string& file_name) {
 
-///-------------------------------------------/// 
-/// レベルオブジェクトの配置
-///-------------------------------------------///
-//void IScene::PlaceLevelObjects() {
-//
-//	// 早期リターン
-//	if (!IsLevelLoaded_) {
-//		return;
-//	}
-//
-//
-//	std::vector<Model*> objects; // 配置済みオブジェクト格納先
-//
-//	for (const auto& objectData : levelData_->objects) {
-//		Model* model = nullptr;
-//
-//		// モデルキャッシュから取得
-//		auto it = models_.find(objectData.fileName);
-//		if (it != models_.end()) {
-//			model = it->second;
-//		}
-//
-//		// モデルから新しいインスタンスを生成
-//		Model* newObject = new Model();
-//		newObject->Initialize(objectData.fileName);
-//		newObject->SetTranslate(objectData.translation);
-//		newObject->SetRotate(Math::QuaternionFromVector(objectData.rotation));
-//		newObject->SetScale(objectData.scaling);
-//
-//		objects.push_back(newObject);
-//	}
-//
-//	// 一括格納
-//	objects_ = std::move(objects);
-//}
+	LevelData* levelData = GraphicsResourceGetter::GetLevelData(file_name);
 
-///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-void IScene::SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
+	for (const auto& obj : levelData->objects) {
+
+		// モデルの読み込み
+		//Loader::LoadLevelModel(obj.fileName);
+
+		// 生成
+		std::unique_ptr<Model> model = std::make_unique<Model>();
+
+		// モデル初期化（ファイル名指定）
+		model->Initialize(obj.fileName);
+
+		// 位置・回転・スケーリングを設定
+		model->SetTranslate(obj.translation);
+		model->SetScale(obj.scaling);
+
+		// オイラー角からクォータニオンへ変換（ユーティリティ関数を使用）
+		model->SetRotate(Math::QuaternionFromVector(obj.rotation));
+
+		// カメラ設定
+		model->SetCamera(CameraService::GetActiveCamera().get());
+
+		// モデルをリストに追加
+		models_.push_back(std::move(model));
+	}
+}
+// 更新
+void IScene::UpdateLevelModels() {
+	for (auto& model : models_) {
+		model->SetCamera(CameraService::GetActiveCamera().get());
+		model->Update();
+	}
+}
+
+void IScene::DrawLevelModels(BlendMode mode) {
+	for (auto& model : models_) {
+		model->Draw(mode);
+	}
+}
+
+

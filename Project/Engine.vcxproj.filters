@@ -260,6 +260,7 @@
     <ClInclude Include="Engine\System\Service\ColliderService.h" />
     <ClInclude Include="Engine\DataInfo\LightData.h" />
     <ClInclude Include="Engine\DataInfo\LevelData.h" />
+    <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

@@ -21,7 +21,7 @@ public:
 	~LevelManager() = default;
 
 	// Load
-	void LoadJSON(const std::string& file_path);
+	void LoadLevelJson(const std::string& basePath, const std::string& file_path);
 
 	// レベルデータの取得
 	LevelData* GetLevelData(const std::string& file_path);
