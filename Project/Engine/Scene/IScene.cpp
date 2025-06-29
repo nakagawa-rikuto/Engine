@@ -88,6 +88,9 @@ void IScene::GenerateModelsFromLevelData(const std::string& file_name) {
 		// カメラ設定
 		model->SetCamera(CameraService::GetActiveCamera().get());
 
+		// モデルの更新
+		model->Update();
+
 		// モデルをリストに追加
 		models_.push_back(std::move(model));
 	}

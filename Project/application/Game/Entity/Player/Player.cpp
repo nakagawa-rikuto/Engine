@@ -60,6 +60,7 @@ void Player::Initialize() {
 
 	// Sphereの設定
 	SphereCollider::Initialize();
+	name_ = ColliderName::Player;
 	sphere_.radius = 1.5f;
 }
 

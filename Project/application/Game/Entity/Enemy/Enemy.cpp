@@ -53,6 +53,7 @@ void Enemy::Initialize() {
 
 	// Sphereの設定
 	SphereCollider::Initialize();
+	name_ = ColliderName::Enemy;
 	sphere_.center = baseInfo_.translate;
 	sphere_.radius = 2.0f;
 }

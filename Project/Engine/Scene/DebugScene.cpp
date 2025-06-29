@@ -162,7 +162,7 @@ void DebugScene::Initialize() {
 #pragma endregion
 
 	// ===LevelDataからモデルの生成と配置=== ///
-	GenerateModelsFromLevelData("TL_12.json");
+	//GenerateModelsFromLevelData("TL_12.json");
 }
 
 ///-------------------------------------------/// 
@@ -582,7 +582,7 @@ void DebugScene::Update() {
 #pragma endregion
 
 	/// ===ISceneのの更新=== ///
-	UpdateLevelModels();
+	//UpdateLevelModels();
 	IScene::Update();
 }
 
@@ -614,7 +614,7 @@ void DebugScene::Draw() {
 
 
 	/// ===ISceneの描画=== ///
-	DrawLevelModels();
+	//DrawLevelModels();
 	IScene::Draw();
 
 #pragma endregion

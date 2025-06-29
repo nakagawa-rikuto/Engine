@@ -90,12 +90,9 @@ void GameScene::Update() {
 	player_->UpdateImGui();
 
 	// Enemy
-	//enemy_->UpdateImGui();
+	enemy_->UpdateImGui();
 
 #endif // USE_IMGUI
-
-	/// ===ColliderManager=== ///
-	ColliderService::SetCamera(CameraService::GetActiveCamera().get());
 
 	/// ===Playerの更新=== ///
 	player_->Update();
@@ -106,6 +103,9 @@ void GameScene::Update() {
 	/// ===Groundの更新=== ///
 	ground_->SetCamera(CameraService::GetActiveCamera().get());
 	ground_->Update();
+
+	/// ===ColliderManager=== ///
+	ColliderService::SetCamera(CameraService::GetActiveCamera().get());
 
 	/// ===ISceneの更新=== ///
 	IScene::Update();
