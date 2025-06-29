@@ -41,7 +41,7 @@ private:/// ===メンバ変数=== ///
 	/// ===変数の宣言=== ///
 	struct CameraInfo {
 		Vector3 translate = { 0.0f, 50.0f, 3.0f };
-		Quaternion rotate = { 0.9f, 0.0f, 0.0f, 1.0f };
+		Quaternion rotate = { 0.7f, 0.0f, 0.0f, 1.0f };
 	};
 	CameraInfo cameraInfo_;
 };

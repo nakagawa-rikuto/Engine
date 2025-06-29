@@ -8,6 +8,7 @@
 #include "Engine/System/Service/CameraService.h"
 #include "Engine/System/Service/ParticleService.h"
 #include "Engine/System/Service/ColliderService.h"
+#include "Engine/System/Service/Loader.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -29,7 +30,8 @@ DebugScene::~DebugScene() {
 	// model
 	model2_.reset();
 	modelLight_.reset();
-
+	// Colliderのリセット
+	ColliderService::Reset();
 	// ISceneのデストラクタ
 	IScene::~IScene();
 }
@@ -40,6 +42,12 @@ DebugScene::~DebugScene() {
 void DebugScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
+
+	/// ===読み込み処理=== ///
+#pragma region Load
+	// Jsonの読み込み
+	Loader::LoadLevelJson("TL_12.json");
+#pragma endregion
 
 	/// ===カメラの初期化=== ///
 #pragma region Cameraの初期化
@@ -116,6 +124,7 @@ void DebugScene::Initialize() {
 	// 一回更新をかける
 	model2_->Update();
 	modelLight_->Update();
+
 #pragma endregion
 
 	/// ===アニメーションモデルの初期化=== ///
@@ -151,6 +160,13 @@ void DebugScene::Initialize() {
 #pragma region Line
 	line_ = std::make_unique<Line>();
 #pragma endregion
+
+	// ===LevelDataからモデルの生成と配置=== ///
+	//GenerateModelsFromLevelData("TL_12.json");
+
+	/// ===Player=== ///
+	player_ = std::make_unique<Player>();
+	player_->Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -569,7 +585,11 @@ void DebugScene::Update() {
 	ColliderService::SetLightData(light_);
 #pragma endregion
 
+	player_->SetCamera(CameraService::GetActiveCamera().get());
+	player_->Update();
+
 	/// ===ISceneのの更新=== ///
+	//UpdateLevelModels();
 	IScene::Update();
 }
 
@@ -597,10 +617,13 @@ void DebugScene::Draw() {
 		model2_->Draw();
 
 		modelLight_->Draw();
+
+		player_->Draw();
 	}
 
 
 	/// ===ISceneの描画=== ///
+	//DrawLevelModels();
 	IScene::Draw();
 
 #pragma endregion

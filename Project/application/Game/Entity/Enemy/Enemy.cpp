@@ -7,6 +7,7 @@
 // Service
 #include "Engine/System/Service/InputService.h"
 #include "Engine/System/Service/ParticleService.h"
+#include "Engine/System/Service/CameraService.h"
 // ImGui
 #ifdef USE_IMGUI
 #include "imgui.h"
@@ -26,21 +27,16 @@ Vector3 Enemy::GetTranslate() const { return baseInfo_.translate; }
 Quaternion Enemy::GetRotate() const { return baseInfo_.rotate; }
 
 ///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void Enemy::SetPlayer(Player* player) { player_ = player; }
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Enemy::Init(Camera* camera, Player* player) {
-	camera_ = camera;
-	player_ = player;
-
-	// 初期化
-	Initialize();
-	// Cameraの設定
-	SetCamera(camera_);
-
-	// object3dの更新を一回行う
-	object3d_->Update();
-}
 void Enemy::Initialize() {
+
+	camera_ = CameraService::GetActiveCamera().get();
 
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
@@ -53,8 +49,15 @@ void Enemy::Initialize() {
 
 	// Sphereの設定
 	SphereCollider::Initialize();
+	name_ = ColliderName::Enemy;
 	sphere_.center = baseInfo_.translate;
 	sphere_.radius = 2.0f;
+
+	// Cameraの設定
+	SetCamera(camera_);
+
+	// object3dの更新を一回行う
+	object3d_->Update();
 }
 
 ///-------------------------------------------/// 

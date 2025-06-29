@@ -11,9 +11,6 @@ public:
 	Player() = default;
 	~Player();
 
-	// 初期化（GameScene用）
-	void Init(Camera* camera);
-
 	// 初期化
 	void Initialize()override;
 	// 更新

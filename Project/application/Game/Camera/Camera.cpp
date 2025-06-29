@@ -5,6 +5,10 @@
 #include "Math/MatrixMath.h"
 // Service
 #include "Engine/System/Service/GraphicsResourceGetter.h"
+// ImGui
+#ifdef USE_IMGUI
+#include "imgui.h"
+#endif // USE_IMGUI
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -107,6 +111,24 @@ void Camera::Update() {
 
 	// 合成行列
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+}
+
+///-------------------------------------------/// 
+/// 情報
+///-------------------------------------------///
+void Camera::UpdateImGui() {
+#ifdef USE_IMGUI
+
+	ImGui::Begin("Camera");
+	ImGui::DragFloat3("Translate", &transform_.translate.x, 0.01f);
+	ImGui::DragFloat4("Rotate", &transform_.rotate.x, 0.001f);
+	ImGui::DragFloat("Horizontal View", &horizontalView_, 0.01f);
+	ImGui::DragFloat("Aspect Ratio", &aspect_, 0.01f);
+	ImGui::DragFloat("Near Clip", &nearClip_, 0.01f);
+	ImGui::DragFloat("Far Clip", &farClip_, 0.01f);
+	ImGui::End();
+
+#endif // USE_IMGUI
 }
 
 ///-------------------------------------------/// 

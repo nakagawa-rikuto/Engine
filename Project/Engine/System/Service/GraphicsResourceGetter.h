@@ -8,6 +8,7 @@
 // Engine
 #include "Engine/DataInfo/CData.h"
 #include "Engine/DataInfo/AnimationData.h"
+#include "Engine/DataInfo/LevelData.h"
 
 ///=====================================================/// 
 /// GraphicsResourceGetter
@@ -40,6 +41,8 @@ public:/// ===Data=== ///
 	static ModelData GetModelData(const std::string& directorPath);
 	// AnimationDataの取得
 	static std::map<std::string, Animation> GetAnimationData(const std::string& directorPath);
+	// LevelDataの取得
+	static LevelData* GetLevelData(const std::string& file_name);
 
 public:/// ===ID3D12=== ///
 	// Deviceの取得

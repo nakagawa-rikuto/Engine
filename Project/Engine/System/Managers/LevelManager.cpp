@@ -1,19 +1,24 @@
-#include "LevelLoader.h"
+#include "LevelManager.h"
 // c++
 #include <thread>
 #include <cassert>
+// Math
+#include "Math/sMath.h"
 
 ///-------------------------------------------/// 
 /// Jsonの読み込み関数
 ///-------------------------------------------///
-void LevelLoader::LoadJSON(const std::string& file_path) {
+void LevelManager::LoadLevelJson(const std::string& basePath, const std::string& file_path) {
 
     /// ===JSONファイルを読み込んでみる=== ///
     // ファイルストリーム
     std::ifstream file;
 
+	// basePath`と`file_path`を結合して完全なパスを作成
+	std::string full_path = basePath + "/" + file_path;
+
     // ファイルを開く
-    file.open(file_path);
+    file.open(full_path);
 
     // ファイルオープン失敗をチェック
     if (file.fail()) {
@@ -44,9 +49,12 @@ void LevelLoader::LoadJSON(const std::string& file_path) {
 
     // "objects"の全オブジェクトを走査
     LoadobjectRecursive(deserialized, levelData);
+
+	// レベルデータをマップに格納 
+    m_objectMap[file_path] = std::move(levelData);
 }
 // 走査関数
-void LevelLoader::LoadobjectRecursive(nlohmann::json object, LevelData* levelData) {
+void LevelManager::LoadobjectRecursive(nlohmann::json object, LevelData* levelData) {
 
     for (nlohmann::json& object : object["objects"]) {
         assert(object.contains("type"));
@@ -94,4 +102,13 @@ void LevelLoader::LoadobjectRecursive(nlohmann::json object, LevelData* levelDat
         }
     }
 }
+
+///-------------------------------------------/// 
+/// レベルデータの取得
+///-------------------------------------------///
+LevelData* LevelManager::GetLevelData(const std::string& file_path) {
+    assert(m_objectMap.contains(file_path));
+    return m_objectMap.at(file_path);
+}
+
 

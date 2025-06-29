@@ -31,6 +31,7 @@ void Framework::Initialize(const wchar_t* title) {
 		MiiEngine_->GetAnimationManager(),
 		MiiEngine_->GetAudioManager(),
 		MiiEngine_->GetCSVManager(),
+		MiiEngine_->GetLevelManager(),
 		MiiEngine_->GetOffScreenRenderer(),
 		MiiEngine_->GetLineObject3D(),
 		MiiEngine_->GetKeyboard(),

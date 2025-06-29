@@ -120,17 +120,13 @@ void MyGame::LoadModel() {
 	// Particleで使用。
 	Loader::LoadModel("Particle", "Particle.obj");
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
-
 	// Game
 	Loader::LoadModel("player", "player.gltf");
-	Loader::LoadModel("GameGround", "GameGround.gltf");
+	Loader::LoadModel("GameGround", "Ground.obj");
 }
 // アニメーション
 void MyGame::LoadAnimation() {
 	// DebugSceneで使用。
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
 	Loader::LoadAnimation("human", "sneakWalk.gltf");
-	// 上記の二つが読み込め対理由は,キーがDirectぽ明日になっている為、それがあっていないと読み込めない
-	// ダイレクトパスまで書いてしまえばいい。
-	//Loader::LoadAnimationdifferentModel("human", "walk.gltf", "running.gltf");
 }
