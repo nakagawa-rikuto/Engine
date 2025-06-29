@@ -163,6 +163,10 @@ void DebugScene::Initialize() {
 
 	// ===LevelDataからモデルの生成と配置=== ///
 	//GenerateModelsFromLevelData("TL_12.json");
+
+	/// ===Player=== ///
+	player_ = std::make_unique<Player>();
+	player_->Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -581,6 +585,9 @@ void DebugScene::Update() {
 	ColliderService::SetLightData(light_);
 #pragma endregion
 
+	player_->SetCamera(CameraService::GetActiveCamera().get());
+	player_->Update();
+
 	/// ===ISceneのの更新=== ///
 	//UpdateLevelModels();
 	IScene::Update();
@@ -610,6 +617,8 @@ void DebugScene::Draw() {
 		model2_->Draw();
 
 		modelLight_->Draw();
+
+		player_->Draw();
 	}
 
 

@@ -14,9 +14,6 @@ public:
 	Enemy() = default;
 	~Enemy();
 
-	// 初期化（GameScene用）
-	void Init(Camera* camera, Player* player);
-
 	// 初期化
 	void Initialize()override;
 	// 更新
@@ -33,6 +30,10 @@ public: /// ===Getter=== ///
 
 	Vector3 GetTranslate()const;
 	Quaternion GetRotate()const;
+
+public: /// ===Setter=== ///
+
+	void SetPlayer(Player* player);
 
 private: /// ===変数の宣言=== ///
 

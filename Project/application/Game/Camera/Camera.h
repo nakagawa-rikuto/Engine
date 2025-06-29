@@ -35,6 +35,9 @@ public:
 	/// </summary>
 	void SetFollowCamera(FollowCameraType type);
 
+	// カメラの情報
+	void UpdateImGui();
+
 public:/// ===Getter=== ///
 	// WorldMatrix
 	const Matrix4x4& GetWorldMatrix()const;

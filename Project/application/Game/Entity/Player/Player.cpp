@@ -3,6 +3,7 @@
 #include "application/Game/Camera/Camera.h"
 // Service
 #include "Engine/System/Service/InputService.h"
+#include "Engine/System/Service/CameraService.h"
 // Math
 #include "Math/sMath.h"
 
@@ -28,27 +29,11 @@ bool Player::GetCargeFlag() { return chargeInfo_.isFlag; }
 bool Player::GetAvoidanceFlag() { return avoidanceInfo_.isFlag; }
 
 ///-------------------------------------------/// 
-/// 初期化（GameScene用）
-///-------------------------------------------///
-void Player::Init(Camera* camera) {
-
-	camera_ = camera;
-
-	// 初期化
-	Initialize();
-	// Cameraの設定
-	SetCamera(camera_);
-	camera_->SetFollowCamera(FollowCameraType::TopDown);
-	camera_->SetOffset({ 0.0f, 70.0f, 0.0f });
-	camera_->SetFollowSpeed(0.1f);
-
-	object3d_->Update();
-}
-
-///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void Player::Initialize() {
+
+	camera_ = CameraService::GetActiveCamera().get();
 
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
@@ -62,6 +47,14 @@ void Player::Initialize() {
 	SphereCollider::Initialize();
 	name_ = ColliderName::Player;
 	sphere_.radius = 1.5f;
+
+	// Cameraの設定
+	SetCamera(camera_);
+	camera_->SetFollowCamera(FollowCameraType::TopDown);
+	camera_->SetOffset({ 0.0f, 70.0f, 0.0f });
+	camera_->SetFollowSpeed(0.1f);
+
+	object3d_->Update();
 }
 
 

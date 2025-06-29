@@ -49,11 +49,11 @@ void GameScene::Initialize() {
 
 	/// ===Player=== ///
 	player_ = std::make_unique<Player>();
-	player_->Init(CameraService::GetActiveCamera().get());
-
+	player_->Initialize();
 	/// ===Enemy=== ///
 	enemy_ = std::make_unique<Enemy>();
-	enemy_->Init(CameraService::GetActiveCamera().get(), player_.get());
+	enemy_->Initialize();
+	enemy_->SetPlayer(player_.get()); // Playerを設定
 
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();
@@ -82,10 +82,8 @@ void GameScene::Update() {
 	ImGui::End();
 
 	// Camera
-	ImGui::Begin("Camera");
-	ImGui::DragFloat3("Translate", &cameraInfo_.translate.x, 0.01f);
-	ImGui::DragFloat4("Rotate", &cameraInfo_.rotate.x, 0.001f);
-	ImGui::End();
+	camera_->UpdateImGui();
+
 	// Player
 	player_->UpdateImGui();
 
