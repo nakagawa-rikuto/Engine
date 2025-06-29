@@ -1,14 +1,29 @@
 #include "IScene.h"
+// Service
 #include "Engine/System/Service/ServiceLocator.h"
-#include "Engine/Graphics/3d/Line/LineObject3D.h"
 #include "Engine/System/Service/CameraService.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
+#include "Engine/System/Service/Loader.h"
+// Object3d
+#include "Engine/Graphics/3d/Model/Model.h"
+// Line
+#include "Engine/Graphics/3d/Line/LineObject3D.h"
+// Math
+#include "Math/sMath.h"
 
 ///-------------------------------------------/// 
-/// 初期化
+/// デストラクタ
 ///-------------------------------------------///
 IScene::~IScene() {
 	defaultCamera_.reset();
+	models_.clear();
 }
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void IScene::SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
+
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -46,6 +61,49 @@ void IScene::Draw() {
 }
 
 ///-------------------------------------------/// 
-/// Setter
+/// LevelDataからModelを生成して配置する
 ///-------------------------------------------///
-void IScene::SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
+void IScene::GenerateModelsFromLevelData(const std::string& file_name) {
+
+	LevelData* levelData = GraphicsResourceGetter::GetLevelData(file_name);
+
+	for (const auto& obj : levelData->objects) {
+
+		// モデルの読み込み
+		//Loader::LoadLevelModel(obj.fileName);
+
+		// 生成
+		std::unique_ptr<Model> model = std::make_unique<Model>();
+
+		// モデル初期化（ファイル名指定）
+		model->Initialize(obj.fileName);
+
+		// 位置・回転・スケーリングを設定
+		model->SetTranslate(obj.translation);
+		model->SetScale(obj.scaling);
+
+		// オイラー角からクォータニオンへ変換（ユーティリティ関数を使用）
+		model->SetRotate(Math::QuaternionFromVector(obj.rotation));
+
+		// カメラ設定
+		model->SetCamera(CameraService::GetActiveCamera().get());
+
+		// モデルをリストに追加
+		models_.push_back(std::move(model));
+	}
+}
+// 更新
+void IScene::UpdateLevelModels() {
+	for (auto& model : models_) {
+		model->SetCamera(CameraService::GetActiveCamera().get());
+		model->Update();
+	}
+}
+
+void IScene::DrawLevelModels(BlendMode mode) {
+	for (auto& model : models_) {
+		model->Draw(mode);
+	}
+}
+
+

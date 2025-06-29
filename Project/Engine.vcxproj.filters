@@ -128,7 +128,7 @@
     <ClCompile Include="Engine\Graphics\Particle\Derivative\RingParticle.cpp" />
     <ClCompile Include="Engine\Graphics\Particle\Derivative\CylinderParticle.cpp" />
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
-    <ClCompile Include="Engine\System\Level\LevelLoader.cpp" />
+    <ClCompile Include="Engine\System\Managers\LevelManager.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
     <ClCompile Include="Engine\Debug\DebugModel.cpp" />
@@ -251,7 +251,7 @@
     <ClInclude Include="Engine\Graphics\Particle\Derivative\RingParticle.h" />
     <ClInclude Include="Engine\Graphics\Particle\Derivative\CylinderParticle.h" />
     <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
-    <ClInclude Include="Engine\System\Level\LevelLoader.h" />
+    <ClInclude Include="Engine\System\Managers\LevelManager.h" />
     <ClInclude Include="Engine\DataInfo\LineObjectData.h" />
     <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
     <ClInclude Include="application\Drawing\3d\Line.h" />
@@ -262,6 +262,8 @@
     <ClInclude Include="Engine\DataInfo\OffScreenTypeData.h" />
     <ClInclude Include="Engine\System\Service\ColliderService.h" />
     <ClInclude Include="Engine\DataInfo\LightData.h" />
+    <ClInclude Include="Engine\DataInfo\LevelData.h" />
+    <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
     <ClInclude Include="application\Game\Entity\Player\Player.h" />
     <ClInclude Include="application\Game\Entity\Enemy\Enemy.h" />
     <ClInclude Include="application\Game\Object\Ground\Ground.h" />

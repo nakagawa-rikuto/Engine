@@ -8,6 +8,7 @@
 #include "Engine/System/Service/CameraService.h"
 #include "Engine/System/Service/ParticleService.h"
 #include "Engine/System/Service/ColliderService.h"
+#include "Engine/System/Service/Loader.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -40,6 +41,12 @@ DebugScene::~DebugScene() {
 void DebugScene::Initialize() {
 	// ISceneの初期化(デフォルトカメラとカメラマネージャ)
 	IScene::Initialize();
+
+	/// ===読み込み処理=== ///
+#pragma region Load
+	// Jsonの読み込み
+	Loader::LoadLevelJson("TL_12.json");
+#pragma endregion
 
 	/// ===カメラの初期化=== ///
 #pragma region Cameraの初期化
@@ -116,6 +123,7 @@ void DebugScene::Initialize() {
 	// 一回更新をかける
 	model2_->Update();
 	modelLight_->Update();
+
 #pragma endregion
 
 	/// ===アニメーションモデルの初期化=== ///
@@ -151,6 +159,9 @@ void DebugScene::Initialize() {
 #pragma region Line
 	line_ = std::make_unique<Line>();
 #pragma endregion
+
+	// ===LevelDataからモデルの生成と配置=== ///
+	GenerateModelsFromLevelData("TL_12.json");
 }
 
 ///-------------------------------------------/// 
@@ -570,6 +581,7 @@ void DebugScene::Update() {
 #pragma endregion
 
 	/// ===ISceneのの更新=== ///
+	UpdateLevelModels();
 	IScene::Update();
 }
 
@@ -601,6 +613,7 @@ void DebugScene::Draw() {
 
 
 	/// ===ISceneの描画=== ///
+	DrawLevelModels();
 	IScene::Draw();
 
 #pragma endregion
