@@ -122,7 +122,7 @@ void MyGame::LoadModel() {
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 	// Game
 	Loader::LoadModel("player", "player.gltf");
-	Loader::LoadModel("GameGround", "GameGround.gltf");
+	Loader::LoadModel("GameGround", "Ground.obj");
 }
 // アニメーション
 void MyGame::LoadAnimation() {
