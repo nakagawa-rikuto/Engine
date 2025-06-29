@@ -98,11 +98,11 @@ void GameScene::Update() {
 #endif // USE_IMGUI
 
 	/// ===Playerの更新=== ///
-	player_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	//player_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	player_->Update();
 
 	/// ===Enemy=== ///
-	enemy_->SetCamera(ServiceCamera::GetActiveCamera().get());
+	//enemy_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	enemy_->Update();
 
 	/// ===Groundの更新=== ///
@@ -110,6 +110,7 @@ void GameScene::Update() {
 	ground_->Update();
 
 	/// ===ColliderManager=== ///
+	colliderManager_->SetCamera(ServiceCamera::GetActiveCamera().get());
 	colliderManager_->CheckAllCollisions();
 
 	/// ===ISceneの更新=== ///
