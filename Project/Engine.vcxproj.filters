@@ -139,6 +139,7 @@
     <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
     <ClCompile Include="application\Game\Entity\Enemy\Enemy.cpp" />
     <ClCompile Include="application\Game\Object\Ground\Ground.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\BaseEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="application\Game\Entity\Player\Player.h" />
     <ClInclude Include="application\Game\Entity\Enemy\Enemy.h" />
     <ClInclude Include="application\Game\Object\Ground\Ground.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\BaseEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

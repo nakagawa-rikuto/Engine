@@ -1,15 +1,14 @@
-
 #pragma once
 /// ===Include=== ///
-#include "Engine/Collider/SphereCollider.h"
+#include "application/Game/Entity/Enemy/BaseEnemy.h"
 
 /// ===前方宣言=== ///
 class Player;
 
 ///=====================================================/// 
-/// Enemy
+/// Enemy(近接)
 ///=====================================================///
-class Enemy : public SphereCollider {
+class Enemy : public BaseEnemy {
 public:
 	Enemy() = default;
 	~Enemy();
@@ -26,32 +25,59 @@ public:
 public: /// ===衝突判定=== ///
 	void OnCollision(Collider* collider) override;
 
-public: /// ===Getter=== ///
+private: /// ===変数=== ///
 
-	Vector3 GetTranslate()const;
-	Quaternion GetRotate()const;
-
-public: /// ===Setter=== ///
-
-	void SetPlayer(Player* player);
-
-private: /// ===変数の宣言=== ///
-
-	Camera* camera_ = nullptr; // カメラ
-
-	Player* player_ = nullptr;
-
-	/// ===基本情報=== ///
-	struct BaseInfo {
-		Vector3 translate = { 0.0f, 1.0f, 0.0f };
-		Quaternion rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
-		Vector3 scale = { 1.0f, 1.0f, 1.0f };
-		Vector4 color = { 1.0f, 0.0f, 1.0f, 1.0f };
-		Vector3 velocity = { 0.0f, 0.0f, 0.0f };
+	/// ===Behavior=== ///
+	enum Behavior {
+		kMove, // 移動
+		kAttack // 攻撃
 	};
-	BaseInfo baseInfo_;
+	Behavior behavior_ = Behavior::kMove; // 振る舞い
+	// 次の振る舞いリクエスト
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
+
+	// 移動情報
+	struct MoveInfo {
+		float speed = 0.05f; // 移動速度
+		float range = 20.0f; // 移動範囲
+		Vector3 rangeCenter = { 0.0f, 0.0f, 0.0f }; // 移動範囲の中心
+		float interval = 8.0f; // 移動間隔
+		float timer = 0.0f; // タイマー
+	};
+	MoveInfo moveInfo_; // 移動情報
+
+	// 攻撃情報
+	struct AttackInfo{
+		float moveSpeed = 0.5f; // 攻撃時の移動速度
+		float range = 2.0f; // 攻撃範囲(回転の情報から±)
+		float distance = 10.0f; // 攻撃可能距離
+		float interval = 8.0f; // 攻撃間隔
+		float timer = 5.0f; // タイマー
+		float power = 1.0f; // 攻撃力
+		Vector3 direction = { 0.0f, 0.0f, 0.0f }; // 攻撃方向
+		Vector3 playerPos = { 0.0f, 0.0f, 0.0f }; // プレイヤー位置
+		bool isAttackable = false; // 攻撃可能かどうか
+		bool isAttack = false; // 攻撃中かどうか
+	};
+	AttackInfo attackInfo_; // 攻撃情報
+
+	// 時間の経過速度
+	const float deltaTime_ = 1.0f / 60.0f;
 
 private:
 	// 移動処理
+	void InitMove();
 	void Move();
+
+	// 攻撃処理
+	void InitAttack();
+	void Attack();
+	// 攻撃可能かチェック
+	bool CheckAttackable();
+
+	// 回転更新関数
+	void UpdateRotationTowards(const Vector3& direction, float lerpT);
+
+	// 時間を進める
+	void advanceTimer();
 };
