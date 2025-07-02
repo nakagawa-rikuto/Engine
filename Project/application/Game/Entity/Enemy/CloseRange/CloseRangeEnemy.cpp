@@ -163,7 +163,7 @@ void CloseRangeEnemy::Move() {
 		baseInfo_.velocity = { 0.0f, 0.0f, 0.0f }; // 待機中は移動しない
 
 		// 向く方向に回転
-		UpdateRotationTowards(moveInfo_.direction, 0.3f);
+		UpdateRotationTowards(moveInfo_.direction, 0.2f);
 
 		if (moveInfo_.timer <= 0.0f) {
 			// ランダムな時間を設定
@@ -240,18 +240,19 @@ void CloseRangeEnemy::Attack() {
 		attackInfo_.playerPos = player_->GetTranslate();
 
 		// プレイヤー位置への方向ベクトル
-		Vector3 dir = Normalize(attackInfo_.playerPos - baseInfo_.translate);
-		attackInfo_.direction = dir; // 方向を保存
+		Vector3 dir = attackInfo_.playerPos - baseInfo_.translate;
+		attackInfo_.direction = Normalize(dir); // 方向を保存
 
 		// directionの方向に回転
-		UpdateRotationTowards(attackInfo_.direction, 0.3f);
+		UpdateRotationTowards(attackInfo_.direction, 0.2f);
 
 		// 少し待つ
 		if (attackInfo_.timer <= 0.0f) { // タイマーが0以下
+			// 移動ベクトルを設定
+			baseInfo_.velocity = attackInfo_.direction * attackInfo_.moveSpeed;
+
 			// 攻撃開始
 			attackInfo_.isAttack = true;
-			// 移動ベクトルを設定
-			baseInfo_.velocity = Normalize(attackInfo_.direction) * attackInfo_.moveSpeed;
 		}
 
 	} else { /// ===IsAttackがtrue=== ///
