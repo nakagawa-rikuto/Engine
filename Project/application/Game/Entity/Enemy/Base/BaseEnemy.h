@@ -2,6 +2,9 @@
 /// ===Include=== ///
 #include "Engine/Collider/SphereCollider.h"
 
+// c++
+#include <random>
+
 /// ===前方宣言=== ///
 class Player;
 
@@ -47,5 +50,8 @@ protected: /// ===変数の宣言=== ///
 		Vector3 velocity = { 0.0f, 0.0f, 0.0f };
 	};
 	BaseInfo baseInfo_;
+
+	// ランダムシード
+	std::mt19937 randomEngine_;
 };
 

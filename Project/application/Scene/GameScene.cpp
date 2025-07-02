@@ -51,7 +51,7 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize();
 	/// ===Enemy=== ///
-	enemy_ = std::make_unique<Enemy>();
+	enemy_ = std::make_unique<CloseRangeEnemy>();
 	enemy_->Initialize();
 	enemy_->SetPlayer(player_.get()); // Playerを設定
 

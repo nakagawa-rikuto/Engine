@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "CloseRangeEnemy.h"
 // Camera
 #include "application/Game/Camera/Camera.h"
 // Player
@@ -10,6 +10,9 @@
 // Math
 #include "Math/sMath.h"
 #include "Math/EasingMath.h"
+// c++
+#include <cstdlib>
+#include <ctime>
 
 // ImGui
 #ifdef USE_IMGUI
@@ -19,14 +22,17 @@
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
-Enemy::~Enemy() {
+CloseRangeEnemy::~CloseRangeEnemy() {
 	object3d_.reset();
 }
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void Enemy::Initialize() {
+void CloseRangeEnemy::Initialize() {
+
+	// シードの設定
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
@@ -50,9 +56,11 @@ void Enemy::Initialize() {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void Enemy::Update() {
-
+void CloseRangeEnemy::Update() {
 	if (!player_) return;
+
+	// タイマーを進める
+	advanceTimer();
 
 	/// ===Behavior遷移の実装=== ///
 	if (behaviorRequest_) {
@@ -61,10 +69,10 @@ void Enemy::Update() {
 		// 各振る舞いの初期化
 		switch (behavior_) {
 			// 移動
-		case Enemy::Behavior::kMove:
+		case CloseRangeEnemy::Behavior::kMove:
 			InitMove();
 			break;
-		case Enemy::Behavior::kAttack:
+		case CloseRangeEnemy::Behavior::kAttack:
 			InitAttack();
 			break;
 		}
@@ -75,16 +83,15 @@ void Enemy::Update() {
 
 	// 各振る舞いの更新
 	switch (behavior_) {
-	case Enemy::Behavior::kMove:
+	case CloseRangeEnemy::Behavior::kMove:
 		Move();
 		break;
-	case Enemy::Behavior::kAttack:
+	case CloseRangeEnemy::Behavior::kAttack:
 		Attack();
 		break;
 	}
 
-	// タイマーを進める
-	advanceTimer();
+	
 
 	// BaseEnemyの更新
 	BaseEnemy::Update();
@@ -93,21 +100,22 @@ void Enemy::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void Enemy::Draw(BlendMode mode) {
+void CloseRangeEnemy::Draw(BlendMode mode) {
 	SphereCollider::Draw(mode);
 }
 
 ///-------------------------------------------/// 
 /// 更新（ImGui）
 ///-------------------------------------------///
-void Enemy::UpdateImGui() {
+void CloseRangeEnemy::UpdateImGui() {
 #ifdef _DEBUG
 	ImGui::Begin("Enemy");
 	ImGui::DragFloat3("Translate", &baseInfo_.translate.x, 0.1f);
 	ImGui::DragFloat4("Rotate", &baseInfo_.rotate.x, 0.1f);
-	ImGui::Checkbox("isAttackable", &attackInfo_.isAttackable);
-
-	ImGui::DragFloat("timer", &attackInfo_.timer, 0.1f);
+	ImGui::DragFloat3("Direction", &moveInfo_.direction.x, 0.1f);
+	ImGui::DragFloat3("Velocity", &baseInfo_.velocity.x, 0.1f);
+	ImGui::DragFloat("Movetimer", &moveInfo_.timer, 0.1f);
+	ImGui::Checkbox("IsWating", &moveInfo_.isWating);
 	ImGui::End();
 #endif // _DEBUG
 }
@@ -115,7 +123,7 @@ void Enemy::UpdateImGui() {
 ///-------------------------------------------/// 
 /// 衝突判定
 ///-------------------------------------------///
-void Enemy::OnCollision(Collider* collider) {
+void CloseRangeEnemy::OnCollision(Collider* collider) {
 	// Playerとの当たり判定
 	if (collider->GetColliderName() == ColliderName::Player) {
 		// Playerの突進に対しての衝突処理
@@ -131,32 +139,55 @@ void Enemy::OnCollision(Collider* collider) {
 ///-------------------------------------------/// 
 /// 移動処理
 ///-------------------------------------------///
-void Enemy::InitMove() {
-	moveInfo_.rangeCenter = { attackInfo_.playerPos }; // 移動範囲の中心
-	baseInfo_.velocity = { 0.0f, 0.0f, 0.0f }; // 初期速度をリセット
+void CloseRangeEnemy::InitMove() {
+	// 移動範囲の中心を設定
+	moveInfo_.rangeCenter = { attackInfo_.playerPos }; 
+	// 初期速度をリセット
+	baseInfo_.velocity = { 0.0f, 0.0f, 0.0f };
+	// 動くまでの時間を設定
 	moveInfo_.timer = 0.5f;
 }
-void Enemy::Move() {
+void CloseRangeEnemy::Move() {
+
+	Vector3 preDirection = moveInfo_.direction; // 前回の方向を保存
 
 	// 移動範囲の中心との方向ベクトルを計算（XZ平面）
 	Vector3 toCenter = moveInfo_.rangeCenter - baseInfo_.translate;
-	toCenter.y = 0.0f;
 
 	// 中心からの距離を取得
 	float distanceFromCenter = Length(toCenter);
 
-	// 範囲外に出ていた場合、中心に戻る方向に移動
-	if (distanceFromCenter > moveInfo_.range) {
-		Vector3 dir = Normalize(toCenter);
-		baseInfo_.velocity = dir * moveInfo_.speed;
+	/// ===移動処理=== ///
+	if (moveInfo_.isWating) { /// ===範囲外に出ていた場合=== ///
 
-		// 範囲内かつタイマーが切れていた場合、新しい移動方向を設定
-	} else if (moveInfo_.timer <= 0.0f) {
-		moveInfo_.timer = moveInfo_.interval;
+		baseInfo_.velocity = { 0.0f, 0.0f, 0.0f }; // 待機中は移動しない
+
+		// 向く方向に回転
+		UpdateRotationTowards(moveInfo_.direction, 0.3f);
+
+		if (moveInfo_.timer <= 0.0f) {
+			// ランダムな時間を設定
+			std::uniform_real_distribution<float> timeDist(1.0f, moveInfo_.interval);
+			moveInfo_.timer = timeDist(randomEngine_);
+
+			// 移動ベクトルを設定
+			baseInfo_.velocity = moveInfo_.direction * moveInfo_.speed;
+			moveInfo_.isWating = false; // 待機フラグを解除
+		}
+
+	} else if (distanceFromCenter > moveInfo_.range) { /// ===待機中=== ///
+		
+		// 方向の設定と待機処理の準備
+		PreparNextMove(toCenter);
+
+	} else if (moveInfo_.timer <= 0.0f && !moveInfo_.isWating) { /// ===範囲内かつタイマーが切れていた場合=== ///
 
 		// ランダムな角度と距離を生成
-		float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * Math::Pi();
-		float distance = static_cast<float>(rand()) / RAND_MAX * moveInfo_.range;
+		std::uniform_real_distribution<float> angleDist(0.0f, 2.0f * Math::Pi());
+		std::uniform_real_distribution<float> distanceDist(0.0f, moveInfo_.range);
+		// ランダムな値の設定
+		float angle = angleDist(randomEngine_);
+		float distance = distanceDist(randomEngine_);
 
 		// 方向ベクトルを円から算出
 		Vector3 offset = {
@@ -169,19 +200,8 @@ void Enemy::Move() {
 		Vector3 target = moveInfo_.rangeCenter + offset;
 		target.y = baseInfo_.translate.y;
 		
-		// 現在位置から移動先への方向ベクトルを算出
-		Vector3 dir = target - baseInfo_.translate;
-		dir.y = 0.0f;
-		dir = Normalize(dir);
-
-		// 速度として反映
-		baseInfo_.velocity = dir * moveInfo_.speed;
-	}
-
-	// 進行方向に自然に向けるために、クォータニオンで回転補間を行う
-	Vector3 moveDir = baseInfo_.velocity;
-	if (Length(moveDir) > 0.001f) {
-		UpdateRotationTowards(moveDir, 0.15f); // 少しゆるやかな回転
+		// 方向の設定と待機処理の準備
+		PreparNextMove(target - baseInfo_.translate);
 	}
 
 	/// ===Behavirの変更=== ///
@@ -189,36 +209,66 @@ void Enemy::Move() {
 		behaviorRequest_ = Behavior::kAttack;
 	}
 }
+void CloseRangeEnemy::PreparNextMove(const Vector3& vector) {
+	Vector3 dir = Normalize(vector);
+	dir.y = 0.0f; // Y成分を0にしてXZ平面での方向ベクトルを作成
+	moveInfo_.direction = Normalize(dir); // 方向を保存
+
+	// 待機時間を設定
+	moveInfo_.timer = moveInfo_.waitTime; // 待機時間を設定
+	// 待機フラグをtrueに設定
+	moveInfo_.isWating = true;
+}
 
 ///-------------------------------------------/// 
 /// 攻撃処理
 ///-------------------------------------------///
-void Enemy::InitAttack() {
-	// 攻撃情報の初期化
-	attackInfo_.isAttack = true;
+void CloseRangeEnemy::InitAttack() {
+	// デバッグ用
 	baseInfo_.color = { 0.0f, 1.0f, 0.0f, 1.0f }; // 攻撃中は赤色に変更
-	// プレイヤー位置を取得
-	attackInfo_.playerPos = player_->GetTranslate();
+	
+	// 移動ベクトルを0にリセット
+	baseInfo_.velocity = {0.0f, 0.0f, 0.0f}; 
 
-	// プレイヤー位置への方向ベクトル
-	Vector3 dir = Normalize(player_->GetTranslate() - baseInfo_.translate);
-	attackInfo_.direction = dir; // 方向を保存
-	baseInfo_.velocity = dir * attackInfo_.moveSpeed;
+	// 待機時間を設定
+	attackInfo_.timer = 1.0f;
 }
-void Enemy::Attack() {
+void CloseRangeEnemy::Attack() {
 
-	// 攻撃時はやや速めに回転
-	UpdateRotationTowards(attackInfo_.direction, 0.3f);
+	if (!attackInfo_.isAttack) { /// ===IsAttackがfalse=== ///
+		// プレイヤー位置を取得
+		attackInfo_.playerPos = player_->GetTranslate();
 
-	// 攻撃終了判定
-	if (attackInfo_.isAttack) {
+		// プレイヤー位置への方向ベクトル
+		Vector3 dir = Normalize(attackInfo_.playerPos - baseInfo_.translate);
+		attackInfo_.direction = dir; // 方向を保存
+
+		// directionの方向に回転
+		UpdateRotationTowards(attackInfo_.direction, 0.3f);
+
+		// 少し待つ
+		if (attackInfo_.timer <= 0.0f) { // タイマーが0以下
+			// 攻撃開始
+			attackInfo_.isAttack = true;
+			// 移動ベクトルを設定
+			baseInfo_.velocity = Normalize(attackInfo_.direction) * attackInfo_.moveSpeed;
+		}
+
+	} else { /// ===IsAttackがtrue=== ///
+
+		// プレイヤーとの差を計算
 		Vector3 toTarget = attackInfo_.playerPos - baseInfo_.translate;
-		if (Length(toTarget) < 1.0f) { // 到達判定のしきい値（0.5fは任意）
-			attackInfo_.isAttack = false;
-			baseInfo_.velocity = { 0.0f, 0.0f, 0.0f };
-			baseInfo_.color = { 1.0f, 0.0f, 1.0f, 1.0f }; // 元の色に戻す（任意）
+
+		// 攻撃終了判定
+		if (Length(toTarget) < 0.5f) { // 到達判定
+			attackInfo_.isAttack = false; // 攻撃終了フラグをfalseに
+			baseInfo_.velocity = { 0.0f, 0.0f, 0.0f }; // 移動ベクトルをリセット
 			attackInfo_.timer = attackInfo_.interval; // クールダウン再設定
-			behaviorRequest_ = Behavior::kMove;
+
+			baseInfo_.color = { 1.0f, 0.0f, 1.0f, 1.0f }; // 元の色に戻す（任意）
+
+			/// ===Behaviorの変更=== ///
+			behaviorRequest_ = Behavior::kMove; 
 		}
 	}
 }
@@ -226,7 +276,7 @@ void Enemy::Attack() {
 ///-------------------------------------------/// 
 /// 攻撃可能かチェック
 ///-------------------------------------------///
-bool Enemy::CheckAttackable() {
+bool CloseRangeEnemy::CheckAttackable() {
 
 	// 敵の前方向ベクトル（Y軸回転を使用）
 	float yaw = baseInfo_.rotate.y;
@@ -260,13 +310,13 @@ bool Enemy::CheckAttackable() {
 ///-------------------------------------------/// 
 /// 回転更新関数
 ///-------------------------------------------///
-void Enemy::UpdateRotationTowards(const Vector3& direction, float slerpT) {
+void CloseRangeEnemy::UpdateRotationTowards(const Vector3& direction, float slerpT) {
 	if (Length(direction) < 0.001f) return;
 
 	// forward方向からターゲットクォータニオンを作成
 	Quaternion targetRotation = Math::LookRotation(direction, Vector3(0.0f, 1.0f, 0.0f));
 
-	// SLerp補間（→ 正規化する！）
+	// SLerp補間
 	Quaternion result = Math::SLerp(baseInfo_.rotate, targetRotation, slerpT);
 	baseInfo_.rotate = Normalize(result); // ★ 正規化でスケール崩れ防止
 }
@@ -274,9 +324,11 @@ void Enemy::UpdateRotationTowards(const Vector3& direction, float slerpT) {
 ///-------------------------------------------/// 
 /// 時間を進める
 ///-------------------------------------------///
-void Enemy::advanceTimer() {
-	// 無敵タイマーを進める
-	moveInfo_.timer -= deltaTime_;
+void CloseRangeEnemy::advanceTimer() {
+	// 移動移動用のタイマーをするメイル
+	if (moveInfo_.timer > 0.0f) {
+		moveInfo_.timer -= deltaTime_;
+	}
 
 	// 攻撃用のタイマーを進める
 	if (attackInfo_.timer > 0.0f) {
