@@ -35,9 +35,6 @@ public:
 	void CheckAllCollisions();
 
 public: /// ===Setter=== ///
-	// カメラの設定
-	void SetCamera(Camera* camera);
-
 	// Lightの設定
 	void SetLight(LightType type);
 	void SetLightData(LightInfo light);

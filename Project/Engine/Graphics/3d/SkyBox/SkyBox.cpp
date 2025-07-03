@@ -5,6 +5,7 @@
 // Engine
 #include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
+#include "Engine/System/Service/CameraService.h"
 // camera
 #include "application/Game/Camera/camera.h"
 // Math
@@ -30,7 +31,6 @@ void SkyBox::Initialize(const std::string & fileName, LightType type) {
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
 	/// ===vertex=== ///
@@ -64,6 +64,9 @@ void SkyBox::Initialize(const std::string & fileName, LightType type) {
 /// 更新
 ///-------------------------------------------///
 void SkyBox::Update() {
+	/// ===カメラの設定=== ///
+	camera_ = CameraService::GetActiveCamera().get();
+
 	/// ===データの書き込み=== ///
 	VertexDataWrite();
 	MateialDataWrite();
@@ -149,18 +152,13 @@ void SkyBox::MateialDataWrite() {
 /// WVPDataの書き込み
 ///-------------------------------------------///
 void SkyBox::TransformDataWrite() {
-	Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldMatrix = Math::MakeAffineQuaternionMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 
 	/// ===Matrixの作成=== ///
-	if (camera_) {
-		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-	} else {
-		Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-		Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
-		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-	}
+	const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+	worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+
 	/// ===値の代入=== ///
 	common_->SetTransformData(
 		worldViewProjectionMatrix,
@@ -200,9 +198,5 @@ void SkyBox::LightDataWrite() {
 /// CameraDataの書き込み
 ///-------------------------------------------///
 void SkyBox::CameraDataWrite() {
-	if (camera_) {
-		common_->SetCameraForGPU(camera_->GetTranslate());
-	} else {
-		common_->SetCameraForGPU(cameraTransform_.translate);
-	}
+	common_->SetCameraForGPU(camera_->GetTranslate());
 }

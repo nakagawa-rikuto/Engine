@@ -52,10 +52,9 @@ private:
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
-	EulerTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
-	EulerTransform worldTransform_;
+	QuaternionTransform worldTransform_;
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	/// ===Light=== ///
