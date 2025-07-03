@@ -139,23 +139,41 @@ void LongRangeEnemy::Move() {
 
 	// 移動範囲の中心との方向ベクトルを計算（XZ平面）
 	Vector3 toCenter = moveInfo_.rangeCenter - baseInfo_.translate;
-	toCenter.y = 0.0f;
 
 	// 中心からの距離を取得
 	float distanceFromCenter = Length(toCenter);
 
-	// 範囲外に出ていた場合、中心に戻る方向に移動
-	if (distanceFromCenter > moveInfo_.range) {
-		Vector3 dir = Normalize(toCenter);
-		baseInfo_.velocity = dir * moveInfo_.speed;
+	/// ===移動処理=== ///
+	if (moveInfo_.isWating) { /// ===範囲外に出ていた場合=== ///
 
-		// 範囲内かつタイマーが切れていた場合、新しい移動方向を設定
-	} else if (moveInfo_.timer <= 0.0f) {
-		moveInfo_.timer = moveInfo_.interval;
+		baseInfo_.velocity = { 0.0f, 0.0f, 0.0f }; // 待機中は移動しない
+
+		// 向く方向に回転
+		UpdateRotationTowards(moveInfo_.direction, 0.2f);
+
+		if (moveInfo_.timer <= 0.0f) {
+			// ランダムな時間を設定
+			std::uniform_real_distribution<float> timeDist(1.0f, moveInfo_.interval);
+			moveInfo_.timer = timeDist(randomEngine_);
+
+			// 移動ベクトルを設定
+			baseInfo_.velocity = moveInfo_.direction * moveInfo_.speed;
+			moveInfo_.isWating = false; // 待機フラグを解除
+		}
+
+	} else if (distanceFromCenter > moveInfo_.range) { /// ===待機中=== ///
+
+		// 方向の設定と待機処理の準備
+		PreparNextMove(toCenter);
+
+	} else if (moveInfo_.timer <= 0.0f && !moveInfo_.isWating) { /// ===範囲内かつタイマーが切れていた場合=== ///
 
 		// ランダムな角度と距離を生成
-		float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * Math::Pi();
-		float distance = static_cast<float>(rand()) / RAND_MAX * moveInfo_.range;
+		std::uniform_real_distribution<float> angleDist(0.0f, 2.0f * Math::Pi());
+		std::uniform_real_distribution<float> distanceDist(0.0f, moveInfo_.range);
+		// ランダムな値の設定
+		float angle = angleDist(randomEngine_);
+		float distance = distanceDist(randomEngine_);
 
 		// 方向ベクトルを円から算出
 		Vector3 offset = {
@@ -168,25 +186,24 @@ void LongRangeEnemy::Move() {
 		Vector3 target = moveInfo_.rangeCenter + offset;
 		target.y = baseInfo_.translate.y;
 
-		// 現在位置から移動先への方向ベクトルを算出
-		Vector3 dir = target - baseInfo_.translate;
-		dir.y = 0.0f;
-		dir = Normalize(dir);
-
-		// 速度として反映
-		baseInfo_.velocity = dir * moveInfo_.speed;
-	}
-
-	// 進行方向に自然に向けるために、クォータニオンで回転補間を行う
-	Vector3 moveDir = baseInfo_.velocity;
-	if (Length(moveDir) > 0.001f) {
-		UpdateRotationTowards(moveDir, 0.15f); // 少しゆるやかな回転
+		// 方向の設定と待機処理の準備
+		PreparNextMove(target - baseInfo_.translate);
 	}
 
 	/// ===Behavirの変更=== ///
 	if (CheckAttackable() && attackInfo_.timer <= 0.0f && !attackInfo_.isAttack) {
 		behaviorRequest_ = Behavior::kAttack;
 	}
+}
+void LongRangeEnemy::PreparNextMove(const Vector3& vector) {
+	Vector3 dir = Normalize(vector);
+	dir.y = 0.0f; // Y成分を0にしてXZ平面での方向ベクトルを作成
+	moveInfo_.direction = Normalize(dir); // 方向を保存
+
+	// 待機時間を設定
+	moveInfo_.timer = moveInfo_.waitTime; // 待機時間を設定
+	// 待機フラグをtrueに設定
+	moveInfo_.isWating = true;
 }
 
 ///-------------------------------------------/// 

@@ -149,8 +149,6 @@ void CloseRangeEnemy::InitMove() {
 }
 void CloseRangeEnemy::Move() {
 
-	Vector3 preDirection = moveInfo_.direction; // 前回の方向を保存
-
 	// 移動範囲の中心との方向ベクトルを計算（XZ平面）
 	Vector3 toCenter = moveInfo_.rangeCenter - baseInfo_.translate;
 

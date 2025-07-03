@@ -141,6 +141,7 @@
     <ClCompile Include="application\Game\Object\Ground\Ground.cpp" />
     <ClCompile Include="application\Game\Entity\Enemy\Base\BaseEnemy.cpp" />
     <ClCompile Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemy.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemeyBullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -271,6 +272,7 @@
     <ClInclude Include="application\Game\Object\Ground\Ground.h" />
     <ClInclude Include="application\Game\Entity\Enemy\Base\BaseEnemy.h" />
     <ClInclude Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemy.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemeyBullet.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

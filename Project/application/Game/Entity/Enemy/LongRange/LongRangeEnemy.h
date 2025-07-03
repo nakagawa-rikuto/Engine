@@ -38,11 +38,14 @@ private: /// ===変数=== ///
 
 	// 移動情報
 	struct MoveInfo {
-		float speed = 0.05f; // 移動速度
-		float range = 20.0f; // 移動範囲
+		float timer = 5.0f;		// タイマー
+		float speed = 0.05f;	// 移動速度
+		float range = 10.0f;	// 移動範囲
+		float interval = 5.0f;	// 移動間隔
+		float waitTime = 1.0f;  // 待機時間
 		Vector3 rangeCenter = { 0.0f, 0.0f, 0.0f }; // 移動範囲の中心
-		float interval = 8.0f; // 移動間隔
-		float timer = 0.0f; // タイマー
+		Vector3 direction = { 0.0f, 0.0f, 0.0f };   // 移動方向
+		bool isWating = false; // 待機中かどうか
 	};
 	MoveInfo moveInfo_; // 移動情報
 
@@ -66,6 +69,8 @@ private:
 	// 移動処理
 	void InitMove();
 	void Move();
+	// 方向の設定と待機時間の設定
+	void PreparNextMove(const Vector3& vector);
 
 	// 攻撃処理
 	void InitAttack();
