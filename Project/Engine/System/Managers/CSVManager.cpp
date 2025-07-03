@@ -1,5 +1,7 @@
 #include "CSVManager.h"
+// c++
 #include <thread>
+#include <cassert>
 
 ///-------------------------------------------/// 
 /// CSVの読み込み関数
@@ -40,3 +42,4 @@ void CSVManager::Load(const std::string & file_path) {
 
     cv_.notify_all(); // 他のスレッドに通知
 }
+

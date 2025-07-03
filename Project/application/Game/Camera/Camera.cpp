@@ -4,7 +4,7 @@
 #include "Math/EasingMath.h"
 #include "Math/MatrixMath.h"
 // Service
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -74,7 +74,7 @@ void Camera::Initialize() {
 	transform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f} };
 	addTransform_ = { {1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.f} };
 	horizontalView_ = 0.45f;
-	aspect_ = static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight());
+	aspect_ = static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight());
 	nearClip_ = 0.1f;
 	farClip_ = 100.0f;
 	worldMatrix_ = Math::MakeAffineQuaternionMatrix(transform_.scale, transform_.rotate, transform_.translate);

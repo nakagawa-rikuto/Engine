@@ -90,6 +90,8 @@ void ImGuiManager::End() {
 	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
 	// ImGuiの内部コマンドを生成する
 	ImGui::Render();
+	// SRVの設定
+	srvManager_->PreDraw();
 	// 実際のCommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
 #endif // USE_IMGUI
@@ -100,9 +102,6 @@ void ImGuiManager::End() {
 /// 描画
 ///-------------------------------------------///
 void ImGuiManager::Draw() {
-	// 描画用のDescriptorHeapの設定
-	ComPtr<ID3D12GraphicsCommandList> commandList = dxCommon_->GetCommandList();
-	srvManager_->PreDraw();
 
 	// 各ウィンドウを描画
 	if (sceneView_) sceneView_->Draw();

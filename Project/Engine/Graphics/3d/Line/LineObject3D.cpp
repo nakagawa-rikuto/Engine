@@ -1,6 +1,6 @@
 #include "LineObject3D.h"
 // Service
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
 // Camera
 #include "application/Game/Camera/camera.h"
@@ -71,7 +71,7 @@ void LineObject3D::Update() {
 		worldViewProjectionMatrix = viewProjectionMatrix;
 	} else {
 		Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-		Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+		Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
 		worldViewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
 	}
 
@@ -84,7 +84,7 @@ void LineObject3D::Update() {
 ///-------------------------------------------///
 void LineObject3D::Draw() {
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = GraphicsResourceGetter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定

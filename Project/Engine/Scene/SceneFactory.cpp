@@ -1,7 +1,7 @@
 #include "SceneFactory.h"
 
 // 各シーン
-#include "application/Scene/DebugScene.h"
+#include "Engine/Scene/DebugScene.h"
 #include "application/Scene/TitleScene.h"
 #include "application/Scene/SelectScene.h"
 #include "application/Scene/GameScene.h"

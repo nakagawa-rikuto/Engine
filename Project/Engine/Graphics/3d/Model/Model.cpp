@@ -3,7 +3,7 @@
 #include <cassert>
 #include <fstream>
 // Engine
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
 // camera
 #include "application/Game/Camera/Camera.h"
@@ -16,11 +16,7 @@
 /// コンストラクタ、デストラクタ
 ///-------------------------------------------///
 Model::Model() = default;
-Model::~Model() {
-	vertex_.reset();
-	index_.reset();
-	common_.reset();
-}
+Model::~Model() = default;
 
 ///-------------------------------------------/// 
 /// Getter
@@ -36,7 +32,11 @@ const Vector4& Model::GetColor() const { return color_; }
 ///-------------------------------------------///
 /// ===モデル=== ///
 void Model::SetTranslate(const Vector3& position) { worldTransform_.translate = position; }
-void Model::SetRotate(const Quaternion& rotate) { worldTransform_.rotate = rotate; }
+void Model::SetRotate(const Quaternion& rotate) { 
+	worldTransform_.rotate = rotate; 
+	// 正規化を入れる
+	Normalize(worldTransform_.rotate);
+}
 void Model::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void Model::SetColor(const Vector4& color) { color_ = color; }
 /// ===Light=== ///
@@ -76,15 +76,15 @@ void Model::SetCamera(Camera* camera) { camera_ = camera; }
 void Model::Initialize(const std::string& filename, LightType type) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Getter::GetDXDevice();
+	ID3D12Device* device = GraphicsResourceGetter::GetDXDevice();
 
 	/// ===モデル読み込み=== ///
-	modelData_ = Getter::GetModelData(filename); // ファイルパス
+	modelData_ = GraphicsResourceGetter::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
-	vertex_ = std::make_unique<VertexBuffer3D>();
-	index_ = std::make_unique<IndexBuffer3D>();
-	common_ = std::make_unique<ModelCommon>();
+	vertex_ = std::make_shared<VertexBuffer3D>();
+	index_ = std::make_shared<IndexBuffer3D>();
+	common_ = std::make_shared<ModelCommon>();
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
@@ -133,7 +133,7 @@ void Model::Update() {
 void Model::Draw(BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = GraphicsResourceGetter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
@@ -147,6 +147,27 @@ void Model::Draw(BlendMode mode) {
 	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
 	// 描画（Drawコール）
 	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+}
+
+///-------------------------------------------/// 
+/// クローン
+///-------------------------------------------///
+std::shared_ptr<Model> Model::Clone() const {
+	std::shared_ptr<Model> clone = std::make_shared<Model>();
+
+	clone->modelData_ = this->modelData_;
+	clone->worldTransform_ = this->worldTransform_;
+	clone->cameraTransform_ = this->cameraTransform_;
+	clone->uvTransform_ = this->uvTransform_;
+	clone->color_ = this->color_;
+	clone->light_ = this->light_;
+	clone->camera_ = this->camera_;
+
+	clone->vertex_ = this->vertex_;
+	clone->index_ = this->index_;
+	clone->common_ = this->common_;
+
+	return clone;
 }
 
 ///-------------------------------------------/// 
@@ -179,7 +200,7 @@ void Model::TransformDataWrite() {
 		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
 	} else {
 		Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-		Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+		Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
 		worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	}
 	/// ===値の代入=== ///

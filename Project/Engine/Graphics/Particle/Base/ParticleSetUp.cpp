@@ -5,7 +5,7 @@
 #include <numbers>
 // Service
 #include "Engine/System/Service/ServiceLocator.h"
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
 // Managers
 #include "Engine/System/Managers/SRVManager.h"
@@ -42,13 +42,13 @@ void ParticleSetUp::SetInstancingData(size_t index, const Vector4& color, const 
 void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMaxInstance, shapeType type) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12Device* device = Getter::GetDXDevice();
+	ID3D12Device* device = GraphicsResourceGetter::GetDXDevice();
 
 	// 引数の値を代入
 	kNumMaxInstance_ = kNumMaxInstance;
 
 	/// ===モデル読み込み=== ///
-	modelData_ = Getter::GetModelData(filename); // ファイルパス
+	modelData_ = GraphicsResourceGetter::GetModelData(filename); // ファイルパス
 
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
@@ -94,7 +94,7 @@ void ParticleSetUp::Initialze(const std::string& filename, const uint32_t kNumMa
 void ParticleSetUp::Darw(const uint32_t instance, BlendMode mode) {
 
 	/// ===コマンドリストのポインタの取得=== ///
-	ID3D12GraphicsCommandList* commandList = Getter::GetDXCommandList();
+	ID3D12GraphicsCommandList* commandList = GraphicsResourceGetter::GetDXCommandList();
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定

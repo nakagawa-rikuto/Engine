@@ -5,6 +5,7 @@
 #include "Engine/System/Managers/AudioManager.h"
 #include "Engine/System/Managers/CSVManager.h"
 #include "Engine/System/Managers/AnimationManager.h"
+#include "Engine/system/Managers/LevelManager.h"
 // ServiceLocator
 #include "ServiceLocator.h"
 
@@ -20,17 +21,36 @@ void Loader::LoadTexture(const std::string& key, const std::string& filePath) {
 ///-------------------------------------------/// 
 /// モデル
 ///-------------------------------------------///
-void Loader::LoadModel(const std::string& directorPath, const std::string& filename) {
+void Loader::LoadModel(const std::string& Key, const std::string& filename) {
 	// ベースのディレクトリパス
 	const std::string& baseDirectorPath = "./Resource/Models";
-	ServiceLocator::GetModelManager()->Load(baseDirectorPath, directorPath, filename);
+	ServiceLocator::GetModelManager()->Load(baseDirectorPath, Key, filename);
 }
 
 ///-------------------------------------------/// 
 /// csv
 ///-------------------------------------------///
 void Loader::LoadCSV(const std::string& filename) {
-	ServiceLocator::GetCSVManager()->Load(filename);
+	const std::string& baseDirectorPath = "./Resource/CSV";
+	ServiceLocator::GetCSVManager()->Load(baseDirectorPath + "/" + filename);
+}
+
+///-------------------------------------------/// 
+/// Json
+///-------------------------------------------///
+void Loader::LoadLevelJson(const std::string& filename) {
+	// ベースのディレクトリパス
+	const std::string& baseDirectorPath = "./Resource/Json";
+	ServiceLocator::GetLevelManager()->LoadLevelJson(baseDirectorPath, filename);
+}
+
+///-------------------------------------------/// 
+/// LevelModel
+///-------------------------------------------///
+void Loader::LoadLevelModel(const std::string& filname) {
+	// ベースのディレクトリパス
+	const std::string& baseDirectorPath = "./Resource/Models/Level";
+	ServiceLocator::GetModelManager()->Load(filname, baseDirectorPath, filname);
 }
 
 ///-------------------------------------------/// 
