@@ -218,6 +218,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Engine\System\Service\CameraService.cpp" />
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Primitives\PrimitiveCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
@@ -343,6 +344,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
     <ClInclude Include="Engine\System\Service\CameraService.h" />
     <ClInclude Include="Engine\System\Service\ParticleService.h" />
+    <ClInclude Include="Engine\Graphics\3d\Primitives\PrimitiveCommon.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

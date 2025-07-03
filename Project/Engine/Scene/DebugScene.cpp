@@ -16,6 +16,8 @@
 #include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
 #include "Engine/Graphics/Particle/Derivative/RingParticle.h"
 #include "Engine/Graphics/Particle/Derivative/CylinderParticle.h"
+// Math
+#include "Math/sMath.h"
 
 
 ///-------------------------------------------/// 
@@ -131,6 +133,11 @@ void DebugScene::Initialize() {
 	debugAnimationModel_->Initialize();
 #pragma endregion
 
+#pragma region SkyBoxの初期化
+	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_->Initialize("skyBox", LightType::Lambert);
+#pragma endregion
+
 	/// ===ColliderManagerの初期化=== ///
 #pragma region ColliderManagerの初期化
 	// コライダーの追加
@@ -160,7 +167,7 @@ void DebugScene::Initialize() {
 #pragma endregion
 
 	// ===LevelDataからモデルの生成と配置=== ///
-	GenerateModelsFromLevelData("TL_12.json");
+	//GenerateModelsFromLevelData("TL_12.json");
 }
 
 ///-------------------------------------------/// 
@@ -458,6 +465,14 @@ void DebugScene::Update() {
 	} else if (InputService::PushKey(DIK_DOWN)) {
 		cameraInfo_.Translate.z -= 0.01f;
 	}
+	if (InputService::PushKey(DIK_LEFT)) {
+		// Y軸回転のクォータニオンを加算
+		Quaternion delta = Math::RotateY(-0.01f);
+		cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
+	} else if (InputService::PushKey(DIK_RIGHT)) {
+		Quaternion delta = Math::RotateY(+0.01f);
+		cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
+	}
 #pragma endregion
 
 	/// ===マウス関連の処理=== ///
@@ -543,6 +558,10 @@ void DebugScene::Update() {
 	debugAnimationModel_->Update();
 #pragma endregion
 
+#pragma region SkyBoxの更新
+	skyBox_->Update();
+#pragma endregion
+
 	/// ===Particle=== ///
 #pragma region Particle
 	// パーティクルの生成
@@ -575,7 +594,7 @@ void DebugScene::Update() {
 #pragma endregion
 
 	/// ===ISceneのの更新=== ///
-	UpdateLevelModels();
+	//UpdateLevelModels();
 	IScene::Update();
 }
 
@@ -594,6 +613,8 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 
+	skyBox_->Draw();
+
 	if (isDisplay_.Model) {
 		/// ===アニーメーションモデル=== ///
 		debugAnimationModel_->Draw();
@@ -607,7 +628,7 @@ void DebugScene::Draw() {
 
 
 	/// ===ISceneの描画=== ///
-	DrawLevelModels();
+	//DrawLevelModels();
 	IScene::Draw();
 
 #pragma endregion
