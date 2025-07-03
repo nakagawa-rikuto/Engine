@@ -58,12 +58,12 @@ void BaseEnemy::Update() {
 	SetColor(baseInfo_.color);
 
 	// SphereColliderの更新
-	SphereCollider::Update();
+	OBBCollider::Update();
 }
 
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
 void BaseEnemy::Draw(BlendMode mode) {
-	SphereCollider::Draw(mode);
+	OBBCollider::Draw(mode);
 }

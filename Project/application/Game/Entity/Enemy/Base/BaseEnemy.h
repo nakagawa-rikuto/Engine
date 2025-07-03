@@ -1,6 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Collider/SphereCollider.h"
+#include "Engine/Collider/OBBCollider.h"
 
 // c++
 #include <random>
@@ -11,7 +11,7 @@ class Player;
 ///=====================================================/// 
 /// Enemy
 ///=====================================================///
-class BaseEnemy : public SphereCollider {
+class BaseEnemy : public OBBCollider {
 public:
 	BaseEnemy() = default;
 	~BaseEnemy();

@@ -44,9 +44,9 @@ void Player::Initialize() {
 	SetColor(baseInfo_.color);
 
 	// Sphereの設定
-	SphereCollider::Initialize();
+	OBBCollider::Initialize();
 	name_ = ColliderName::Player;
-	sphere_.radius = 1.5f;
+	obb_.halfSize = { 1.5f, 1.5f, 1.5f }; 
 
 	// Cameraの設定
 	SetCamera(camera_);
@@ -130,7 +130,7 @@ void Player::Update() {
 	SetColor(baseInfo_.color);
 
 	// SphereColliderの更新
-	SphereCollider::Update();
+	OBBCollider::Update();
 }
 
 
@@ -139,7 +139,7 @@ void Player::Update() {
 ///-------------------------------------------///
 void Player::Draw(BlendMode mode) {
 	// SphereCollider
-	SphereCollider::Draw(mode);
+	OBBCollider::Draw(mode);
 }
 
 

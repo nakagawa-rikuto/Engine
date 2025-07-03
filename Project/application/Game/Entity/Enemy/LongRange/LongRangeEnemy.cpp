@@ -38,10 +38,10 @@ void LongRangeEnemy::Initialize() {
 	SetColor(baseInfo_.color);
 
 	// Sphereの設定
-	SphereCollider::Initialize();
+	// Sphereの設定
+	OBBCollider::Initialize();
 	name_ = ColliderName::Enemy;
-	sphere_.center = baseInfo_.translate;
-	sphere_.radius = 2.0f;
+	obb_.halfSize = { 2.0f, 2.0f, 2.0f };
 
 	// BaseEnemyの初期化
 	BaseEnemy::Initialize();
@@ -94,7 +94,7 @@ void LongRangeEnemy::Update() {
 /// 描画
 ///-------------------------------------------///
 void LongRangeEnemy::Draw(BlendMode mode) {
-	SphereCollider::Draw(mode);
+	BaseEnemy::Draw(mode);
 }
 
 ///-------------------------------------------/// 

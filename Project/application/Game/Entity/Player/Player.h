@@ -1,11 +1,11 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Collider/SphereCollider.h"
+#include "Engine/Collider/OBBCollider.h"
 
 ///=====================================================/// 
 /// Player
 ///=====================================================///
-class Player : public SphereCollider {
+class Player : public OBBCollider {
 public:
 
 	Player() = default;

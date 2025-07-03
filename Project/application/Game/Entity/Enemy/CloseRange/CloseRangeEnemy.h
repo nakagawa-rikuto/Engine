@@ -39,7 +39,7 @@ private: /// ===変数=== ///
 
 	/// ===移動情報=== ///
 	struct MoveInfo {
-		float timer = 5.0f;		// タイマー
+		float timer = 1.0f;		// タイマー
 		float speed = 0.05f;	// 移動速度
 		float range = 10.0f;	// 移動範囲
 		float interval = 5.0f;	// 移動間隔
