@@ -108,6 +108,7 @@ namespace {
 			{ PipelineType::ForGround2D,  { inputElementDescs2,      _countof(inputElementDescs2) } },
 			{ PipelineType::BackGround2D, { inputElementDescs2,      _countof(inputElementDescs2) } },
 			{ PipelineType::Obj3D,        { inputElementDescs3,      _countof(inputElementDescs3) } },
+			{ PipelineType::PrimitiveSkyBox,       { inputElementDescs3,      _countof(inputElementDescs3) } },
 			{ PipelineType::Particle,     { inputElementDescs3,      _countof(inputElementDescs3) } },
 			{ PipelineType::Skinning3D,   { inputElementDescs5,		 _countof(inputElementDescs5) } },
 			{ PipelineType::Line3D,       { inputElementDescsLine,   _countof(inputElementDescsLine) } },

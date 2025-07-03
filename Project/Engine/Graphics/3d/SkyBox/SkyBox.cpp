@@ -20,7 +20,7 @@ SkyBox::~SkyBox() {}
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void SkyBox::Initialize(const std::string & fileName, LightType type) {
+void SkyBox::Initialize(const std::string& fileName, LightType type) {
 	/// ===コマンドリストのポインタの取得=== ///
 	ID3D12Device* device = GraphicsResourceGetter::GetDXDevice();
 
@@ -30,34 +30,44 @@ void SkyBox::Initialize(const std::string & fileName, LightType type) {
 	common_ = std::make_unique<ModelCommon>();
 
 	/// ===worldTransform=== ///
-	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+	worldTransform_ = { { 100.0f, 100.0f, 100.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
 	/// ===vertex=== ///
 	// Buffer
-	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
+	vertex_->Create(device, sizeof(VertexData3D) * kVertexCount);
 	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	// メモリコピー
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData3D) * modelData_.vertices.size());
-	// view
-	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
-	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
-	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
 	// 頂点情報の設定
 	VertexDataWrite();
+	// view
+	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
+	vertexBufferView_.SizeInBytes = sizeof(VertexData3D) * kVertexCount;
+	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
+
 
 	/// ===index=== ///
-	index_->Create(device, sizeof(uint32_t) * modelData_.indices.size());
+	index_->Create(device, sizeof(uint32_t) * kIndexCount);
 	index_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-	// メモリコピー
-	std::memcpy(indexData_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	// インデックスデータ
+	uint32_t indices[kIndexCount] = {
+		0,1,2, 2,1,3,        // 右
+		4,5,6, 6,5,7,        // 左
+		8,9,10,10,9,11,      // 前
+		12,13,14,14,13,15,   // 後
+		16,18,17,17,18,19,   // 上（修正済）
+		20,22,21,21,22,23    // 下（修正済）
+	};
+	std::memcpy(indexData_, indices, sizeof(indices));
 	// view
 	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
+	indexBufferView_.SizeInBytes = sizeof(uint32_t) * kIndexCount;
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
 	/// ===Common=== ///
 	common_->Initialize(device, type);
+
+	// テクスチャパス保存
+	textureFilePath_ = fileName;
 }
 
 ///-------------------------------------------/// 
@@ -84,16 +94,16 @@ void SkyBox::Draw(BlendMode mode) {
 
 	/// ===コマンドリストに設定=== ///
 	// PSOの設定
-	Render::SetPSO(commandList, PipelineType::Obj3D, mode);
+	Render::SetPSO(commandList, PipelineType::PrimitiveSkyBox, mode);
 	// Viewの設定
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	commandList->IASetIndexBuffer(&indexBufferView_);
 	// 共通部の設定
 	common_->Bind(commandList);
 	// テクスチャの設定
-	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, textureFilePath_);
 	// 描画（Drawコール）
-	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	commandList->DrawIndexedInstanced(kIndexCount, 1, 0, 0, 0);
 }
 
 ///-------------------------------------------/// 
@@ -162,7 +172,7 @@ void SkyBox::TransformDataWrite() {
 	/// ===値の代入=== ///
 	common_->SetTransformData(
 		worldViewProjectionMatrix,
-		Multiply(modelData_.rootNode.localMatrix, worldMatrix),
+		worldMatrix,
 		Math::Inverse4x4(worldMatrix)
 	);
 }

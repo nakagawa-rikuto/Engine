@@ -26,7 +26,7 @@ public:
 	// 更新
 	void Update();
 	// 描画
-	void Draw(BlendMode mode);
+	void Draw(BlendMode mode = BlendMode::kBlendModeNone);
 
 public: /// ===Getter=== ///
 
@@ -46,16 +46,22 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-	/// ===モデルデータ=== ///
-	ModelData modelData_;
+	/// ===定数=== ///
+	static constexpr int kVertexCount = 24;
+	static constexpr int kIndexCount = 36;
+
+	/// ===UV=== ///
 	EulerTransform uvTransform_;
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
 
-	/// ===モデル情報=== ///
+	/// ===プリミティブ情報=== ///
 	QuaternionTransform worldTransform_;
 	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	/// ===ファイルパス=== ///
+	std::string textureFilePath_;
 
 	/// ===Light=== ///
 	LightInfo light_ = {
