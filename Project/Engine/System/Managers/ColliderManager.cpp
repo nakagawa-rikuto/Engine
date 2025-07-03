@@ -16,12 +16,6 @@ ColliderManager::~ColliderManager() { colliders_.clear(); }
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-// カメラの設定
-void ColliderManager::SetCamera(Camera* camera) {
-	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA) {
-		(*itA)->SetCamera(camera);
-	}
-}
 // Lightの設定
 void ColliderManager::SetLight(LightType type) {
 	for (auto itA = colliders_.begin(); itA != colliders_.end(); ++itA) {

@@ -1,5 +1,7 @@
 #include "ParticleManager.h"
 
+#include "Engine/System/Service/CameraService.h"
+
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -38,7 +40,7 @@ void ParticleManager::Emit(const std::string& name, const Vector3& translate) {
 	if (it == prototype_.end()) return;
 
 	std::unique_ptr<ParticleGroup> newParticle = it->second->Clone();
-	newParticle->Initialze(translate, camera_);
+	newParticle->Initialze(translate, CameraService::GetActiveCamera().get());
 	activeParticles_[name].push_back(std::move(newParticle));
 }
 
@@ -57,8 +59,6 @@ void ParticleManager::SetTexture(const std::string& name, const std::string& tex
 		}
 	}
 }
-// Camera
-void ParticleManager::SetCamera(Camera* camera) {camera_ = camera; }
 
 
 ///-------------------------------------------/// 

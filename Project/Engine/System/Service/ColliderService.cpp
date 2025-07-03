@@ -22,9 +22,6 @@ void ColliderService::Reset() { ServiceLocator::GetColliderManager()->Reset(); }
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-// Camera
-void ColliderService::SetCamera(Camera* camera) { ServiceLocator::GetColliderManager()->SetCamera(camera); }
-
 // LightTYpe
 void ColliderService::SetLight(LightType lightType) {ServiceLocator::GetColliderManager()->SetLight(lightType);}
 

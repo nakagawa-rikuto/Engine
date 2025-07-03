@@ -103,7 +103,6 @@ void DebugScene::Initialize() {
 	model_->SetLightIntensity(1.0f);                             // Lightの明るさの設定(初期値は {1.0f})
 	model_->SetLightColor(Vector4(1.0f, 1.0f, 1.0f, 1.0));       // Lightカラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f})
 	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
-	model_->SetCamera(CameraService::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
 	// DebugModelの初期化
@@ -530,11 +529,9 @@ void DebugScene::Update() {
 	model2_->SetTranslate(modelInfo_.Translate);
 	model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
-	model2_->SetCamera(CameraService::GetActiveCamera().get());
 	model2_->Update();
 
 	modelLight_->SetTranslate(light_.point.position);
-	modelLight_->SetCamera(CameraService::GetActiveCamera().get());
 	modelLight_->Update();
 
 	// デバッグモデルの更新(LightDataとCameraの設定はColliderManagerで行う)
@@ -555,9 +552,6 @@ void DebugScene::Update() {
 		ParticleService::SetTexture("Ring", "gradationLine");
 		ParticleService::SetTexture("HitEffect", "circle2");
 	}
-
-	// Cameraを設定
-	ParticleService::SetCamera(CameraService::GetActiveCamera().get());
 #pragma endregion
 
 	/// ===カメラの更新=== ///
@@ -576,7 +570,7 @@ void DebugScene::Update() {
 #pragma endregion
 
 #pragma region ColliderManagerの更新
-	ColliderService::SetCamera(CameraService::GetActiveCamera().get());
+#pragma region ColliderManagerの更新
 	ColliderService::SetLightData(light_);
 #pragma endregion
 

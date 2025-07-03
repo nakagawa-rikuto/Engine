@@ -21,9 +21,6 @@ public:
 	// 追加
 	static void AddCollider(Collider* collider);
 
-	// カメラの設定
-	static void SetCamera(Camera* camera);
-
 	// Lightの設定
 	static void SetLight(LightType type);
 	static void SetLightData(LightInfo light);

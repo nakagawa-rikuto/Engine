@@ -24,6 +24,4 @@ public:
     static void Emit(const std::string& name, const Vector3& translate);
     // テクスチャの設定
     static void SetTexture(const std::string& name, const std::string& textureName);
-    // カメラの設定
-    static void SetCamera(Camera* camera);
 };

@@ -52,8 +52,6 @@ public: /// ===Setter=== ///
 	void SetLight(LightType type);
 	// LightData
 	void SetLightData(LightInfo light);
-	// カメラ
-	void SetCamera(Camera* camera);
 
 private: /// ===Variables(変数)=== ///
 
@@ -76,7 +74,6 @@ private: /// ===Variables(変数)=== ///
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
-	EulerTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
 	QuaternionTransform worldTransform_;
