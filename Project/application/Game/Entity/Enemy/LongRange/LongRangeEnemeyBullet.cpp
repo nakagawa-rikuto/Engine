@@ -1,16 +1,36 @@
 #include "LongRangeEnemeyBullet.h"
 
-LongRangeEnemeyBullet::~LongRangeEnemeyBullet()
-{}
+///-------------------------------------------/// 
+/// デストラクタ
+///-------------------------------------------///
+LongRangeEnemeyBullet::~LongRangeEnemeyBullet() {
 
-void LongRangeEnemeyBullet::Initialize()
-{}
+}
 
-void LongRangeEnemeyBullet::Update()
-{}
+///-------------------------------------------/// 
+/// 初期化
+///-------------------------------------------///
+void LongRangeEnemeyBullet::Initialize() {
 
-void LongRangeEnemeyBullet::Draw(BlendMode mode)
-{}
+}
 
-void LongRangeEnemeyBullet::OnCollision(Collider * collider)
-{}
+///-------------------------------------------/// 
+/// 更新
+///-------------------------------------------///
+void LongRangeEnemeyBullet::Update() {
+
+}
+
+///-------------------------------------------/// 
+/// 描画
+///-------------------------------------------///
+void LongRangeEnemeyBullet::Draw(BlendMode mode) {
+
+}
+
+///-------------------------------------------///  
+/// 衝突判定
+///-------------------------------------------///
+void LongRangeEnemeyBullet::OnCollision(Collider * collider) {
+
+}

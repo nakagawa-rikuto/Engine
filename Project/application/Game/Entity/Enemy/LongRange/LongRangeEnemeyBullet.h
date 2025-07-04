@@ -25,5 +25,22 @@ public: /// ===Getter=== ///
 
 	Vector3 GetTranslate()const;
 	Quaternion GetRotate()const;
+
+private: /// ===変数=== ///
+
+	// 座標
+	Vector3 translate = { 0.0f, 0.0f, 0.0f }; 
+
+	// 回転
+	Quaternion rotate = { 0.0f, 0.0f, 0.0f, 1.0f }; 
+
+	// 拡縮
+	Vector3 scale = { 1.0f, 1.0f, 1.0f }; 
+
+	// ベクトル
+	Vector3 velocity = { 0.0f, 0.0f, 0.0f }; 
+
+	// 速度
+	float speed = 1.0f;
 };
 
