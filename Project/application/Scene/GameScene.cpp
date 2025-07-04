@@ -27,7 +27,6 @@ void GameScene::Update() {
 #ifdef USE_IMGUI
 	ImGui::Begin("GameScene");
 	ImGui::End();
-
 #endif // USE_IMGUI
 
 	/// ===ISceneの更新=== ///
@@ -43,7 +42,6 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
-
 	/// ===ISceneの描画=== ///
 	IScene::Draw();
 #pragma endregion

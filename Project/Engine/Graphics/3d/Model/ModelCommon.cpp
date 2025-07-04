@@ -17,13 +17,13 @@ ModelCommon::~ModelCommon() {
 /// Getter
 ///-------------------------------------------///
 LightType ModelCommon::GetLightType() const {
-	if (materialData_->enableLighting = 1) {
+	if (materialData_->enableLighting == 1) {
 		return LightType::Lambert;
-	} else if (materialData_->enableLighting = 2) {
+	} else if (materialData_->enableLighting == 2) {
 		return LightType::HalfLambert;
-	} else if (materialData_->enableLighting = 3) {
+	} else if (materialData_->enableLighting == 3) {
 		return LightType::PointLight;
-	} else if (materialData_->enableLighting = 4) {
+	} else if (materialData_->enableLighting == 4) {
 		return LightType::SpotLight;
 	} else {
 		return LightType::None;

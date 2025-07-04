@@ -123,6 +123,22 @@ Vector3 Math::QuaternionToEuler(const Quaternion& quaternion) {
 
     return euler;
 }
+// Vector3からQuaternionに変換する関数
+Quaternion Math::QuaternionFromVector(const Vector3& vector) {
+    float cx = std::cos(vector.x * 0.5f);
+    float sx = std::sin(vector.x * 0.5f);
+    float cy = std::cos(vector.y * 0.5f);
+    float sy = std::sin(vector.y * 0.5f);
+    float cz = std::cos(vector.z * 0.5f);
+    float sz = std::sin(vector.z * 0.5f);
+
+    Quaternion q;
+    q.w = cx * cy * cz + sx * sy * sz;
+    q.x = sx * cy * cz - cx * sy * sz;
+    q.y = cx * sy * cz + sx * cy * sz;
+    q.z = cx * cy * sz - sx * sy * cz;
+    return q;
+}
 // ある方向（forward）を向くクォータニオン（回転）を作る
 Quaternion Math::LookRotation(Vector3 forward, Vector3 up) {
     // Z軸（前方ベクトル）
@@ -142,4 +158,37 @@ Quaternion Math::LookRotation(Vector3 forward, Vector3 up) {
 
     // 行列をクォータニオンに変換して返す
     return MatrixToQuaternion(rotationMatrix);
+}
+
+///-------------------------------------------/// 
+/// 軸の回転を行うQuaternionを返す関数
+///-------------------------------------------///
+Quaternion Math::RotateX(float angle) {
+    float half = angle * 0.5f;
+    return Quaternion(
+        std::sin(half) * 1.0f, // x
+        std::sin(half) * 0.0f, // y
+        std::sin(half) * 0.0f, // z
+        std::cos(half)         // w
+    );
+}
+
+Quaternion Math::RotateY(float angle) {
+    float half = angle * 0.5f;
+    return Quaternion(
+        std::sin(half) * 0.0f, // x
+        std::sin(half) * 1.0f, // y
+        std::sin(half) * 0.0f, // z
+        std::cos(half)         // w
+    );
+}
+
+Quaternion Math::RotateZ(float angle) {
+    float half = angle * 0.5f;
+    return Quaternion(
+        std::sin(half) * 0.0f, // x
+        std::sin(half) * 0.0f, // y
+        std::sin(half) * 1.0f, // z
+        std::cos(half)         // w
+    );
 }

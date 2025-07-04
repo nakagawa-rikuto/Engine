@@ -24,12 +24,13 @@ namespace {
 	};
 
 	const std::unordered_map<PipelineType, ShaderInfo> kShaderTable_ = {
-	{ PipelineType::Obj3D,        { L"3D/Obj3D.VS.hlsl",			  L"3D/Obj3D.PS.hlsl" } },
 	{ PipelineType::ForGround2D,  { L"2D/Obj2D.VS.hlsl",		      L"2D/Obj2D.PS.hlsl" } },
 	{ PipelineType::BackGround2D, { L"2D/Obj2D.VS.hlsl",			  L"2D/Obj2D.PS.hlsl" } },
-	{ PipelineType::Particle,     { L"Particle/Particle.VS.hlsl",     L"Particle/Particle.PS.hlsl" } },
+	{ PipelineType::Obj3D,        { L"3D/Obj3D.VS.hlsl",			  L"3D/Obj3D.PS.hlsl" } },
+	{ PipelineType::PrimitiveSkyBox,       { L"3D/SkyBox.VS.hlsl",             L"3D/SkyBox.PS.hlsl"} },
 	{ PipelineType::Skinning3D,   { L"3D/SkinningObj3D.VS.hlsl",      L"3D/SkinningObj3D.PS.hlsl" } },
 	{ PipelineType::Line3D,       { L"3D/Line3D.VS.hlsl",             L"3D/Line3D.PS.hlsl"}},
+	{ PipelineType::Particle,     { L"Particle/Particle.VS.hlsl",     L"Particle/Particle.PS.hlsl" } },
 	{ PipelineType::OffScreen,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/CopyImage.PS.hlsl" } },
 	{ PipelineType::Grayscale,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/Grayscale.PS.hlsl" } },
 	{ PipelineType::Vignette ,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/Vignette.Ps.hlsl" } },

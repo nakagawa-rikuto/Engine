@@ -138,14 +138,6 @@ void Object3d::SetLight(LightType type) {
 		animationModel_->SetLight(type);
 	}
 }
-// Camera
-void Object3d::SetCamera(Camera * camera) {
-	if (type_ == ObjectType::Model) {
-		model_->SetCamera(camera);
-	} else {
-		animationModel_->SetCamera(camera);
-	}
-}
 // Animation
 void Object3d::SetAnimation(const std::string& animationName, bool isLoop) {
 	if (type_ == ObjectType::AnimationModel) {

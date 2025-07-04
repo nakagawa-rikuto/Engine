@@ -418,6 +418,7 @@ namespace {
 	using RootSigGenerator = std::function<ComPtr<ID3D12RootSignature>(ID3D12Device*)>;
 	const std::unordered_map<PipelineType, RootSigGenerator> kRootSignatureTable_ = {
 		{ PipelineType::Obj3D,        Type3D },
+		{ PipelineType::PrimitiveSkyBox,       Type3D },
 		{ PipelineType::ForGround2D,  Type2D },
 		{ PipelineType::BackGround2D, Type2D },
 		{ PipelineType::Particle,     TypeParticle },

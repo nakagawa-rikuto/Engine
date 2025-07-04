@@ -27,6 +27,8 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	assert(registry.audioManager);
 	// CSVManager
 	assert(registry.csvManager);
+	// LevelManager
+	assert(registry.levelManager);
 	// OffScreenRenderer
 	assert(registry.offScreenRenderer);
 	// LineObject3D
@@ -35,7 +37,14 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	assert(registry.keyboard);
 	assert(registry.mouse);
 	assert(registry.controller);
+	// CameraManager
+	assert(registry.cameraManager);
+	// ParticleManager
+	assert(registry.particleManager);
+	// ColliderManager
+	assert(registry.colliderManager);
 
+	/// ===代入=== ///
 	// WinApp
 	winApp_ = registry.winApp;
 	// DXCommon
@@ -56,6 +65,8 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	audioManager_ = registry.audioManager;
 	// CSV
 	csvManager_ = registry.csvManager;
+	// Level
+	levelManager_ = registry.levelManager;
 	// OffScreen
 	offScreenRenderer_ = registry.offScreenRenderer;
 	// LineObject
@@ -64,15 +75,25 @@ void ServiceLocator::ProvideAll(const ServiceRegister& registry) {
 	keyboard_ = registry.keyboard;
 	mouse_ = registry.mouse;
 	controller_ = registry.controller;
+	// CameraManager
+	cameraManager_ = registry.cameraManager;
+	// ParticleManager
+	particleManager_ = registry.particleManager;
+	// ColliderManager
+	colliderManager_ = registry.colliderManager;
 }
 
 ///-------------------------------------------/// 
 /// 全てのサービスを終了
 ///-------------------------------------------///
 void ServiceLocator::Finalize() {
+	colliderManager_ = nullptr;
+	particleManager_ = nullptr;
+	cameraManager_ = nullptr;
 	controller_ = nullptr;
 	mouse_ = nullptr;
 	keyboard_ = nullptr;
+	levelManager_ = nullptr;
 	csvManager_ = nullptr;
 	audioManager_ = nullptr;
 	lineObject3D_ = nullptr;
@@ -87,6 +108,16 @@ void ServiceLocator::Finalize() {
 	winApp_ = nullptr;
 	dxCommon_ = nullptr;
 }
+
+///-------------------------------------------/// 
+/// DXCommon
+///-------------------------------------------///
+DXCommon* ServiceLocator::GetDXCommon() { return dxCommon_; }
+
+///-------------------------------------------/// 
+/// WinApp
+///-------------------------------------------///
+WinApp* ServiceLocator::GetWinApp() { return winApp_; }
 
 ///-------------------------------------------/// 
 /// SRVManager
@@ -104,19 +135,9 @@ RTVManager* ServiceLocator::GetRTVManager() { return rtvManager_; }
 DSVManager* ServiceLocator::GetDSVManager() { return dsvManager_; }
 
 ///-------------------------------------------/// 
-/// AudioManager
+/// PipelineManager
 ///-------------------------------------------///
-AudioManager* ServiceLocator::GetAudioManager() { return audioManager_; }
-
-///-------------------------------------------/// 
-/// LineObject3D
-///-------------------------------------------///
-LineObject3D* ServiceLocator::GetLineObject3D() { return lineObject3D_; }
-
-///-------------------------------------------/// 
-/// OffScreenRenderer
-///-------------------------------------------///
-OffScreenRenderer* ServiceLocator::GetOffScreenRenderer() { return offScreenRenderer_; }
+PipelineManager* ServiceLocator::GetPipelineManager() { return pipelineManager_; }
 
 ///-------------------------------------------/// 
 /// TextureManager
@@ -139,19 +160,24 @@ AnimationManager* ServiceLocator::GetAnimationManager() { return animationManage
 CSVManager* ServiceLocator::GetCSVManager() { return csvManager_; }
 
 ///-------------------------------------------/// 
-/// PipelineManager
+/// LevelManager
 ///-------------------------------------------///
-PipelineManager* ServiceLocator::GetPipelineManager() { return pipelineManager_; }
+LevelManager* ServiceLocator::GetLevelManager() { return levelManager_; }
 
 ///-------------------------------------------/// 
-/// DXCommon
+/// AudioManager
 ///-------------------------------------------///
-DXCommon* ServiceLocator::GetDXCommon() { return dxCommon_; }
+AudioManager* ServiceLocator::GetAudioManager() { return audioManager_; }
 
 ///-------------------------------------------/// 
-/// WinApp
+/// LineObject3D
 ///-------------------------------------------///
-WinApp* ServiceLocator::GetWinApp() { return winApp_; }
+LineObject3D* ServiceLocator::GetLineObject3D() { return lineObject3D_; }
+
+///-------------------------------------------/// 
+/// OffScreenRenderer
+///-------------------------------------------///
+OffScreenRenderer* ServiceLocator::GetOffScreenRenderer() { return offScreenRenderer_; }
 
 ///-------------------------------------------/// 
 /// Input
@@ -159,3 +185,18 @@ WinApp* ServiceLocator::GetWinApp() { return winApp_; }
 Keyboard* ServiceLocator::GetKeyboard() { return keyboard_; }
 Mouse* ServiceLocator::GetMouse() { return mouse_; }
 Controller* ServiceLocator::GetController() { return controller_; }
+
+///-------------------------------------------/// 
+/// CameraManager
+///-------------------------------------------///
+CameraManager* ServiceLocator::GetCameraManager() { return cameraManager_; }
+
+///-------------------------------------------/// 
+/// particleManager
+///-------------------------------------------///
+ParticleManager* ServiceLocator::GetParticleManager() { return particleManager_; }
+
+///-------------------------------------------/// 
+/// ColliderManager
+///-------------------------------------------///
+ColliderManager* ServiceLocator::GetColliderManager() { return colliderManager_; }

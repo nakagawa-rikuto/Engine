@@ -45,8 +45,6 @@ public: /// ===Setter=== ///
 	void SetLight(LightType type);
 	// LightData
 	void SetLightData(LightInfo light);
-	// Camera
-	void SetCamera(Camera* camera);
 	// Animation
 	void SetAnimation(const std::string& animationName, bool isLoop = true);
 

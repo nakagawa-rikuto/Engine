@@ -22,11 +22,14 @@ public: /// ===基本的な関数=== ///
 	~Model();
 
 	// 初期化
-	void Initialize(const std::string& filename, LightType type); // オブジェクトを読み込まない場合の初期化
+	void Initialize(const std::string& filename, LightType type = LightType::None); // オブジェクトを読み込まない場合の初期化
 	// 更新
 	void Update();
 	// 描画
 	void Draw(BlendMode mode);
+
+	// クローン
+	std::shared_ptr<Model> Clone() const;
 
 public: /// ===Getter=== ///
 	// モデル座標
@@ -49,15 +52,13 @@ public: /// ===Setter=== ///
 	void SetLight(LightType type);
 	// LightData
 	void SetLightData(LightInfo light);
-	// カメラ
-	void SetCamera(Camera* camera);
 
 private: /// ===Variables(変数)=== ///
 
 	/// ===バッファリソース=== ///
-	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<IndexBuffer3D> index_;
-	std::unique_ptr<ModelCommon> common_;
+	std::shared_ptr<VertexBuffer3D> vertex_;
+	std::shared_ptr<IndexBuffer3D> index_;
+	std::shared_ptr<ModelCommon> common_;
 
 	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;
@@ -73,7 +74,6 @@ private: /// ===Variables(変数)=== ///
 
 	/// ===カメラ=== ///
 	Camera* camera_ = nullptr;
-	EulerTransform cameraTransform_;
 
 	/// ===モデル情報=== ///
 	QuaternionTransform worldTransform_;

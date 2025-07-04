@@ -34,8 +34,14 @@ namespace Math {
 	float GetYAngle(const Quaternion& quaternion);
 	// QuaternionをEulerAngles(Vector3)に変換する関数
 	Vector3 QuaternionToEuler(const Quaternion& quaternion);
+	// Vector3からQuaternionに変換する関数
+	Quaternion QuaternionFromVector(const Vector3& vector);
 	// ある方向（forward）を向くクォータニオン（回転）を作る
 	Quaternion LookRotation(Vector3 forward, Vector3 up);
+	// 
+	Quaternion RotateX(float angle);
+	Quaternion RotateY(float angle);
+	Quaternion RotateZ(float angle);
 }
 
 

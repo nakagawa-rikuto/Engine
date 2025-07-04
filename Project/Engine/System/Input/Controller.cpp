@@ -8,6 +8,7 @@
 ///-------------------------------------------///
 Controller::~Controller() {}
 
+
 ///-------------------------------------------/// 
 /// 初期化　対応済み
 ///-------------------------------------------///
@@ -34,6 +35,7 @@ void Controller::Initialize() {
 	};
 }
 
+
 ///-------------------------------------------/// 
 /// 更新 対応済み
 ///-------------------------------------------///
@@ -47,6 +49,7 @@ void Controller::Update() {
 		ZeroMemory(&currentDIState_[i], sizeof(DIJOYSTATE2));
 	}
 }
+
 
 ///-------------------------------------------/// 
 /// コントローラースティックの取得
@@ -74,6 +77,7 @@ bool Controller::GetJoystickStatePrevious(int stickNo, DIJOYSTATE2& out) const {
 	return true;
 }
 
+
 ///-------------------------------------------/// 
 /// 指定したボタンの XInput / DirectInput マッピングを取得
 ///-------------------------------------------///
@@ -84,6 +88,7 @@ std::pair<WORD, int> Controller::ConvertToButton(ControllerButtonType button) co
 	}
 	return { 0, -1 }; // 無効なボタン
 }
+
 
 ///-------------------------------------------/// 
 /// ボタンを押している間　対応済み
@@ -115,6 +120,7 @@ bool Controller::PushButton(int stickNo, ControllerButtonType button) const {
 
 	return false;
 }
+
 
 ///-------------------------------------------/// 
 /// ボタンを押した瞬間　対応済み
@@ -152,6 +158,7 @@ bool Controller::TriggerButton(int stickNo, ControllerButtonType button) const {
 	return false;
 }
 
+
 ///-------------------------------------------/// 
 /// ボタンを離した瞬間 対応済み
 ///-------------------------------------------///
@@ -187,6 +194,7 @@ bool Controller::ReleaseButton(int stickNo, ControllerButtonType button) const {
 
 	return false;
 }
+
 
 ///-------------------------------------------/// 
 /// スティックの状況を取得 対応済み
@@ -242,6 +250,7 @@ StickState Controller::GetRightStickState(int stickNo) const {
 	return state;
 }
 
+
 ///-------------------------------------------/// 
 /// 指定スティックの値を取得 対応済み
 ///-------------------------------------------///
@@ -280,6 +289,79 @@ float Controller::GetStickValue(int stickNo, ControllerValueType valueType) cons
 	// XInput と DirectInput の値のうち、大きい方を採用
 	return std::max<float>(xInputValue, std::clamp<float>(dInputValue, -1.0f, 1.0f));
 }
+
+
+///-------------------------------------------/// 
+/// スティックの前フレーム状態を取得する関数
+///-------------------------------------------///
+// 左スティック
+StickState Controller::GetLeftStickStatePrevious(int stickNo) const {
+	StickState state = { 0.0f, 0.0f };
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
+
+	float lxXInput = static_cast<float>(previousState_[stickNo].Gamepad.sThumbLX) / NORMALIZE_RANGE;
+	float lyXInput = static_cast<float>(previousState_[stickNo].Gamepad.sThumbLY) / NORMALIZE_RANGE;
+
+	float lxDInput = (static_cast<float>(previousDIState_[stickNo].lX) - 32767.0f) / 32767.0f;
+	float lyDInput = (static_cast<float>(previousDIState_[stickNo].lY) - 32767.0f) / 32767.0f;
+
+	if (std::abs(lxXInput) < DEADZONE) lxXInput = 0.0f;
+	if (std::abs(lyXInput) < DEADZONE) lyXInput = 0.0f;
+	if (std::abs(lxDInput) < DEADZONE) lxDInput = 0.0f;
+	if (std::abs(lyDInput) < DEADZONE) lyDInput = 0.0f;
+
+	state.x = std::max<float>(lxXInput, std::clamp<float>(lxDInput, -1.0f, 1.0f));
+	state.y = std::max<float>(lyXInput, std::clamp<float>(lyDInput, -1.0f, 1.0f));
+
+	return state;
+}
+// 右スティック
+StickState Controller::GetRightStickStatePrevious(int stickNo) const {
+	StickState state = { 0.0f, 0.0f };
+	if (stickNo < 0 || stickNo >= XUSER_MAX_COUNT) return state;
+
+	float rxXInput = static_cast<float>(previousState_[stickNo].Gamepad.sThumbRX) / NORMALIZE_RANGE;
+	float ryXInput = static_cast<float>(previousState_[stickNo].Gamepad.sThumbRY) / NORMALIZE_RANGE;
+
+	float rxDInput = (static_cast<float>(previousDIState_[stickNo].lRx) - 32767.0f) / 32767.0f;
+	float ryDInput = (static_cast<float>(previousDIState_[stickNo].lRy) - 32767.0f) / 32767.0f;
+
+	if (std::abs(rxXInput) < DEADZONE) rxXInput = 0.0f;
+	if (std::abs(ryXInput) < DEADZONE) ryXInput = 0.0f;
+	if (std::abs(rxDInput) < DEADZONE) rxDInput = 0.0f;
+	if (std::abs(ryDInput) < DEADZONE) ryDInput = 0.0f;
+
+	state.x = std::max<float>(rxXInput, std::clamp<float>(rxDInput, -1.0f, 1.0f));
+	state.y = std::max<float>(ryXInput, std::clamp<float>(ryDInput, -1.0f, 1.0f));
+
+	return state;
+}
+
+
+///-------------------------------------------/// 
+/// スティックのはじき（ Flick ）を検出する関数
+///-------------------------------------------///
+// 左スティック
+bool Controller::FlickLeftStick(int stickNo, float threshold) const {
+	StickState prev = GetLeftStickStatePrevious(stickNo);
+	StickState curr = GetLeftStickState(stickNo);
+
+	float prevLen = std::sqrt(prev.x * prev.x + prev.y * prev.y);
+	float currLen = std::sqrt(curr.x * curr.x + curr.y * curr.y);
+
+	return (prevLen < DEADZONE && currLen >= threshold);
+}
+// 右スティック
+bool Controller::FlickRightStick(int stickNo, float threshold) const {
+	StickState prev = GetRightStickStatePrevious(stickNo);
+	StickState curr = GetRightStickState(stickNo);
+
+	float prevLen = std::sqrt(prev.x * prev.x + prev.y * prev.y);
+	float currLen = std::sqrt(curr.x * curr.x + curr.y * curr.y);
+
+	return (prevLen < DEADZONE && currLen >= threshold);
+}
+
 
 ///-------------------------------------------/// 
 /// ボタンの押し込み量を取得　対応済み

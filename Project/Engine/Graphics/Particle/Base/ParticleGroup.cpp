@@ -2,7 +2,7 @@
 // Camera
 #include "application/Game/Camera/Camera.h"
 // Service
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"
@@ -58,7 +58,7 @@ void ParticleGroup::InstancingUpdate(std::list<ParticleData>::iterator it) {
         wvpMatrix = Multiply(worldMatrix, viewProjectionMatrix);
     } else {
         Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(group_.cameraTransform.scale, group_.cameraTransform.rotate, group_.cameraTransform.translate));
-        Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+        Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
         wvpMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
     }
 
