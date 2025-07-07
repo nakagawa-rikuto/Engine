@@ -52,6 +52,8 @@ public: /// ===Setter=== ///
 	void SetLight(LightType type);
 	// LightData
 	void SetLightData(LightInfo light);
+	// 環境マップ
+	void SetEnviromentMapData(EnviromentMapInfo enviromentMap);
 
 private: /// ===Variables(変数)=== ///
 
@@ -87,6 +89,13 @@ private: /// ===Variables(変数)=== ///
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f} 
 	};
 
+	/// ===環境マップ=== ///
+	EnviromentMapInfo enviromentMapInfo_{
+		"skyBox", // textureName
+		false, // isEnviromentMap
+		1.0f // strength
+	};
+
 private: /// ===Functions(関数)=== ///
 
 	// MaterialDataの書き込み
@@ -97,5 +106,7 @@ private: /// ===Functions(関数)=== ///
 	void LightDataWrite();
 	// CameraData書き込み
 	void CameraDataWrite();
+	// EnvironmentMapData書き込み
+	void EnviromentMapDataWrite();
 };
 

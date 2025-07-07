@@ -120,16 +120,23 @@ namespace {
 
 	/// ===3D=== ///
 	ComPtr<ID3D12RootSignature> Type3D(ID3D12Device* device) {
-		// DescriptroRangeの生成
-		D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
-		descriptorRange[0].BaseShaderRegister = 0; // 0から始める
-		descriptorRange[0].NumDescriptors = 1; // 数は1つ
-		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+		// DescriptroRangeの生成				
+		// t0用
+		D3D12_DESCRIPTOR_RANGE descriptorRange0 = {};
+		descriptorRange0.BaseShaderRegister = 0; // t0
+		descriptorRange0.NumDescriptors = 1; // 数は1つ
+		descriptorRange0.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+		descriptorRange0.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+		// t1用
+		D3D12_DESCRIPTOR_RANGE descriptorRange1 = {};
+		descriptorRange1.BaseShaderRegister = 1; // t0
+		descriptorRange1.NumDescriptors = 1; // 数は1つ
+		descriptorRange1.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+		descriptorRange1.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
 
 		// RootParameterの生成
-		D3D12_ROOT_PARAMETER rootParameters[7] = {};
+		D3D12_ROOT_PARAMETER rootParameters[9] = {};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使用
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使用
 		rootParameters[0].Descriptor.ShaderRegister = 0; // レジスタ番号0を使用
@@ -140,24 +147,33 @@ namespace {
 
 		rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTableを使用
 		rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange; // Tableの中身の配列を指定
-		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange); // Tableで利用する数
+		rootParameters[2].DescriptorTable.pDescriptorRanges = &descriptorRange0; // Tableの中身の配列を指定
+		rootParameters[2].DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
 
-		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[3].Descriptor.ShaderRegister = 1; // レジスタ番号1を使用
+		rootParameters[3].DescriptorTable.pDescriptorRanges = &descriptorRange1; // Tableの中身の配列を指定
+		rootParameters[3].DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
 
 		rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[4].Descriptor.ShaderRegister = 2; // レジスタ番号2を使用
+		rootParameters[4].Descriptor.ShaderRegister = 1; // レジスタ番号1を使用
 
 		rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[5].Descriptor.ShaderRegister = 3; // レジスタ番号3を使用
+		rootParameters[5].Descriptor.ShaderRegister = 2; // レジスタ番号2を使用
 
 		rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[6].Descriptor.ShaderRegister = 4; // レジスタ番号4を使用
+		rootParameters[6].Descriptor.ShaderRegister = 3; // レジスタ番号3を使用
+
+		rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[7].Descriptor.ShaderRegister = 4; // レジスタ番号4を使用
+
+		rootParameters[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[8].Descriptor.ShaderRegister = 5; // レジスタ番号5を使用
 
 
 		// Samplerの設定
@@ -168,7 +184,7 @@ namespace {
 		staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 		staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 		staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
-		staticSamplers[0].ShaderRegister = 0;
+		staticSamplers[0].ShaderRegister = 0; // S0
 		staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
 
@@ -418,7 +434,7 @@ namespace {
 	using RootSigGenerator = std::function<ComPtr<ID3D12RootSignature>(ID3D12Device*)>;
 	const std::unordered_map<PipelineType, RootSigGenerator> kRootSignatureTable_ = {
 		{ PipelineType::Obj3D,        Type3D },
-		{ PipelineType::PrimitiveSkyBox,       Type3D },
+		{ PipelineType::PrimitiveSkyBox, Type3D },
 		{ PipelineType::ForGround2D,  Type2D },
 		{ PipelineType::BackGround2D, Type2D },
 		{ PipelineType::Particle,     TypeParticle },

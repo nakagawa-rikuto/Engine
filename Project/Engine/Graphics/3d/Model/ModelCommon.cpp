@@ -65,10 +65,6 @@ void ModelCommon::SetDirectionLight(const Vector4& color, const Vector3& directi
 	directionalLightData_->direction = direction;
 	directionalLightData_->intensity = intensity;
 }
-// cameraForGPU
-void ModelCommon::SetCameraForGPU(const Vector3& translate) {
-	cameraForGPUData_->worldPosition = translate;
-}
 // PointLight
 void ModelCommon::SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay) {
 	pointLightData_->color = color;
@@ -87,6 +83,15 @@ void ModelCommon::SetSpotLightData(const Vector4& color, const Vector3& position
 	spotLightData_->decay = decay;
 	spotLightData_->cosAngle = cosAngle;
 }
+// cameraForGPU
+void ModelCommon::SetCameraForGPU(const Vector3& translate) {
+	cameraForGPUData_->worldPosition = translate;
+}
+// EnviromentMap
+void ModelCommon::SetEnviromentMapData(bool enable, float strength) {
+	enviromentMapData_->enable = enable;	
+	enviromentMapData_->strength = strength;
+}
 
 
 ///-------------------------------------------/// 
@@ -97,10 +102,11 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 	/// ===生成=== ///
 	material_ = std::make_unique<Material3D>();
 	wvp_ = std::make_unique<Transform3D>();
-	directionallight_ = std::make_unique<Light>();
-	camera3D_ = std::make_unique<Camera3D>();
-	pointLight_ = std::make_unique<Light>();
-	spotLight_ = std::make_unique<Light>();
+	camera3D_ = std::make_unique<BufferBase>();
+	directionallight_ = std::make_unique<BufferBase>();
+	pointLight_ = std::make_unique<BufferBase>();
+	spotLight_ = std::make_unique<BufferBase>();
+	enviromentMap_ = std::make_unique<BufferBase>();
 
 	/// ===Material=== ///
 	// buffer
@@ -160,6 +166,12 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 	spotLightData_->distance = 0.0f;
 	spotLightData_->decay = 0.0f;
 	spotLightData_->cosAngle = 0.0f;
+
+	/// ===EnviromentMap=== ///
+	enviromentMap_->Create(device, sizeof(EnviromentMap));
+	enviromentMap_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&enviromentMapData_));
+	enviromentMapData_->enable = 0; // 環境マップは初期状態では無効化
+	enviromentMapData_->strength = 1.0f; // 環境マップの強度は1.0fに設定
 }
 
 
@@ -174,11 +186,13 @@ void ModelCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 	// wvpMatrixBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 	// DirectionlLightの設定
-	commandList->SetGraphicsRootConstantBufferView(3, directionallight_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(4, directionallight_->GetBuffer()->GetGPUVirtualAddress());
 	// CameraBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(5, camera3D_->GetBuffer()->GetGPUVirtualAddress());
 	// PointLight
-	commandList->SetGraphicsRootConstantBufferView(5, pointLight_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(6, pointLight_->GetBuffer()->GetGPUVirtualAddress());
 	// SpotLight
-	commandList->SetGraphicsRootConstantBufferView(6, spotLight_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(7, spotLight_->GetBuffer()->GetGPUVirtualAddress());
+	// EnviromentMap
+	commandList->SetGraphicsRootConstantBufferView(8, enviromentMap_->GetBuffer()->GetGPUVirtualAddress());
 }

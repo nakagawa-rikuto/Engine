@@ -617,7 +617,7 @@ void DebugScene::Draw() {
 
 	if (isDisplay_.Model) {
 		/// ===アニーメーションモデル=== ///
-		debugAnimationModel_->Draw();
+		//debugAnimationModel_->Draw();
 
 		/// ===Model=== ///
 		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);

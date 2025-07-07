@@ -44,6 +44,8 @@ void Model::SetColor(const Vector4& color) { color_ = color; }
 void Model::SetLight(LightType type) { common_->SetLightType(type); }
 // LightInfo
 void Model::SetLightData(LightInfo light) {light_ = light; }
+// 環境マップ
+void Model::SetEnviromentMapData(EnviromentMapInfo enviromentMap) { enviromentMapInfo_ = enviromentMap; }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -104,6 +106,7 @@ void Model::Update() {
 	TransformDataWrite();
 	LightDataWrite();
 	CameraDataWrite();
+	EnviromentMapDataWrite();
 }
 
 ///-------------------------------------------/// 
@@ -124,6 +127,7 @@ void Model::Draw(BlendMode mode) {
 	common_->Bind(commandList);
 	// テクスチャの設定
 	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Render::SetGraphicsRootDescriptorTable(commandList, 3, enviromentMapInfo_.textureName);
 	// 描画（Drawコール）
 	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
@@ -216,4 +220,11 @@ void Model::LightDataWrite() {
 ///-------------------------------------------///
 void Model::CameraDataWrite() {
 	common_->SetCameraForGPU(camera_->GetTranslate());
+}
+
+///-------------------------------------------/// 
+/// 環境マップの書き込み
+///-------------------------------------------///
+void Model::EnviromentMapDataWrite() {
+	common_->SetEnviromentMapData(enviromentMapInfo_.isEnviromentMap, enviromentMapInfo_.strength);
 }
