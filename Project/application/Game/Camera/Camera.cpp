@@ -9,6 +9,11 @@
 #ifdef USE_IMGUI
 #include "imgui.h"
 #endif // USE_IMGUI
+// Debug
+#ifdef _DEBUG
+#include "Engine/System/Service/InputService.h"
+#endif // _DEBUG
+
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -111,6 +116,46 @@ void Camera::Update() {
 
 	// 合成行列
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+}
+
+///-------------------------------------------/// 
+/// デバッグ用の更新
+///-------------------------------------------///
+void Camera::DebugUpdate() {
+#ifdef _DEBUG
+	// カメラのローカルX軸（右方向ベクトル）を取得
+	Vector3 right = Math::RotateVector({ 1.0f, 0.0f, 0.0f }, transform_.rotate);
+
+	/// ===カメラの回転=== ///
+	if (InputService::PushKey(DIK_D)) {
+		transform_.translate.x += 0.01f;
+	} else if (InputService::PushKey(DIK_A)) {
+		transform_.translate.x -= 0.01f;
+	}
+	if (InputService::PushKey(DIK_W)) {
+		transform_.translate.z += 0.01f;
+	} else if (InputService::PushKey(DIK_S)) {
+		transform_.translate.z -= 0.01f;
+	}
+	// ピッチ（縦回転）
+	if (InputService::PushKey(DIK_UP)) {
+		Quaternion delta = Math::MakeRotateAxisAngle(right, -0.01f);
+		transform_.rotate = delta * transform_.rotate;
+	} else if (InputService::PushKey(DIK_DOWN)) {
+		Quaternion delta = Math::MakeRotateAxisAngle(right, +0.01f);
+		transform_.rotate = delta * transform_.rotate;
+	}
+
+	// ヨー（左右回転）
+	if (InputService::PushKey(DIK_LEFT)) {
+		Quaternion delta = Math::RotateY(-0.01f);
+		transform_.rotate = delta * transform_.rotate;
+	} else if (InputService::PushKey(DIK_RIGHT)) {
+		Quaternion delta = Math::RotateY(+0.01f);
+		transform_.rotate = delta * transform_.rotate;
+	}
+#endif // _DEBUG
+
 }
 
 ///-------------------------------------------/// 
@@ -275,13 +320,16 @@ void Camera::FollowTopDown() {
 			norm.y * radius
 		};
 
-		desiredPosition = *targetPos_ + offsetCircle;
+		Vector3 translate = offset_ + *targetPos_;
+		translate.y = 1.0f;
+
+		desiredPosition = translate + offsetCircle;
 	}
 
 	// カメラの位置を補間で滑らかに移動
 	transform_.translate = Math::Lerp(transform_.translate, desiredPosition, followSpeed_);
 
-	// 対象を見下ろすように回転（常に真下を向く）
-	Vector3 forward = *targetPos_ - transform_.translate;
-	//transform_.rotate = Math::LookRotation(forward, { 0.0f, 1.0f, 0.0f });
+	// 対象を見下ろすように回転
+	/*Vector3 forward = *targetPos_ - transform_.translate;
+	transform_.rotate = Math::LookRotation(forward, { 0.0f, 1.0f, 0.0f });*/
 }

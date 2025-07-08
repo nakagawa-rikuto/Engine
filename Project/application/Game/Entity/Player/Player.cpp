@@ -32,7 +32,7 @@ bool Player::GetAvoidanceFlag() { return avoidanceInfo_.isFlag; }
 /// 初期化
 ///-------------------------------------------///
 void Player::Initialize() {
-
+	// Cameraの設定
 	camera_ = CameraService::GetActiveCamera().get();
 
 	// Object3dの初期化
@@ -47,12 +47,6 @@ void Player::Initialize() {
 	OBBCollider::Initialize();
 	name_ = ColliderName::Player;
 	obb_.halfSize = { 1.5f, 1.5f, 1.5f }; 
-
-	// Cameraの設定
-	SetCamera(camera_);
-	camera_->SetFollowCamera(FollowCameraType::TopDown);
-	camera_->SetOffset({ 0.0f, 70.0f, 0.0f });
-	camera_->SetFollowSpeed(0.1f);
 
 	object3d_->Update();
 }
@@ -161,7 +155,22 @@ void Player::UpdateImGui() {
 ///-------------------------------------------/// 
 /// 衝突
 ///-------------------------------------------///
-void Player::OnCollision(Collider* collider) {}
+void Player::OnCollision(Collider* collider) {
+	// Colliderによって処理を変更
+	if (collider->GetColliderName() == ColliderName::Enemy) {
+
+		if (chargeInfo_.isFlag) {
+
+
+		} else if (attackInfo_.isFlag) {
+
+
+		} else {
+
+
+		}
+	}
+}
 
 
 ///-------------------------------------------/// 
@@ -274,7 +283,7 @@ void Player::UpdateMove() {
 ///-------------------------------------------///
 void Player::InitAvoidance() {
 	// 回避スピードの設定
-	avoidanceInfo_.acceleration = 0.3f;
+	avoidanceInfo_.acceleration = 0.2f;
 	// 回避時間を0にする
 	avoidanceInfo_.timer = avoidanceInfo_.activeTime;
 	avoidanceInfo_.isPreparation = false;
@@ -333,7 +342,6 @@ void Player::UpdateCharge() {
 		chargeInfo_.isFlag = false;
 		chargeInfo_.timer = chargeInfo_.cooltime;
 	}
-
 }
 
 ///-------------------------------------------/// 

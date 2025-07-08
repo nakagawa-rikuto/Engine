@@ -31,6 +31,11 @@ public:
 	void Update();
 
 	/// <summary>
+	/// デバッグ用の更新
+	/// </summary>
+	void DebugUpdate();
+
+	/// <summary>
 	/// FollowTypeの設定
 	/// </summary>
 	void SetFollowCamera(FollowCameraType type);
