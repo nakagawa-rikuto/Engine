@@ -83,6 +83,12 @@ void IScene::GenerateModelsFromLevelData(const std::string& file_name) {
 		// オイラー角からクォータニオンへ変換（ユーティリティ関数を使用）
 		model->SetRotate(Math::QuaternionFromVector(obj.rotation));
 
+		// カメラ設定
+		model->SetCamera(CameraService::GetActiveCamera().get());
+
+		// モデルの更新
+		model->Update();
+
 		// モデルをリストに追加
 		models_.push_back(std::move(model));
 	}
@@ -90,6 +96,7 @@ void IScene::GenerateModelsFromLevelData(const std::string& file_name) {
 // 更新
 void IScene::UpdateLevelModels() {
 	for (auto& model : models_) {
+		model->SetCamera(CameraService::GetActiveCamera().get());
 		model->Update();
 	}
 }

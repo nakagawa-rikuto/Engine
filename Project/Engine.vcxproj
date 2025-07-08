@@ -108,6 +108,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="application\Game\Entity\Enemy\CloseRange\CloseRangeEnemy.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\Base\BaseEnemy.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
     <ClCompile Include="Engine\Collider\AABBCollider.cpp" />
     <ClCompile Include="Engine\Debug\DebugAnimationModel.cpp" />
@@ -123,6 +125,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Managers\LevelManager.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
+    <ClCompile Include="application\Game\Object\Ground\Ground.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemy.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemeyBullet.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="Engine\System\Service\AudioService.cpp" />
@@ -219,10 +224,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\ObjectCommon.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application\Game\Entity\Enemy\Base\BaseEnemy.h" />
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
     <ClInclude Include="Engine\DataInfo\LevelData.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\CloseRange\CloseRangeEnemy.h" />
     <ClInclude Include="Engine\System\Service\ColliderService.h" />
     <ClInclude Include="Engine\Collider\AABBCollider.h" />
     <ClInclude Include="Engine\DataInfo\LightData.h" />
@@ -241,6 +249,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\LevelManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
     <ClInclude Include="application\Drawing\3d\Line.h" />
+    <ClInclude Include="application\Game\Object\Ground\Ground.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemy.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemeyBullet.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
@@ -345,6 +356,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\ParticleService.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\ObjectCommon.h" />
     <ClInclude Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.h" />
+    <ClInclude Include="application\Game\Entity\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

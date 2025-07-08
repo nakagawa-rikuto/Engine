@@ -32,7 +32,8 @@ DebugScene::~DebugScene() {
 	// model
 	model2_.reset();
 	modelLight_.reset();
-
+	// Colliderのリセット
+	ColliderService::Reset();
 	// ISceneのデストラクタ
 	IScene::~IScene();
 }

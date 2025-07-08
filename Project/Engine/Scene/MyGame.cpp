@@ -52,7 +52,7 @@ void MyGame::Initialize(const wchar_t* title) {
 	// シーンマネージャの初期化
 	sceneManager_ = std::make_unique<SceneManager>();
 	sceneManager_->SetSceneFactory(sceneFactory_.get());
-	sceneManager_->ChangeScene(SceneType::Debug);
+	sceneManager_->ChangeScene(SceneType::Game);
 }
  
 ///-------------------------------------------/// 
@@ -93,15 +93,20 @@ void MyGame::Draw() {
 ///-------------------------------------------///
 // 音
 void MyGame::LoadAudio() {
-	// Wave
+#pragma region Wave
 	Loader::LoadWave("fanfare", "fanfare.wav");
-	// MP3
+#pragma endregion
+
+#pragma region MP3
 	Loader::LoadMP3("clear", "clear.mp3");
+#pragma endregion
 }
 // テクスチャ
 void MyGame::LoadTexture() {
+	// DebugSceneで使用。
 	Loader::LoadTexture("uvChecker", "uvChecker.png");
 	Loader::LoadTexture("monsterBall", "monsterBall.png");
+	// Particleで使用。
 	Loader::LoadTexture("circle", "circle.png");
 	Loader::LoadTexture("circle2", "circle2.png");
 	Loader::LoadTexture("gradationLine", "gradationLine.png");
@@ -109,15 +114,20 @@ void MyGame::LoadTexture() {
 }
 // モデル
 void MyGame::LoadModel() {
+	// DebugSceneで使用。
 	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
 	Loader::LoadModel("terrain", "terrain.obj");
 	Loader::LoadModel("plane", "plane.obj");
+	// Particleで使用。
 	Loader::LoadModel("Particle", "Particle.obj");
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 	// Game
+	Loader::LoadModel("player", "player.gltf");
+	Loader::LoadModel("GameGround", "Ground.obj");
 }
 // アニメーション
 void MyGame::LoadAnimation() {
+	// DebugSceneで使用。
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
 	Loader::LoadAnimation("human", "sneakWalk.gltf");
 }

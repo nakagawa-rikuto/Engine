@@ -17,8 +17,10 @@
 
 #include <numbers>
 
+#include "application/Game/Entity/Player/Player.h"
+
 ///=====================================================/// 
-/// ゲームシーン
+/// デバッグシーン
 ///=====================================================///
 class DebugScene : public IScene {
 public:/// ===メンバ関数=== ///
@@ -169,4 +171,7 @@ private:/// ===メンバ変数=== ///
 	LineInfo lineInfo_;
 	
 #pragma endregion
+
+	// Player
+	std::unique_ptr<Player> player_;
 };
