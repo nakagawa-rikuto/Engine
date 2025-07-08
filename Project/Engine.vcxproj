@@ -130,7 +130,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\Particle\Derivative\ConfettiParticle.cpp" />
     <ClCompile Include="Engine\System\Input\Controller.cpp" />
     <ClCompile Include="Engine\System\Managers\CSVManager.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="application\Scene\ClearScene.cpp" />
     <ClCompile Include="Engine\Scene\Framework.cpp" />
@@ -175,7 +174,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Graphics\2d\IndexBuffer2D.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\IndexBuffer3D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\Light.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\BufferBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application\Drawing\2d\Sprite.cpp" />
     <ClCompile Include="Engine\System\Managers\TextureManager.cpp" />
@@ -218,7 +217,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\3d\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Engine\System\Service\CameraService.cpp" />
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Primitives\PrimitiveCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\ObjectCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
@@ -250,7 +250,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DataInfo\InputData.h" />
     <ClInclude Include="Engine\System\Input\Controller.h" />
     <ClInclude Include="Engine\System\Managers\CSVManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\Camera3D.h" />
     <ClInclude Include="Engine\DataInfo\ParticleData.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="application\Scene\ClearScene.h" />
@@ -312,7 +311,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\SRVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\Model.h" />
     <ClInclude Include="Engine\System\Managers\ModelManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\Light.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\BufferBase.h" />
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />
@@ -344,7 +343,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\3d\SkyBox\SkyBox.h" />
     <ClInclude Include="Engine\System\Service\CameraService.h" />
     <ClInclude Include="Engine\System\Service\ParticleService.h" />
-    <ClInclude Include="Engine\Graphics\3d\Primitives\PrimitiveCommon.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\ObjectCommon.h" />
+    <ClInclude Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

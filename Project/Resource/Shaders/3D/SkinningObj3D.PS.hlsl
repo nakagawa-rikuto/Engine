@@ -39,12 +39,20 @@ struct SpotLight
     float decay; // 減衰率
     float cosAngle; // スポットライトの余弦
 };
+// 環境マップ
+struct EnviromentMap
+{
+    int enable; // 環境マップを使用するかどうか
+    float strength; // 環境マップの強さ
+    float padding[2]; // パディング
+};
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
 ConstantBuffer<PointLight> gPointLight : register(b3);
 ConstantBuffer<SpotLight> gSpotLight : register(b4);
+ConstantBuffer<EnviromentMap> gEnviromentMap : register(b5); // 環境マップの定数バッファ
 
 struct PixlShaderOutput
 {
@@ -53,6 +61,8 @@ struct PixlShaderOutput
 
 //SRVのregisterはt
 Texture2D<float4> gTexture : register(t0);
+// 環境マップ用のregisterは t1
+TextureCube<float4> gEnviromentTexture : register(t1);
 
 // Samplerのregisterはs
 SamplerState gSampler : register(s0);
@@ -169,6 +179,19 @@ PixlShaderOutput main(VertexShaderOutput input)
         float3 specular = specularDirectionalLight + specularPointLight + specularSpotLight;
         // 拡散反射・鏡面反射
         output.color.rgb = saturate(diffuse + specular);
+        
+        // ---環境マップの計算--- //
+        if (gEnviromentMap.enable != 0)
+        {
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 environmentColor = gEnviromentTexture.Sample(gSampler, reflectVector);
+
+            // 環境マップの反射を強度付きで加算
+            output.color.rgb += environmentColor.rgb * gEnviromentMap.strength;
+            output.color.rgb = saturate(output.color.rgb);
+        }
+        
         // アルファ今まで通り
         output.color.a = gMaterial.color.a * textureColor.a;
     }

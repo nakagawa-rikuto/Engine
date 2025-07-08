@@ -1,15 +1,14 @@
 #pragma once
 /// ===include=== ///
 #include "Engine/DataInfo/FunctionData.h"
-#include "Engine/DataInfo/LightData.h"
 
 ///=====================================================/// 
 /// Light
 ///=====================================================///
-class Light {
+class BufferBase {
 public:
-	Light() = default;
-	~Light();
+	BufferBase() = default;
+	~BufferBase();
 
 	/// <summary>
 	/// 生成

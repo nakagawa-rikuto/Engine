@@ -1,22 +1,25 @@
-#include "PrimitiveCommon.h"
+#include "ObjectCommon.h"
 // Math
 #include "Math/MatrixMath.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
-PrimitiveCommon::PrimitiveCommon() = default;
-PrimitiveCommon::~PrimitiveCommon() {
+ObjectCommon::ObjectCommon() = default;
+ObjectCommon::~ObjectCommon() {
 	material_.reset();
 	wvp_.reset();
 	directionallight_.reset();
 	camera3D_.reset();
+	pointLight_.reset();
+	spotLight_.reset();
+	enviromentMap_.reset();
 }
 
 ///-------------------------------------------/// 
 /// Getter
 ///-------------------------------------------///
-LightType PrimitiveCommon::GetLightType() const {
+LightType ObjectCommon::GetLightType() const {
 	if (materialData_->enableLighting == 1) {
 		return LightType::Lambert;
 	} else if (materialData_->enableLighting == 2) {
@@ -34,19 +37,19 @@ LightType PrimitiveCommon::GetLightType() const {
 /// Setter
 ///-------------------------------------------///
 // mateial
-void PrimitiveCommon::SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform) {
+void ObjectCommon::SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform) {
 	materialData_->color = color;
 	materialData_->shininess = shininess;
 	materialData_->uvTransform = uvTransform;
 }
 // wvp
-void PrimitiveCommon::SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World, const Matrix4x4& WorldInverseTranspose) {
+void ObjectCommon::SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World, const Matrix4x4& WorldInverseTranspose) {
 	wvpMatrixData_->WVP = WVP;
 	wvpMatrixData_->World = World;
 	wvpMatrixData_->WorldInverseTranspose = WorldInverseTranspose;
 }
 // LightType
-void PrimitiveCommon::SetLightType(LightType type) {
+void ObjectCommon::SetLightType(LightType type) {
 	if (type == LightType::Lambert) {
 		materialData_->enableLighting = 1;
 	} else if (type == LightType::HalfLambert) {
@@ -60,17 +63,13 @@ void PrimitiveCommon::SetLightType(LightType type) {
 	}
 }
 // DirectionlLight
-void PrimitiveCommon::SetDirectionLight(const Vector4& color, const Vector3& direction, const float& intensity) {
+void ObjectCommon::SetDirectionLight(const Vector4& color, const Vector3& direction, const float& intensity) {
 	directionalLightData_->color = color;
 	directionalLightData_->direction = direction;
 	directionalLightData_->intensity = intensity;
 }
-// cameraForGPU
-void PrimitiveCommon::SetCameraForGPU(const Vector3& translate) {
-	cameraForGPUData_->worldPosition = translate;
-}
 // PointLight
-void PrimitiveCommon::SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay) {
+void ObjectCommon::SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay) {
 	pointLightData_->color = color;
 	pointLightData_->position = position;
 	pointLightData_->intensity = intensity;
@@ -78,7 +77,7 @@ void PrimitiveCommon::SetPointLightData(const Vector4& color, const Vector3& pos
 	pointLightData_->decay = decay;
 }
 // SpotLight
-void PrimitiveCommon::SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle) {
+void ObjectCommon::SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle) {
 	spotLightData_->color = color;
 	spotLightData_->position = position;
 	spotLightData_->direction = direction;
@@ -87,20 +86,30 @@ void PrimitiveCommon::SetSpotLightData(const Vector4& color, const Vector3& posi
 	spotLightData_->decay = decay;
 	spotLightData_->cosAngle = cosAngle;
 }
+// cameraForGPU
+void ObjectCommon::SetCameraForGPU(const Vector3& translate) {
+	cameraForGPUData_->worldPosition = translate;
+}
+// EnviromentMap
+void ObjectCommon::SetEnviromentMapData(bool enable, float strength) {
+	enviromentMapData_->enable = enable;
+	enviromentMapData_->strength = strength;
+}
 
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void PrimitiveCommon::Initialize(ID3D12Device* device, LightType type) {
+void ObjectCommon::Initialize(ID3D12Device* device, LightType type) {
 
 	/// ===生成=== ///
 	material_ = std::make_unique<Material3D>();
 	wvp_ = std::make_unique<Transform3D>();
-	directionallight_ = std::make_unique<Light>();
-	camera3D_ = std::make_unique<Camera3D>();
-	pointLight_ = std::make_unique<Light>();
-	spotLight_ = std::make_unique<Light>();
+	camera3D_ = std::make_unique<BufferBase>();
+	directionallight_ = std::make_unique<BufferBase>();
+	pointLight_ = std::make_unique<BufferBase>();
+	spotLight_ = std::make_unique<BufferBase>();
+	enviromentMap_ = std::make_unique<BufferBase>();
 
 	/// ===Material=== ///
 	// buffer
@@ -160,13 +169,19 @@ void PrimitiveCommon::Initialize(ID3D12Device* device, LightType type) {
 	spotLightData_->distance = 0.0f;
 	spotLightData_->decay = 0.0f;
 	spotLightData_->cosAngle = 0.0f;
+
+	/// ===EnviromentMap=== ///
+	enviromentMap_->Create(device, sizeof(EnviromentMap));
+	enviromentMap_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&enviromentMapData_));
+	enviromentMapData_->enable = 0; // 環境マップは初期状態では無効化
+	enviromentMapData_->strength = 1.0f; // 環境マップの強度は1.0fに設定
 }
 
 
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void PrimitiveCommon::Bind(ID3D12GraphicsCommandList* commandList) {
+void ObjectCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 
 	/// ===コマンドリストに設定=== ///
 	// MaterialBufferの設定
@@ -174,11 +189,13 @@ void PrimitiveCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 	// wvpMatrixBufferの設定
 	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
 	// DirectionlLightの設定
-	commandList->SetGraphicsRootConstantBufferView(3, directionallight_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(4, directionallight_->GetBuffer()->GetGPUVirtualAddress());
 	// CameraBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(5, camera3D_->GetBuffer()->GetGPUVirtualAddress());
 	// PointLight
-	commandList->SetGraphicsRootConstantBufferView(5, pointLight_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(6, pointLight_->GetBuffer()->GetGPUVirtualAddress());
 	// SpotLight
-	commandList->SetGraphicsRootConstantBufferView(6, spotLight_->GetBuffer()->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(7, spotLight_->GetBuffer()->GetGPUVirtualAddress());
+	// EnviromentMap
+	commandList->SetGraphicsRootConstantBufferView(8, enviromentMap_->GetBuffer()->GetGPUVirtualAddress());
 }

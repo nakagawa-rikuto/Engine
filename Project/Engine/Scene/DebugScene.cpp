@@ -135,7 +135,8 @@ void DebugScene::Initialize() {
 
 #pragma region SkyBoxの初期化
 	skyBox_ = std::make_unique<SkyBox>();
-	skyBox_->Initialize("skyBox", LightType::Lambert);
+	skyBox_->Initialize("skyBox", LightType::None);
+	//skyBox_->SetScale({ 100.0f, 100.0f, 100.0f });
 #pragma endregion
 
 	/// ===ColliderManagerの初期化=== ///

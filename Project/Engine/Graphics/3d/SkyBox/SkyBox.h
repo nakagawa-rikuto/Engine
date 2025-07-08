@@ -3,7 +3,7 @@
 // buffer
 #include "Engine/Graphics/3d/Base/VertexBuffer3D.h"
 #include "Engine/Graphics/3d/Base/IndexBuffer3D.h"
-#include "Engine/Graphics/3d/Model/ModelCommon.h"
+#include "Engine/Graphics/3d/Base/ObjectCommon.h"
 // Pipeline
 #include "Engine/DataInfo/PipelineStateObjectType.h"
 // c++
@@ -29,14 +29,34 @@ public:
 	void Draw(BlendMode mode = BlendMode::kBlendModeNone);
 
 public: /// ===Getter=== ///
+	// モデル座標
+	const Vector3& GetTranslate() const;
+	// モデル回転
+	const Quaternion& GetRotate() const;
+	// モデル拡縮
+	const Vector3& GetScale() const;
+	// モデルカラー
+	const Vector4& GetColor() const;
 
 public: /// ===Setter=== ///
+	// モデルTransform
+	void SetTranslate(const Vector3& position);
+	void SetRotate(const Quaternion& rotate);
+	void SetScale(const Vector3& scale);
+	// モデルカラー
+	void SetColor(const Vector4& color);
+	// Light
+	void SetLight(LightType type);
+	// LightData
+	void SetLightData(LightInfo light);
+	// 環境マップ
+	void SetEnviromentMapData(bool flag, float string);
 
 private:
 	/// ===バッファリソース=== ///
 	std::unique_ptr<VertexBuffer3D> vertex_;
 	std::unique_ptr<IndexBuffer3D> index_;
-	std::unique_ptr<ModelCommon> common_;
+	std::unique_ptr<ObjectCommon> common_;
 
 	/// ===バッファリソース内のデータを指すポインタ=== ///
 	VertexData3D* vertexData_ = nullptr;
@@ -71,6 +91,9 @@ private:
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f}
 	};
 
+	/// ===環境マップ=== ///
+	EnviromentMapInfo enviromentMapInfo_;
+
 private: /// ===Functions(関数)=== ///
 
 	// VertexDataの書き込み
@@ -83,5 +106,7 @@ private: /// ===Functions(関数)=== ///
 	void LightDataWrite();
 	// CameraData書き込み
 	void CameraDataWrite();
+	// EnvironmentMapData書き込み
+	void EnviromentMapDataWrite();
 };
 
