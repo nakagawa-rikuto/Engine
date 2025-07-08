@@ -139,11 +139,11 @@ void Object3d::SetLight(LightType type) {
 	}
 }
 // 環境マップ
-void Object3d::SetEnviromentMapData(EnviromentMapInfo enviromentMap) {
+void Object3d::SetEnviromentMapData(bool flag, float string) {
 	if (type_ == ObjectType::Model) {
-		model_->SetEnviromentMapData(enviromentMap);
+		model_->SetEnviromentMapData(flag, string);
 	} else {
-		//animationModel_->SetEnviromentMapData(enviromentMap);
+		animationModel_->SetEnviromentMapData(flag, string);
 	}
 }
 // Animation

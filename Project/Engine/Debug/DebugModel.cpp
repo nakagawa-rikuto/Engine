@@ -46,7 +46,7 @@ void DebugModel::Update() {
 	SetScale(base_.scale);
 	SetColor(base_.color);
 
-	object3d_->SetEnviromentMapData({ "skyBox", true, 1.0f });
+	object3d_->SetEnviromentMapData(true, 1.0f );
 
 	OBBCollider::Update();
 }

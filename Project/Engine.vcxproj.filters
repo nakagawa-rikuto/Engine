@@ -135,6 +135,8 @@
     <ClCompile Include="Engine\System\Service\CameraService.cpp" />
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\ObjectCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -259,6 +261,8 @@
     <ClInclude Include="Engine\DataInfo\LightData.h" />
     <ClInclude Include="Engine\DataInfo\LevelData.h" />
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\ObjectCommon.h" />
+    <ClInclude Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

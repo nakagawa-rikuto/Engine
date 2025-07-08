@@ -135,7 +135,8 @@ void DebugScene::Initialize() {
 
 #pragma region SkyBoxの初期化
 	skyBox_ = std::make_unique<SkyBox>();
-	skyBox_->Initialize("skyBox", LightType::Lambert);
+	skyBox_->Initialize("skyBox", LightType::None);
+	//skyBox_->SetScale({ 100.0f, 100.0f, 100.0f });
 #pragma endregion
 
 	/// ===ColliderManagerの初期化=== ///
@@ -617,7 +618,7 @@ void DebugScene::Draw() {
 
 	if (isDisplay_.Model) {
 		/// ===アニーメーションモデル=== ///
-		//debugAnimationModel_->Draw();
+		debugAnimationModel_->Draw();
 
 		/// ===Model=== ///
 		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
