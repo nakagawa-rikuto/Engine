@@ -161,6 +161,39 @@ Quaternion Math::LookRotation(Vector3 forward, Vector3 up) {
 }
 
 ///-------------------------------------------/// 
+/// 軸の回転を行うQuaternionを返す関数
+///-------------------------------------------///
+Quaternion Math::RotateX(float angle) {
+    float half = angle * 0.5f;
+    return Quaternion(
+        std::sin(half) * 1.0f, // x
+        std::sin(half) * 0.0f, // y
+        std::sin(half) * 0.0f, // z
+        std::cos(half)         // w
+    );
+}
+
+Quaternion Math::RotateY(float angle) {
+    float half = angle * 0.5f;
+    return Quaternion(
+        std::sin(half) * 0.0f, // x
+        std::sin(half) * 1.0f, // y
+        std::sin(half) * 0.0f, // z
+        std::cos(half)         // w
+    );
+}
+
+Quaternion Math::RotateZ(float angle) {
+    float half = angle * 0.5f;
+    return Quaternion(
+        std::sin(half) * 0.0f, // x
+        std::sin(half) * 0.0f, // y
+        std::sin(half) * 1.0f, // z
+        std::cos(half)         // w
+    );
+}
+
+///-------------------------------------------/// 
 /// 
 ///-------------------------------------------///
 // 

@@ -7,6 +7,8 @@
 // DebugModel
 #include "Engine/Debug/DebugModel.h"
 #include "Engine/Debug/DebugAnimationModel.h"
+// SkyBox
+#include "Engine/Graphics/3d/SkyBox/SkyBox.h"
 
 // Line
 #include "application/Drawing/3d/Line.h"
@@ -88,6 +90,8 @@ private:/// ===メンバ変数=== ///
 	std::unique_ptr<DebugModel> debugModel_;
 	// DebugAnimationModel
 	std::unique_ptr<DebugAnimationModel> debugAnimationModel_;
+	// SkyBox
+	std::unique_ptr<SkyBox> skyBox_;
 
 #pragma endregion
 

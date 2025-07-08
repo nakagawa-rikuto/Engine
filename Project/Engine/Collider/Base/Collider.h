@@ -67,8 +67,6 @@ public: /// ===Setter=== ///
 	void SetScale(const Vector3& scale);
     // color
 	void SetColor(const Vector4& color);
-    // Camera
-    void SetCamera(Camera* camera);
 	// Light
 	void SetLight(LightType type);
 	void SetLightData(LightInfo light);

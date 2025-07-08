@@ -5,6 +5,7 @@
 #include "Engine/System/Service/CameraService.h"
 #include "Engine/System/Service/ParticleService.h"
 #include "Engine/System/Service/ColliderService.h"
+#include "Engine/System/Service/InputService.h"
 // Particle
 #include "Engine/Graphics/Particle/Derivative/ConfettiParticle.h"
 #include "Engine/Graphics/Particle/Derivative/ExplosionParticle.h"
@@ -12,6 +13,7 @@
 #include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
 #include "Engine/Graphics/Particle/Derivative/RingParticle.h"
 #include "Engine/Graphics/Particle/Derivative/CylinderParticle.h"
+#include "Math/SMath.h"
 
 ///-------------------------------------------/// 
 /// デストラクタ
@@ -41,8 +43,10 @@ void GameScene::Initialize() {
 	/// ===Camera=== ///
 	camera_ = std::make_shared<Camera>();
 	camera_->Initialize();
-	camera_->SetTranslate(cameraInfo_.translate);
 	camera_->SetRotate(cameraInfo_.rotate);
+	camera_->SetFollowCamera(FollowCameraType::TopDown);
+	camera_->SetOffset({ 0.0f, 70.0f, -60.0f });
+	camera_->SetFollowSpeed(0.1f);
 	// Managerに追加,アクティブに
 	CameraService::Add("Game", camera_);
 	CameraService::SetActiveCamera("Game");
@@ -92,6 +96,9 @@ void GameScene::Update() {
 
 #endif // USE_IMGUI
 
+	/// ===DebugCamera=== ///
+	camera_->DebugUpdate();
+
 	/// ===Playerの更新=== ///
 	player_->Update();
 
@@ -99,11 +106,9 @@ void GameScene::Update() {
 	enemy_->Update();
 
 	/// ===Groundの更新=== ///
-	ground_->SetCamera(CameraService::GetActiveCamera().get());
 	ground_->Update();
 
 	/// ===ColliderManager=== ///
-	ColliderService::SetCamera(CameraService::GetActiveCamera().get());
 
 	/// ===ISceneの更新=== ///
 	IScene::Update();

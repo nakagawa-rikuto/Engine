@@ -10,6 +10,7 @@
 #include "Engine/System/Service/ServiceLocator.h"
 #include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
+#include "Engine/System/Service/CameraService.h"
 // Manager
 #include "Engine/System/Managers/SRVManager.h"
 // camera
@@ -24,9 +25,7 @@
 ///-------------------------------------------///
 AnimationModel::AnimationModel() = default;
 AnimationModel::~AnimationModel() {
-	vertex_.reset();
-	index_.reset();
-	common_.reset();
+
 }
 
 ///-------------------------------------------/// 
@@ -42,43 +41,19 @@ const Vector4& AnimationModel::GetColor() const { return color_; }
 /// Setter
 ///-------------------------------------------///
 /// ===モデル=== ///
-void AnimationModel::SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
-void AnimationModel::SetRotate(const Quaternion& rotate) { 
-	worldTransform_.rotate = rotate; 
-	// 正規化を入れる
-	Normalize(worldTransform_.rotate);
-}
+void AnimationModel::SetTranslate(const Vector3& position) { worldTransform_.translate = position; }
+void AnimationModel::SetRotate(const Quaternion& rotate) { worldTransform_.rotate = rotate; }
 void AnimationModel::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 void AnimationModel::SetColor(const Vector4& color) { color_ = color; }
 /// ===Light=== ///
-void AnimationModel::SetLight(LightType type) { common_->SetLightType(type); }
-// LightData
-void AnimationModel::SetLightData(LightInfo light) { 
-	/*light_.shininess = light.shininess;
-	if (common_->GetLightType() == LightType::Lambert ||
-		common_->GetLightType() == LightType::HalfLambert) {
-		light_.directional.direction = light.directional.direction;
-		light_.directional.intensity = light.directional.intensity;
-		light_.directional.color = light.directional.color;
-	} else if (common_->GetLightType() == LightType::PointLight) {
-		light_.point.position = light.point.position;
-		light_.directional.intensity = light.directional.intensity;
-		light_.directional.color = light.directional.color;
-		light_.point.radius = light.point.radius;
-		light_.point.decay = light.point.decay;
-	} else if (common_->GetLightType() == LightType::SpotLight) {
-		light_.spot.position = light.spot.position;
-		light_.spot.direction = light.spot.direction;
-		light_.spot.intensity = light.spot.intensity;
-		light_.spot.color = light.spot.color;
-		light_.spot.distance = light.spot.distance;
-		light_.spot.decay = light.spot.decay;
-		light_.spot.cosAngle = light.spot.cosAngle;
-	}*/
-	light_ = light;
+void AnimationModel::SetLight(LightType type) { ModelCommon::SetLightType(type); }
+// LightInfo
+void AnimationModel::SetLightData(LightInfo light) { light_ = light; }
+// 環境マップ
+void AnimationModel::SetEnviromentMapData(bool flag, float string) {
+	enviromentMapInfo_.isEnviromentMap = flag;
+	enviromentMapInfo_.strength = string;
 }
-/// ===Camera=== ///
-void AnimationModel::SetCamera(Camera* camera) { camera_ = camera; }
 /// ===AnimatinoName=== ///
 void AnimationModel::SetAnimation(const std::string& animationName, bool isLoop) { 
 	animationName_ = animationName; 
@@ -98,10 +73,6 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 	/// ===Animationの読み込み=== ///
 	animation_ = GraphicsResourceGetter::GetAnimationData(filename); // ファイルパス
 
-	/*
-	animation_.nodeAnimations[0] <- 0番目のノードのアニメーション
-	上記のようにすることによって、ノードごとにアニメーションを管理することができる
-	*/
 	/// ===Boneがあれば=== ///
 	if (modelData_.haveBone) {
 		/// ===Skeletonの作成=== ///
@@ -110,39 +81,8 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 		skinCluster_ = CreateSkinCluster(device, skeleton_, modelData_);
 	}
 
-	/// ===生成=== ///
-	vertex_ = std::make_unique<VertexBuffer3D>();
-	index_ = std::make_unique<IndexBuffer3D>();
-	common_ = std::make_unique<ModelCommon>();
-
-	/// ===EulerTransform=== ///
-	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
-	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
-	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-
-	/// ===vertex=== ///
-	// Buffer
-	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
-	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	// メモリコピー
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData3D) * modelData_.vertices.size());
-	// view
-	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
-	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
-	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
-
-	/// ===index=== ///
-	index_->Create(device, sizeof(uint32_t) * modelData_.indices.size());
-	index_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-	// メモリコピー
-	std::memcpy(indexData_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	// view
-	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-
-	/// ===Common=== ///
-	common_->Initialize(device, type);
+	/// ===ModelCommonの初期化=== ///
+	ModelCommon::Create(device, type);
 
 	/// ===animation=== ///
 	isLoop_ = true;
@@ -153,6 +93,8 @@ void AnimationModel::Initialize(const std::string & filename, LightType type) {
 /// 更新
 ///-------------------------------------------///
 void AnimationModel::Update() {
+	/// ===カメラの設定=== ///
+	camera_ = CameraService::GetActiveCamera().get();
 
 	/// ===Animationの再生=== ///
 	float duration = animation_[animationName_].duration;
@@ -177,11 +119,8 @@ void AnimationModel::Update() {
 	// SkinClusterの更新
 	SkinClusterUpdate(skinCluster_, skeleton_);
 
-	/// ===データの書き込み=== ///
-	MateialDataWrite();
-	TransformDataWrite();
-	LightDataWrite();
-	CameraDataWrite();
+	/// ===ModelCommonの更新=== ///
+	ModelCommon::Update();
 }
 
 ///-------------------------------------------/// 
@@ -204,14 +143,7 @@ void AnimationModel::Draw(BlendMode mode) {
 		commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 		commandList->IASetVertexBuffers(0, 2, vbvs);
 		commandList->IASetIndexBuffer(&indexBufferView_);
-		// 共通部の設定
-		common_->Bind(commandList);
-		// GPUを登録
-		commandList->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
-		// テクスチャの設定
-		Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
-		// 描画（Drawコール）
-		commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+		
 	} else {
 		/// ===コマンドリストに設定=== ///
 		// PSOの設定
@@ -219,118 +151,22 @@ void AnimationModel::Draw(BlendMode mode) {
 		// Viewの設定
 		commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
 		commandList->IASetIndexBuffer(&indexBufferView_);
-		// 共通部の設定
-		common_->Bind(commandList);
-		// テクスチャの設定
-		Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
-		// 描画（Drawコール）
-		commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 	}
+
+	/// ===ModelCommonの描画=== ///
+	ModelCommon::Bind(commandList);
+
+	// GPUを登録
+	commandList->SetGraphicsRootDescriptorTable(9, skinCluster_.paletteSrvHandle.second);
+
+	// テクスチャの設定
+	Render::SetGraphicsRootDescriptorTable(commandList, 2, modelData_.material.textureFilePath);
+	Render::SetGraphicsRootDescriptorTable(commandList, 3, enviromentMapInfo_.textureName);
+
+	// 描画（Drawコール）
+	commandList->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
 
-///-------------------------------------------/// 
-/// MaterialDataの書き込み
-///-------------------------------------------///
-void AnimationModel::MateialDataWrite() {
-	/// ===Matrixの作成=== ///
-	Matrix4x4 uvTransformMatrix = Math::MakeScaleMatrix(uvTransform_.scale);
-	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, Math::MakeRotateZMatrix(uvTransform_.rotate.z));
-	uvTransformMatrixMultiply = Multiply(uvTransformMatrixMultiply, Math::MakeTranslateMatrix(uvTransform_.translate));
-	/// ===値の代入=== ///
-	common_->SetMatiarlData(
-		color_,
-		light_.shininess,
-		uvTransformMatrixMultiply
-	);
-}
-
-///-------------------------------------------/// 
-/// Transform情報の書き込み
-///-------------------------------------------///
-void AnimationModel::TransformDataWrite() {
-	Matrix4x4 worldMatrix = Math::MakeAffineQuaternionMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	Matrix4x4 worldViewProjectionMatrix;
-
-	if (modelData_.haveBone) {
-		/// ===Matrixの作成=== ///
-		if (camera_) {
-			const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-			worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-		} else {
-			Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-			Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
-			worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-		}
-
-		/// ===値の代入=== ///
-		common_->SetTransformData(
-			worldViewProjectionMatrix,
-			worldMatrix,
-			Math::Inverse4x4(worldMatrix)
-		);
-	} else {
-		/// ===Animationの再生=== ///
-		NodeAnimation& rootNodeAnimation = animation_[animationName_].nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
-		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime_); // 指定自国の値を取得。
-		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime_);
-		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime_);
-		Matrix4x4 localMatrix = Math::MakeAffineQuaternionMatrix(scale, rotate, translate);
-
-		/// ===Matrixの作成=== ///
-		if (camera_) {
-			const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-			worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-		} else {
-			Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-			Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
-			worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-		}
-		/// ===値の代入=== ///
-		common_->SetTransformData(
-			Multiply(localMatrix, worldViewProjectionMatrix),
-			Multiply(localMatrix, worldMatrix),
-			Math::Inverse4x4(worldMatrix)
-		);
-	}
-}
-
-///-------------------------------------------///  
-///　ライトの書き込み
-///-------------------------------------------///
-void AnimationModel::LightDataWrite() {
-	common_->SetDirectionLight(
-		light_.directional.color,
-		light_.directional.direction,
-		light_.directional.intensity
-	);
-	common_->SetPointLightData(
-		light_.point.color,
-		light_.point.position,
-		light_.point.intensity,
-		light_.point.radius,
-		light_.point.decay
-	);
-	common_->SetSpotLightData(
-		light_.spot.color,
-		light_.spot.position,
-		light_.spot.direction,
-		light_.spot.intensity,
-		light_.spot.distance,
-		light_.spot.decay,
-		light_.spot.cosAngle
-	);
-}
-
-///-------------------------------------------/// 
-/// カメラの書き込み
-///-------------------------------------------///
-void AnimationModel::CameraDataWrite() {
-	if (camera_) {
-		common_->SetCameraForGPU(camera_->GetTranslate());
-	} else {
-		common_->SetCameraForGPU(cameraTransform_.translate);
-	}
-}
 
 ///-------------------------------------------/// 
 /// 任意の時刻の値を取得する関数

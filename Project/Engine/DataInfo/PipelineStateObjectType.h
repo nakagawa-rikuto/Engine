@@ -13,6 +13,8 @@ enum PipelineType {
 	BackGround2D,
 	// 3D
 	Obj3D,
+	// SkyBox
+	PrimitiveSkyBox,
 	// Particle
 	Particle,
 	// Skinning3D
@@ -35,6 +37,6 @@ enum PipelineType {
 
 // 列挙型の全値を取得する関数
 constexpr std::array<PipelineType, static_cast<size_t>(PipelineType::CountOfPipelineType)> AllPipelineTypes() {
-	return { PipelineType::ForGround2D, PipelineType::BackGround2D, PipelineType::Obj3D, PipelineType::Particle , PipelineType::Skinning3D, Line3D,
+	return { PipelineType::ForGround2D, PipelineType::BackGround2D, PipelineType::Obj3D, PipelineType::PrimitiveSkyBox, PipelineType::Particle , PipelineType::Skinning3D, Line3D,
 		PipelineType::OffScreen, PipelineType::Grayscale, PipelineType::Vignette, PipelineType::BoxFilter3x3, PipelineType::BoxFilter5x5 };
 }

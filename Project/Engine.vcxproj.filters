@@ -29,7 +29,6 @@
     <ClCompile Include="Engine\System\Service\AudioService.cpp" />
     <ClCompile Include="Engine\Scene\DebugScene.cpp" />
     <ClCompile Include="Engine\System\Managers\CSVManager.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\Camera3D.cpp" />
     <ClCompile Include="Engine\Scene\AbstractSceneFactory.cpp" />
     <ClCompile Include="application\Scene\ClearScene.cpp" />
     <ClCompile Include="Engine\Scene\Framework.cpp" />
@@ -71,7 +70,7 @@
     <ClCompile Include="application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Graphics\2d\IndexBuffer2D.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\IndexBuffer3D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\Light.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\BufferBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application\Drawing\2d\Sprite.cpp" />
     <ClCompile Include="Engine\System\Managers\TextureManager.cpp" />
@@ -136,6 +135,8 @@
     <ClCompile Include="Engine\System\Service\CameraService.cpp" />
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Base\ObjectCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.cpp" />
     <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
     <ClCompile Include="application\Game\Entity\Enemy\CloseRange\CloseRangeEnemy.cpp" />
     <ClCompile Include="application\Game\Object\Ground\Ground.cpp" />
@@ -147,7 +148,6 @@
     <ClInclude Include="Engine\System\Service\AudioService.h" />
     <ClInclude Include="Engine\Scene\DebugScene.h" />
     <ClInclude Include="Engine\System\Managers\CSVManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\Camera3D.h" />
     <ClInclude Include="Engine\DataInfo\ParticleData.h" />
     <ClInclude Include="Engine\Scene\AbstractSceneFactory.h" />
     <ClInclude Include="application\Scene\ClearScene.h" />
@@ -205,7 +205,7 @@
     <ClInclude Include="Engine\System\Managers\SRVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\Model.h" />
     <ClInclude Include="Engine\System\Managers\ModelManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\Light.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\BufferBase.h" />
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />
@@ -267,6 +267,8 @@
     <ClInclude Include="Engine\DataInfo\LightData.h" />
     <ClInclude Include="Engine\DataInfo\LevelData.h" />
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
+    <ClInclude Include="Engine\Graphics\3d\Base\ObjectCommon.h" />
+    <ClInclude Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.h" />
     <ClInclude Include="application\Game\Entity\Player\Player.h" />
     <ClInclude Include="application\Game\Entity\Enemy\CloseRange\CloseRangeEnemy.h" />
     <ClInclude Include="application\Game\Object\Ground\Ground.h" />

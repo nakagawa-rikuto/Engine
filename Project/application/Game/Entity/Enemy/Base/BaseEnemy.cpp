@@ -37,9 +37,6 @@ void BaseEnemy::Initialize() {
 	// カメラの取得
 	camera_ = CameraService::GetActiveCamera().get();
 
-	// Cameraの設定
-	SetCamera(camera_);
-
 	// object3dの更新を一回行う
 	object3d_->Update();
 }

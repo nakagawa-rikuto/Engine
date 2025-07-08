@@ -1,167 +1,90 @@
 #include "ModelCommon.h"
 // Math
 #include "Math/MatrixMath.h"
+// Service
+#include "Engine/System/Service/Render.h"
+// camera
+#include "application/Game/Camera/Camera.h"
 
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
 ModelCommon::ModelCommon() = default;
 ModelCommon::~ModelCommon() {
-	material_.reset();
-	wvp_.reset();
-	directionallight_.reset();
-	camera3D_.reset();
-}
-
-///-------------------------------------------/// 
-/// Getter
-///-------------------------------------------///
-LightType ModelCommon::GetLightType() const {
-	if (materialData_->enableLighting = 1) {
-		return LightType::Lambert;
-	} else if (materialData_->enableLighting = 2) {
-		return LightType::HalfLambert;
-	} else if (materialData_->enableLighting = 3) {
-		return LightType::PointLight;
-	} else if (materialData_->enableLighting = 4) {
-		return LightType::SpotLight;
-	} else {
-		return LightType::None;
-	}
+	vertex_.reset();
+	index_.reset();
+	common_.reset();
 }
 
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-// mateial
-void ModelCommon::SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform) {
-	materialData_->color = color;
-	materialData_->shininess = shininess;
-	materialData_->uvTransform = uvTransform;
-}
-// wvp
-void ModelCommon::SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World, const Matrix4x4& WorldInverseTranspose) {
-	wvpMatrixData_->WVP = WVP;
-	wvpMatrixData_->World = World;
-	wvpMatrixData_->WorldInverseTranspose = WorldInverseTranspose;
-}
-// LightType
-void ModelCommon::SetLightType(LightType type) {
-	if (type == LightType::Lambert) {
-		materialData_->enableLighting = 1;
-	} else if (type == LightType::HalfLambert) {
-		materialData_->enableLighting = 2;
-	} else if (type == LightType::PointLight) {
-		materialData_->enableLighting = 3;
-	} else if (type == LightType::SpotLight) {
-		materialData_->enableLighting = 4;
-	} else {
-		materialData_->enableLighting = 0;
-	}
-}
-// DirectionlLight
-void ModelCommon::SetDirectionLight(const Vector4& color, const Vector3& direction, const float& intensity) {
-	directionalLightData_->color = color;
-	directionalLightData_->direction = direction;
-	directionalLightData_->intensity = intensity;
-}
-// cameraForGPU
-void ModelCommon::SetCameraForGPU(const Vector3& translate) {
-	cameraForGPUData_->worldPosition = translate;
-}
-// PointLight
-void ModelCommon::SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay) {
-	pointLightData_->color = color;
-	pointLightData_->position = position;
-	pointLightData_->intensity = intensity;
-	pointLightData_->radius = radius;
-	pointLightData_->decay = decay;
-}
-// SpotLight
-void ModelCommon::SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle) {
-	spotLightData_->color = color;
-	spotLightData_->position = position;
-	spotLightData_->direction = direction;
-	spotLightData_->intensity = intensity;
-	spotLightData_->distance = distance;
-	spotLightData_->decay = decay;
-	spotLightData_->cosAngle = cosAngle;
-}
-
+void ModelCommon::SetLightType(LightType type) {common_->SetLightType(type);}
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
+void ModelCommon::Create(ID3D12Device* device, LightType type) {
+	/// ===初期化時の設定=== ///
+	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
+	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+	light_ = {
+		40.0f,
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f},
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f},
+		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f}
+	};
+	enviromentMapInfo_ = {
+		"skyBox",
+		false,
+		1.0f
+	};
 
 	/// ===生成=== ///
-	material_ = std::make_unique<Material3D>();
-	wvp_ = std::make_unique<Transform3D>();
-	directionallight_ = std::make_unique<Light>();
-	camera3D_ = std::make_unique<Camera3D>();
-	pointLight_ = std::make_unique<Light>();
-	spotLight_ = std::make_unique<Light>();
+	vertex_ = std::make_unique<VertexBuffer3D>();
+	index_ = std::make_unique<IndexBuffer3D>();
+	common_ = std::make_unique<ObjectCommon>();
 
-	/// ===Material=== ///
-	// buffer
-	material_->Create(device, sizeof(MaterialData3D));
-	material_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	// Data書き込み
-	materialData_->color = {1.0f, 1.0f, 1.0f, 1.0f};
-	if (type == LightType::Lambert) {
-		materialData_->enableLighting = 1;
-	} else if (type == LightType::HalfLambert) {
-		materialData_->enableLighting = 2;
-	} else if (type == LightType::PointLight) {
-		materialData_->enableLighting = 3;
-	} else if (type == LightType::SpotLight) {
-		materialData_->enableLighting = 4;
-	} else {
-		materialData_->enableLighting = 0;
-	}
-	materialData_->shininess = 10.0f;
-	materialData_->uvTransform = Math::MakeIdentity4x4();
+	/// ===vertex=== ///
+	// Buffer
+	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
+	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	// メモリコピー
+	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData3D) * modelData_.vertices.size());
+	// view
+	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
+	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
+	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
 
-	/// ===wvp=== ///
-	// buffer
-	wvp_->Create(device, sizeof(TransformationMatrix3D));
-	wvp_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&wvpMatrixData_));
-	// Dataの書き込み
-	wvpMatrixData_->WVP = Math::MakeIdentity4x4();
-	wvpMatrixData_->World = Math::MakeIdentity4x4();
-	wvpMatrixData_->WorldInverseTranspose = Math::Inverse4x4(wvpMatrixData_->World);
+	/// ===index=== ///
+	index_->Create(device, sizeof(uint32_t) * modelData_.indices.size());
+	index_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	// メモリコピー
+	std::memcpy(indexData_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+	// view
+	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress();
+	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
+	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
-	/// ===DirectionalLight=== ///
-	directionallight_->Create(device, sizeof(DirectionalLight));
-	directionallight_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
-	directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	directionalLightData_->direction = { 0.0f, -1.0f, 0.0f };
-	directionalLightData_->intensity = 1.0f;
-
-	/// ===Camera=== ///
-	camera3D_->Create(device, sizeof(CameraForGPU));
-	camera3D_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPUData_));
-	cameraForGPUData_->worldPosition = {0.0f, 4.0f, -10.0f};
-
-	/// ===PointLight=== ///
-	pointLight_->Create(device, sizeof(PointLight));
-	pointLight_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData_));
-	pointLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	pointLightData_->position = { 0.0f, 0.0f, 0.0f };
-	pointLightData_->intensity = 1.0f;
-
-	/// ===SpotLight=== ///
-	spotLight_->Create(device, sizeof(SpotLight));
-	spotLight_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData_));
-	spotLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	spotLightData_->position = { 0.0f, 0.0f, 0.0f };
-	spotLightData_->intensity = 1.0f;
-	spotLightData_->direction = { 0.0f, 0.0f, 0.0f };
-	spotLightData_->distance = 0.0f;
-	spotLightData_->decay = 0.0f;
-	spotLightData_->cosAngle = 0.0f;
+	/// ===Common=== ///
+	common_->Initialize(device, type);
 }
 
+///-------------------------------------------/// 
+/// 更新
+///-------------------------------------------///
+void ModelCommon::Update() {
+	// MaterialDataの書き込み
+	MateialDataWrite();
+	// Transform情報の書き込み
+	TransformDataWrite();
+	// Lightの書き込み
+	LightDataWrite();
+	// Cameraの書き込み
+	CameraDataWrite();
+	// 環境マップの書き込み
+	EnviromentMapDataWrite();
+}
 
 ///-------------------------------------------/// 
 /// 描画
@@ -169,16 +92,91 @@ void ModelCommon::Initialize(ID3D12Device* device, LightType type) {
 void ModelCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 
 	/// ===コマンドリストに設定=== ///
-	// MaterialBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(0, material_->GetBuffer()->GetGPUVirtualAddress());
-	// wvpMatrixBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(1, wvp_->GetBuffer()->GetGPUVirtualAddress());
-	// DirectionlLightの設定
-	commandList->SetGraphicsRootConstantBufferView(3, directionallight_->GetBuffer()->GetGPUVirtualAddress());
-	// CameraBufferの設定
-	commandList->SetGraphicsRootConstantBufferView(4, camera3D_->GetBuffer()->GetGPUVirtualAddress());
-	// PointLight
-	commandList->SetGraphicsRootConstantBufferView(5, pointLight_->GetBuffer()->GetGPUVirtualAddress());
-	// SpotLight
-	commandList->SetGraphicsRootConstantBufferView(6, spotLight_->GetBuffer()->GetGPUVirtualAddress());
+	// Commonの設定
+	common_->Bind(commandList);
+}
+
+///-------------------------------------------/// 
+/// MaterialDataの書き込み
+///-------------------------------------------///
+void ModelCommon::MateialDataWrite() {
+	/// ===Matrixの作成=== ///
+	Matrix4x4 uvTransformMatrix = Math::MakeScaleMatrix(uvTransform_.scale);
+	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, Math::MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrixMultiply = Multiply(uvTransformMatrixMultiply, Math::MakeTranslateMatrix(uvTransform_.translate));
+
+	/// ===値の代入=== ///
+	common_->SetMatiarlData(
+		color_,
+		light_.shininess,
+		uvTransformMatrixMultiply
+	);
+}
+
+///-------------------------------------------/// 
+/// Transform情報の書き込み
+///-------------------------------------------///
+void ModelCommon::TransformDataWrite() {
+
+	Matrix4x4 worldMatrix = Math::MakeAffineQuaternionMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldViewProjectionMatrix;
+
+	/// ===Matrixの作成=== ///
+	const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+	worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+
+	/// ===値の代入=== ///
+	common_->SetTransformData(
+		worldViewProjectionMatrix,
+		Multiply(modelData_.rootNode.localMatrix, worldMatrix),
+		Math::Inverse4x4(worldMatrix)
+	);
+
+}
+
+///-------------------------------------------///  
+///　ライトの書き込み
+///-------------------------------------------///
+void ModelCommon::LightDataWrite() {
+	
+	// DirectionalLightの書き込み
+	common_->SetDirectionLight(
+		light_.directional.color,
+		light_.directional.direction,
+		light_.directional.intensity
+	);
+
+	// PointLightの書き込み
+	common_->SetPointLightData(
+		light_.point.color,
+		light_.point.position,
+		light_.point.intensity,
+		light_.point.radius,
+		light_.point.decay
+	);
+
+	// SpotLightの書き込み
+	common_->SetSpotLightData(
+		light_.spot.color,
+		light_.spot.position,
+		light_.spot.direction,
+		light_.spot.intensity,
+		light_.spot.distance,
+		light_.spot.decay,
+		light_.spot.cosAngle
+	);
+}
+
+///-------------------------------------------/// 
+/// カメラの書き込み
+///-------------------------------------------///
+void ModelCommon::CameraDataWrite() {
+	common_->SetCameraForGPU(camera_->GetTranslate()); // カメラの位置をワールド座標系で取得
+}
+
+///-------------------------------------------/// 
+/// 環境マップの書き込み
+///-------------------------------------------///
+void ModelCommon::EnviromentMapDataWrite() {
+	common_->SetEnviromentMapData(enviromentMapInfo_.isEnviromentMap, enviromentMapInfo_.strength);
 }

@@ -20,7 +20,3 @@ void ParticleService::Emit(const std::string& name, const Vector3& translate) {
 void ParticleService::SetTexture(const std::string& name, const std::string& textureName) {
 	ServiceLocator::GetParticleManager()->SetTexture(name, textureName);
 }
-// カメラの設定
-void ParticleService::SetCamera(Camera* camera) {
-	ServiceLocator::GetParticleManager()->SetCamera(camera);
-}

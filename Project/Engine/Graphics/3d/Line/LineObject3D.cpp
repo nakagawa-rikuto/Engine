@@ -2,6 +2,7 @@
 // Service
 #include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
+#include "Engine/System/Service/CameraService.h"
 // Camera
 #include "application/Game/Camera/camera.h"
 // DXCommon
@@ -22,11 +23,6 @@ LineObject3D::~LineObject3D() {
 /// Getter
 ///-------------------------------------------///
 const std::vector<Vector3> LineObject3D::GetSphereData() { return spheres_; }
-
-///-------------------------------------------/// 
-/// Setter
-///-------------------------------------------///
-void LineObject3D::SetCamera(Camera* camera) { camera_ = camera; }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -62,18 +58,13 @@ void LineObject3D::Initialize(ID3D12Device* device) {
 /// 更新
 ///-------------------------------------------///
 void LineObject3D::Update() {
-	//Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	Matrix4x4 worldViewProjectionMatrix;
+	
+	/// ===カメラの設定=== ///
+	camera_ = CameraService::GetActiveCamera().get();
 
 	/// ===Matrixの作成=== ///
-	if (camera_) {
-		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = viewProjectionMatrix;
-	} else {
-		Matrix4x4 viewMatrix = Math::Inverse4x4(Math::MakeAffineEulerMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate));
-		Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
-		worldViewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
-	}
+	const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+	Matrix4x4 worldViewProjectionMatrix = viewProjectionMatrix;
 
 	// Dataの代入
 	wvpData_->WVP = worldViewProjectionMatrix;

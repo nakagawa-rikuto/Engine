@@ -16,6 +16,8 @@
 #include "Engine/Graphics/Particle/Derivative/HitEffectParticle.h"
 #include "Engine/Graphics/Particle/Derivative/RingParticle.h"
 #include "Engine/Graphics/Particle/Derivative/CylinderParticle.h"
+// Math
+#include "Math/sMath.h"
 
 
 ///-------------------------------------------/// 
@@ -104,7 +106,6 @@ void DebugScene::Initialize() {
 	model_->SetLightIntensity(1.0f);                             // Lightの明るさの設定(初期値は {1.0f})
 	model_->SetLightColor(Vector4(1.0f, 1.0f, 1.0f, 1.0));       // Lightカラーの設定(初期値は {1.0f, 1.0f, 1.0f, 1.0f})
 	model_->SetLightShininess(0.27f);                            // 光沢度の設定(初期値は0.27f)
-	model_->SetCamera(CameraService::GetActiveCamera().get());  // カメラの設定(初期値は {{1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f}};)
 	*/
 
 	// DebugModelの初期化
@@ -131,6 +132,12 @@ void DebugScene::Initialize() {
 #pragma region AnimationModelの初期化
 	debugAnimationModel_ = std::make_unique<DebugAnimationModel>();
 	debugAnimationModel_->Initialize();
+#pragma endregion
+
+#pragma region SkyBoxの初期化
+	skyBox_ = std::make_unique<SkyBox>();
+	skyBox_->Initialize("skyBox", LightType::None);
+	//skyBox_->SetScale({ 100.0f, 100.0f, 100.0f });
 #pragma endregion
 
 	/// ===ColliderManagerの初期化=== ///
@@ -163,10 +170,6 @@ void DebugScene::Initialize() {
 
 	// ===LevelDataからモデルの生成と配置=== ///
 	//GenerateModelsFromLevelData("TL_12.json");
-
-	/// ===Player=== ///
-	player_ = std::make_unique<Player>();
-	player_->Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -464,6 +467,14 @@ void DebugScene::Update() {
 	} else if (InputService::PushKey(DIK_DOWN)) {
 		cameraInfo_.Translate.z -= 0.01f;
 	}
+	if (InputService::PushKey(DIK_LEFT)) {
+		// Y軸回転のクォータニオンを加算
+		Quaternion delta = Math::RotateY(-0.01f);
+		cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
+	} else if (InputService::PushKey(DIK_RIGHT)) {
+		Quaternion delta = Math::RotateY(+0.01f);
+		cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
+	}
 #pragma endregion
 
 	/// ===マウス関連の処理=== ///
@@ -535,11 +546,9 @@ void DebugScene::Update() {
 	model2_->SetTranslate(modelInfo_.Translate);
 	model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
-	model2_->SetCamera(CameraService::GetActiveCamera().get());
 	model2_->Update();
 
 	modelLight_->SetTranslate(light_.point.position);
-	modelLight_->SetCamera(CameraService::GetActiveCamera().get());
 	modelLight_->Update();
 
 	// デバッグモデルの更新(LightDataとCameraの設定はColliderManagerで行う)
@@ -551,6 +560,10 @@ void DebugScene::Update() {
 	debugAnimationModel_->Update();
 #pragma endregion
 
+#pragma region SkyBoxの更新
+	skyBox_->Update();
+#pragma endregion
+
 	/// ===Particle=== ///
 #pragma region Particle
 	// パーティクルの生成
@@ -560,9 +573,6 @@ void DebugScene::Update() {
 		ParticleService::SetTexture("Ring", "gradationLine");
 		ParticleService::SetTexture("HitEffect", "circle2");
 	}
-
-	// Cameraを設定
-	ParticleService::SetCamera(CameraService::GetActiveCamera().get());
 #pragma endregion
 
 	/// ===カメラの更新=== ///
@@ -581,12 +591,9 @@ void DebugScene::Update() {
 #pragma endregion
 
 #pragma region ColliderManagerの更新
-	ColliderService::SetCamera(CameraService::GetActiveCamera().get());
+#pragma region ColliderManagerの更新
 	ColliderService::SetLightData(light_);
 #pragma endregion
-
-	player_->SetCamera(CameraService::GetActiveCamera().get());
-	player_->Update();
 
 	/// ===ISceneのの更新=== ///
 	//UpdateLevelModels();
@@ -608,6 +615,8 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 
+	skyBox_->Draw();
+
 	if (isDisplay_.Model) {
 		/// ===アニーメーションモデル=== ///
 		debugAnimationModel_->Draw();
@@ -617,8 +626,6 @@ void DebugScene::Draw() {
 		model2_->Draw();
 
 		modelLight_->Draw();
-
-		player_->Draw();
 	}
 
 

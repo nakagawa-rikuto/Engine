@@ -1,32 +1,25 @@
 #pragma once
-// buffer
-#include "Engine/Graphics/3d/Base/VertexBuffer3D.h"
-#include "Engine/Graphics/3d/Base/IndexBuffer3D.h"
+// Common
 #include "Engine/Graphics/3d/Model/ModelCommon.h"
 // Data
 #include "Engine/DataInfo/AnimationData.h"
 #include "Engine/DataInfo/PipelineStateObjectType.h"
-// c++
-#include <memory>
-
-/// ===前方宣言=== ///
-class Camera;
 
 ///=====================================================/// 
 /// アニメーションモデル
 ///=====================================================///
-class AnimationModel {
+class AnimationModel : public ModelCommon {
 public:
 
 	AnimationModel();
 	~AnimationModel();
 
 	// 初期化
-	void Initialize(const std::string& filename, LightType type);
+	void Initialize(const std::string& filename, LightType type) override;
 	// 更新
-	void Update();
+	void Update() override;
 	// 描画
-	void Draw(BlendMode mode);
+	void Draw(BlendMode mode) override;
 
 public: /// ===Getter=== ///
 	// モデル座標
@@ -40,54 +33,21 @@ public: /// ===Getter=== ///
 
 public: /// ===Setter=== ///
 	// モデルTransform
-	void SetTranslate(const Vector3& translate);
+	void SetTranslate(const Vector3& position);
 	void SetRotate(const Quaternion& rotate);
 	void SetScale(const Vector3& scale);
-	// モデルColor
+	// モデルカラー
 	void SetColor(const Vector4& color);
 	// Light
 	void SetLight(LightType type);
 	// LightData
 	void SetLightData(LightInfo light);
-	// Camera
-	void SetCamera(Camera* camera);
+	// 環境マップ
+	void SetEnviromentMapData(bool flag, float string);
 	// Animation
 	void SetAnimation(const std::string& animationName, bool isLoop);
 
 private: /// ===Variables(変数)=== ///
-
-	/// ===バッファリソース=== ///
-	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<IndexBuffer3D> index_;
-	std::unique_ptr<ModelCommon> common_;
-
-	/// ===バッファリソース内のデータを指すポイント=== ///
-	VertexData3D* vertexData_ = nullptr;
-	uint32_t* indexData_ = nullptr;
-
-	/// ===バッファビュー=== ///
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
-
-	/// ===モデルデータ=== ///
-	ModelData modelData_;
-	EulerTransform uvTransform_;
-
-	/// ===カメラ=== ///
-	Camera* camera_ = nullptr;
-	EulerTransform cameraTransform_;
-
-	/// ===モデル情報=== ///
-	QuaternionTransform worldTransform_;
-	Vector4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	/// ===Light=== ///
-	LightInfo light_ = {
-		40.0f,
-		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f},
-		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 1.0f, 0.0f, 0.0f},
-		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, 0.0f, 0.0f } , 0.0f, { 0.0f, 0.0f, 0.0f } , 0.0f, 0.0f, 0.0f}
-	};
 
 	/// ===Animation=== ///
 	float animationTime_;
@@ -99,14 +59,6 @@ private: /// ===Variables(変数)=== ///
 
 private: /// ===Functions(関数)=== ///
 
-	// MaterialDataの書き込み
-	void MateialDataWrite();
-	// Transform情報の書き込み
-	void TransformDataWrite();
-	// LightData書き込み
-	void LightDataWrite();
-	// CameraData書き込み
-	void CameraDataWrite();
 	// 任意の時刻を取得する関数(Vector3)
 	Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
 	// 任意の時刻を取得する関数(Quaternion)
