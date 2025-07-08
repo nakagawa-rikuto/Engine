@@ -5,14 +5,14 @@ struct Material
     float4 color;
     int enableLighting; // 0はライト無し、1はランバート、2はハーフランバート
     float4x4 uvTransform;
-    float shininess; // 光沢度
+    float shininess;    // 光沢度
 };
 // ダイレクショナルライト
 struct DirectionalLight
 {
-    float4 color; // ライトの色
+    float4 color;     // ライトの色
     float3 direction; // ライトの向き
-    float intensity; // ライトの明るさ(輝度)
+    float intensity;  // ライトの明るさ(輝度)
 };
 // カメラ
 struct Camera
@@ -39,22 +39,32 @@ struct SpotLight
     float decay;      // 減衰率
     float cosAngle;   // スポットライトの余弦
 };
+// 環境マップ
+struct EnviromentMap
+{
+    int enable;      // 環境マップを使用するかどうか
+    float strength;  // 環境マップの強さ
+    float padding[2]; // パディング
+};
 
-ConstantBuffer<Material> gMaterial : register(b0);
-ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
-ConstantBuffer<Camera> gCamera : register(b2);
-ConstantBuffer<PointLight> gPointLight : register(b3);
-ConstantBuffer<SpotLight> gSpotLight : register(b4);
+ConstantBuffer<Material> gMaterial : register(b0);                  // マテリアルの定数バッファ
+ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);  // ダイレクショナルライトの定数バッファ
+ConstantBuffer<Camera> gCamera : register(b2);                      // カメラの定数バッファ
+ConstantBuffer<PointLight> gPointLight : register(b3);              // ポイントライトの定数バッファ
+ConstantBuffer<SpotLight> gSpotLight : register(b4);                // スポットライトの定数バッファ
+ConstantBuffer<EnviromentMap> gEnviromentMap : register(b5);        // 環境マップの定数バッファ
 
 struct PixlShaderOutput
 {
     float4 color : SV_TARGET0;
 };
 
-//SRVのregisterはt
+//SRVのregisterは t0
 Texture2D<float4> gTexture : register(t0);
+// 環境マップ用のregisterは t1
+TextureCube<float4> gEnviromentTexture : register(t1);
 
-// Samplerのregisterはs
+// Samplerのregisterは s0
 SamplerState gSampler : register(s0);
 
 
@@ -83,7 +93,8 @@ PixlShaderOutput main(VertexShaderOutput input)
     // Lighting
     if (gMaterial.enableLighting != 0) // Lightingする場合
     { 
-       // 変数の宣言
+       
+        // ---変数の宣言--- //
         float diffuseFactor = 0.0f;
         float specularPow = 0.0f;
         float RdotE = 0.0f;
@@ -99,6 +110,8 @@ PixlShaderOutput main(VertexShaderOutput input)
         float3 specularSpotLight = { 0.0f, 0.0f, 0.0f };
         // normal
         float3 normal = normalize(input.normal);
+        
+        // ---Lightの計算--- //
         if (gMaterial.enableLighting == 1)/* Lambert */
         {
             diffuseFactor = saturate(dot(normal, -gDirectionalLight.direction));
@@ -169,8 +182,21 @@ PixlShaderOutput main(VertexShaderOutput input)
         float3 specular = specularDirectionalLight + specularPointLight + specularSpotLight;
         // 拡散反射・鏡面反射
         output.color.rgb = saturate(diffuse + specular);
+        
+        // ---環境マップの計算--- //
+        if (gEnviromentMap.enable != 0)
+        {
+            float3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+            float3 reflectVector = reflect(cameraToPosition, normalize(input.normal));
+            float4 environmentColor = gEnviromentTexture.Sample(gSampler, reflectVector);
+
+            // 環境マップの反射を強度付きで加算
+            output.color.rgb += environmentColor.rgb * gEnviromentMap.strength;
+            output.color.rgb = saturate(output.color.rgb);
+        }
+        
         // アルファ今まで通り
-        output.color.a = gMaterial.color.a * textureColor.a;
+            output.color.a = gMaterial.color.a * textureColor.a;
     }
     
     return output;

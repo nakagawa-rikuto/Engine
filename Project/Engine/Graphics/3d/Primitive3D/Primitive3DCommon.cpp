@@ -1,4 +1,4 @@
-#include "ModelCommon.h"
+#include "Primitive3DCommon.h"
 // Math
 #include "Math/MatrixMath.h"
 // Service
@@ -9,8 +9,8 @@
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
-ModelCommon::ModelCommon() = default;
-ModelCommon::~ModelCommon() {
+Primitive3DCommon::Primitive3DCommon() = default;
+Primitive3DCommon::~Primitive3DCommon() {
 	vertex_.reset();
 	index_.reset();
 	common_.reset();
@@ -19,12 +19,12 @@ ModelCommon::~ModelCommon() {
 ///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-void ModelCommon::SetLightType(LightType type) {common_->SetLightType(type);}
+void Primitive3DCommon::SetLightType(LightType type) { common_->SetLightType(type); }
 
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ModelCommon::Create(ID3D12Device* device, LightType type) {
+void Primitive3DCommon::Create(ID3D12Device* device, LightType type) {
 	/// ===初期化時の設定=== ///
 	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
@@ -40,31 +40,9 @@ void ModelCommon::Create(ID3D12Device* device, LightType type) {
 		1.0f
 	};
 
-	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
 	index_ = std::make_unique<IndexBuffer3D>();
-	common_ = std::make_unique<ObjectCommon>();
-
-	/// ===vertex=== ///
-	// Buffer
-	vertex_->Create(device, sizeof(VertexData3D) * modelData_.vertices.size());
-	vertex_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	// メモリコピー
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData3D) * modelData_.vertices.size());
-	// view
-	vertexBufferView_.BufferLocation = vertex_->GetBuffer()->GetGPUVirtualAddress();
-	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData3D) * modelData_.vertices.size());
-	vertexBufferView_.StrideInBytes = sizeof(VertexData3D);
-
-	/// ===index=== ///
-	index_->Create(device, sizeof(uint32_t) * modelData_.indices.size());
-	index_->GetBuffer()->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-	// メモリコピー
-	std::memcpy(indexData_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-	// view
-	indexBufferView_.BufferLocation = index_->GetBuffer()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+	common_ = std::make_shared<ObjectCommon>();
 
 	/// ===Common=== ///
 	common_->Initialize(device, type);
@@ -73,7 +51,7 @@ void ModelCommon::Create(ID3D12Device* device, LightType type) {
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
-void ModelCommon::Update() {
+void Primitive3DCommon::Update() {
 	// MaterialDataの書き込み
 	MateialDataWrite();
 	// Transform情報の書き込み
@@ -89,7 +67,7 @@ void ModelCommon::Update() {
 ///-------------------------------------------/// 
 /// 描画
 ///-------------------------------------------///
-void ModelCommon::Bind(ID3D12GraphicsCommandList* commandList) {
+void Primitive3DCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 
 	/// ===コマンドリストに設定=== ///
 	// Commonの設定
@@ -99,7 +77,7 @@ void ModelCommon::Bind(ID3D12GraphicsCommandList* commandList) {
 ///-------------------------------------------/// 
 /// MaterialDataの書き込み
 ///-------------------------------------------///
-void ModelCommon::MateialDataWrite() {
+void Primitive3DCommon::MateialDataWrite() {
 	/// ===Matrixの作成=== ///
 	Matrix4x4 uvTransformMatrix = Math::MakeScaleMatrix(uvTransform_.scale);
 	Matrix4x4 uvTransformMatrixMultiply = Multiply(uvTransformMatrix, Math::MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -116,7 +94,7 @@ void ModelCommon::MateialDataWrite() {
 ///-------------------------------------------/// 
 /// Transform情報の書き込み
 ///-------------------------------------------///
-void ModelCommon::TransformDataWrite() {
+void Primitive3DCommon::TransformDataWrite() {
 
 	Matrix4x4 worldMatrix = Math::MakeAffineQuaternionMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	Matrix4x4 worldViewProjectionMatrix;
@@ -128,7 +106,7 @@ void ModelCommon::TransformDataWrite() {
 	/// ===値の代入=== ///
 	common_->SetTransformData(
 		worldViewProjectionMatrix,
-		Multiply(modelData_.rootNode.localMatrix, worldMatrix),
+		worldMatrix,
 		Math::Inverse4x4(worldMatrix)
 	);
 
@@ -137,8 +115,8 @@ void ModelCommon::TransformDataWrite() {
 ///-------------------------------------------///  
 ///　ライトの書き込み
 ///-------------------------------------------///
-void ModelCommon::LightDataWrite() {
-	
+void Primitive3DCommon::LightDataWrite() {
+
 	// DirectionalLightの書き込み
 	common_->SetDirectionLight(
 		light_.directional.color,
@@ -170,13 +148,13 @@ void ModelCommon::LightDataWrite() {
 ///-------------------------------------------/// 
 /// カメラの書き込み
 ///-------------------------------------------///
-void ModelCommon::CameraDataWrite() {
+void Primitive3DCommon::CameraDataWrite() {
 	common_->SetCameraForGPU(camera_->GetTranslate()); // カメラの位置をワールド座標系で取得
 }
 
 ///-------------------------------------------/// 
 /// 環境マップの書き込み
 ///-------------------------------------------///
-void ModelCommon::EnviromentMapDataWrite() {
+void Primitive3DCommon::EnviromentMapDataWrite() {
 	common_->SetEnviromentMapData(enviromentMapInfo_.isEnviromentMap, enviromentMapInfo_.strength);
 }

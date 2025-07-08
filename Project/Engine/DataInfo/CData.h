@@ -112,26 +112,34 @@ struct DirectionalLight {
 };
 /// ===カメラの位置=== ///
 struct CameraForGPU {
-	Vector3 worldPosition;
+	Vector3 worldPosition; // カメラのワールド位置W
 };
 /// ===ポイントライト=== ///
 struct PointLight {
-	Vector4 color;
-	Vector3 position;
-	float intensity;
-	float radius;
-	float decay;
-	float padding[2];
+	Vector4 color; 		// ライトの色
+	Vector3 position;	// ライトの位置
+	float intensity;	// ライトの明るさ(輝度)
+	float radius;		// ライトの半径
+	float decay;		// 減衰率
+	float padding[2];	// パディング
 };
 /// ===スポットライト=== ///
 struct SpotLight {
-	Vector4 color;
-	Vector3 position;
-	float intensity;
-	Vector3 direction;
-	float distance;
-	float decay;
-	float cosAngle;
-	float padding[3];
+	Vector4 color;		// ライトの色
+	Vector3 position;	// ライトの位置
+	float intensity;	// ライトの明るさ(輝度)
+	Vector3 direction;	// ライトの向き
+	float distance;		// ライトの距離
+	float decay;		// 減衰率
+	float cosAngle;		// コサイン角度(スポットライトの角度)
+	float padding[3];	// パディング
+};
+#pragma endregion
+#pragma region 環境マップ
+/// ===環境マップ=== ///
+struct EnviromentMap {
+	int32_t enable;		// 環境マップの有効化
+	float strength;		// 環境マップの強度
+	float padding[2];   // パディング
 };
 #pragma endregion

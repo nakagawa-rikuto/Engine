@@ -14,12 +14,12 @@
 class Camera;
 
 ///=====================================================/// 
-/// モデル共通部
+/// プリミティブコモン
 ///=====================================================///
-class ModelCommon {
+class Primitive3DCommon {
 public:
-	ModelCommon();
-	~ModelCommon();
+	Primitive3DCommon();
+	~Primitive3DCommon();
 
 	// 初期化
 	virtual void Initialize(const std::string& modelName, LightType type) = 0;
@@ -39,6 +39,10 @@ public:/// ===Setter=== ///
 
 protected: /// ===継承先で使用する変数=== ///
 
+	// バッファリソース
+	std::shared_ptr<VertexBuffer3D> vertex_;
+	std::shared_ptr<IndexBuffer3D> index_;
+
 	/// ===バッファビュー=== ///
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
@@ -47,11 +51,13 @@ protected: /// ===継承先で使用する変数=== ///
 	VertexData3D* vertexData_ = nullptr;
 	uint32_t* indexData_ = nullptr;
 
-	/// ===モデル情報=== ///
-	ModelData modelData_;
+	/// ===Primitiv情報=== ///
 	EulerTransform uvTransform_;
 	QuaternionTransform worldTransform_;
 	Vector4 color_;
+
+	/// ===ファイルパス=== ///
+	std::string textureFilePath_;
 
 	/// ===Light=== ///
 	LightInfo light_;
@@ -64,10 +70,8 @@ protected: /// ===継承先で使用する変数=== ///
 
 private:/// ===Variables(変数)=== ///
 
-	// バッファリソース
-	std::unique_ptr<VertexBuffer3D> vertex_;
-	std::unique_ptr<IndexBuffer3D> index_;
-	std::unique_ptr<ObjectCommon> common_;
+	// Common
+	std::shared_ptr<ObjectCommon> common_;
 
 private:
 	// MaterialDataの書き込み

@@ -18,6 +18,33 @@
 SkyBox::~SkyBox() {}
 
 ///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+/// ===モデル=== ///
+const Vector3& SkyBox::GetTranslate() const { return worldTransform_.translate; }
+const Quaternion& SkyBox::GetRotate() const { return worldTransform_.rotate; }
+const Vector3& SkyBox::GetScale() const { return worldTransform_.scale; }
+const Vector4& SkyBox::GetColor() const { return color_; }
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+/// ===モデル=== ///
+void SkyBox::SetTranslate(const Vector3& position) { worldTransform_.translate = position; }
+void SkyBox::SetRotate(const Quaternion& rotate) { worldTransform_.rotate = rotate; }
+void SkyBox::SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
+void SkyBox::SetColor(const Vector4& color) { color_ = color; }
+/// ===Light=== ///
+void SkyBox::SetLight(LightType type) { common_->SetLightType(type); }
+// LightInfo
+void SkyBox::SetLightData(LightInfo light) { light_ = light; }
+// 環境マップ
+void SkyBox::SetEnviromentMapData(bool flag, float string) {
+	enviromentMapInfo_.isEnviromentMap = flag;
+	enviromentMapInfo_.strength = string;
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void SkyBox::Initialize(const std::string& fileName, LightType type) {
@@ -27,7 +54,7 @@ void SkyBox::Initialize(const std::string& fileName, LightType type) {
 	/// ===生成=== ///
 	vertex_ = std::make_unique<VertexBuffer3D>();
 	index_ = std::make_unique<IndexBuffer3D>();
-	common_ = std::make_unique<ModelCommon>();
+	common_ = std::make_unique<ObjectCommon>();
 
 	/// ===worldTransform=== ///
 	worldTransform_ = { { 100.0f, 100.0f, 100.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
@@ -82,7 +109,8 @@ void SkyBox::Update() {
 	MateialDataWrite();
 	TransformDataWrite();
 	LightDataWrite();
-	CameraDataWrite();
+	CameraDataWrite(); 
+	EnviromentMapDataWrite();
 }
 
 ///-------------------------------------------/// 
@@ -209,4 +237,11 @@ void SkyBox::LightDataWrite() {
 ///-------------------------------------------///
 void SkyBox::CameraDataWrite() {
 	common_->SetCameraForGPU(camera_->GetTranslate());
+}
+
+///-------------------------------------------/// 
+/// 環境マップの書き込み
+///-------------------------------------------///
+void SkyBox::EnviromentMapDataWrite() {
+	common_->SetEnviromentMapData(enviromentMapInfo_.isEnviromentMap, enviromentMapInfo_.strength);
 }

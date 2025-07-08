@@ -138,6 +138,14 @@ void Object3d::SetLight(LightType type) {
 		animationModel_->SetLight(type);
 	}
 }
+// 環境マップ
+void Object3d::SetEnviromentMapData(bool flag, float string) {
+	if (type_ == ObjectType::Model) {
+		model_->SetEnviromentMapData(flag, string);
+	} else {
+		animationModel_->SetEnviromentMapData(flag, string);
+	}
+}
 // Animation
 void Object3d::SetAnimation(const std::string& animationName, bool isLoop) {
 	if (type_ == ObjectType::AnimationModel) {
