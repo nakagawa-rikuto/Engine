@@ -95,7 +95,6 @@ void DebugScene::Initialize() {
 
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
-	
 	/* モデルの使い方
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -115,6 +114,7 @@ void DebugScene::Initialize() {
 	model2_ = std::make_unique<Object3d>();
 	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
 	model2_->SetEnviromentMapData(false, 1.0f);
+	model2_->SetTranslate({ 0.0f, -1.0f, 0.0f });
 
 	modelLight_ = std::make_unique<Object3d>();
 	modelLight_->Init(ObjectType::Model, "Particle");
@@ -626,8 +626,8 @@ void DebugScene::Draw() {
 		debugAnimationModel_->Draw();
 		/// ===Model=== ///
 		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
-		model2_->Draw();
 
+		model2_->Draw();
 		modelLight_->Draw();
 	}
 
