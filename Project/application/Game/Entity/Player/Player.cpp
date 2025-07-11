@@ -38,16 +38,13 @@ void Player::Initialize() {
 	// Object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "player");
-	SetTranslate(baseInfo_.translate);
-	SetRotate(baseInfo_.rotate);
-	SetScale(baseInfo_.scale);
-	SetColor(baseInfo_.color);
 
 	// Sphereの設定
 	OBBCollider::Initialize();
 	name_ = ColliderName::Player;
 	obb_.halfSize = { 1.5f, 1.5f, 1.5f }; 
 
+	// 更新
 	object3d_->Update();
 }
 
@@ -56,7 +53,7 @@ void Player::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void Player::Update() {
-
+	/// ===スティックの取得=== ///
 	StickState rightStick = InputService::GetRightStickState(0);
 	camera_->SetStick({ rightStick.x, rightStick.y });
 
@@ -121,9 +118,10 @@ void Player::Update() {
 	/// ===Object3dの更新=== ///
 	SetTranslate(baseInfo_.translate);
 	SetRotate(baseInfo_.rotate);
+	SetScale(baseInfo_.scale);
 	SetColor(baseInfo_.color);
 
-	// SphereColliderの更新
+	/// ===SphereColliderの更新=== ///
 	OBBCollider::Update();
 }
 
@@ -132,7 +130,7 @@ void Player::Update() {
 /// 描画
 ///-------------------------------------------///
 void Player::Draw(BlendMode mode) {
-	// SphereCollider
+	/// ===SphereColliderの描画=== ///
 	OBBCollider::Draw(mode);
 }
 
