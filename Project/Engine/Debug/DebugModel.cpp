@@ -20,6 +20,7 @@ void DebugModel::Initialize() {
 	/// ===モデルを生成=== ///
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "MonsterBall", LightType::PointLight);
+
 	SetTranslate(base_.translate);
 	SetRotate(base_.rotate);
 	SetScale(base_.scale);

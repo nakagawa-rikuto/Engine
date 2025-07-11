@@ -42,6 +42,9 @@ namespace Math {
 	Quaternion RotateX(float angle);
 	Quaternion RotateY(float angle);
 	Quaternion RotateZ(float angle);
+
+	// 
+	float NormalizeAngle(float angle);
 }
 
 
