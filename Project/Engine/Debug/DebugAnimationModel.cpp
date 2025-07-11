@@ -54,18 +54,18 @@ void DebugAnimationModel::Update() {
 	/// ===移動処理=== ///
 	Move();
 
-	/// ===Animationの切り替え=== ///
-	//if (InputService::TriggerKey(DIK_SPACE)) {
-	//	if (isChagAnimation_) {
-	//		// アニメーションのループを有効化
-	//		object3d_->SetAnimation("Armature|mixamo.com|Layer0", false);
-	//		isChagAnimation_ = false;
-	//	} else {
-	//		// アニメーションのループを無効化
-	//		object3d_->SetAnimation("Armature|mixamo.com|Layer0", true);
-	//		isChagAnimation_ = true;
-	//	}
-	//}
+	 /// ===Animationの切り替え=== ///
+	if (InputService::TriggerKey(DIK_SPACE)) {
+		if (isChagAnimation_) {
+			// アニメーションのループを有効化
+			object3d_->SetAnimation("Armature|mixamo.com|Layer0", false);
+			isChagAnimation_ = false;
+		} else {
+			// アニメーションのループを無効化
+			object3d_->SetAnimation("Armature|mixamo.com|Layer0", true);
+			isChagAnimation_ = true;
+		}
+	}
 
 	// 移動量の加算
 	base_.translate += base_.velocity;

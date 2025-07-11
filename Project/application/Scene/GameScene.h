@@ -1,10 +1,6 @@
 #pragma once
 /// ===Includ=== ///
 #include "Engine/Scene/IScene.h"
-// Animation
-#include "Engine/Debug/DebugAnimationModel.h"
-// SkyBox
-#include "Engine/Graphics/3d/SkyBox/SkyBox.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -26,13 +22,5 @@ private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
 	/// </summary>
-	
-	/// ===クラス=== ///
-	// DebugAnimationModel
-	std::unique_ptr<DebugAnimationModel> debugAnimationModel_;
-	// SkyBox
-	std::unique_ptr<SkyBox> skyBox_;
-	// Camera
-	std::shared_ptr<Camera> camera_;
 };
 
