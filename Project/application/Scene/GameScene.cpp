@@ -2,7 +2,6 @@
 // SceneManager
 #include "Engine/System/Managers/SceneManager.h"
 
-
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -42,6 +41,7 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region モデル描画
+
 	/// ===ISceneの描画=== ///
 	IScene::Draw();
 #pragma endregion

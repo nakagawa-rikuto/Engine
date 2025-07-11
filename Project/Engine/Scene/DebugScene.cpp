@@ -114,6 +114,8 @@ void DebugScene::Initialize() {
 	// モデルの初期化
 	model2_ = std::make_unique<Object3d>();
 	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
+	model2_->SetEnviromentMapData(false, 1.0f);
+
 	modelLight_ = std::make_unique<Object3d>();
 	modelLight_->Init(ObjectType::Model, "Particle");
 
@@ -542,8 +544,8 @@ void DebugScene::Update() {
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	model2_->SetTranslate(modelInfo_.Translate);
-	model2_->SetRotate(modelInfo_.Rotate);
+	//model2_->SetTranslate(modelInfo_.Translate);
+	//model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
 	model2_->Update();
 
@@ -614,19 +616,20 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 
-	skyBox_->Draw();
+	// SkyBoxの描画
+	//skyBox_->Draw();
+	
 
+	// Modelの描画
 	if (isDisplay_.Model) {
-		/// ===アニーメーションモデル=== ///
+		// アニメーションの描画
 		debugAnimationModel_->Draw();
-
 		/// ===Model=== ///
 		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 		model2_->Draw();
 
 		modelLight_->Draw();
 	}
-
 
 	/// ===ISceneの描画=== ///
 	//DrawLevelModels();
