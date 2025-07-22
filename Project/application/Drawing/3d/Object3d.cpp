@@ -138,12 +138,12 @@ void Object3d::SetLight(LightType type) {
 		animationModel_->SetLight(type);
 	}
 }
-// Camera
-void Object3d::SetCamera(Camera * camera) {
+// 環境マップ
+void Object3d::SetEnviromentMapData(bool flag, float string) {
 	if (type_ == ObjectType::Model) {
-		model_->SetCamera(camera);
+		model_->SetEnviromentMapData(flag, string);
 	} else {
-		animationModel_->SetCamera(camera);
+		animationModel_->SetEnviromentMapData(flag, string);
 	}
 }
 // Animation

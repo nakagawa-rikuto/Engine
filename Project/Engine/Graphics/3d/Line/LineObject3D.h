@@ -37,10 +37,6 @@ public:
 public: /// ===Getter=== ///
 	const std::vector<Vector3> GetSphereData();
 
-public: /// ===Setter=== ///
-	// Camera
-	void SetCamera(Camera* camera);
-
 private:
 
 	/// ===バッファリソース=== ///

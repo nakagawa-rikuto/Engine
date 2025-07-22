@@ -31,7 +31,7 @@ public:/// ===Functions(関数)=== ///
 	void Initialize(TextureManager* texture);
 
 	// ファイルの読み込み
-	void Load(const std::string& baseDirectoryPath, const std::string& directorPath, const std::string& filename);
+	void Load(const std::string& Key, const std::string& baseDirectoryPath, const std::string& filename);
 
 	// モデルデータの取得
 	ModelData GetModelData(const std::string& filename);

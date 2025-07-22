@@ -1,44 +1,17 @@
 #pragma once
 /// ===include=== ///
 // Buffer
-#include "Engine/Graphics/3d/Base/Material3D.h"
-#include "Engine/Graphics/3d/Base/Transform3D.h"
-#include "Engine/Graphics/3d/Base/Light.h"
-#include "Engine/Graphics/3d/Base/Camera3D.h"
+#include "Engine/Graphics/3d/Base/VertexBuffer3D.h"
+#include "Engine/Graphics/3d/Base/IndexBuffer3D.h"
+#include "Engine/Graphics/3d/Base/ObjectCommon.h"
+// Data
+#include "Engine/DataInfo/BlendModeData.h"
 // c++
 #include <memory>
+#include <string>
 
-/// ===DirectionalLight=== ///
-struct DirectionalLightInfo {
-	Vector4 color;     
-	Vector3 direction; 
-	float intensity;   
-};
-/// ===ポイントライト=== ///
-struct PointLightInfo {
-	Vector4 color;
-	Vector3 position;
-	float intensity;
-	float radius;
-	float decay;
-};
-/// ===スポットライト=== ///
-struct SpotLightInfo {
-	Vector4 color;
-	Vector3 position;
-	float intensity;
-	Vector3 direction;
-	float distance;
-	float decay;
-	float cosAngle;
-};
-/// ===LightInfo=== ///
-struct LightInfo {
-	float shininess;
-	DirectionalLightInfo directional;
-	PointLightInfo point;
-	SpotLightInfo spot;
-};
+/// ===前方宣言=== ///
+class Camera;
 
 ///=====================================================/// 
 /// モデル共通部
@@ -49,46 +22,63 @@ public:
 	~ModelCommon();
 
 	// 初期化
-	void Initialize(ID3D12Device* device, LightType type); // オブジェクトを読み込まない場合の初期化
+	virtual void Initialize(const std::string& modelName, LightType type) = 0;
+	// 更新
+	virtual void Update();
 	// 描画
+	virtual void Draw(BlendMode mode) = 0;
+
+	// 作成
+	void Create(ID3D12Device* device, LightType type);
+	// 描画処理
 	void Bind(ID3D12GraphicsCommandList* commandList);
 
-public: /// ===Getter=== ///
-
-	LightType GetLightType() const;
-
 public:/// ===Setter=== ///
-	// Material
-	void SetMatiarlData(const Vector4& color, const float& shininess, const Matrix4x4& uvTransform);
-	// ワールドトランスフォーム
-	void SetTransformData(const Matrix4x4& WVP, const Matrix4x4& World, const Matrix4x4& WorldInverseTranspose);
 	// Light
 	void SetLightType(LightType type);
-	// DirectionalLight
-	void SetDirectionLight(const Vector4& color, const Vector3& direction, const float& intensity);
-	// PointLight
-	void SetPointLightData(const Vector4& color, const Vector3& position, const float& intensity, const float& radius, const float& decay);
-	// SpotLight
-	void SetSpotLightData(const Vector4& color, const Vector3& position, const Vector3& direction, const float& intensity, const float& distance, const float& decay, const float& cosAngle);
-	// CameraForGPU
-	void SetCameraForGPU(const Vector3& translate);
+
+protected: /// ===継承先で使用する変数=== ///
+
+	/// ===バッファビュー=== ///
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+
+	/// ===バッファリソース内のデータを指すポインタ=== ///
+	VertexData3D* vertexData_ = nullptr;
+	uint32_t* indexData_ = nullptr;
+
+	/// ===モデル情報=== ///
+	ModelData modelData_;
+	EulerTransform uvTransform_;
+	QuaternionTransform worldTransform_;
+	Vector4 color_;
+
+	/// ===Light=== ///
+	LightInfo light_;
+
+	/// ===Camera=== ///
+	Camera* camera_ = nullptr;
+
+	/// ===環境マップ=== ///
+	EnviromentMapInfo enviromentMapInfo_;
 
 private:/// ===Variables(変数)=== ///
 
 	// バッファリソース
-	std::unique_ptr<Material3D> material_;
-	std::unique_ptr<Transform3D> wvp_;
-	std::unique_ptr<Light> directionallight_;
-	std::unique_ptr<Camera3D> camera3D_;
-	std::unique_ptr<Light> pointLight_;
-	std::unique_ptr<Light> spotLight_;
+	std::unique_ptr<VertexBuffer3D> vertex_;
+	std::unique_ptr<IndexBuffer3D> index_;
+	std::unique_ptr<ObjectCommon> common_;
 
-	// バッファリソース内のデータを指すポインタ
-	MaterialData3D* materialData_ = nullptr;
-	TransformationMatrix3D* wvpMatrixData_ = nullptr;
-	DirectionalLight* directionalLightData_ = nullptr;
-	CameraForGPU* cameraForGPUData_ = nullptr;
-	PointLight* pointLightData_ = nullptr;
-	SpotLight* spotLightData_ = nullptr;
+private:
+	// MaterialDataの書き込み
+	void MateialDataWrite();
+	// Transform情報の書き込み
+	void TransformDataWrite();
+	// LightData書き込み
+	void LightDataWrite();
+	// CameraData書き込み
+	void CameraDataWrite();
+	// EnvironmentMapData書き込み
+	void EnviromentMapDataWrite();
 };
 

@@ -1,5 +1,7 @@
 #include "ParticleManager.h"
 
+#include "Engine/System/Service/CameraService.h"
+
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -17,6 +19,19 @@ void ParticleManager::AddParticle(const std::string & name, std::unique_ptr<Part
 	}
 }
 
+
+///-------------------------------------------/// 
+/// 削除
+///-------------------------------------------///
+void ParticleManager::RemoveParticle(const std::string& name) {
+	// テンプレートから削除
+	prototype_.erase(name);
+
+	// アクティブなパーティクルも削除
+	activeParticles_.erase(name);
+}
+
+
 ///-------------------------------------------/// 
 /// 発生
 ///-------------------------------------------///
@@ -25,9 +40,14 @@ void ParticleManager::Emit(const std::string& name, const Vector3& translate) {
 	if (it == prototype_.end()) return;
 
 	std::unique_ptr<ParticleGroup> newParticle = it->second->Clone();
-	newParticle->Initialze(translate, camera_);
+	newParticle->Initialze(translate, CameraService::GetActiveCamera().get());
 	activeParticles_[name].push_back(std::move(newParticle));
 }
+
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
 // Texture
 void ParticleManager::SetTexture(const std::string& name, const std::string& textureName) {
 	auto it = activeParticles_.find(name);
@@ -39,8 +59,7 @@ void ParticleManager::SetTexture(const std::string& name, const std::string& tex
 		}
 	}
 }
-// Camera
-void ParticleManager::SetCamera(Camera* camera) {camera_ = camera; }
+
 
 ///-------------------------------------------/// 
 /// 全てのPartlceの更新

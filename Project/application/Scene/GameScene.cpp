@@ -2,7 +2,6 @@
 // SceneManager
 #include "Engine/System/Managers/SceneManager.h"
 
-
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -27,7 +26,6 @@ void GameScene::Update() {
 #ifdef USE_IMGUI
 	ImGui::Begin("GameScene");
 	ImGui::End();
-
 #endif // USE_IMGUI
 
 	/// ===ISceneの更新=== ///

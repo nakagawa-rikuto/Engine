@@ -10,8 +10,16 @@ void Framework::Initialize(const wchar_t* title) {
 	// MiiEnigne
 	MiiEngine_ = std::make_unique<Mii>();
 	MiiEngine_->Initialize(title, 1280, 720);
+	// CameraManager
+	cameraManager_ = std::make_unique<CameraManager>();
+	// ParticleManager
+	particleManager_ = std::make_unique<ParticleManager>();
+	// ColliderManager
+	colliderManager_ = std::make_unique<ColliderManager>();
+	colliderManager_->Initialize();
+
 	// ServiceLocator
-	ServiceLocator::ProvideAll({ 
+	ServiceLocator::ProvideAll({
 		MiiEngine_->GetWinApp(),
 		MiiEngine_->GetDXCommon(),
 		MiiEngine_->GetSRVManager(),
@@ -23,11 +31,16 @@ void Framework::Initialize(const wchar_t* title) {
 		MiiEngine_->GetAnimationManager(),
 		MiiEngine_->GetAudioManager(),
 		MiiEngine_->GetCSVManager(),
+		MiiEngine_->GetLevelManager(),
 		MiiEngine_->GetOffScreenRenderer(),
 		MiiEngine_->GetLineObject3D(),
 		MiiEngine_->GetKeyboard(),
 		MiiEngine_->GetMouse(),
-		MiiEngine_->GetController() }
+		MiiEngine_->GetController(),
+		cameraManager_.get(),
+		particleManager_.get(),
+		colliderManager_.get()
+		}
 	);
 }
 
@@ -38,6 +51,12 @@ void Framework::Finalize() {
 	/// ===終了処理=== ///
 	// サービスロケータ
 	ServiceLocator::Finalize();
+	// CameraManager
+	cameraManager_.reset();
+	// ParticleManager
+	particleManager_.reset();
+	// ColliderManager
+	colliderManager_.reset();
 	// MiiEngine
 	MiiEngine_->Finalize();
 	MiiEngine_.reset();
@@ -50,6 +69,12 @@ void Framework::Update() {
 	/// ===システムの更新処理=== ///
 	// MiiEngine
 	MiiEngine_->Update();
+	// ParticleManager
+	particleManager_->Update();
+	// CameraManager
+	cameraManager_->UpdateAllCameras();
+	// ColliderManager
+	colliderManager_->CheckAllCollisions();
 }
 
 ///-------------------------------------------/// 
@@ -88,6 +113,9 @@ void Framework::PreDraw() {
 /// 描画後処理
 ///-------------------------------------------///
 void Framework::PostDraw() {
+	// ParticleManager
+	particleManager_->Draw(BlendMode::kBlendModeAdd);
+
 	// フレームの終了
 	MiiEngine_->EndFrame();
 }

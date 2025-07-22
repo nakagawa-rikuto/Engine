@@ -16,7 +16,8 @@ public:
 	CSVManager() = default;
 	~CSVManager() = default;
 
-	// Load関数
+public: /// ===Load関数=== ///
+	// CSV
 	void Load(const std::string& file_path);
 
 private:

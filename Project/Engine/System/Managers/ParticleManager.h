@@ -24,8 +24,8 @@ public:
     void Emit(const std::string& name, const Vector3& translate);
     // テクスチャの設定
     void SetTexture(const std::string& name, const std::string& textureName);
-    // カメラの設定
-    void SetCamera(Camera* camera);
+    // パーティクルの削除
+    void RemoveParticle(const std::string& name);
 
     // パーティクルの全体更新
     void Update();
@@ -33,8 +33,6 @@ public:
     void Draw(BlendMode mode = BlendMode::kBlendModeAdd);
 
 private:
-    // Camera
-    Camera* camera_ = nullptr;
     // 登録されたテンプレート
     std::map<std::string, std::unique_ptr<ParticleGroup>> prototype_;
     // 実際に動いているパーティクル

@@ -1,6 +1,6 @@
 #pragma once
 /// ===Includ=== ///
-#include "application/Scene/IScene.h"
+#include "Engine/Scene/IScene.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -22,6 +22,5 @@ private:/// ===メンバ変数=== ///
 	/// <summary>
 	/// シーン用
 	/// </summary>
-	
 };
 

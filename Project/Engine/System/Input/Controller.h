@@ -42,6 +42,14 @@ public:
     StickState GetRightStickState(int stickNo) const;
     float GetStickValue(int stickNo, ControllerValueType valueType) const;
 
+    // スティックの前フレーム状態を取得する関数
+    StickState GetLeftStickStatePrevious(int stickNo) const;
+    StickState GetRightStickStatePrevious(int stickNo) const;
+
+    // スティックのはじき（ Flick ）を検出する関数
+    bool FlickLeftStick(int stickNo, float threshold = 0.7f) const;
+    bool FlickRightStick(int stickNo, float threshold = 0.7f) const;
+
 private:
     static constexpr float NORMALIZE_RANGE = 32768.0f; // XInputのスティック最大値
     static constexpr float TRIGGER_THRESHOLD = 128.0f; // トリガーボタン判定のしきい値

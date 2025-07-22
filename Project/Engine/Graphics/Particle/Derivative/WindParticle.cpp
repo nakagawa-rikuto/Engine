@@ -2,7 +2,7 @@
 // c++
 #include <numbers>
 // Service
-#include "Engine/System/Service/Getter.h"
+#include "Engine/System/Service/GraphicsResourceGetter.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"
@@ -47,7 +47,7 @@ void WindParticle::Update() {
 	// Martixの作成
 	Matrix4x4 worldMatrix = Multiply(Math::MakeScaleMatrix(group_.transform.scale), Multiply(Math::MakeTranslateMatrix(group_.transform.translate), billboardMatrix));
 	Matrix4x4 viewMatrix = Math::Inverse4x4(cameraMatrix);
-	Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(Getter::GetWindowWidth()) / static_cast<float>(Getter::GetWindowHeight()), 0.1f, 100.0f);
+	Matrix4x4 projectionMatrix = Math::MakePerspectiveFovMatrix(0.45f, static_cast<float>(GraphicsResourceGetter::GetWindowWidth()) / static_cast<float>(GraphicsResourceGetter::GetWindowHeight()), 0.1f, 100.0f);
 
 	// インスタンス数を0にする
 	group_.numInstance = 0;
