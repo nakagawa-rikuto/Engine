@@ -108,6 +108,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Graphics\OffScreen\PostEffect\BoxFilter3x3Effect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\PostEffect\BoxFilter5x5Effect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\PostEffect\GrayscaleEffect.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
     <ClCompile Include="Engine\Collider\AABBCollider.cpp" />
     <ClCompile Include="Engine\Debug\DebugAnimationModel.cpp" />
@@ -209,7 +212,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
-    <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\PostEffect\CopyImageEffect.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
     <ClCompile Include="Engine\System\ImGui\SceneView.cpp" />
     <ClCompile Include="Engine\System\Service\OffScreenService.cpp" />
@@ -219,10 +222,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Service\ParticleService.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\ObjectCommon.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\PostEffect\OutLineEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\PostEffect\RadiusBlurEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\PostEffect\VignetteEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Graphics\OffScreen\PostEffect\BoxFilter3x3Effect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\PostEffect\BoxFilter5x5Effect.h" />
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
     <ClInclude Include="Engine\DataInfo\LevelData.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\PostEffect\GrayscaleEffect.h" />
     <ClInclude Include="Engine\System\Service\ColliderService.h" />
     <ClInclude Include="Engine\Collider\AABBCollider.h" />
     <ClInclude Include="Engine\DataInfo\LightData.h" />
@@ -335,7 +344,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
-    <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\PostEffect\CopyImageEffect.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
     <ClInclude Include="Engine\System\ImGui\SceneView.h" />
     <ClInclude Include="Engine\System\Service\OffScreenService.h" />
@@ -345,6 +354,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Service\ParticleService.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\ObjectCommon.h" />
     <ClInclude Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\PostEffect\OutLineEffect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\PostEffect\RadiusBlurEffect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\PostEffect\VignetteEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

@@ -39,6 +39,8 @@ namespace {
 		{ PipelineType::Vignette,     CreateDepthDesc(false) },
 		{ PipelineType::BoxFilter3x3, CreateDepthDesc(false) },
 		{ PipelineType::BoxFilter5x5, CreateDepthDesc(false) },
+		{ PipelineType::RadiusBlur,   CreateDepthDesc(false)},
+		{ PipelineType::OutLine,	  CreateDepthDesc(false) },
 	};
 }
 

@@ -65,6 +65,9 @@ void Mii::Initialize(const wchar_t* title, int width, int height) {
 	// CSVManagerの生成
 	csvManager_ = std::make_unique<CSVManager>();
 
+	// LevelManagerの生成
+	levelManager_ = std::make_unique<LevelManager>();
+
 	// LineObject3Dの生成
 	lineObject3D_ = std::make_unique<LineObject3D>();
 	lineObject3D_->Initialize(dXCommon_->GetDevice());
@@ -96,6 +99,8 @@ void Mii::Update() {
 	controller_->Update();
 	// ImGui
 	imGuiManager_->Begin();
+	// OffScreenRendererのImGui
+	offScreenRenderer_->DrawImGui();
 }
 
 ///=====================================================/// 
@@ -126,6 +131,8 @@ void Mii::Finalize() {
 	textureManager_.reset();	// TextrureManager
 	// LineObject3D
 	lineObject3D_.reset();
+	// LevelManager
+	levelManager_.reset();	// LevelManager
 	// SceneView
 	sceneView_.reset();
 	// OffScreen
@@ -229,6 +236,8 @@ CSVManager* Mii::GetCSVManager() { return csvManager_.get(); }
 AnimationManager* Mii::GetAnimationManager() { return animationManager_.get(); }
 // OffScreenRenderer
 OffScreenRenderer* Mii::GetOffScreenRenderer() { return offScreenRenderer_.get(); }
+// LevelManager
+LevelManager* Mii::GetLevelManager() { return levelManager_.get(); }
 // LineObject3D
 LineObject3D* Mii::GetLineObject3D() { return lineObject3D_.get(); }
 // Keyboard

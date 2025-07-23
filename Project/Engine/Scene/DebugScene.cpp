@@ -569,10 +569,11 @@ void DebugScene::Update() {
 #pragma region Particle
 	// パーティクルの生成
 	if (InputService::TriggerKey(DIK_SPACE)) {
-		ParticleService::Emit("Ring", particleInofo_.Translate);
-		ParticleService::Emit("HitEffect", particleInofo_.Translate);
-		ParticleService::SetTexture("Ring", "gradationLine");
-		ParticleService::SetTexture("HitEffect", "circle2");
+		if (offScreenInfo_.isGrayscale) {
+			offScreenInfo_.isGrayscale = false;
+		} else {
+			offScreenInfo_.isGrayscale = true;
+		}
 	}
 #pragma endregion
 

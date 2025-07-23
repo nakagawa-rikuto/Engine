@@ -526,6 +526,8 @@ namespace {
 		{ PipelineType::Vignette ,    TypeOffScreen },
 		{ PipelineType::BoxFilter3x3, TypeOffScreen },
 		{ PipelineType::BoxFilter5x5, TypeOffScreen },
+		{ PipelineType::RadiusBlur,   TypeOffScreen },
+		{ PipelineType::OutLine,	  TypeOffScreen },
 	};
 }
 
