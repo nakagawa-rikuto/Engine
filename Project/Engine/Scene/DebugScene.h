@@ -154,12 +154,6 @@ private:/// ===メンバ変数=== ///
 	};
 	ParticleInfo particleInofo_;
 	
-	// OffScreen
-	struct OffScreenInfo {
-		bool isGrayscale = false;
-	};
-	OffScreenInfo offScreenInfo_;
-	
 	// Line
 	struct LineInfo {
 		Vector3 startPos = { 0.0f, 0.0f, 0.0f };

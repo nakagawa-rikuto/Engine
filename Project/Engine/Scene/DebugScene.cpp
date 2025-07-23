@@ -159,7 +159,6 @@ void DebugScene::Initialize() {
 
 	/// ===OffScreen=== ///
 #pragma region OffScreen
-	offScreenInfo_.isGrayscale = false;
 #pragma endregion
 
 	/// ===Particle=== ///
@@ -416,10 +415,6 @@ void DebugScene::Update() {
 	ImGui::DragFloat("Volume", &audioInfo_.volume, 0.01f);
 	ImGui::DragFloat("Ptich", &audioInfo_.pitch, 0.01f);
 	ImGui::End();
-	/// ===OffScreen=== ///
-	ImGui::Begin("OffScreen");
-	ImGui::Checkbox("Grayscale", &offScreenInfo_.isGrayscale);
-	ImGui::End();
 
 	/// ===Line=== ///
 	ImGui::Begin("Line");
@@ -434,12 +429,6 @@ void DebugScene::Update() {
 #endif // USE_IMGUI
 
 #pragma region OffScreen
-	/// ===OffScreen=== ///
-	if (offScreenInfo_.isGrayscale) {
-		OffScreenService::SetOffScreenType(OffScreenType::Grayscale);
-	} else {
-		OffScreenService::SetOffScreenType(OffScreenType::CopyImage);
-	}
 #pragma endregion
 
 	/// ===カメラの変更=== ///
@@ -567,14 +556,6 @@ void DebugScene::Update() {
 
 	/// ===Particle=== ///
 #pragma region Particle
-	// パーティクルの生成
-	if (InputService::TriggerKey(DIK_SPACE)) {
-		if (offScreenInfo_.isGrayscale) {
-			offScreenInfo_.isGrayscale = false;
-		} else {
-			offScreenInfo_.isGrayscale = true;
-		}
-	}
 #pragma endregion
 
 	/// ===カメラの更新=== ///

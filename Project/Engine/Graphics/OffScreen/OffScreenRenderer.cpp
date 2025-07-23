@@ -130,10 +130,10 @@ void OffScreenRenderer::DrawImGui() {
 		"CopyImage",
 		"Grayscale",
 		"Vignette",
-		"OutLine",
 		"BoxFilter3x3",
 		"BoxFilter5x5",
-		"RadiusBlur"
+		"RadiusBlur",
+		"OutLine"
 	};
 
 	int current = static_cast<int>(type_);
