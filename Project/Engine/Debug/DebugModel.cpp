@@ -21,11 +21,11 @@ void DebugModel::Initialize() {
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "MonsterBall", LightType::PointLight);
 
+	// 設定
 	SetTranslate(base_.translate);
 	SetRotate(base_.rotate);
 	SetScale(base_.scale);
 	SetColor(base_.color);
-
 
 	// コライダーの名前を登録
 	name_ = ColliderName::Enemy;
