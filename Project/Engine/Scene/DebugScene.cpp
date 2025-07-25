@@ -610,20 +610,18 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 
-	// SkyBoxの描画
-	skyBox_->Draw();
 	
-	// アニメーションの描画
-	debugAnimationModel_->Draw();
 
 	// Modelの描画
 	if (isDisplay_.Model) {
+		// SkyBoxの描画
+		skyBox_->Draw();
 		// アニメーションの描画
 		debugAnimationModel_->Draw();
 		/// ===Model=== ///
 		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 
-		//model2_->Draw();
+		model2_->Draw();
 		//modelLight_->Draw();
 	}
 
