@@ -108,6 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
@@ -227,6 +228,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.h" />
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
@@ -494,7 +496,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.Ps.hlsl">
+    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

@@ -17,6 +17,7 @@ OffScreenRenderer::~OffScreenRenderer() {
 	boxFilter5x5_.reset();
 	radiusBlur_.reset();
 	outLine_.reset();
+	dissolve_.reset();
 	renderTexture_.reset();
 }
 
@@ -45,6 +46,10 @@ void OffScreenRenderer::Initialize(
 	// ビネットレンダーパス
 	vignette_ = std::make_shared<VignetteEffect>();
 	vignette_->Initialize(renderTexture_);
+
+	// Dissolveエフェクト
+	dissolve_ = std::make_shared<DissolveEffect>();
+	dissolve_->Initialize(renderTexture_);
 
 	// 3x3ボックスフィルタレンダーパス
 	boxFilter3x3_ = std::make_shared<BoxFilter3x3Effect>();
@@ -89,6 +94,9 @@ void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CP
 	case OffScreenType::OutLine:
 		outLine_->PreDraw(commandList, dsvHandle);
 		break;
+	case OffScreenType::Dissolve:
+		dissolve_->PreDraw(commandList, dsvHandle);
+		break;
 	}
 }
 
@@ -118,6 +126,9 @@ void OffScreenRenderer::Draw(ID3D12GraphicsCommandList* commandList) {
 	case OffScreenType::OutLine:
 		outLine_->Draw(commandList);
 		break;
+	case OffScreenType::Dissolve:
+		dissolve_->Draw(commandList);
+		break;
 	}
 }
 
@@ -137,8 +148,9 @@ void OffScreenRenderer::DrawImGui() {
 		"Vignette",
 		"BoxFilter3x3",
 		"BoxFilter5x5",
-		"RadiusBlur",
-		"OutLine"
+		"RadiusBlur"
+		//"OutLine",
+		//"Dissolve",
 	};
 
 	int current = static_cast<int>(type_);

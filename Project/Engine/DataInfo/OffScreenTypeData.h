@@ -8,4 +8,5 @@ enum class OffScreenType {
 	BoxFilter5x5,
 	RadiusBlur,
 	OutLine,
+	Dissolve,
 };

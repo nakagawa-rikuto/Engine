@@ -105,6 +105,7 @@ void MyGame::LoadTexture() {
 	Loader::LoadTexture("circle", "circle.png");
 	Loader::LoadTexture("circle2", "circle2.png");
 	Loader::LoadTexture("gradationLine", "gradationLine.png");
+	Loader::LoadTexture("Dissolve", "Dissolve.png");
 	Loader::LoadTexture("skyBox", "rostock_laage_airport_4k.dds");
 }
 // モデル

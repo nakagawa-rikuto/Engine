@@ -16,6 +16,8 @@ public:
 	virtual void PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
 	// 描画
 	virtual void Draw(ID3D12GraphicsCommandList* commandList) = 0;
+	// ImGui情報
+	virtual void ImGuiInfo() {}
 
 protected:
 	std::shared_ptr<RenderTexture> renderTexture_;

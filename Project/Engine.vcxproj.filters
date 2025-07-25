@@ -14,7 +14,7 @@
     <FxCompile Include="Resource\Shaders\OffScreen\Fullscreen.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\CopyImage.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\Grayscale.PS.hlsl" />
-    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.Ps.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter3x3.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter5x5.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\LuminanceBasedOutline.PS.hlsl" />
@@ -143,6 +143,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\OutLineEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -275,6 +276,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\OutLineEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />
