@@ -36,6 +36,8 @@ namespace {
 	{ PipelineType::Vignette ,    { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/Vignette.Ps.hlsl" } },
 	{ PipelineType::BoxFilter3x3, { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/BoxFilter3x3.PS.hlsl" } },
 	{ PipelineType::BoxFilter5x5, { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/BoxFilter5x5.PS.hlsl" } },
+	{ PipelineType::RadiusBlur,	  { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/RadialBlur.PS.hlsl" } },
+	{ PipelineType::OutLine,	  { L"OffScreen/Fullscreen.VS.hlsl",  L"OffScreen/LuminanceBasedOutline.PS.hlsl" } },
 	};
 }
 

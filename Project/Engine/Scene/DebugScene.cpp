@@ -434,12 +434,6 @@ void DebugScene::Update() {
 #endif // USE_IMGUI
 
 #pragma region OffScreen
-	/// ===OffScreen=== ///
-	if (offScreenInfo_.isGrayscale) {
-		OffScreenService::SetOffScreenType(OffScreenType::Grayscale);
-	} else {
-		OffScreenService::SetOffScreenType(OffScreenType::CopyImage);
-	}
 #pragma endregion
 
 	/// ===カメラの変更=== ///
@@ -617,8 +611,10 @@ void DebugScene::Draw() {
 #pragma region モデル描画
 
 	// SkyBoxの描画
-	//skyBox_->Draw();
+	skyBox_->Draw();
 	
+	// アニメーションの描画
+	debugAnimationModel_->Draw();
 
 	// Modelの描画
 	if (isDisplay_.Model) {
@@ -627,8 +623,8 @@ void DebugScene::Draw() {
 		/// ===Model=== ///
 		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
 
-		model2_->Draw();
-		modelLight_->Draw();
+		//model2_->Draw();
+		//modelLight_->Draw();
 	}
 
 	/// ===ISceneの描画=== ///

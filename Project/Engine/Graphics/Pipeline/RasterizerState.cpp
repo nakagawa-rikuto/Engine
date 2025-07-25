@@ -17,6 +17,8 @@ namespace {
 	{ PipelineType::Vignette,     D3D12_CULL_MODE_NONE },
 	{ PipelineType::BoxFilter3x3, D3D12_CULL_MODE_NONE },
 	{ PipelineType::BoxFilter5x5, D3D12_CULL_MODE_NONE },
+	{ PipelineType::RadiusBlur,   D3D12_CULL_MODE_NONE },
+	{ PipelineType::OutLine,      D3D12_CULL_MODE_NONE },
 	};
 }
 

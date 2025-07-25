@@ -77,7 +77,7 @@ void DebugAnimationModel::Update() {
 	SetColor(base_.color);
 
 	// 環境マップ
-	object3d_->SetEnviromentMapData(false, 1.0f);
+	object3d_->SetEnviromentMapData(true, 1.0f);
 
 	// SphereColliderの更新
 	SphereCollider::Update();
