@@ -129,6 +129,7 @@ void OffScreenRenderer::PostDraw(ID3D12GraphicsCommandList* commandList) {}
 ///-------------------------------------------/// 
 /// ImGuiの描画
 ///-------------------------------------------///
+#ifdef USE_IMGUI
 void OffScreenRenderer::DrawImGui() {
 	const char* typeNames[] = {
 		"CopyImage",
@@ -150,6 +151,7 @@ void OffScreenRenderer::DrawImGui() {
 	}
 	ImGui::End();
 }
+#endif // USE_IMGUI
 
 ///-------------------------------------------/// 
 /// Getter
