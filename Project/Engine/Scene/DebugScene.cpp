@@ -599,7 +599,7 @@ void DebugScene::Draw() {
 #pragma region モデル描画
 
 	// SkyBoxの描画
-	//skyBox_->Draw();
+	skyBox_->Draw();
 	
 
 	// Modelの描画
