@@ -119,7 +119,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\RenderTexture.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\RenderPass.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\OffScreenRenderer.cpp" />
-    <ClCompile Include="Engine\Graphics\OffScreen\SceneRenderPass.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\CopyImageEffect.cpp" />
     <ClCompile Include="application\Drawing\3d\Object3d.cpp" />
     <ClCompile Include="Engine\System\ImGui\SceneView.cpp" />
     <ClCompile Include="Engine\System\Service\OffScreenService.cpp" />
@@ -137,6 +137,12 @@
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\ObjectCommon.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\GrayScaleEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\OutLineEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -240,7 +246,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\RenderTexture.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\RenderPass.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\OffScreenRenderer.h" />
-    <ClInclude Include="Engine\Graphics\OffScreen\SceneRenderPass.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\CopyImageEffect.h" />
     <ClInclude Include="application\Drawing\3d\Object3d.h" />
     <ClInclude Include="Engine\System\ImGui\SceneView.h" />
     <ClInclude Include="Engine\System\Service\OffScreenService.h" />
@@ -263,6 +269,12 @@
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
     <ClInclude Include="Engine\Graphics\3d\Base\ObjectCommon.h" />
     <ClInclude Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\GrayScaleEffect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\OutLineEffect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

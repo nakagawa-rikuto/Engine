@@ -99,6 +99,8 @@ void Mii::Update() {
 	controller_->Update();
 	// ImGui
 	imGuiManager_->Begin();
+	// OffScreenRendererのImGui
+	offScreenRenderer_->DrawImGui();
 }
 
 ///=====================================================/// 

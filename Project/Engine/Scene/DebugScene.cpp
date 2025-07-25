@@ -434,12 +434,6 @@ void DebugScene::Update() {
 #endif // USE_IMGUI
 
 #pragma region OffScreen
-	/// ===OffScreen=== ///
-	if (offScreenInfo_.isGrayscale) {
-		OffScreenService::SetOffScreenType(OffScreenType::Grayscale);
-	} else {
-		OffScreenService::SetOffScreenType(OffScreenType::CopyImage);
-	}
 #pragma endregion
 
 	/// ===カメラの変更=== ///
