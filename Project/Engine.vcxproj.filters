@@ -70,7 +70,7 @@
     <ClCompile Include="application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Graphics\2d\IndexBuffer2D.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\IndexBuffer3D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\BufferBase.cpp" />
+    <ClCompile Include="Engine\Graphics\Base\BufferBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application\Drawing\2d\Sprite.cpp" />
     <ClCompile Include="Engine\System\Managers\TextureManager.cpp" />
@@ -206,7 +206,7 @@
     <ClInclude Include="Engine\System\Managers\SRVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\Model.h" />
     <ClInclude Include="Engine\System\Managers\ModelManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\BufferBase.h" />
+    <ClInclude Include="Engine\Graphics\Base\BufferBase.h" />
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />

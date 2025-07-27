@@ -2,7 +2,7 @@
 /// ===include=== ///
 #include "Engine/Graphics/3d/Base/Material3D.h"
 #include "Engine/Graphics/3d/Base/Transform3D.h"
-#include "Engine/Graphics/3d/Base/BufferBase.h"
+#include "Engine/Graphics/Base/BufferBase.h"
 // Data
 #include "Engine/DataInfo/LightData.h"
 // c++

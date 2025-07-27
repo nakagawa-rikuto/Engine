@@ -1,5 +1,8 @@
 #pragma once
 /// ===Include=== ///
+// BufferBase
+#include "Engine/Graphics/Base/BufferBase.h"
+// RenderPass
 #include "Engine/Graphics/OffScreen/RenderPass.h"
 // c++
 #include <string>
@@ -15,7 +18,7 @@ public:
 	~DissolveEffect() = default;
 
 	// 初期化
-	void Initialize(std::shared_ptr<RenderTexture> RenderTexture) override;
+	void Initialize(ID3D12Device* device, std::shared_ptr<RenderTexture> RenderTexture) override;
 	// 描画
 	void PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle) override;
 	// 描画
@@ -23,9 +26,17 @@ public:
 	// ImGui情報
 	void ImGuiInfo() override;
 
+public: /// ===Setter=== ///
+
+	void SetDissolveData(float threshold, float edgeStart, float edgeEnd, const Vector3& edgeColor);
+
 private:
 
+	// テクスチャ名
 	std::string textureKeyName_ = "Dissolve";
+
+	// Buffer
+	std::unique_ptr<BufferBase> buffer_;
 
 	// / Dissolveエフェクトのデータ構造
 	struct DissolveData {
@@ -35,5 +46,5 @@ private:
 		Vector3 edgeColor; // エッジ色
 		float padding; // floatの倍数にするためのパディング
 	};
-	DissolveData dissolveData_;
+	DissolveData* data_ = nullptr;
 };

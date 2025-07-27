@@ -461,7 +461,7 @@ namespace {
 
 
 		// RootParameterの生成
-		D3D12_ROOT_PARAMETER rootParameters[2]{};
+		D3D12_ROOT_PARAMETER rootParameters[3]{};
 		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescriptorTableを使う
 		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 		rootParameters[0].DescriptorTable.pDescriptorRanges = &descriptorRange0; // Tableの中身の配列を指定
@@ -471,6 +471,10 @@ namespace {
 		rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 		rootParameters[1].DescriptorTable.pDescriptorRanges = &descriptorRange1; // Tableの中身の配列を指定
 		rootParameters[1].DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
+
+		rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // CBVを使用
+		rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使用
+		rootParameters[2].Descriptor.ShaderRegister = 0; // レジスタ番号0を使用
 
 		// Samplerの設定
 		D3D12_STATIC_SAMPLER_DESC staticSamplers[1]{};

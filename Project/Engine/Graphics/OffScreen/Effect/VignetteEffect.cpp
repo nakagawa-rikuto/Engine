@@ -6,9 +6,12 @@
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void VignetteEffect::Initialize(std::shared_ptr<RenderTexture> RenderTexture) {
+void VignetteEffect::Initialize(ID3D12Device* device, std::shared_ptr<RenderTexture> RenderTexture) {
 	// RenderTextureを取得
 	renderTexture_ = RenderTexture;
+
+	// Deviceの初期化
+	ID3D12Device* devicePtr = device;
 }
 
 ///-------------------------------------------/// 
@@ -19,7 +22,7 @@ void VignetteEffect::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_D
 }
 
 ///-------------------------------------------/// 
-/// ImGuiの描画
+/// 描画
 ///-------------------------------------------///
 void VignetteEffect::Draw(ID3D12GraphicsCommandList* commandList) {
 	// コピーイメージ
@@ -28,4 +31,11 @@ void VignetteEffect::Draw(ID3D12GraphicsCommandList* commandList) {
 	commandList->SetGraphicsRootDescriptorTable(0, renderTexture_->GetSRVHandle());
 	// 頂点3つを描画
 	commandList->DrawInstanced(3, 1, 0, 0);
+}
+
+///-------------------------------------------/// 
+/// ImGui情報
+///-------------------------------------------///
+void VignetteEffect::ImGuiInfo() {
+
 }

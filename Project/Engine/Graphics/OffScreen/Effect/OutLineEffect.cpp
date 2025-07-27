@@ -5,7 +5,7 @@
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void OutLineEffect::Initialize(std::shared_ptr<RenderTexture> RenderTexture) {
+void OutLineEffect::Initialize(ID3D12Device* device, std::shared_ptr<RenderTexture> RenderTexture) {
 	// RenderTextureを取得
 	renderTexture_ = RenderTexture;
 }
@@ -27,4 +27,11 @@ void OutLineEffect::Draw(ID3D12GraphicsCommandList* commandList) {
 	commandList->SetGraphicsRootDescriptorTable(0, renderTexture_->GetSRVHandle());
 	// 頂点3つを描画
 	commandList->DrawInstanced(3, 1, 0, 0);
+}
+
+///-------------------------------------------/// 
+/// ImGui情報
+///-------------------------------------------///
+void OutLineEffect::ImGuiInfo() {
+
 }
