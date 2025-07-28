@@ -35,8 +35,10 @@ PixelShaderOutPut main(VertexShaderOutPut input) {
     output.color.a = 1.0f;
 
     // 5x5 ガウシアンブラーの適用
-    for (int x = 0; x < 5; ++x) {
-        for (int y = 0; y < 5; ++y) {
+    for (int x = 0; x < 5; ++x) 
+    {
+        for (int y = 0; y < 5; ++y) 
+        {
             float2 texcoord = input.texcoord + kIndex5x5[x][y] * usvStepSize;
             float3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
             output.color.rgb += fetchColor * kGaussianKernel5x5[x][y];

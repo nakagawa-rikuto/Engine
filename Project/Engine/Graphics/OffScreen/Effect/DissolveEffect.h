@@ -29,6 +29,7 @@ public:
 public: /// ===Setter=== ///
 
 	void SetDissolveData(float threshold, float edgeStart, float edgeEnd, const Vector3& edgeColor);
+	void SetTexture(std::string& texuteKeyName);
 
 private:
 

@@ -2,6 +2,8 @@
 #pragma once
 /// ===Include=== ///
 #include "Engine/Graphics/OffScreen/RenderPass.h"
+// BufferBase
+#include "Engine/Graphics/Base/BufferBase.h"
 
 ///=====================================================/// 
 /// VignetteEffect
@@ -18,4 +20,21 @@ public:
 	void Draw(ID3D12GraphicsCommandList* commandList) override;
 	// ImGui情報
 	void ImGuiInfo() override;
+
+public: /// ===Setter=== ///
+
+	void SetVignetteData(float scale, float pawer);
+
+private:
+
+	// Buffer
+	std::unique_ptr<BufferBase> buffer_;
+
+	// / Dissolveエフェクトのデータ構造
+	struct VignetteData {
+		float scale; // discardの閾値
+		float pawer; // smoothstep開始
+		Vector2 padding; // floatの倍数にするためのパディング
+	};
+	VignetteData* data_ = nullptr;
 };

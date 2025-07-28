@@ -1,5 +1,14 @@
 #include "Fullscreen.hlsli"
 
+struct RadialBlurParameters
+{
+    float2 center; // 中心点
+    int numSamples; // サンプリング数
+    float blurWidth; // ブラーの幅
+    float padding; // HLSL の16バイト境界合わせ用
+};
+
+ConstantBuffer<RadialBlurParameters> gRadialBlurParams : register(b0);
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler : register(s0);
 
@@ -11,11 +20,11 @@ struct PixelShaderOutPut
 PixelShaderOutPut main(VertexShaderOutPut input)
 {   
     // 中心点。ここを基準に放射状にブラーがかかる
-    const float2 kCenter = float2(0.5f, 0.5f);
+    const float2 kCenter = gRadialBlurParams.center;
     // サンプリング数（多いほど滑らかが思い）
-    const int kNumSamples = 10;
+    const int kNumSamples = gRadialBlurParams.numSamples;
     // ぼかしの幅 (大きい程、おおきい)
-    const float kBlurWidth = 0.01f;
+    const float kBlurWidth = gRadialBlurParams.blurWidth;
 
     // 中心から現在のuvに対しての方向を計算
     float2 direction = input.texcoord - kCenter;
