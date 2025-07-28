@@ -17,6 +17,7 @@ OffScreenRenderer::~OffScreenRenderer() {
 	boxFilter5x5_.reset();
 	radiusBlur_.reset();
 	outLine_.reset();
+	dissolve_.reset();
 	renderTexture_.reset();
 }
 
@@ -36,31 +37,35 @@ void OffScreenRenderer::Initialize(
 	/// ===RenderPassの登録=== ///
 	// SceneRenderPass
 	copyImage_ = std::make_shared<CopyImageEffect>();
-	copyImage_->Initialize(renderTexture_);
+	copyImage_->Initialize(device,renderTexture_);
 
 	// グレースケールレンダーパス
 	grayscale_ = std::make_shared<GrayscaleEffect>();
-	grayscale_->Initialize(renderTexture_);
+	grayscale_->Initialize(device, renderTexture_);
 
 	// ビネットレンダーパス
 	vignette_ = std::make_shared<VignetteEffect>();
-	vignette_->Initialize(renderTexture_);
+	vignette_->Initialize(device, renderTexture_);
+
+	// Dissolveエフェクト
+	dissolve_ = std::make_shared<DissolveEffect>();
+	dissolve_->Initialize(device, renderTexture_);
 
 	// 3x3ボックスフィルタレンダーパス
 	boxFilter3x3_ = std::make_shared<BoxFilter3x3Effect>();
-	boxFilter3x3_->Initialize(renderTexture_);
+	boxFilter3x3_->Initialize(device, renderTexture_);
 
 	// 5x5ボックスフィルタレンダーパス
 	boxFilter5x5_ = std::make_shared<BoxFilter5x5Effect>();
-	boxFilter5x5_->Initialize(renderTexture_);
+	boxFilter5x5_->Initialize(device, renderTexture_);
 
 	// 半径ブラーエフェクト
 	radiusBlur_ = std::make_shared<RadiusBlurEffect>();
-	radiusBlur_->Initialize(renderTexture_);
+	radiusBlur_->Initialize(device, renderTexture_);
 
 	// OutLineエフェクト
 	outLine_ = std::make_shared<OutLineEffect>();
-	outLine_->Initialize(renderTexture_);
+	outLine_->Initialize(device, renderTexture_);
 }
 
 ///-------------------------------------------/// 
@@ -88,6 +93,9 @@ void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CP
 		break;
 	case OffScreenType::OutLine:
 		outLine_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::Dissolve:
+		dissolve_->PreDraw(commandList, dsvHandle);
 		break;
 	}
 }
@@ -118,6 +126,9 @@ void OffScreenRenderer::Draw(ID3D12GraphicsCommandList* commandList) {
 	case OffScreenType::OutLine:
 		outLine_->Draw(commandList);
 		break;
+	case OffScreenType::Dissolve:
+		dissolve_->Draw(commandList);
+		break;
 	}
 }
 
@@ -138,7 +149,8 @@ void OffScreenRenderer::DrawImGui() {
 		"BoxFilter3x3",
 		"BoxFilter5x5",
 		"RadiusBlur",
-		"OutLine"
+		"OutLine",
+		"Dissolve",
 	};
 
 	int current = static_cast<int>(type_);
@@ -149,6 +161,34 @@ void OffScreenRenderer::DrawImGui() {
 			type_ = static_cast<OffScreenType>(current);
 		}
 	}
+
+	switch (type_) {
+	case OffScreenType::CopyImage:
+		copyImage_->ImGuiInfo();
+		break;
+	case OffScreenType::Grayscale:
+		grayscale_->ImGuiInfo();
+		break;
+	case OffScreenType::Vignette:
+		vignette_->ImGuiInfo();
+		break;
+	case OffScreenType::BoxFilter3x3:
+		boxFilter3x3_->ImGuiInfo();
+		break;
+	case OffScreenType::BoxFilter5x5:
+		boxFilter5x5_->ImGuiInfo();
+		break;
+	case OffScreenType::RadiusBlur:
+		radiusBlur_->ImGuiInfo();
+		break;
+	case OffScreenType::OutLine:
+		outLine_->ImGuiInfo();
+		break;
+	case OffScreenType::Dissolve:
+		dissolve_->ImGuiInfo();
+		break;
+	}
+
 	ImGui::End();
 }
 #endif // USE_IMGUI

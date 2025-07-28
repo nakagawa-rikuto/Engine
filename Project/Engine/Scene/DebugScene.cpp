@@ -416,10 +416,6 @@ void DebugScene::Update() {
 	ImGui::DragFloat("Volume", &audioInfo_.volume, 0.01f);
 	ImGui::DragFloat("Ptich", &audioInfo_.pitch, 0.01f);
 	ImGui::End();
-	/// ===OffScreen=== ///
-	ImGui::Begin("OffScreen");
-	ImGui::Checkbox("Grayscale", &offScreenInfo_.isGrayscale);
-	ImGui::End();
 
 	/// ===Line=== ///
 	ImGui::Begin("Line");
@@ -610,7 +606,10 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 
-	
+	// アニメーションの描画
+	debugAnimationModel_->Draw();
+	/// ===Model=== ///
+	debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);s
 
 	// Modelの描画
 	if (isDisplay_.Model) {

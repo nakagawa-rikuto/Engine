@@ -12,6 +12,7 @@
 #include "Effect/BoxFilter3x3Effect.h"
 #include "Effect/BoxFilter5x5Effect.h"
 #include "Effect/RadiusBlurEffect.h"
+#include "Effect/DissolveEffect.h"
 
 // Data
 #include "Engine/DataInfo/OffScreenTypeData.h"
@@ -67,6 +68,7 @@ private:
 	std::shared_ptr<BoxFilter3x3Effect> boxFilter3x3_;
 	std::shared_ptr<BoxFilter5x5Effect> boxFilter5x5_;
 	std::shared_ptr<RadiusBlurEffect> radiusBlur_;
+	std::shared_ptr<DissolveEffect> dissolve_;
 
 	// Piplineのタイプ
 	OffScreenType type_ = OffScreenType::CopyImage;

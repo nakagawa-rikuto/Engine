@@ -108,6 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
@@ -177,7 +178,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Graphics\2d\IndexBuffer2D.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\IndexBuffer3D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\BufferBase.cpp" />
+    <ClCompile Include="Engine\Graphics\Base\BufferBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application\Drawing\2d\Sprite.cpp" />
     <ClCompile Include="Engine\System\Managers\TextureManager.cpp" />
@@ -227,6 +228,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.h" />
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
@@ -320,7 +322,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\SRVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\Model.h" />
     <ClInclude Include="Engine\System\Managers\ModelManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\BufferBase.h" />
+    <ClInclude Include="Engine\Graphics\Base\BufferBase.h" />
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />
@@ -494,7 +496,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.Ps.hlsl">
+    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

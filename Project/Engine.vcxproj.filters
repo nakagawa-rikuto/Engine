@@ -14,7 +14,7 @@
     <FxCompile Include="Resource\Shaders\OffScreen\Fullscreen.VS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\CopyImage.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\Grayscale.PS.hlsl" />
-    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.Ps.hlsl" />
+    <FxCompile Include="Resource\Shaders\OffScreen\Vignette.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter3x3.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\BoxFilter5x5.PS.hlsl" />
     <FxCompile Include="Resource\Shaders\OffScreen\LuminanceBasedOutline.PS.hlsl" />
@@ -70,7 +70,7 @@
     <ClCompile Include="application\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Graphics\2d\IndexBuffer2D.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Base\IndexBuffer3D.cpp" />
-    <ClCompile Include="Engine\Graphics\3d\Base\BufferBase.cpp" />
+    <ClCompile Include="Engine\Graphics\Base\BufferBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application\Drawing\2d\Sprite.cpp" />
     <ClCompile Include="Engine\System\Managers\TextureManager.cpp" />
@@ -143,6 +143,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\OutLineEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.cpp" />
+    <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -205,7 +206,7 @@
     <ClInclude Include="Engine\System\Managers\SRVManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\Model.h" />
     <ClInclude Include="Engine\System\Managers\ModelManager.h" />
-    <ClInclude Include="Engine\Graphics\3d\Base\BufferBase.h" />
+    <ClInclude Include="Engine\Graphics\Base\BufferBase.h" />
     <ClInclude Include="Engine\System\Managers\PiplineManager.h" />
     <ClInclude Include="Engine\Graphics\3d\Model\ModelCommon.h" />
     <ClInclude Include="Engine\Graphics\2d\SpriteCommon.h" />
@@ -275,6 +276,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\OutLineEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.h" />
+    <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />
