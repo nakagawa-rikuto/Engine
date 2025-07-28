@@ -74,8 +74,8 @@ void ImGuiManager::Begin() {
 	// Dock付きUI描画
 	//DrawMainDockWindow();
 	// ドッキング設定
-	/*ImGui::DockSpaceOverViewport
-	(ImGui::GetMainViewport()->ID, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);*/
+	ImGui::DockSpaceOverViewport
+	(ImGui::GetMainViewport()->ID, ImGui::GetMainViewport(), ImGuiDockNodeFlags_None);
 
 #endif // USE_IMGUI
 }

@@ -416,10 +416,6 @@ void DebugScene::Update() {
 	ImGui::DragFloat("Volume", &audioInfo_.volume, 0.01f);
 	ImGui::DragFloat("Ptich", &audioInfo_.pitch, 0.01f);
 	ImGui::End();
-	/// ===OffScreen=== ///
-	ImGui::Begin("OffScreen");
-	ImGui::Checkbox("Grayscale", &offScreenInfo_.isGrayscale);
-	ImGui::End();
 
 	/// ===Line=== ///
 	ImGui::Begin("Line");
