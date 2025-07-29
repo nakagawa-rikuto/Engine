@@ -50,9 +50,9 @@ void BaseEnemy::Update() {
 	baseInfo_.translate += baseInfo_.velocity;
 
 	/// ===Object3dの更新=== ///
-	SetTranslate(baseInfo_.translate);
-	SetRotate(baseInfo_.rotate);
-	SetColor(baseInfo_.color);
+	object3d_->SetTranslate(baseInfo_.translate);
+	object3d_->SetRotate(baseInfo_.rotate);
+	object3d_->SetColor(baseInfo_.color);
 
 	// SphereColliderの更新
 	OBBCollider::Update();

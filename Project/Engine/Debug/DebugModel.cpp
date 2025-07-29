@@ -20,10 +20,10 @@ void DebugModel::Initialize() {
 	/// ===モデルを生成=== ///
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "MonsterBall", LightType::PointLight);
-	SetTranslate(base_.translate);
-	SetRotate(base_.rotate);
-	SetScale(base_.scale);
-	SetColor(base_.color);
+	object3d_->SetTranslate(base_.translate);
+	object3d_->SetRotate(base_.rotate);
+	object3d_->SetScale(base_.scale);
+	object3d_->SetColor(base_.color);
 
 
 	// コライダーの名前を登録
@@ -41,10 +41,10 @@ void DebugModel::Initialize() {
 ///-------------------------------------------///
 void DebugModel::Update() {
 
-	SetTranslate(base_.translate);
-	SetRotate(base_.rotate);
-	SetScale(base_.scale);
-	SetColor(base_.color);
+	object3d_->SetTranslate(base_.translate);
+	object3d_->SetRotate(base_.rotate);
+	object3d_->SetScale(base_.scale);
+	object3d_->SetColor(base_.color);
 
 	object3d_->SetEnviromentMapData(true, 1.0f );
 

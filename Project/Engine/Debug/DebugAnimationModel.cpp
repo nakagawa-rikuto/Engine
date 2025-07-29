@@ -20,10 +20,10 @@ void DebugAnimationModel::Initialize() {
 	/// ===モデルを生成=== ///
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::AnimationModel, "human", LightType::Lambert);
-	SetTranslate(base_.translate);
-	SetRotate(base_.rotate);
-	SetScale(base_.scale);
-	SetColor(base_.color);
+	object3d_->SetTranslate(base_.translate);
+	object3d_->SetRotate(base_.rotate);
+	object3d_->SetScale(base_.scale);
+	object3d_->SetColor(base_.color);
 	// アニメーションを登録しないとアニメーションが再生されない
 	object3d_->SetAnimation("Armature|mixamo.com|Layer0");
 	
@@ -55,10 +55,10 @@ void DebugAnimationModel::Update() {
 		}
 	}
 
-	SetTranslate(base_.translate);
-	SetRotate(base_.rotate);
-	SetScale(base_.scale);
-	SetColor(base_.color);
+	object3d_->SetTranslate(base_.translate);
+	object3d_->SetRotate(base_.rotate);
+	object3d_->SetScale(base_.scale);
+	object3d_->SetColor(base_.color);
 
 	object3d_->SetEnviromentMapData(true, 1.0f);
 

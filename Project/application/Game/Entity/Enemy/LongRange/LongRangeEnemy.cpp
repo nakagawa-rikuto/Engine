@@ -32,10 +32,10 @@ void LongRangeEnemy::Initialize() {
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "player");
 	// Object3dの初期設定
-	SetTranslate(baseInfo_.translate);
-	SetRotate(baseInfo_.rotate);
-	SetScale(baseInfo_.scale);
-	SetColor(baseInfo_.color);
+	object3d_->SetTranslate(baseInfo_.translate);
+	object3d_->SetRotate(baseInfo_.rotate);
+	object3d_->SetScale(baseInfo_.scale);
+	object3d_->SetColor(baseInfo_.color);
 
 	// Sphereの設定
 	// Sphereの設定
@@ -118,7 +118,7 @@ void LongRangeEnemy::OnCollision(Collider* collider) {
 	// Playerとの当たり判定
 	if (collider->GetColliderName() == ColliderName::Player) {
 		// Playerの突進に対しての衝突処理
-		if (player_->GetCargeFlag()) {
+		if (player_->GetStateFlag(actionType::kCharge)) {
 			// パーティクルを発生
 			// 現状課題ようで設定
 			ParticleService::Emit("Explosion", baseInfo_.translate);

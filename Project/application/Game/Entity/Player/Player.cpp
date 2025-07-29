@@ -1,6 +1,8 @@
 #include "Player.h"
 // Camera
 #include "application/Game/Camera/Camera.h"
+// State
+#include "State/RootState.h"
 // Service
 #include "Engine/System/Service/InputService.h"
 #include "Engine/System/Service/CameraService.h"
@@ -20,13 +22,94 @@ Player::~Player() {
 }
 
 ///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+// 座標
+Vector3 Player::GetTranslate() const { return baseInfo_.translate; }
+// 回転
+Quaternion Player::GetRotate() const { return baseInfo_.rotate; }
+// 移動量
+Vector3 Player::GetVelocity() const { return baseInfo_.velocity; }
+// DeltaTime
+float Player::GetDeltaTime() const { return deltaTime_; }
+// フラグ
+bool Player::GetStateFlag(actionType type) const {
+	if (type == actionType::kAvoidance) {
+		return avoidanceInfo_.isFlag;
+	} else if (type == actionType::kCharge) {
+		return chargeInfo_.isFlag;
+	} else {
+		return attackInfo_.isFlag;
+	}
+}
+bool Player::GetpreparationFlag(actionType type) const {
+	if (type == actionType::kAvoidance) {
+		return avoidanceInfo_.isPreparation;
+	} else if (type == actionType::kCharge) {
+		return chargeInfo_.isPreparation;
+	} else {
+		return attackInfo_.isPreparation;
+	}
+}
+
+///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
-Vector3 Player::GetTranslate() const { return baseInfo_.translate; }
-Quaternion Player::GetRotate() const { return baseInfo_.rotate; }
+// 座標
+void Player::SetTranslate(const Vector3& translate) { baseInfo_.translate = translate;}
+// 回転
+void Player::SetRotate(const Quaternion& rotate) { baseInfo_.rotate = rotate; }
+// 移動量
+void Player::SetVelocity(const Vector3& velocity) {baseInfo_.velocity = velocity;}
+// 移動量に加算
+void Player::SetVelocityX(const float& x) { baseInfo_.velocity.x += x; }
+void Player::SetVeloctiyY(const float& y) { baseInfo_.velocity.y += y; }
+void Player::SetVeloctiyZ(const float& z) { baseInfo_.velocity.z += z; }
 // フラグ
-bool Player::GetCargeFlag() { return chargeInfo_.isFlag; }
-bool Player::GetAvoidanceFlag() { return avoidanceInfo_.isFlag; }
+void Player::SetStateFlag(actionType type, bool falg) {
+	switch (type) {
+	case actionType::kAvoidance:
+		avoidanceInfo_.isFlag = falg;
+		break;
+	case actionType::kCharge:
+		chargeInfo_.isFlag = falg;
+		break;
+	case actionType::kAttack:
+		attackInfo_.isFlag = falg;
+		break;
+	}
+}
+void Player::SetpreparationFlag(actionType type, bool falg) {
+	switch (type) {
+	case actionType::kAvoidance:
+		avoidanceInfo_.isPreparation = falg;
+		break;
+	case actionType::kCharge:
+		chargeInfo_.isPreparation = falg;
+		break;
+	case actionType::kAttack:
+		attackInfo_.isPreparation = falg;
+		break;
+	}
+}
+// タイマーの設定
+void Player::SetTimer(actionType type, const float& timer) {
+	switch (type) {
+	case actionType::kAvoidance:
+		avoidanceInfo_.timer = timer;
+		break;
+	case actionType::kCharge:
+		chargeInfo_.timer = timer;
+		break;
+	case actionType::kAttack:
+		attackInfo_.timer = timer;
+		break;
+	}
+}
+void Player::SetInvicibleTime(const float& time) { 
+	invicibleInfo_.timer = invicibleInfo_.time + time; 
+}
+
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -44,6 +127,9 @@ void Player::Initialize() {
 	name_ = ColliderName::Player;
 	obb_.halfSize = { 1.5f, 1.5f, 1.5f }; 
 
+	// 初期設定
+	ChangState(std::make_unique<RootState>());
+
 	// 更新
 	object3d_->Update();
 }
@@ -60,54 +146,12 @@ void Player::Update() {
 	/// ===タイマーを進める=== ///
 	advanceTimer();
 
-	/// ===Behavior遷移の実装=== ///
-	if (behaviorRequest_) {
-		// 振る舞いを変更
-		behavior_ = behaviorRequest_.value();
-		// 各振る舞いの初期化
-		switch (behavior_) {
-			// 通常
-		case Player::Behavior::kRoot:
-			InitRoot();
-			break;
-			// 移動
-		case Player::Behavior::kMove:
-			InitMove();
-			break;
-		case Player::Behavior::kAvoidance:
-			InitAvoidance();
-			break;
-			// 突進
-		case Player::Behavior::kCharge:
-			InitCharge();
-			break;
-		case Player::Behavior::kAttack:
-			InitAttack();
-			break;
-		}
-
-		// 振る舞いリクエストをリセット
-		behaviorRequest_ = std::nullopt;
+	/// ===Stateの管理=== ///
+	if (currentState_) {
+		// 各Stateの更新
+		currentState_->Update(this, camera_);
 	}
-
-	// 各振る舞いの更新
-	switch (behavior_) {
-	case Player::Behavior::kRoot:
-		UpdateRoot();
-		break;
-	case Player::Behavior::kMove:
-		UpdateMove();
-		break;
-	case Player::Behavior::kAvoidance:
-		UpdateAvoidance();
-		break;
-	case Player::Behavior::kCharge:
-		UpdateCharge();
-		break;
-	case Player::Behavior::kAttack:
-		UpdateAttack();
-		break;
-	}
+	
 
 	/// ===移動量の反映=== ///
 	baseInfo_.translate += baseInfo_.velocity;
@@ -116,10 +160,10 @@ void Player::Update() {
 	camera_->SetTarget(&baseInfo_.translate, &baseInfo_.rotate);
 
 	/// ===Object3dの更新=== ///
-	SetTranslate(baseInfo_.translate);
-	SetRotate(baseInfo_.rotate);
-	SetScale(baseInfo_.scale);
-	SetColor(baseInfo_.color);
+	object3d_->SetTranslate(baseInfo_.translate);
+	object3d_->SetRotate(baseInfo_.rotate);
+	object3d_->SetScale(baseInfo_.scale);
+	object3d_->SetColor(baseInfo_.color);
 
 	/// ===SphereColliderの更新=== ///
 	OBBCollider::Update();
@@ -170,184 +214,6 @@ void Player::OnCollision(Collider* collider) {
 	}
 }
 
-
-///-------------------------------------------/// 
-/// Root（通常）
-///-------------------------------------------///
-void Player::InitRoot() {}
-void Player::UpdateRoot() {
-
-	/// === 左スティック入力取得（移動用）=== ///
-	StickState leftStick = InputService::GetLeftStickState(0);
-
-	/// === 減速率（数値を下げればゆっくり止まる）=== ///
-	const float deceleration = 0.75f;
-
-	/// === 徐々に止まる処理 === ///
-	// Velocityが0でないなら徐々に0にする
-	if (baseInfo_.velocity.x != 0.0f) {
-		// 各軸に対して減速適用
-		baseInfo_.velocity.x *= deceleration;
-		// 小さすぎる値は完全に0にスナップ
-		if (std::abs(baseInfo_.velocity.x) < 0.01f) {
-			baseInfo_.velocity.x = 0.0f;
-		}
-	}
-	if (baseInfo_.velocity.z != 0.0f) {
-		baseInfo_.velocity.z *= deceleration;
-		if (std::abs(baseInfo_.velocity.z) < 0.01f) {
-			baseInfo_.velocity.z = 0.0f;
-		}
-	}
-
-	/// === Behaviorの遷移 === ///
-	// 移動があれば移動状態へ
-	if (std::abs(leftStick.x) > 0.1f || std::abs(leftStick.y) > 0.1f) {
-		behaviorRequest_ = Behavior::kMove;
-	}
-	// Aボタンが押されたら進んでいる突進状態へ
-	if (InputService::TriggerButton(0, ControllerButtonType::RB)) {
-		// タイマーがクールタイムより高ければ、
-		if (chargeInfo_.isPreparation) {
-			behaviorRequest_ = Behavior::kCharge;
-			chargeInfo_.direction = Normalize(baseInfo_.velocity);
-		}
-		// 回避状態へ
-	} else if (InputService::TriggerButton(0, ControllerButtonType::A)) {
-		if (avoidanceInfo_.isPreparation) {
-			behaviorRequest_ = Behavior::kAvoidance;
-			avoidanceInfo_.direction = Normalize(moveInfo_.direction);
-		}
-	}
-}
-
-///-------------------------------------------/// 
-/// Move（移動）
-///-------------------------------------------///
-void Player::InitMove() {
-	moveInfo_.speed = 0.4f;
-}
-void Player::UpdateMove() {
-
-	/// === 左スティック入力取得（移動用）=== ///
-	StickState leftStick = InputService::GetLeftStickState(0);
-
-	/// ===移動処理=== ///
-	// 方向の設定
-	moveInfo_.direction.x = leftStick.x;
-	moveInfo_.direction.z = leftStick.y;
-
-	// Velcotiyに反映
-	baseInfo_.velocity = moveInfo_.direction * moveInfo_.speed;
-
-	/// ===移動方向に沿って回転=== ///
-	// 方向が変更されたら
-	if (Length(moveInfo_.direction) > 0.01f) {
-		// 現在のYaw角（Y軸の回転）を取得
-		float currentYaw = Math::GetYAngle(baseInfo_.rotate);
-
-		// 入力方向から目標のYaw角を取得
-		float targetYaw = std::atan2(moveInfo_.direction.x, moveInfo_.direction.z);
-
-		// 差分を [-π, π] に正規化
-		float diff = Math::NormalizeAngle(targetYaw - currentYaw);
-
-		// イージング補間（短い方向へ回転）
-		float easedYaw = currentYaw + diff * (deltaTime_ * 5.0f);
-
-		// Quaternionに再変換
-		baseInfo_.rotate = Math::MakeRotateAxisAngle({ 0, 1, 0 }, easedYaw);
-	}
-
-	/// ===Behaviorの変更=== ///
-	if (std::abs(leftStick.x) < 0.1f && std::abs(leftStick.y) < 0.1f) {
-		behaviorRequest_ = Behavior::kRoot;
-	}
-	if (InputService::TriggerButton(0, ControllerButtonType::RB)) {
-		if (chargeInfo_.isPreparation) {
-			behaviorRequest_ = Behavior::kCharge;
-			chargeInfo_.direction = Normalize(moveInfo_.direction);
-		}
-	} else if (InputService::TriggerButton(0, ControllerButtonType::A)) {
-		if (avoidanceInfo_.isPreparation) {
-			behaviorRequest_ = Behavior::kAvoidance;
-			avoidanceInfo_.direction = Normalize(moveInfo_.direction);
-		}
-	}
-}
-
-///-------------------------------------------/// 
-/// Avoidance（回避）
-///-------------------------------------------///
-void Player::InitAvoidance() {
-	// 回避スピードの設定
-	avoidanceInfo_.acceleration = 0.2f;
-	// 回避時間を0にする
-	avoidanceInfo_.timer = avoidanceInfo_.activeTime;
-	avoidanceInfo_.isPreparation = false;
-	avoidanceInfo_.isFlag = true;
-}
-void Player::UpdateAvoidance() {
-
-	/// ===フラグがtruenなら=== ///
-	// 無敵時間の変更
-	invicibleInfo_.timer = invicibleInfo_.time - avoidanceInfo_.invincibleTime;
-
-	// 加速度の減少
-	avoidanceInfo_.acceleration -= deltaTime_ * avoidanceInfo_.activeTime;
-	// 速度の設定
-	avoidanceInfo_.speed = moveInfo_.speed * avoidanceInfo_.acceleration;
-
-	// Velocityに反映
-	baseInfo_.velocity += avoidanceInfo_.direction * avoidanceInfo_.speed;
-
-	/// ===タイマーが回避の有効期限を超えていたら=== ///
-	if (avoidanceInfo_.timer <= 0.0f) {
-		behaviorRequest_ = Behavior::kRoot;
-		avoidanceInfo_.isFlag = false;
-		avoidanceInfo_.timer = avoidanceInfo_.cooltime;
-	}
-}
-
-///-------------------------------------------/// 
-/// Charge（突進マーク付け）
-///-------------------------------------------///
-void Player::InitCharge() {
-	// 突進スピードの設定
-	chargeInfo_.acceleration = 0.2f;
-	// 突進時間を0にする
-	chargeInfo_.timer = chargeInfo_.activeTime;
-	chargeInfo_.isPreparation = false;
-	chargeInfo_.isFlag = true;
-}
-void Player::UpdateCharge() {
-
-	/// ===フラグがtrueなら=== ///
-	// 無敵時間の変更
-	invicibleInfo_.timer = invicibleInfo_.time - chargeInfo_.invincibleTime;
-
-	// 加速度の減少
-	chargeInfo_.acceleration -= deltaTime_ * chargeInfo_.activeTime;
-	// 速度の設定
-	chargeInfo_.speed = moveInfo_.speed * chargeInfo_.acceleration;
-
-	// Velcotiyに反映
-	baseInfo_.velocity += chargeInfo_.direction * chargeInfo_.speed;
-
-	/// ===タイマーが突進の有効期限を超えていたら=== ///
-	if (chargeInfo_.timer <= 0.0f) {
-		behaviorRequest_ = Behavior::kRoot;
-		chargeInfo_.isFlag = false;
-		chargeInfo_.timer = chargeInfo_.cooltime;
-	}
-}
-
-///-------------------------------------------/// 
-/// Attack（攻撃）
-///-------------------------------------------///
-void Player::InitAttack() {}
-void Player::UpdateAttack() {}
-
 ///-------------------------------------------/// 
 /// 時間を進める
 ///-------------------------------------------///
@@ -368,4 +234,41 @@ void Player::advanceTimer() {
 	} else {
 		avoidanceInfo_.isPreparation = true;
 	}
+}
+
+///-------------------------------------------/// 
+/// 減速処理
+///-------------------------------------------///
+void Player::ApplyDeceleration(const float& develeration) {
+	// Velocityが0でないなら徐々に0にする
+	if (baseInfo_.velocity.x != 0.0f) {
+		// 各軸に対して減速適用
+		baseInfo_.velocity.x *= develeration;
+		// 小さすぎる値は完全に0にスナップ
+		if (std::abs(baseInfo_.velocity.x) < 0.01f) {
+			baseInfo_.velocity.x = 0.0f;
+		}
+	}
+	if (baseInfo_.velocity.z != 0.0f) {
+		baseInfo_.velocity.z *= develeration;
+		if (std::abs(baseInfo_.velocity.z) < 0.01f) {
+			baseInfo_.velocity.z = 0.0f;
+		}
+	}
+}
+
+///-------------------------------------------/// 
+/// Stateの変更
+///-------------------------------------------///
+void Player::ChangState(std::unique_ptr<PlayerState> newState) {
+	if (currentState_) {
+		// 古い状態を解放  
+		currentState_->Finalize();
+		currentState_.reset();
+	}
+
+	// 新しい状態をセット  
+	currentState_ = std::move(newState);
+	// 新しい状態の初期化  
+	currentState_->Enter(this, camera_);
 }

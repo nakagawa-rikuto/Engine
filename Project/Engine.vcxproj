@@ -110,6 +110,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="application\Game\Entity\Enemy\CloseRange\CloseRangeEnemy.cpp" />
     <ClCompile Include="application\Game\Entity\Enemy\Base\BaseEnemy.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\ChargeState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\AttackState.cpp" />
     <ClCompile Include="Engine\System\Service\ColliderService.cpp" />
     <ClCompile Include="Engine\Collider\AABBCollider.cpp" />
     <ClCompile Include="Engine\Debug\DebugAnimationModel.cpp" />
@@ -225,9 +227,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\3d\Base\ObjectCommon.cpp" />
     <ClCompile Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.cpp" />
     <ClCompile Include="application\Game\Entity\Player\Player.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\Base\PlayerState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\RootState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\MoveState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\AvoidanceState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\Game\Entity\Enemy\Base\BaseEnemy.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\AttackState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\ChargeState.h" />
     <ClInclude Include="Engine\DataInfo\BlendModeData.h" />
     <ClInclude Include="Engine\DataInfo\LevelData.h" />
     <ClInclude Include="application\Game\Entity\Enemy\CloseRange\CloseRangeEnemy.h" />
@@ -357,6 +365,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\3d\Base\ObjectCommon.h" />
     <ClInclude Include="Engine\Graphics\3d\Primitive3D\Primitive3DCommon.h" />
     <ClInclude Include="application\Game\Entity\Player\Player.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\Base\PlayerState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\RootState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\MoveState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\AvoidanceState.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

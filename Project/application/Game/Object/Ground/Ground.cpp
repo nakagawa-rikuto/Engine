@@ -18,8 +18,8 @@ void Ground::Initialize() {
 	// object3dの初期化
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Init(ObjectType::Model, "GameGround");
-	SetTranslate({ 0.0f, 0.0f, 0.0f });
-	SetScale({ 0.5f, 0.5f, 0.5f });
+	object3d_->SetTranslate({ 0.0f, 0.0f, 0.0f });
+	object3d_->SetScale({ 0.5f, 0.5f, 0.5f });
 	object3d_->Update();
 }
 

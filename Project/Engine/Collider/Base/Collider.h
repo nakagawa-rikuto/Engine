@@ -59,17 +59,9 @@ public: /// ===Getter=== ///
     ColliderName GetColliderName();
 
 public: /// ===Setter=== ///
-
-    /// ===Object3D=== ///
-    // Transform
-    void SetTranslate(const Vector3& translate);
-	void SetRotate(const Quaternion& rotate);
-	void SetScale(const Vector3& scale);
-    // color
-	void SetColor(const Vector4& color);
-	// Light
-	void SetLight(LightType type);
-	void SetLightData(LightInfo light);
+    // Light
+    void SetLight(LightType type);
+    void SetLightData(LightInfo light);
 
     /// ===isCollision=== ///
     void SetIsCollisison(bool flag);

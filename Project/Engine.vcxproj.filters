@@ -143,6 +143,12 @@
     <ClCompile Include="application\Game\Entity\Enemy\Base\BaseEnemy.cpp" />
     <ClCompile Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemy.cpp" />
     <ClCompile Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemeyBullet.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\Base\PlayerState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\RootState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\MoveState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\AvoidanceState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\ChargeState.cpp" />
+    <ClCompile Include="application\Game\Entity\Player\State\AttackState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -275,6 +281,12 @@
     <ClInclude Include="application\Game\Entity\Enemy\Base\BaseEnemy.h" />
     <ClInclude Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemy.h" />
     <ClInclude Include="application\Game\Entity\Enemy\LongRange\LongRangeEnemeyBullet.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\Base\PlayerState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\RootState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\MoveState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\AvoidanceState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\ChargeState.h" />
+    <ClInclude Include="application\Game\Entity\Player\State\AttackState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />
