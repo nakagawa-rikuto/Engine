@@ -68,7 +68,7 @@ void DebugScene::Initialize() {
 #pragma endregion
 
 	/// ===ParticleManager=== ///
-#pragma region Particleの追加
+#pragma region Particle
 	// Particleの追加
 	ParticleService::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
 	ParticleService::AddParticle("Explosion", std::make_unique<ExplosionParticle>());
@@ -76,6 +76,9 @@ void DebugScene::Initialize() {
 	ParticleService::AddParticle("Ring", std::make_unique<RingParticle>());
 	ParticleService::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
 	ParticleService::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
+
+	/// ===Particle=== ///
+	particleInofo_.Translate = { 0.0f, 0.0f, 0.0f };
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -162,15 +165,13 @@ void DebugScene::Initialize() {
 	offScreenInfo_.isGrayscale = false;
 #pragma endregion
 
-	/// ===Particle=== ///
-	particleInofo_.Translate = { 0.0f, 0.0f, 0.0f };
-
+	/// ===Line=== ///
 #pragma region Line
 	line_ = std::make_unique<Line>();
 #pragma endregion
 
 	// ===LevelDataからモデルの生成と配置=== ///
-	//GenerateModelsFromLevelData("TL_12.json");
+	GenerateModelsFromLevelData("TL_12.json");
 }
 
 ///-------------------------------------------/// 
@@ -582,12 +583,13 @@ void DebugScene::Update() {
 #pragma endregion
 
 #pragma region ColliderManagerの更新
-#pragma region ColliderManagerの更新
 	ColliderService::SetLightData(light_);
 #pragma endregion
 
+	/// ===LevelEditorの更新=== ///
+	UpdateLevelModels();
+
 	/// ===ISceneのの更新=== ///
-	//UpdateLevelModels();
 	IScene::Update();
 }
 
@@ -607,9 +609,9 @@ void DebugScene::Draw() {
 #pragma region モデル描画
 
 	// アニメーションの描画
-	debugAnimationModel_->Draw();
+	//debugAnimationModel_->Draw();
 	/// ===Model=== ///
-	debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);s
+	//debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);s
 
 	// Modelの描画
 	if (isDisplay_.Model) {
@@ -624,8 +626,10 @@ void DebugScene::Draw() {
 		//modelLight_->Draw();
 	}
 
+	/// ===LevelEditorの更新=== ///
+	DrawLevelModels();
+
 	/// ===ISceneの描画=== ///
-	//DrawLevelModels();
 	IScene::Draw();
 
 #pragma endregion
