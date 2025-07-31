@@ -25,10 +25,14 @@ from .export_scene import MYADDON_OT_export_scene
 from .add_collider import MYADDON_OT_add_collider
 # オペレータ　カスタムプロパティ「'file_name'」追加
 from .add_filename import MYADDON_OT_add_filename
+# オペレータ　カスタムプロパティ「'disabled'」追加
+from .add_disabled import MYADDON_OT_add_disabled
 # パネル コライダー
 from .collider import OBJECT_PT_collider
 # パネル ファイル名
 from .file_name import OBJECT_PT_file_name
+# パネル　無効オプション
+from .disabled import OBJECT_PT_disabled
 # コライダー描画
 from .DrawCollider import DrawCollider
 # メニュー
@@ -75,13 +79,17 @@ def unregister():
 classes = (
     # オペレータを追加するたびにここに追加
     TOPBAR_MT_my_menu,
+    
     MYADDON_OT_stretch_vertex,
     MYADDON_OT_create_ico_sphere,
     MYADDON_OT_export_scene,
     MYADDON_OT_add_filename,
     MYADDON_OT_add_collider,
+    MYADDON_OT_add_disabled,
+
     OBJECT_PT_file_name,
     OBJECT_PT_collider,
+    OBJECT_PT_disabled,
 )
 
 
