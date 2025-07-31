@@ -59,6 +59,16 @@ void LevelManager::LoadobjectRecursive(nlohmann::json object, LevelData* levelDa
     for (nlohmann::json& object : object["objects"]) {
         assert(object.contains("type"));
 
+        // 無効オプション
+        if (object.contains("disabled")) {
+            // 有効無効フラグ
+            bool disabled = object["disabled"].get<bool>();
+            if (disabled) {
+                // 配置しない
+                continue;
+            }
+        }
+
         // 種別を取得
         std::string type = object["type"].get<std::string>();
 

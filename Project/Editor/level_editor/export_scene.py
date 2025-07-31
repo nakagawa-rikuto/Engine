@@ -111,6 +111,10 @@ class MYADDON_OT_export_scene(bpy.types.Operator, bpy_extras.io_utils.ExportHelp
         # json_objectにtransformを登録
         json_object["transform"] = transform
 
+        # カスタムプロパティ 'disabled'
+        if "disabled" in object:
+            json_object["disabled"] = object["disabled"]
+
         # カスタムプロパティ 'file_name'
         if "file_name" in object:
             json_object["file_name"] = object["file_name"]
@@ -163,6 +167,10 @@ class MYADDON_OT_export_scene(bpy.types.Operator, bpy_extras.io_utils.ExportHelp
         self.write_and_print(file, indent + "T %f %f %f" % (trans.x, trans.y, trans.z))
         self.write_and_print(file, indent + "R %f %f %f" % (rot.x, rot.y, rot.z))
         self.write_and_print(file, indent + "S %f %f %f" % (scale.x, scale.y, scale.z))
+
+        # カスタムプロパティ'無効オプション'
+        if "disabled" in object:
+            json_object["disabled"] = object["disabled"]
 
         # カスタムプロパティ'file_name'
         if "file_name" in object:
