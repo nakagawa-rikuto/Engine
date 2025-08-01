@@ -111,7 +111,7 @@ void MyGame::LoadTexture() {
 	Loader::LoadTexture("noise0", "OffScreen/noise0.png");
 	Loader::LoadTexture("noise1", "OffScreen/noise1.png");
 	// SkyBox
-	Loader::LoadTexture("skyBox", "rostock_laage_airport_4k.dds");
+	Loader::LoadTexture("skyBox", "test.dds");
 }
 // モデル
 void MyGame::LoadModel() {
@@ -119,6 +119,7 @@ void MyGame::LoadModel() {
 	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
 	Loader::LoadModel("terrain", "terrain.obj");
 	Loader::LoadModel("plane", "plane.obj");
+	Loader::LoadModel("CG4_02_03", "Ground.obj");
 	// Particle
 	Loader::LoadModel("Particle", "Particle.obj");
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");

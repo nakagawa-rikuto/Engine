@@ -113,9 +113,10 @@ void DebugScene::Initialize() {
 
 	// モデルの初期化
 	model2_ = std::make_unique<Object3d>();
-	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
+	model2_->Init(ObjectType::Model, "CG4_02_03", LightType::PointLight);
 	model2_->SetEnviromentMapData(false, 1.0f);
 	model2_->SetTranslate({ 0.0f, -1.0f, 0.0f });
+	model2_->SetScale({ 0.5f, 0.5f, 0.5f });
 
 	modelLight_ = std::make_unique<Object3d>();
 	modelLight_->Init(ObjectType::Model, "Particle");
@@ -169,7 +170,7 @@ void DebugScene::Initialize() {
 #pragma endregion
 
 	// ===LevelDataからモデルの生成と配置=== ///
-	GenerateModelsFromLevelData("TL_12.json");
+	//GenerateModelsFromLevelData("TL_12.json");
 }
 
 ///-------------------------------------------/// 
@@ -488,25 +489,25 @@ void DebugScene::Update() {
 	/// ===コントローラーの処理=== ///
 #pragma region コントローラの処理
 
-	// スティックの入力処理を取得
-	StickState leftStick = InputService::GetLeftStickState(0);
-	StickState rightStick = InputService::GetRightStickState(0);
+	//// スティックの入力処理を取得
+	//StickState leftStick = InputService::GetLeftStickState(0);
+	//StickState rightStick = InputService::GetRightStickState(0);
 
-	// モデルの移動処理
-	modelInfo_.Translate.x += leftStick.x * 0.01f;
-	modelInfo_.Translate.y += leftStick.y * 0.01f;
+	//// モデルの移動処理
+	//modelInfo_.Translate.x += leftStick.x * 0.01f;
+	//modelInfo_.Translate.y += leftStick.y * 0.01f;
 
-	// カメラの移動処理
-	cameraInfo_.Translate.x += rightStick.x * 0.01f;
-	cameraInfo_.Translate.y += rightStick.y * 0.01f;
+	//// カメラの移動処理
+	//cameraInfo_.Translate.x += rightStick.x * 0.01f;
+	//cameraInfo_.Translate.y += rightStick.y * 0.01f;
 
-	if (InputService::FlickLeftStick(0, 0.5f)) {
-		if (cameraInfo_.Set) {
-			cameraInfo_.Set = false;
-		} else {
-			cameraInfo_.Set = true;
-		}
-	}
+	//if (InputService::FlickLeftStick(0, 0.5f)) {
+	//	if (cameraInfo_.Set) {
+	//		cameraInfo_.Set = false;
+	//	} else {
+	//		cameraInfo_.Set = true;
+	//	}
+	//}
 
 #pragma endregion
 
@@ -585,7 +586,7 @@ void DebugScene::Update() {
 #pragma endregion
 
 	/// ===LevelEditorの更新=== ///
-	UpdateLevelModels();
+	//UpdateLevelModels();
 
 	/// ===ISceneのの更新=== ///
 	IScene::Update();
@@ -606,26 +607,21 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 
+	// SkyBoxの描画
+	skyBox_->Draw();
 	// アニメーションの描画
-	//debugAnimationModel_->Draw();
+	debugAnimationModel_->Draw();
 	/// ===Model=== ///
-	//debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);s
-
+	//debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
+	
 	// Modelの描画
 	if (isDisplay_.Model) {
-		// SkyBoxの描画
-		skyBox_->Draw();
-		// アニメーションの描画
-		debugAnimationModel_->Draw();
-		/// ===Model=== ///
-		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
-
 		model2_->Draw();
 		//modelLight_->Draw();
 	}
 
 	/// ===LevelEditorの更新=== ///
-	DrawLevelModels();
+	//DrawLevelModels();
 
 	/// ===ISceneの描画=== ///
 	IScene::Draw();
