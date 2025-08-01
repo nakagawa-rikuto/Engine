@@ -55,16 +55,14 @@ void DebugScene::Initialize() {
 	// カメラ1
 	camera_ = std::make_shared<Camera>();
 	camera_->Initialize();
-	camera_->SetTranslate({ 0.0f, 0.0f, -4.0f });
-	camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
 	// カメラ2
 	camera2_ = std::make_shared<Camera>();
 	camera2_->Initialize();
-	camera2_->SetTranslate({ 0.0f, 0.0f, -30.0f });
-	camera2_->SetRotate({ 0.0f, 0.0f, 0.0f });
 	// カメラマネージャにカメラを追加
 	CameraService::Add("Debug", camera_);
 	CameraService::Add("Debug2", camera2_);
+
+	cameraInfo_.Translate = { 0.0f, 0.0f, -50.0f };
 #pragma endregion
 
 	/// ===ParticleManager=== ///

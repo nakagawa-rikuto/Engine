@@ -53,7 +53,6 @@ void IScene::Update() {
 /// 描画
 ///-------------------------------------------///
 void IScene::Draw() {
-
 	// Lineの描画
 	ServiceLocator::GetLineObject3D()->Draw();
 }

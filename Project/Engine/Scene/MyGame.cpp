@@ -100,26 +100,33 @@ void MyGame::LoadAudio() {
 }
 // テクスチャ
 void MyGame::LoadTexture() {
+	// DebugScene
 	Loader::LoadTexture("uvChecker", "uvChecker.png");
 	Loader::LoadTexture("monsterBall", "monsterBall.png");
+	// Particle
 	Loader::LoadTexture("circle", "circle.png");
 	Loader::LoadTexture("circle2", "circle2.png");
 	Loader::LoadTexture("gradationLine", "gradationLine.png");
+	// OffScreen
 	Loader::LoadTexture("noise0", "OffScreen/noise0.png");
 	Loader::LoadTexture("noise1", "OffScreen/noise1.png");
+	// SkyBox
 	Loader::LoadTexture("skyBox", "rostock_laage_airport_4k.dds");
 }
 // モデル
 void MyGame::LoadModel() {
+	// DebugScene
 	Loader::LoadModel("MonsterBall", "MonsterBall.obj");
 	Loader::LoadModel("terrain", "terrain.obj");
 	Loader::LoadModel("plane", "plane.obj");
+	// Particle
 	Loader::LoadModel("Particle", "Particle.obj");
 	Loader::LoadModel("ParticlePlane", "ParticlePlane.gltf");
 	// Game
 }
 // アニメーション
 void MyGame::LoadAnimation() {
+	// DebugScene
 	Loader::LoadAnimation("simpleSkin", "simpleSkin.gltf");
 	Loader::LoadAnimation("human", "sneakWalk.gltf");
 }
