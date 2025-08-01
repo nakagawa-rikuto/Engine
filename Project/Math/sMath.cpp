@@ -125,12 +125,19 @@ Vector3 Math::QuaternionToEuler(const Quaternion& quaternion) {
 }
 // Vector3からQuaternionに変換する関数
 Quaternion Math::QuaternionFromVector(const Vector3& vector) {
-    float cx = std::cos(vector.x * 0.5f);
+   /* float cx = std::cos(vector.x * 0.5f);
     float sx = std::sin(vector.x * 0.5f);
     float cy = std::cos(vector.y * 0.5f);
     float sy = std::sin(vector.y * 0.5f);
     float cz = std::cos(vector.z * 0.5f);
-    float sz = std::sin(vector.z * 0.5f);
+    float sz = std::sin(vector.z * 0.5f);*/
+
+    float cx = std::cos(vector.x * 0.75f);
+    float sx = std::sin(vector.x * 0.75f);
+    float cy = std::cos(vector.y * 0.75f);
+    float sy = std::sin(vector.y * 0.75f);
+    float cz = std::cos(vector.z * 0.75f);
+    float sz = std::sin(vector.z * 0.75f);
 
     Quaternion q;
     q.w = cx * cy * cz + sx * sy * sz;
