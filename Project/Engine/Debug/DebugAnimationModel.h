@@ -24,6 +24,11 @@ public:
 	/// ===衝突応答=== ///
 	void OnCollision(Collider* collider) override;
 
+public:
+
+	Vector3& GetTranslate();
+	Quaternion& GetRotate();
+
 private:
 
 	/// ===BaseData=== ///
@@ -32,10 +37,24 @@ private:
 		Quaternion rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
 		Vector3 scale = { 1.0f, 1.0f, 1.0f };
 		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Vector3 velocity = { 0.0f, 0.0f, 0.0f };
 	};
 	BaseData base_;
 
+	struct MoveData {
+		float spped = 0.05f;
+		Vector3 direction = { 0.0f, 0.0f, 0.0f };
+	};
+	MoveData info_;
+
 	// アニメーションのループ再生の切り替え
 	bool isChagAnimation_ = false;
+
+	const float deltaTime_ = 1.0f / 60.0f;
+
+private:
+
+	// 移動処理
+	void Move();
 };
 

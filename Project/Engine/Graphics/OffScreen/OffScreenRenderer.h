@@ -4,7 +4,16 @@
 #include <vector>
 // Offscreen
 #include "RenderTexture.h"
-#include "RenderPass.h"
+// Effect
+#include "Effect/CopyImageEffect.h"
+#include "Effect/GrayscaleEffect.h"
+#include "Effect/VignetteEffect.h"
+#include "Effect/OutLineEffect.h"
+#include "Effect/BoxFilter3x3Effect.h"
+#include "Effect/BoxFilter5x5Effect.h"
+#include "Effect/RadiusBlurEffect.h"
+#include "Effect/DissolveEffect.h"
+
 // Data
 #include "Engine/DataInfo/OffScreenTypeData.h"
 
@@ -28,6 +37,10 @@ public:
 	// 描画後処理
 	void PostDraw(ID3D12GraphicsCommandList* commandList);
 
+#ifdef USE_IMGUI
+	void DrawImGui();
+#endif
+
 public: /// ===Getter=== ///
 	// RTVHandleの取得
 	D3D12_CPU_DESCRIPTOR_HANDLE GetResultRTV() const;
@@ -46,7 +59,16 @@ public: /// ===Setter=== ///
 
 private:
 	std::shared_ptr<RenderTexture> renderTexture_;
-	std::vector<std::shared_ptr<RenderPass>> renderPass_;
+
+	// 各パス（あらかじめ生成済み）
+	std::shared_ptr<CopyImageEffect> copyImage_;
+	std::shared_ptr<GrayscaleEffect> grayscale_;
+	std::shared_ptr<VignetteEffect> vignette_;
+	std::shared_ptr<OutLineEffect> outLine_;
+	std::shared_ptr<BoxFilter3x3Effect> boxFilter3x3_;
+	std::shared_ptr<BoxFilter5x5Effect> boxFilter5x5_;
+	std::shared_ptr<RadiusBlurEffect> radiusBlur_;
+	std::shared_ptr<DissolveEffect> dissolve_;
 
 	// Piplineのタイプ
 	OffScreenType type_ = OffScreenType::CopyImage;

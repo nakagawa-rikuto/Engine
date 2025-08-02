@@ -1,14 +1,23 @@
 #include "OffScreenRenderer.h"
-// RenderPass
-#include "SceneRenderPass.h"
 // Service
 #include "Engine/System/Service/Render.h"
+// ImGui
+#ifdef USE_IMGUI
+#include <imgui.h>
+#endif
 
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
 OffScreenRenderer::~OffScreenRenderer() {
-	renderPass_.clear();
+	copyImage_.reset();
+	grayscale_.reset();
+	vignette_.reset();
+	boxFilter3x3_.reset();
+	boxFilter5x5_.reset();
+	radiusBlur_.reset();
+	outLine_.reset();
+	dissolve_.reset();
 	renderTexture_.reset();
 }
 
@@ -25,22 +34,69 @@ void OffScreenRenderer::Initialize(
 	renderTexture_->Initialize(srv, rtv, width, height, clearColor, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 	renderTexture_->CreateRenderTexture(device);
 
-	///-------------------------------------------/// 
-	/// これからどんどん追加していく
-	///-------------------------------------------///
 	/// ===RenderPassの登録=== ///
 	// SceneRenderPass
-	std::shared_ptr<SceneRenderPass> scenePass = std::make_shared<SceneRenderPass>();
-	scenePass->Initialize(renderTexture_);
-	renderPass_.emplace_back(scenePass);
+	copyImage_ = std::make_shared<CopyImageEffect>();
+	copyImage_->Initialize(device,renderTexture_);
+
+	// グレースケールレンダーパス
+	grayscale_ = std::make_shared<GrayscaleEffect>();
+	grayscale_->Initialize(device, renderTexture_);
+
+	// ビネットレンダーパス
+	vignette_ = std::make_shared<VignetteEffect>();
+	vignette_->Initialize(device, renderTexture_);
+
+	// Dissolveエフェクト
+	dissolve_ = std::make_shared<DissolveEffect>();
+	dissolve_->Initialize(device, renderTexture_);
+
+	// 3x3ボックスフィルタレンダーパス
+	boxFilter3x3_ = std::make_shared<BoxFilter3x3Effect>();
+	boxFilter3x3_->Initialize(device, renderTexture_);
+
+	// 5x5ボックスフィルタレンダーパス
+	boxFilter5x5_ = std::make_shared<BoxFilter5x5Effect>();
+	boxFilter5x5_->Initialize(device, renderTexture_);
+
+	// 半径ブラーエフェクト
+	radiusBlur_ = std::make_shared<RadiusBlurEffect>();
+	radiusBlur_->Initialize(device, renderTexture_);
+
+	// OutLineエフェクト
+	outLine_ = std::make_shared<OutLineEffect>();
+	outLine_->Initialize(device, renderTexture_);
 }
 
 ///-------------------------------------------/// 
 /// 描画前処理
 ///-------------------------------------------///
 void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle) {
-	for (auto& pass : renderPass_) {
-		pass->Draw(commandList, dsvHandle);
+	switch (type_) {
+	case OffScreenType::CopyImage:
+		copyImage_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::Grayscale:
+		grayscale_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::Vignette:
+		vignette_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::BoxFilter3x3:
+		boxFilter3x3_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::BoxFilter5x5:
+		boxFilter5x5_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::RadiusBlur:
+		radiusBlur_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::OutLine:
+		outLine_->PreDraw(commandList, dsvHandle);
+		break;
+	case OffScreenType::Dissolve:
+		dissolve_->PreDraw(commandList, dsvHandle);
+		break;
 	}
 }
 
@@ -48,32 +104,94 @@ void OffScreenRenderer::PreDraw(ID3D12GraphicsCommandList* commandList, D3D12_CP
 /// 描画処理
 ///-------------------------------------------///
 void OffScreenRenderer::Draw(ID3D12GraphicsCommandList* commandList) {
-
-	if (type_ == OffScreenType::Grayscale) {
-		// グレースケール
-		Render::SetPSO(commandList, PipelineType::Grayscale, BlendMode::kBlendModeNone);
-	} else if (type_ == OffScreenType::Vignette) {
-		// ビネット
-		Render::SetPSO(commandList, PipelineType::Vignette, BlendMode::kBlendModeNone);
-	} else if (type_ == OffScreenType::BoxFilter3x3) {
-		// ボックスフィルタ3x3
-		Render::SetPSO(commandList, PipelineType::BoxFilter3x3, BlendMode::kBlendModeNone);
-	} else if (type_ == OffScreenType::BoxFilter5x5) {
-		// ボックスフィルタ5x5
-		Render::SetPSO(commandList, PipelineType::BoxFilter5x5, BlendMode::kBlendModeNone);
-	} else {
-		// コピーイメージ
-		Render::SetPSO(commandList, PipelineType::OffScreen, BlendMode::kBlendModeNone);
+	switch (type_) {
+	case OffScreenType::CopyImage:
+		copyImage_->Draw(commandList);
+		break;
+	case OffScreenType::Grayscale:
+		grayscale_->Draw(commandList);
+		break;
+	case OffScreenType::Vignette:
+		vignette_->Draw(commandList);
+		break;
+	case OffScreenType::BoxFilter3x3:
+		boxFilter3x3_->Draw(commandList);
+		break;
+	case OffScreenType::BoxFilter5x5:
+		boxFilter5x5_->Draw(commandList);
+		break;
+	case OffScreenType::RadiusBlur:
+		radiusBlur_->Draw(commandList);
+		break;
+	case OffScreenType::OutLine:
+		outLine_->Draw(commandList);
+		break;
+	case OffScreenType::Dissolve:
+		dissolve_->Draw(commandList);
+		break;
 	}
-	commandList->SetGraphicsRootDescriptorTable(0, renderTexture_->GetSRVHandle());
-	// 頂点3つを描画
-	commandList->DrawInstanced(3, 1, 0, 0);
 }
 
 ///-------------------------------------------/// 
 /// 描画後処理
 ///-------------------------------------------///
 void OffScreenRenderer::PostDraw(ID3D12GraphicsCommandList* commandList) {}
+
+///-------------------------------------------/// 
+/// ImGuiの描画
+///-------------------------------------------///
+#ifdef USE_IMGUI
+void OffScreenRenderer::DrawImGui() {
+	const char* typeNames[] = {
+		"CopyImage",
+		"Grayscale",
+		"Vignette",
+		"BoxFilter3x3",
+		"BoxFilter5x5",
+		"RadiusBlur",
+		"OutLine",
+		"Dissolve",
+	};
+
+	int current = static_cast<int>(type_);
+	if (ImGui::Begin("OffScreen Effect")) {
+		ImGui::Text("Current Effect: %s", typeNames[current]);  // ← ★ ここで名前表示
+
+		if (ImGui::Combo("Effect Type", &current, typeNames, IM_ARRAYSIZE(typeNames))) {
+			type_ = static_cast<OffScreenType>(current);
+		}
+	}
+
+	switch (type_) {
+	case OffScreenType::CopyImage:
+		copyImage_->ImGuiInfo();
+		break;
+	case OffScreenType::Grayscale:
+		grayscale_->ImGuiInfo();
+		break;
+	case OffScreenType::Vignette:
+		vignette_->ImGuiInfo();
+		break;
+	case OffScreenType::BoxFilter3x3:
+		boxFilter3x3_->ImGuiInfo();
+		break;
+	case OffScreenType::BoxFilter5x5:
+		boxFilter5x5_->ImGuiInfo();
+		break;
+	case OffScreenType::RadiusBlur:
+		radiusBlur_->ImGuiInfo();
+		break;
+	case OffScreenType::OutLine:
+		outLine_->ImGuiInfo();
+		break;
+	case OffScreenType::Dissolve:
+		dissolve_->ImGuiInfo();
+		break;
+	}
+
+	ImGui::End();
+}
+#endif // USE_IMGUI
 
 ///-------------------------------------------/// 
 /// Getter

@@ -1,5 +1,8 @@
 #include "DebugAnimationModel.h"
+// Service
 #include "Engine/System/Service/InputService.h"
+// Math
+#include "Math/sMath.h"
 
 #ifdef USE_IMGUI
 #include "imgui.h"
@@ -11,6 +14,12 @@
 DebugAnimationModel::~DebugAnimationModel() {
 	object3d_.reset();
 }
+
+///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+Vector3& DebugAnimationModel::GetTranslate() {return base_.translate;}
+Quaternion& DebugAnimationModel::GetRotate() { return base_.rotate; }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -42,7 +51,10 @@ void DebugAnimationModel::Initialize() {
 ///-------------------------------------------///
 void DebugAnimationModel::Update() {
 
-	/// ===Animationの切り替え=== ///
+	/// ===移動処理=== ///
+	Move();
+
+	 /// ===Animationの切り替え=== ///
 	if (InputService::TriggerKey(DIK_SPACE)) {
 		if (isChagAnimation_) {
 			// アニメーションのループを有効化
@@ -55,11 +67,16 @@ void DebugAnimationModel::Update() {
 		}
 	}
 
+	// 移動量の加算
+	base_.translate += base_.velocity;
+
+	// Objctの更新
 	object3d_->SetTranslate(base_.translate);
 	object3d_->SetRotate(base_.rotate);
 	object3d_->SetScale(base_.scale);
 	object3d_->SetColor(base_.color);
 
+	// 環境マップ
 	object3d_->SetEnviromentMapData(true, 1.0f);
 
 	// SphereColliderの更新
@@ -95,5 +112,61 @@ void DebugAnimationModel::OnCollision(Collider * collider) {
 
 	if (collider->GetColliderName() == ColliderName::Enemy) {
 		//base_.color = { 1.0f, 0.0f, 0.0f, 1.0f }; // 赤色に変更
+	}
+}
+
+
+///-------------------------------------------/// 
+/// 移動処理
+///-------------------------------------------///
+void DebugAnimationModel::Move() {
+
+	/// ===左スティック入力関数=== ///
+	StickState leftStick = InputService::GetLeftStickState(0);
+
+	/// === 徐々に止まる処理 === ///
+	// 減速率
+	const float deceleration = 0.75f;
+	// Velocityが0でないなら徐々に0にする
+	if (base_.velocity.x != 0.0f) {
+		// 各軸に対して減速適用
+		base_.velocity.x *= deceleration;
+		// 小さすぎる値は完全に0にスナップ
+		if (std::abs(base_.velocity.x) < 0.01f) {
+			base_.velocity.x = 0.0f;
+		}
+	}
+	if (base_.velocity.z != 0.0f) {
+		base_.velocity.z *= deceleration;
+		if (std::abs(base_.velocity.z) < 0.01f) {
+			base_.velocity.z = 0.0f;
+		}
+	}
+
+	/// ===移動処理=== ///
+	// 方向の設定
+	info_.direction.x = leftStick.x;
+	info_.direction.z = leftStick.y;
+
+	// velocityに反映
+	base_.velocity = info_.direction * info_.spped;
+
+	/// ===移動方向に沿って回転=== ///
+	// 方向が変更されたら
+	if (Length(info_.direction) > 0.01f) {
+		// 現在のYaw角（Y軸の回転）を取得
+		float currentYaw = Math::GetYAngle(base_.rotate);
+
+		// 入力方向から目標のYaw角を取得
+		float targetYaw = std::atan2(info_.direction.x, info_.direction.z);
+
+		// 差分を正規化
+		float diff = Math::NormalizeAngle(targetYaw - currentYaw);
+
+		// イージング補間（短い方向へ回転）
+		float easedYaw = currentYaw + diff * (0.3f);
+
+		// Quaternionに再変換
+		base_.rotate = Math::MakeRotateAxisAngle({ 0, 1, 0 }, easedYaw);
 	}
 }
