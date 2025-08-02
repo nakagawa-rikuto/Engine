@@ -1,5 +1,16 @@
 #include "Fullscreen.hlsli"
 
+struct DissolveParames
+{
+    float threshold; // discardの閾値
+    float edgeStart; // smoothstep開始
+    float edgeEnd; // smoothstep終了
+    float3 edgeColor; // エッジ色
+    float padding; // 16バイトアライメント用
+};
+
+ConstantBuffer<DissolveParames> gDissolveParams : register(b0);
+
 Texture2D<float4> gTexture : register(t0);
 Texture2D<float> gMaskTexture : register(t1);
 SamplerState gSampler : register(s0);
@@ -11,21 +22,21 @@ struct PixelShaderOutPut
 
 PixelShaderOutPut main(VertexShaderOutPut input)
 {
-    
     float mask = gMaskTexture.Sample(gSampler, input.texcoord);
-    // maskの値が0.5f（聞値）以下の場合はdiscardして抜く
-    if (mask <= 0.5f)
+
+    // 動的に変更可能な threshold を使用
+    if (mask <= gDissolveParams.threshold)
     {
         discard;
     }
-    
-    // Edgeっぽさを算出
-    float edge = 1.0f - smoothstep(0.5f, 0.53f, mask);
+
+    // エッジの滑らかさをパラメータで制御
+    float edge = 1.0f - smoothstep(gDissolveParams.edgeStart, gDissolveParams.edgeEnd, mask);
 
     PixelShaderOutPut output;
     output.color = gTexture.Sample(gSampler, input.texcoord);
-    
-    // Edgeっぽいほど指定した色を加算
-    output.color.rgb += edge * float3(1.0f, 0.4f, 0.3f);
+
+    // エッジカラーを加算
+    output.color.rgb += edge * gDissolveParams.edgeColor;
     return output;
 }

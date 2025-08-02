@@ -69,7 +69,7 @@ void DebugScene::Initialize() {
 #pragma endregion
 
 	/// ===ParticleManager=== ///
-#pragma region Particleの追加
+#pragma region Particle
 	// Particleの追加
 	ParticleService::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
 	ParticleService::AddParticle("Explosion", std::make_unique<ExplosionParticle>());
@@ -77,6 +77,9 @@ void DebugScene::Initialize() {
 	ParticleService::AddParticle("Ring", std::make_unique<RingParticle>());
 	ParticleService::AddParticle("HitEffect", std::make_unique<HitEffectParticle>());
 	ParticleService::AddParticle("Cylinder", std::make_unique<CylinderParticle>());
+
+	/// ===Particle=== ///
+	particleInofo_.Translate = { 0.0f, 0.0f, 0.0f };
 #pragma endregion
 
 	/// ===スプライトの初期化=== ///
@@ -96,7 +99,6 @@ void DebugScene::Initialize() {
 
 	/// ===モデルの初期化=== ///
 #pragma region Modelの初期化
-	
 	/* モデルの使い方
 	model_->SetPosition(Vector3(0.0f, 0.0f, 0.0f));              // 座標の設定(初期値は {0.0f, 0.0f, 0.0f} )
 	model_->SetRotate(Vector3(0.0f, 0.0f, 0.0f));                // 回転の設定(初期値は {0.0f, 0.0f, 0.0f} )
@@ -115,6 +117,9 @@ void DebugScene::Initialize() {
 	// モデルの初期化
 	model2_ = std::make_unique<Object3d>();
 	model2_->Init(ObjectType::Model, "terrain", LightType::PointLight);
+	model2_->SetEnviromentMapData(false, 1.0f);
+	model2_->SetTranslate({ 0.0f, -1.0f, 0.0f });
+
 	modelLight_ = std::make_unique<Object3d>();
 	modelLight_->Init(ObjectType::Model, "Particle");
 
@@ -161,15 +166,13 @@ void DebugScene::Initialize() {
 	offScreenInfo_.isGrayscale = false;
 #pragma endregion
 
-	/// ===Particle=== ///
-	particleInofo_.Translate = { 0.0f, 0.0f, 0.0f };
-
+	/// ===Line=== ///
 #pragma region Line
 	line_ = std::make_unique<Line>();
 #pragma endregion
 
 	// ===LevelDataからモデルの生成と配置=== ///
-	//GenerateModelsFromLevelData("TL_12.json");
+	GenerateModelsFromLevelData("TL_12.json");
 }
 
 ///-------------------------------------------/// 
@@ -415,10 +418,6 @@ void DebugScene::Update() {
 	ImGui::DragFloat("Volume", &audioInfo_.volume, 0.01f);
 	ImGui::DragFloat("Ptich", &audioInfo_.pitch, 0.01f);
 	ImGui::End();
-	/// ===OffScreen=== ///
-	ImGui::Begin("OffScreen");
-	ImGui::Checkbox("Grayscale", &offScreenInfo_.isGrayscale);
-	ImGui::End();
 
 	/// ===Line=== ///
 	ImGui::Begin("Line");
@@ -433,12 +432,6 @@ void DebugScene::Update() {
 #endif // USE_IMGUI
 
 #pragma region OffScreen
-	/// ===OffScreen=== ///
-	if (offScreenInfo_.isGrayscale) {
-		OffScreenService::SetOffScreenType(OffScreenType::Grayscale);
-	} else {
-		OffScreenService::SetOffScreenType(OffScreenType::CopyImage);
-	}
 #pragma endregion
 
 	/// ===カメラの変更=== ///
@@ -543,8 +536,8 @@ void DebugScene::Update() {
 
 	/// ===モデルの更新=== ///
 #pragma region モデルの更新
-	model2_->SetTranslate(modelInfo_.Translate);
-	model2_->SetRotate(modelInfo_.Rotate);
+	//model2_->SetTranslate(modelInfo_.Translate);
+	//model2_->SetRotate(modelInfo_.Rotate);
 	model2_->SetLightData(light_);
 	model2_->Update();
 
@@ -591,12 +584,13 @@ void DebugScene::Update() {
 #pragma endregion
 
 #pragma region ColliderManagerの更新
-#pragma region ColliderManagerの更新
 	ColliderService::SetLightData(light_);
 #pragma endregion
 
+	/// ===LevelEditorの更新=== ///
+	UpdateLevelModels();
+
 	/// ===ISceneのの更新=== ///
-	//UpdateLevelModels();
 	IScene::Update();
 }
 
@@ -615,22 +609,28 @@ void DebugScene::Draw() {
 
 #pragma region モデル描画
 
-	skyBox_->Draw();
+	// アニメーションの描画
+	//debugAnimationModel_->Draw();
+	/// ===Model=== ///
+	//debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);s
 
+	// Modelの描画
 	if (isDisplay_.Model) {
-		/// ===アニーメーションモデル=== ///
+		// SkyBoxの描画
+		skyBox_->Draw();
+		// アニメーションの描画
 		debugAnimationModel_->Draw();
-
 		/// ===Model=== ///
 		debugModel_->Draw(); // BlendMode変更可能 model_->Draw(BlendMode::kBlendModeAdd);
-		model2_->Draw();
 
-		modelLight_->Draw();
+		model2_->Draw();
+		//modelLight_->Draw();
 	}
 
+	/// ===LevelEditorの更新=== ///
+	DrawLevelModels();
 
 	/// ===ISceneの描画=== ///
-	//DrawLevelModels();
 	IScene::Draw();
 
 #pragma endregion

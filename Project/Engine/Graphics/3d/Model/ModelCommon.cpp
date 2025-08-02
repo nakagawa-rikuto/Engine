@@ -28,6 +28,7 @@ void ModelCommon::Create(ID3D12Device* device, LightType type) {
 	/// ===初期化時の設定=== ///
 	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } };
 	uvTransform_ = { {1.0f, 1.0f,1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	light_ = {
 		40.0f,
 		{{ 1.0f, 1.0f, 1.0f, 1.0f } , { 0.0f, -1.0f, 0.0f } ,1.0f},

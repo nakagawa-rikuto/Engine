@@ -6,4 +6,7 @@ enum class OffScreenType {
 	Vignette,
 	BoxFilter3x3,
 	BoxFilter5x5,
+	RadiusBlur,
+	OutLine,
+	Dissolve,
 };
