@@ -24,9 +24,8 @@ private:
 	struct ChargeInfo {
 		float speed = 0.0f;			  // 突進時の移動速度
 		float activeTime = 0.15f;      // 突進の有効時間
-		float cooltime = 0.5f;		  // 突進のクールタイム
+		float cooltime = 0.8f;		  // 突進のクールタイム
 		float invincibleTime = 0.1f;  // 突進時の無敵時間
-		float timer = 0.0f;           // 突進のタイマー
 		float acceleration = 0.0f;    // 突進の加速度
 		Vector3 direction = { 0.0f, 0.0f, 0.0f };
 	};

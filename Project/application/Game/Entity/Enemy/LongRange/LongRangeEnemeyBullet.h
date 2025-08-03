@@ -17,6 +17,8 @@ public:
 	void Update()override;
 	// 描画
 	void Draw(BlendMode mode = BlendMode::KBlendModeNormal)override;
+	// 生成
+	void Create(const Vector3& pos, const Vector3& vel);
 
 public: /// ===衝突判定=== ///
 	void OnCollision(Collider* collider) override;
@@ -24,23 +26,31 @@ public: /// ===衝突判定=== ///
 public: /// ===Getter=== ///
 
 	Vector3 GetTranslate()const;
-	Quaternion GetRotate()const;
 
 private: /// ===変数=== ///
 
-	// 座標
-	Vector3 translate = { 0.0f, 0.0f, 0.0f }; 
-
-	// 回転
-	Quaternion rotate = { 0.0f, 0.0f, 0.0f, 1.0f }; 
-
-	// 拡縮
-	Vector3 scale = { 1.0f, 1.0f, 1.0f }; 
-
-	// ベクトル
-	Vector3 velocity = { 0.0f, 0.0f, 0.0f }; 
+	/// ===基本情報=== ///
+	struct BaseInfo {
+		Vector3 translate = { 0.0f, 0.0f, 0.0f }; // 座標
+		Vector3 direction = { 0.0f, 0.0f, 0.0f }; // 方向
+		Vector3 velocity = { 0.0f, 0.0f, 0.0f }; // ベクトル
+	};
+	BaseInfo info_;
 
 	// 速度
-	float speed = 1.0f;
+	float speed_ = 2.0f;
+	// 生存タイマー
+	float lifeTimer_ = 0.0f;
+	// 生存時間
+	float lifeTime_ = 3.0f;
+	// 生存フラグ
+	bool isAlive_ = false;
+
+private:
+
+	// 移動処理
+	void Move();
+	// タイマー
+	void PromoteTimer();
 };
 

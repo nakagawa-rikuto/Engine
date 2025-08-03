@@ -6,6 +6,7 @@
 // Service
 #include "Engine/System/Service/InputService.h"
 #include "Engine/System/Service/CameraService.h"
+#include "Engine/System/Service/ColliderService.h"
 // Math
 #include "Math/sMath.h"
 
@@ -49,6 +50,16 @@ bool Player::GetpreparationFlag(actionType type) const {
 		return chargeInfo_.isPreparation;
 	} else {
 		return attackInfo_.isPreparation;
+	}
+}
+// タイマー
+float Player::GetTimer(actionType type) {
+	if (type == actionType::kAvoidance) {
+		return avoidanceInfo_.timer;
+	} else if (type == actionType::kCharge) {
+		return chargeInfo_.timer;
+	} else {
+		return attackInfo_.timer;
 	}
 }
 
@@ -129,6 +140,9 @@ void Player::Initialize() {
 
 	// 初期設定
 	ChangState(std::make_unique<RootState>());
+
+	// コライダーに追加
+	ColliderService::AddCollider(this);
 
 	// 更新
 	object3d_->Update();

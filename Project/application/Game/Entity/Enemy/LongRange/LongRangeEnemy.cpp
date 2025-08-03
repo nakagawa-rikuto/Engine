@@ -7,6 +7,7 @@
 #include "Engine/System/Service/InputService.h"
 #include "Engine/System/Service/ParticleService.h"
 #include "Engine/System/Service/CameraService.h"
+#include "Engine/System/Service/ColliderService.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/EasingMath.h"
@@ -42,6 +43,9 @@ void LongRangeEnemy::Initialize() {
 	OBBCollider::Initialize();
 	name_ = ColliderName::Enemy;
 	obb_.halfSize = { 2.0f, 2.0f, 2.0f };
+
+	// コライダーに追加
+	ColliderService::AddCollider(this);
 
 	// BaseEnemyの初期化
 	BaseEnemy::Initialize();
@@ -86,6 +90,11 @@ void LongRangeEnemy::Update() {
 	// タイマーを進める
 	advanceTimer();
 
+	// バレットの描画
+	for (auto& bullet : bulletInfo_.bullets_) {
+		bullet->Update();
+	}
+
 	// BaseEnemyの更新
 	BaseEnemy::Update();
 }
@@ -94,7 +103,13 @@ void LongRangeEnemy::Update() {
 /// 描画
 ///-------------------------------------------///
 void LongRangeEnemy::Draw(BlendMode mode) {
+	// Enemyの描画
 	BaseEnemy::Draw(mode);
+
+	// バレットの描画
+	for (auto& bullet : bulletInfo_.bullets_) {
+		bullet->Draw(mode);
+	}
 }
 
 ///-------------------------------------------/// 
@@ -222,20 +237,30 @@ void LongRangeEnemy::InitAttack() {
 }
 void LongRangeEnemy::Attack() {
 
+	static float prevYaw = baseInfo_.rotate.y;
+
 	// 攻撃時はやや速めに回転
 	UpdateRotationTowards(attackInfo_.direction, 0.3f);
+	// 現在の回転
+	float currentYaw = baseInfo_.rotate.y;
 
-	// 攻撃終了判定
-	if (attackInfo_.isAttack) {
-		Vector3 toTarget = attackInfo_.playerPos - baseInfo_.translate;
-		if (Length(toTarget) < 1.0f) { // 到達判定のしきい値（0.5fは任意）
-			attackInfo_.isAttack = false;
-			baseInfo_.velocity = { 0.0f, 0.0f, 0.0f };
-			baseInfo_.color = { 1.0f, 0.0f, 1.0f, 1.0f }; // 元の色に戻す（任意）
-			attackInfo_.timer = attackInfo_.interval; // クールダウン再設定
-			behaviorRequest_ = Behavior::kMove;
-		}
+	// 差分（絶対値）
+	float diff = std::fabs(currentYaw - prevYaw);
+
+	// 差が小さい → 回転がほぼ止まったと判定
+	if (diff < 0.01f) {
+		// 弾の生成
+		auto bullet = std::make_unique<LongRangeEnemeyBullet>();
+		bullet->Create(baseInfo_.translate, attackInfo_.direction);
+		bulletInfo_.bullets_.push_back(std::move(bullet));
+		attackInfo_.isAttack = false;
+		baseInfo_.color = { 1.0f, 0.0f, 1.0f, 1.0f }; // 元の色に戻す（任意）
+		attackInfo_.timer = attackInfo_.interval; // クールダウン再設定
+		behaviorRequest_ = Behavior::kMove;
 	}
+
+	// 次のフレーム用に保存
+	prevYaw = currentYaw;
 }
 
 ///-------------------------------------------/// 

@@ -6,6 +6,7 @@
 #include "application/Game/Entity/Player/Player.h"
 #include "application/Game/Object/Ground/Ground.h"
 #include "application/Game/Entity/Enemy/CloseRange/CloseRangeEnemy.h"
+#include "application/Game/Entity/Enemy/LongRange/LongRangeEnemy.h"
 
 ///=====================================================/// 
 /// ゲームシーン
@@ -32,11 +33,14 @@ private:/// ===メンバ変数=== ///
 	// Player
 	std::unique_ptr<Player> player_;
 	// Enemy
-	std::unique_ptr<CloseRangeEnemy> enemy_;
+	std::unique_ptr<CloseRangeEnemy> closeEnemy_;
+	std::unique_ptr<LongRangeEnemy> longEnemy_;
 	// Ground
 	std::unique_ptr<Ground> ground_;
 	// Camera
 	std::shared_ptr<Camera> camera_;
+	// Line
+	std::unique_ptr<Line> line_;
 
 	/// ===変数の宣言=== ///
 	struct CameraInfo {

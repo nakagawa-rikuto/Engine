@@ -1,6 +1,8 @@
 #pragma once
 /// ===Include=== ///
 #include "application/Game/Entity/Enemy/Base/BaseEnemy.h"
+#include "application/Game/Entity/Enemy/LongRange/LongRangeEnemeyBullet.h"
+#include <list>
 
 /// ===前方宣言=== ///
 class Player;
@@ -52,7 +54,7 @@ private: /// ===変数=== ///
 	// 攻撃情報
 	struct AttackInfo {
 		float range = 2.0f; // 攻撃範囲(回転の情報から±)
-		float distance = 15.0f; // 攻撃可能距離
+		float distance = 10.0f; // 攻撃可能距離
 		float interval = 8.0f; // 攻撃間隔
 		float timer = 5.0f; // タイマー
 		float power = 1.0f; // 攻撃力
@@ -61,6 +63,16 @@ private: /// ===変数=== ///
 		bool isAttack = false; // 攻撃中かどうか
 	};
 	AttackInfo attackInfo_; // 攻撃情報
+
+	/// ===Bullet情報=== ///
+	struct BulletInfo {
+		std::list<std::unique_ptr<LongRangeEnemeyBullet>> bullets_;
+		float interval = 0.0f; // インターバル
+		float reloadTime = 3.0f; // リロード時間
+		bool isShot; // 発射フラグ
+		bool isHit; // ヒット時のフラグ
+	};
+	BulletInfo bulletInfo_;
 
 	// 時間の経過速度
 	const float deltaTime_ = 1.0f / 60.0f;

@@ -30,7 +30,8 @@ GameScene::~GameScene() {
 	// Ground
 	ground_.reset();
 	// Enemy
-	enemy_.reset();
+	closeEnemy_.reset();
+	longEnemy_.reset();
 }
 
 ///-------------------------------------------/// 
@@ -56,17 +57,17 @@ void GameScene::Initialize() {
 	player_->Initialize();
 
 	/// ===Enemy=== ///
-	enemy_ = std::make_unique<CloseRangeEnemy>();
-	enemy_->Initialize();
-	enemy_->SetPlayer(player_.get()); // Playerを設定
+	closeEnemy_ = std::make_unique<CloseRangeEnemy>();
+	closeEnemy_->Initialize();
+	closeEnemy_->SetPlayer(player_.get()); // Playerを設定
+
+	longEnemy_ = std::make_unique<LongRangeEnemy>();
+	longEnemy_->Initialize();
+	longEnemy_->SetPlayer(player_.get());
 
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize();
-
-	// Colliderの追加
-	ColliderService::AddCollider(player_.get());
-	ColliderService::AddCollider(enemy_.get());
 
 	// Particleの追加
 	ParticleService::AddParticle("Confetti", std::make_unique<ConfettiParticle>());
@@ -93,7 +94,7 @@ void GameScene::Update() {
 	player_->UpdateImGui();
 
 	// Enemy
-	enemy_->UpdateImGui();
+	closeEnemy_->UpdateImGui();
 
 #endif // USE_IMGUI
 
@@ -104,12 +105,16 @@ void GameScene::Update() {
 	player_->Update();
 
 	/// ===Enemy=== ///
-	enemy_->Update();
+	closeEnemy_->Update();
+	longEnemy_->Update();
 
 	/// ===Groundの更新=== ///
 	ground_->Update();
 
 	/// ===ColliderManager=== ///
+
+	/// ===Line=== ///
+	line_ = std::make_unique<Line>();
 
 	/// ===ISceneの更新=== ///
 	IScene::Update();
@@ -125,10 +130,13 @@ void GameScene::Draw() {
 
 #pragma region モデル描画
 
+	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 1000.0f, 1.0f, 1000.0f }, 100, {1.0f, 1.0f, 1.0f, 1.0f});
+
 	// Ground
-	ground_->Draw();
+	//ground_->Draw();
 	// Enemy
-	enemy_->Draw();
+	//closeEnemy_->Draw();
+	longEnemy_->Draw();
 	// Player
 	player_->Draw();
 

@@ -7,6 +7,7 @@
 #include "Engine/System/Service/InputService.h"
 #include "Engine/System/Service/ParticleService.h"
 #include "Engine/System/Service/CameraService.h"
+#include "Engine/System/Service/ColliderService.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/EasingMath.h"
@@ -23,6 +24,7 @@
 /// デストラクタ
 ///-------------------------------------------///
 CloseRangeEnemy::~CloseRangeEnemy() {
+	ColliderService::RemoveCollider(this);
 	object3d_.reset();
 }
 
@@ -47,6 +49,9 @@ void CloseRangeEnemy::Initialize() {
 	OBBCollider::Initialize();
 	name_ = ColliderName::Enemy;
 	obb_.halfSize = { 2.0f, 2.0f, 2.0f };
+
+	// コライダーに追加
+	ColliderService::AddCollider(this);
 
 	// BaseEnemyの初期化
 	BaseEnemy::Initialize();

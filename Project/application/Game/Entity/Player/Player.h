@@ -46,6 +46,9 @@ public: /// ===Getter=== ///
 	// フラグ
 	bool GetStateFlag(actionType type) const;
 	bool GetpreparationFlag(actionType type) const;
+	
+	// タイマー
+	float GetTimer(actionType type);
 
 public: /// ===Setter=== ///
 

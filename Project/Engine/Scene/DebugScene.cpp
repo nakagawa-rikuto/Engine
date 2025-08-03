@@ -579,7 +579,7 @@ void DebugScene::Update() {
 #ifdef _DEBUG
 	//line_->DrawLine(lineInfo_.startPos, lineInfo_.endPos, lineInfo_.color);
 	//line_->DrawSphere({ modelInfo_.Translate, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
-	//line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 50, {1.0f, 1.0f, 1.0f, 1.0f});
+	line_->DrawGrid({ 0.0f,-2.0f, 0.0f }, { 100.0f, 1.0f, 100.0f }, 50, {1.0f, 1.0f, 1.0f, 1.0f});
 #endif // _DEBUG
 #pragma endregion
 

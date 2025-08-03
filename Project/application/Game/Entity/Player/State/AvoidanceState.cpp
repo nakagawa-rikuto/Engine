@@ -20,7 +20,7 @@ void AvoidanceState::Enter(Player * player, Camera * camera) {
 
 	// 回避情報の初期化
 	info_.acceleration = 0.2f;
-	info_.timer = info_.activeTime;
+	player_->SetTimer(actionType::kAvoidance, info_.activeTime);
 	player_->SetStateFlag(actionType::kAvoidance, true);
 	player_->SetpreparationFlag(actionType::kAvoidance, false);
 }
@@ -45,10 +45,11 @@ void AvoidanceState::Update(Player * player, Camera * camera) {
 	player_->SetVeloctiyZ(info_.direction.z * info_.speed);
 
 	/// ===タイマーが時間を超えたら=== ///
-	if (info_.timer <= 0.0f) {
-		player_->ChangState(std::make_unique<RootState>());
+	if (player_->GetTimer(actionType::kAvoidance) <= 0.0f) {
+		player_->SetTimer(actionType::kAvoidance, info_.cooltime); // クールタイムのリセット
 		player_->SetStateFlag(actionType::kAvoidance, false);
-		info_.timer = info_.cooltime; // クールタイムのリセット
+		// Stateの変更
+		player_->ChangState(std::make_unique<RootState>());
 	}
 }
 
