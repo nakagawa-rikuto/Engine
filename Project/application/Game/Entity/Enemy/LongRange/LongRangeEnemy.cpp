@@ -25,6 +25,13 @@ LongRangeEnemy::~LongRangeEnemy() {
 }
 
 ///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void LongRangeEnemy::SetTranslate(const Vector3& pos) {
+	baseInfo_.translate = pos;
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void LongRangeEnemy::Initialize() {

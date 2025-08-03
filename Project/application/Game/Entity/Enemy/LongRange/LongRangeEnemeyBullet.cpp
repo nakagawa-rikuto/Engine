@@ -15,6 +15,10 @@ Vector3 LongRangeEnemeyBullet::GetTranslate() const {
 	return info_.translate;
 }
 
+bool LongRangeEnemeyBullet::GetIsAlive() {
+	return isAlive_;
+}
+
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
@@ -46,6 +50,8 @@ void LongRangeEnemeyBullet::Update() {
 
 		/// ===タイマー=== ///
 		PromoteTimer();
+
+		info_.translate += info_.velocity;
 
 		// Objectに設定
 		object3d_->SetTranslate(info_.translate);

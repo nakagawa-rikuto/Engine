@@ -60,10 +60,12 @@ void GameScene::Initialize() {
 	closeEnemy_ = std::make_unique<CloseRangeEnemy>();
 	closeEnemy_->Initialize();
 	closeEnemy_->SetPlayer(player_.get()); // Playerを設定
+	closeEnemy_->SetTranslate({ -10.0f, 1.0f, 10.0f });
 
 	longEnemy_ = std::make_unique<LongRangeEnemy>();
 	longEnemy_->Initialize();
 	longEnemy_->SetPlayer(player_.get());
+	longEnemy_->SetTranslate({ 10.0f, 1.0f, 10.0f });
 
 	/// ===Ground=== ///
 	ground_ = std::make_unique<Ground>();
@@ -105,7 +107,7 @@ void GameScene::Update() {
 	player_->Update();
 
 	/// ===Enemy=== ///
-	closeEnemy_->Update();
+	//closeEnemy_->Update();
 	longEnemy_->Update();
 
 	/// ===Groundの更新=== ///
@@ -135,7 +137,7 @@ void GameScene::Draw() {
 	// Ground
 	//ground_->Draw();
 	// Enemy
-	//closeEnemy_->Draw();
+	closeEnemy_->Draw();
 	longEnemy_->Draw();
 	// Player
 	player_->Draw();

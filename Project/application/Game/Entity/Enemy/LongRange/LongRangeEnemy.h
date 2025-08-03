@@ -27,6 +27,10 @@ public:
 public: /// ===衝突判定=== ///
 	void OnCollision(Collider* collider) override;
 
+public: /// ===Setter=== ///
+
+	void SetTranslate(const Vector3& pos);
+
 private: /// ===変数=== ///
 
 	/// ===Behavior=== ///

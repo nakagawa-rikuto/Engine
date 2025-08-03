@@ -29,6 +29,13 @@ CloseRangeEnemy::~CloseRangeEnemy() {
 }
 
 ///-------------------------------------------/// 
+/// Setter
+///-------------------------------------------///
+void CloseRangeEnemy::SetTranslate(const Vector3& pos) {
+	baseInfo_.translate = pos;
+}
+
+///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
 void CloseRangeEnemy::Initialize() {

@@ -26,6 +26,7 @@ public: /// ===衝突判定=== ///
 public: /// ===Getter=== ///
 
 	Vector3 GetTranslate()const;
+	bool GetIsAlive();
 
 private: /// ===変数=== ///
 
@@ -44,7 +45,7 @@ private: /// ===変数=== ///
 	// 生存時間
 	float lifeTime_ = 3.0f;
 	// 生存フラグ
-	bool isAlive_ = false;
+	bool isAlive_ = true;
 
 private:
 
