@@ -20,10 +20,16 @@ IScene::~IScene() {
 }
 
 ///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+const float IScene::GetDeltaTime() const { return deltaTime_; }
+
+
+///-------------------------------------------/// 
 /// Setter
 ///-------------------------------------------///
 void IScene::SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
-
+void IScene::SetDeltaTime(const float deltaTime) { deltaTime_ = deltaTime; }
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -39,6 +45,9 @@ void IScene::Initialize() {
 	// デフォルトカメラの設定
 	CameraService::Add("Default", defaultCamera_);
 	CameraService::SetActiveCamera("Default");
+
+	// DeltaTimeの設定
+	deltaTime_ = 1.0f / 60.0f;
 }
 
 ///-------------------------------------------/// 

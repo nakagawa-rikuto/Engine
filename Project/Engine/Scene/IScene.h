@@ -23,11 +23,19 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
+public: /// ===Getter=== ///
+
+	const float GetDeltaTime()const;
+
 public:/// ===Setter=== ///
 
 	void SetSceneManager(SceneManager* sceneManager);
+	void SetDeltaTime(const float deltaTime);
 
 protected:
+	// 時間の経過速度
+	float deltaTime_;
+
 	// シーンマネージャ
 	SceneManager* sceneManager_ = nullptr;
 	// Camera

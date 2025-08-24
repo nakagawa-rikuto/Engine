@@ -97,6 +97,7 @@ void GameScene::Update() {
 
 	// Enemy
 	closeEnemy_->UpdateImGui();
+	longEnemy_->UpdateImGui();
 
 #endif // USE_IMGUI
 
@@ -107,7 +108,7 @@ void GameScene::Update() {
 	player_->Update();
 
 	/// ===Enemy=== ///
-	//closeEnemy_->Update();
+	closeEnemy_->Update();
 	longEnemy_->Update();
 
 	/// ===Groundの更新=== ///

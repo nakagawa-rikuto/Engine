@@ -108,6 +108,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="application\Game\Entity\Enemy\State\Base\EnemyState.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\State\EnemyAttackState.cpp" />
+    <ClCompile Include="application\Game\Entity\Enemy\State\EnemyMoveState.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.cpp" />
@@ -240,6 +243,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="application\Game\Entity\Player\State\AvoidanceState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application\Game\Entity\Enemy\State\Base\EnemyState.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\State\EnemyAttackState.h" />
+    <ClInclude Include="application\Game\Entity\Enemy\State\EnemyMoveState.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter3x3Effect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\BoxFilter5x5Effect.h" />

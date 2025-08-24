@@ -82,18 +82,6 @@ private: /// ===変数の宣言=== ///
 	/// ===State=== ///
 	std::unique_ptr<PlayerState> currentState_;
 
-	/// ===振る舞い=== ///
-	enum class Behavior {
-		kRoot,
-		kMove,
-		kAvoidance,
-		kCharge,
-		kAttack
-	};
-	Behavior behavior_ = Behavior::kRoot;
-	// 次の振る舞いリクエスト
-	std::optional<Behavior> behaviorRequest_ = std::nullopt;
-
 	/// ===基本情報=== ///
 	struct BaseInfo {
 		Vector3 translate = { 0.0f, 1.0f, 0.0f };

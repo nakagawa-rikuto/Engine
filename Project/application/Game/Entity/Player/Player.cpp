@@ -13,6 +13,7 @@
 // ImGui
 #ifdef USE_IMGUI
 #include "imgui.h"
+#include "application/Game/Entity/Enemy/Base/BaseEnemy.h"
 #endif // USE_IMGUI
 
 ///-------------------------------------------/// 

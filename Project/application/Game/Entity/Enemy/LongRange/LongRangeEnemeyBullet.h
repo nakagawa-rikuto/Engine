@@ -39,7 +39,7 @@ private: /// ===変数=== ///
 	BaseInfo info_;
 
 	// 速度
-	float speed_ = 2.0f;
+	float speed_ = 1.5f;
 	// 生存タイマー
 	float lifeTimer_ = 0.0f;
 	// 生存時間
