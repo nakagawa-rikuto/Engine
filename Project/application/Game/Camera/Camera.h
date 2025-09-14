@@ -2,38 +2,28 @@
 /// ===Include=== ///
 #include "Engine/DataInfo/CData.h"
 
-/// === カメラの種類を表す列挙型 === ///
-enum class FollowCameraType {
-	FixedOffset,        // 固定オフセット型（一定のオフセット距離で追従）
-	Interpolated,       // スムージング追従型（補間で滑らかに追従）
-	Orbiting,           // 回転可能型（対象の周りを回るカメラ）
-	CollisionAvoidance, // 衝突回避型（障害物を避ける）
-	TopDown,           // 上からの視点
-};
-
 ///=====================================================/// 
-/// カメラ
+/// カメラ基底クラス
 ///=====================================================///
 class Camera {
 public:
-
 	Camera() = default;
-	~Camera();
+	virtual ~Camera() = default;
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Initialize();
+	// 初期化
+	virtual void Initialize();
+	// 更新
+	virtual void Update();
+	// カメラ情報
+	virtual void ImGuiUpdate();
 
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
+	// デバッグ用の更新
+	void DebugUpdate();
+	// カメラシェイク開始
+	void StartShake(float intensity, float duration, float frequency = 10.0f);
+	// カメラシェイク停止
+	void StopShake();
 
-	/// <summary>
-	/// FollowTypeの設定
-	/// </summary>
-	void SetFollowCamera(FollowCameraType type);
 
 public:/// ===Getter=== ///
 	// WorldMatrix
@@ -62,29 +52,14 @@ public:/// ===Setter=== ///
 	void SetNearClip(const float& nearClip);
 	// FarClip
 	void SetFarClip(const float& farClip);
-	// 追従対象の座標を設定
-	void SetTarget(Vector3* position, Quaternion* rotation);
-	// 追従オフセット
-	void SetOffset(const Vector3& offset);
-	// 回転型追従カメラのオフセット
-	void SetOrbitingOffset(const Vector3& offset);
-	// 追従速度を設定
-	void SetFollowSpeed(float speed);
-	// 回転補間速度を設定
-	void SetLerpSpeed(float speed);
-	// スティック
-	void SetStick(const Vector2& stickValue);
-	
 
-private:/// ===変数=== ///
-
-	/// ===ビュー行列関連データ=== ///
+protected:/// ===変数=== ///
+	/// ===ビュー行列データ=== ///
 	QuaternionTransform transform_;
-	QuaternionTransform addTransform_;
 	Matrix4x4 worldMatrix_;
 	Matrix4x4 viewMatrix_;
 
-	/// ===プロジェクション行列関連データ=== ///
+	/// ===プロジェクション行列データ=== ///
 	Matrix4x4 projectionMatrix_;
 	float horizontalView_; // 水平方向視野角
 	float aspect_;         // アスペクト比
@@ -94,31 +69,18 @@ private:/// ===変数=== ///
 	/// ===合成行列=== ///
 	Matrix4x4 viewProjectionMatrix_;
 
-	/// ===追従=== ///
-	Vector3* targetPos_ = nullptr;  // 追従対象の座標ポインタ
-	Quaternion* targetRot_ = nullptr;  // 追従対象の回転ポインタ
-	Vector3 offset_ = { 0.0f, 0.0f, -20.0f }; // カメラの初期オフセット
-	Vector3 OrbitingOffset_ = { 0.0f, 0.5f, -20.0f };
-	float followSpeed_ = 0.1f;      // 追従速度
-	float rotationLerpSpeed_ = 0.1f; // 回転補間速度
-
-	Vector2 stickValue_;
-
-	FollowCameraType cameraType_ = FollowCameraType::FixedOffset; // デフォルトカメラタイプ
+	/// ===シェイク=== ///
+	bool isShaking_ = false;        // シェイク中フラグ
+	float shakeIntensity_ = 0.0f;   // シェイクの強度
+	float shakeDuration_ = 0.0f;    // シェイクの継続時間
+	float shakeTimer_ = 0.0f;       // シェイクのタイマー
+	float shakeFrequency_ = 10.0f;  // シェイクの周波数
+	Vector3 shakeOffset_;           // シェイクによるオフセット
+	float shakeTimeOffset_;         // ランダムな時間オフセット
 
 private:
-
-	// カメラの種類に応じた更新処理
-	void UpdateFollowCamera();
-	// 固定オフセット型カメラの処理 
-	void FollowFixedOffset();
-	// スムージング追従型カメラの処理 
-	void FollowInterpolated();
-	// 回転可能型カメラの処理 
-	void FollowOrbiting();
-	// 衝突回避型カメラの処理 
-	void FollowCollisionAvoidance();
-	// 上からの見下ろし追従カメラの処理
-	void FollowTopDown();
+	// 行列の更新処理
+	void UpdateMatrices();
+	// シェイク
+	void UpdateShake();
 };
-

@@ -127,6 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\GrayScaleEffect.cpp" />
+    <ClCompile Include="application\Game\Camera\FollowCamera.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="Engine\System\Service\AudioService.cpp" />
@@ -252,6 +253,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
     <ClInclude Include="application\Drawing\3d\Line.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\GrayScaleEffect.h" />
+    <ClInclude Include="application\Game\Camera\FollowCamera.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />

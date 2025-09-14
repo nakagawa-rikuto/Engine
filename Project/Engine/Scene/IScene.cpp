@@ -37,7 +37,7 @@ void IScene::Initialize() {
 	defaultCamera_->SetRotate({ 0.0f, 0.0f, 0.0f });
 
 	// デフォルトカメラの設定
-	CameraService::Add("Default", defaultCamera_);
+	CameraService::AddCamera("Default", defaultCamera_);
 	CameraService::SetActiveCamera("Default");
 }
 
