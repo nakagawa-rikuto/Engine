@@ -8,6 +8,7 @@
 CameraManager::CameraManager() = default;
 CameraManager::~CameraManager() {
 	activeCamera_.reset();
+	cameras_.clear();
 }
 
 ///-------------------------------------------/// 
@@ -21,9 +22,9 @@ void CameraManager::UpdateAllCameras() {
 }
 
 ///-------------------------------------------/// 
-/// 追加
+/// カメラを追加
 ///-------------------------------------------///
-void CameraManager::Add(const std::string & name, std::shared_ptr<Camera> camera) {
+void CameraManager::AddCamera(const std::string& name, std::shared_ptr<Camera> camera) {
 	cameras_[name] = camera;
 
 	if (!activeCamera_) {
@@ -32,26 +33,72 @@ void CameraManager::Add(const std::string & name, std::shared_ptr<Camera> camera
 }
 
 ///-------------------------------------------/// 
-/// 削除
+/// 追従カメラを追加
 ///-------------------------------------------///
-void CameraManager::Remove(const std::string & name) {
-	cameras_.erase(name);
+void CameraManager::AddFollowCamera(const std::string& name, std::shared_ptr<FollowCamera> followCamera) {
+	// FollowCameraはCameraを継承しているので、基底クラスのポインタとして格納
+	cameras_[name] = followCamera;
 
-	if (activeCamera_ && cameras_.find(name) == cameras_.end()) {
-		activeCamera_ = nullptr;
+	if (!activeCamera_) {
+		activeCamera_ = followCamera; // 最初に追加されたカメラをデフォルトでアクティブにする
 	}
+}
+
+///-------------------------------------------/// 
+/// カメラを削除
+///-------------------------------------------///
+void CameraManager::RemoveCamera(const std::string& name) {
+	auto it = cameras_.find(name);
+	if (it != cameras_.end()) {
+		// アクティブカメラが削除されるカメラの場合、activeCamera_をnullptrにする
+		if (activeCamera_ == it->second) {
+			activeCamera_ = nullptr;
+		}
+		cameras_.erase(it);
+	}
+}
+
+///-------------------------------------------/// 
+/// カメラが存在するかチェック
+///-------------------------------------------///
+bool CameraManager::HasCamera(const std::string& name) const {
+	return cameras_.find(name) != cameras_.end();
 }
 
 ///-------------------------------------------/// 
 /// Getter・Setter
 ///-------------------------------------------///
-// Getter
-std::shared_ptr<Camera> CameraManager::GetActiveCamera() const { return activeCamera_; }
-// Setter
+// アクティブカメラのGetter
+std::shared_ptr<Camera> CameraManager::GetActiveCamera() const {
+	return activeCamera_;
+}
+
+// 指定されたカメラのGetter
+std::shared_ptr<Camera> CameraManager::GetCamera(const std::string& name) const {
+	auto it = cameras_.find(name);
+	if (it != cameras_.end()) {
+		return it->second;
+	}
+	return nullptr;
+}
+
+// 指定された追従カメラのGetter
+std::shared_ptr<FollowCamera> CameraManager::GetFollowCamera(const std::string& name) const {
+	auto it = cameras_.find(name);
+	if (it != cameras_.end()) {
+		// dynamic_cast を使用して FollowCamera にキャスト
+		return std::dynamic_pointer_cast<FollowCamera>(it->second);
+	}
+	return nullptr;
+}
+
+// アクティブカメラのSetter
 void CameraManager::SetActiveCamera(const std::string& name) {
-	// 指定されたカメラが存在する場合アクティブにする
-	assert(cameras_[name]);
-	if (cameras_.find(name) != cameras_.end()) {
-		activeCamera_ = cameras_[name];
+	auto it = cameras_.find(name);
+	if (it != cameras_.end()) {
+		activeCamera_ = it->second;
+	} else {
+		// カメラが存在しない場合の警告
+		assert(false && "指定されたカメラが存在しません");
 	}
 }

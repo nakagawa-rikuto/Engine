@@ -144,6 +144,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
+    <ClCompile Include="application\Game\Camera\FollowCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
+    <ClInclude Include="application\Game\Camera\FollowCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

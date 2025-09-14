@@ -19,7 +19,6 @@
 // Math
 #include "Math/sMath.h"
 
-
 ///-------------------------------------------/// 
 /// デストラクタ
 ///-------------------------------------------///
@@ -59,8 +58,8 @@ void DebugScene::Initialize() {
 	camera2_ = std::make_shared<Camera>();
 	camera2_->Initialize();
 	// カメラマネージャにカメラを追加
-	CameraService::Add("Debug", camera_);
-	CameraService::Add("Debug2", camera2_);
+	CameraService::AddCamera("Debug", camera_);
+	CameraService::AddCamera("Debug2", camera2_);
 
 	cameraInfo_.Translate = { 0.0f, 0.0f, -50.0f };
 #pragma endregion
@@ -404,10 +403,8 @@ void DebugScene::Update() {
 	ImGui::End();
 
 	/// ===Camera=== ///
-	ImGui::Begin("Camera");
+	ImGui::Begin("ChangeCamera");
 	ImGui::Checkbox("Flag", &cameraInfo_.Set);
-	ImGui::DragFloat3("Translate", &cameraInfo_.Translate.x, 0.1f);
-	ImGui::DragFloat4("Rotate", &cameraInfo_.Rotate.x, 0.001f);
 	ImGui::End();
 	/// ===Audio=== ///
 	ImGui::Begin("Audio");
@@ -426,19 +423,27 @@ void DebugScene::Update() {
 	debugAnimationModel_->ImGuiInfo();
 	debugModel_->ImGuiInfo();
 
+	
+	/// ===カメラの変更=== ///
+#pragma region カメラの変更
+	if (cameraInfo_.Set) {
+		CameraService::SetActiveCamera("Debug2");
+		camera2_->DebugUpdate();
+		camera2_->ImGuiUpdate();
+	} else {
+		CameraService::SetActiveCamera("Debug");
+		camera_->DebugUpdate();
+		camera_->ImGuiUpdate();
+
+	}
+#pragma endregion
+
 #endif // USE_IMGUI
 
 #pragma region OffScreen
 #pragma endregion
 
-	/// ===カメラの変更=== ///
-#pragma region カメラの変更
-	if (cameraInfo_.Set) {
-		CameraService::SetActiveCamera("Debug2");
-	} else {
-		CameraService::SetActiveCamera("Debug");
-	}
-#pragma endregion
+	
 
 	/// ===キーボード関連の処理=== ///
 #pragma region キーボード関連の処理

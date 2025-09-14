@@ -4,13 +4,21 @@
 // ServiceLovator
 #include "ServiceLocator.h"
 
-// 追加
-void CameraService::Add(const std::string& name, std::shared_ptr<Camera> camera) {
-		ServiceLocator::GetCameraManager()->Add(name, camera);
+// 追加(Camera)
+void CameraService::AddCamera(const std::string& name, std::shared_ptr<Camera> camera) {
+	ServiceLocator::GetCameraManager()->AddCamera(name, camera);
+}
+// 追加(FollowCamera)
+void CameraService::AddFollowCamera(const std::string& name, std::shared_ptr<FollowCamera> FollowCamera) {
+	ServiceLocator::GetCameraManager()->AddCamera(name, FollowCamera);
 }
 // 削除
 void CameraService::Remove(const std::string& name) {
-	ServiceLocator::GetCameraManager()->Remove(name);
+	ServiceLocator::GetCameraManager()->RemoveCamera(name);
+}
+// カメラのチェック
+void CameraService::HasCamera(const std::string& name) {
+	ServiceLocator::GetCameraManager()->HasCamera(name);
 }
 // アクティブカメラのGetter
 std::shared_ptr<Camera> CameraService::GetActiveCamera() {
