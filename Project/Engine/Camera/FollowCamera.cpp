@@ -42,7 +42,7 @@ void FollowCamera::SetStick(const Vector2& stickValue) { stickValue_ = stickValu
 ///-------------------------------------------///
 void FollowCamera::Initialize() {
 	// 基底クラスの初期化を呼ぶ
-	Camera::Initialize();
+	NormalCaemra::Initialize();
 }
 
 ///-------------------------------------------/// 
@@ -55,7 +55,7 @@ void FollowCamera::Update() {
 	}
 
 	// 基底クラスの更新を呼ぶ（行列計算）
-	Camera::Update();
+	NormalCaemra::Update();
 }
 
 ///-------------------------------------------/// 

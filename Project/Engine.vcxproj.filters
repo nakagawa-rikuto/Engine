@@ -35,7 +35,7 @@
     <ClCompile Include="Engine\System\Managers\AudioManager.cpp" />
     <ClCompile Include="application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\System\Managers\CameraManager.cpp" />
-    <ClCompile Include="application\Game\Camera\Camera.cpp" />
+    <ClCompile Include="Engine\Camera\NormalCaemra.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
     <ClCompile Include="Engine\System\Service\InputService.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
@@ -144,7 +144,8 @@
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
-    <ClCompile Include="application\Game\Camera\FollowCamera.cpp" />
+    <ClCompile Include="Engine\Camera\FollowCamera.cpp" />
+    <ClCompile Include="application\Game\Camera\GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -157,7 +158,7 @@
     <ClInclude Include="Engine\System\Managers\AudioManager.h" />
     <ClInclude Include="application\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\System\Managers\CameraManager.h" />
-    <ClInclude Include="application\Game\Camera\Camera.h" />
+    <ClInclude Include="Engine\Camera\NormalCaemra.h" />
     <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\System\Service\InputService.h" />
@@ -278,7 +279,8 @@
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\RadiusBlurEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\VignetteEffect.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
-    <ClInclude Include="application\Game\Camera\FollowCamera.h" />
+    <ClInclude Include="Engine\Camera\FollowCamera.h" />
+    <ClInclude Include="application\Game\Camera\GameCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

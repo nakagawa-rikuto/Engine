@@ -51,17 +51,17 @@ void DebugScene::Initialize() {
 
 	/// ===カメラの初期化=== ///
 #pragma region Cameraの初期化
-	// カメラ1
-	camera_ = std::make_shared<Camera>();
-	camera_->Initialize();
-	// カメラ2
-	camera2_ = std::make_shared<Camera>();
-	camera2_->Initialize();
+	// カメラ1(Normal)
+	camera_ = std::make_shared<GameCamera>();
+	camera_->Init(CameraType::Normal);
+	camera_->SetTranslate({ 0.0f, 0.0f, -50.0f });
+	// カメラ2(Follow)追従
+	camera2_ = std::make_shared<GameCamera>();
+	camera2_->Init(CameraType::Follow);
 	// カメラマネージャにカメラを追加
 	CameraService::AddCamera("Debug", camera_);
 	CameraService::AddCamera("Debug2", camera2_);
-
-	cameraInfo_.Translate = { 0.0f, 0.0f, -50.0f };
+	CameraService::SetActiveCamera("Debug");
 #pragma endregion
 
 	/// ===ParticleManager=== ///
@@ -447,29 +447,29 @@ void DebugScene::Update() {
 
 	/// ===キーボード関連の処理=== ///
 #pragma region キーボード関連の処理
-	if (InputService::PushKey(DIK_D)) {
-		cameraInfo_.Translate.x += 0.01f;
-	} else if (InputService::PushKey(DIK_A)) {
-		cameraInfo_.Translate.x -= 0.01f;
-	}
-	if (InputService::PushKey(DIK_W)) {
-		cameraInfo_.Translate.y += 0.01f;
-	} else if (InputService::PushKey(DIK_S)) {
-		cameraInfo_.Translate.y -= 0.01f;
-	}
-	if (InputService::PushKey(DIK_UP)) {
-		cameraInfo_.Translate.z += 0.01f;
-	} else if (InputService::PushKey(DIK_DOWN)) {
-		cameraInfo_.Translate.z -= 0.01f;
-	}
-	if (InputService::PushKey(DIK_LEFT)) {
-		// Y軸回転のクォータニオンを加算
-		Quaternion delta = Math::RotateY(-0.01f);
-		cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
-	} else if (InputService::PushKey(DIK_RIGHT)) {
-		Quaternion delta = Math::RotateY(+0.01f);
-		cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
-	}
+	//if (InputService::PushKey(DIK_D)) {
+	//	cameraInfo_.Translate.x += 0.01f;
+	//} else if (InputService::PushKey(DIK_A)) {
+	//	cameraInfo_.Translate.x -= 0.01f;
+	//}
+	//if (InputService::PushKey(DIK_W)) {
+	//	cameraInfo_.Translate.y += 0.01f;
+	//} else if (InputService::PushKey(DIK_S)) {
+	//	cameraInfo_.Translate.y -= 0.01f;
+	//}
+	//if (InputService::PushKey(DIK_UP)) {
+	//	cameraInfo_.Translate.z += 0.01f;
+	//} else if (InputService::PushKey(DIK_DOWN)) {
+	//	cameraInfo_.Translate.z -= 0.01f;
+	//}
+	//if (InputService::PushKey(DIK_LEFT)) {
+	//	// Y軸回転のクォータニオンを加算
+	//	Quaternion delta = Math::RotateY(-0.01f);
+	//	cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
+	//} else if (InputService::PushKey(DIK_RIGHT)) {
+	//	Quaternion delta = Math::RotateY(+0.01f);
+	//	cameraInfo_.Rotate = delta * cameraInfo_.Rotate;
+	//}
 #pragma endregion
 
 	/// ===マウス関連の処理=== ///
@@ -502,8 +502,8 @@ void DebugScene::Update() {
 	modelInfo_.Translate.y += leftStick.y * 0.01f;
 
 	// カメラの移動処理
-	cameraInfo_.Translate.x += rightStick.x * 0.01f;
-	cameraInfo_.Translate.y += rightStick.y * 0.01f;
+	/*cameraInfo_.Translate.x += rightStick.x * 0.01f;
+	cameraInfo_.Translate.y += rightStick.y * 0.01f;*/
 
 	if (InputService::FlickLeftStick(0, 0.5f)) {
 		if (cameraInfo_.Set) {
@@ -572,8 +572,8 @@ void DebugScene::Update() {
 
 	/// ===カメラの更新=== ///
 #pragma region カメラの更新
-	camera_->SetRotate(cameraInfo_.Rotate);
-	camera_->SetTranslate(cameraInfo_.Translate);
+	/*camera_->SetRotate(cameraInfo_.Rotate);
+	camera_->SetTranslate(cameraInfo_.Translate);*/
 #pragma endregion
 
 	/// ===Lineの更新=== ///

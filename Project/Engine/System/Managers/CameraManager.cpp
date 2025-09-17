@@ -24,23 +24,11 @@ void CameraManager::UpdateAllCameras() {
 ///-------------------------------------------/// 
 /// カメラを追加
 ///-------------------------------------------///
-void CameraManager::AddCamera(const std::string& name, std::shared_ptr<Camera> camera) {
+void CameraManager::AddCamera(const std::string& name, std::shared_ptr<GameCamera> camera) {
 	cameras_[name] = camera;
 
 	if (!activeCamera_) {
 		activeCamera_ = camera; // 最初に追加されたカメラをデフォルトでアクティブにする
-	}
-}
-
-///-------------------------------------------/// 
-/// 追従カメラを追加
-///-------------------------------------------///
-void CameraManager::AddFollowCamera(const std::string& name, std::shared_ptr<FollowCamera> followCamera) {
-	// FollowCameraはCameraを継承しているので、基底クラスのポインタとして格納
-	cameras_[name] = followCamera;
-
-	if (!activeCamera_) {
-		activeCamera_ = followCamera; // 最初に追加されたカメラをデフォルトでアクティブにする
 	}
 }
 
@@ -68,13 +56,8 @@ bool CameraManager::HasCamera(const std::string& name) const {
 ///-------------------------------------------/// 
 /// Getter・Setter
 ///-------------------------------------------///
-// アクティブカメラのGetter
-std::shared_ptr<Camera> CameraManager::GetActiveCamera() const {
-	return activeCamera_;
-}
-
 // 指定されたカメラのGetter
-std::shared_ptr<Camera> CameraManager::GetCamera(const std::string& name) const {
+std::shared_ptr<GameCamera> CameraManager::GetCamera(const std::string& name) const {
 	auto it = cameras_.find(name);
 	if (it != cameras_.end()) {
 		return it->second;
@@ -82,15 +65,11 @@ std::shared_ptr<Camera> CameraManager::GetCamera(const std::string& name) const 
 	return nullptr;
 }
 
-// 指定された追従カメラのGetter
-std::shared_ptr<FollowCamera> CameraManager::GetFollowCamera(const std::string& name) const {
-	auto it = cameras_.find(name);
-	if (it != cameras_.end()) {
-		// dynamic_cast を使用して FollowCamera にキャスト
-		return std::dynamic_pointer_cast<FollowCamera>(it->second);
-	}
-	return nullptr;
+// アクティブカメラのGetter
+std::shared_ptr<GameCamera> CameraManager::GetActiveCamera() const {
+	return activeCamera_;
 }
+
 
 // アクティブカメラのSetter
 void CameraManager::SetActiveCamera(const std::string& name) {

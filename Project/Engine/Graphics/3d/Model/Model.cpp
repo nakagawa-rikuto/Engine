@@ -5,9 +5,8 @@
 // Engine
 #include "Engine/System/Service/GraphicsResourceGetter.h"
 #include "Engine/System/Service/Render.h"
-#include "Engine/System/Service/CameraService.h"
 // camera
-#include "application/Game/Camera/Camera.h"
+#include "application/Game/Camera/GameCamera.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"
@@ -66,10 +65,6 @@ void Model::Initialize(const std::string& filename, LightType type) {
 /// 更新
 ///-------------------------------------------///
 void Model::Update() {
-
-	/// ===カメラの設定=== ///
-	camera_ = CameraService::GetActiveCamera().get();
-
 	/// ===ModelCommonの更新=== ///
 	ModelCommon::Update();
 }
