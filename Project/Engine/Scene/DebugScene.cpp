@@ -168,7 +168,7 @@ void DebugScene::Initialize() {
 #pragma endregion
 
 	// ===LevelDataからモデルの生成と配置=== ///
-	GenerateModelsFromLevelData("TL_12.json");
+	//GenerateModelsFromLevelData("TL_12.json");
 }
 
 ///-------------------------------------------/// 

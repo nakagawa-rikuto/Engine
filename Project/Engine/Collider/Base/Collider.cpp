@@ -13,16 +13,26 @@ ColliderName Collider::GetColliderName() { return name_; }
 /// Setter
 ///-------------------------------------------///
 // Object3D
-void Collider::SetTranslate(const Vector3& translate) { object3d_->SetTranslate(translate); }
-void Collider::SetRotate(const Quaternion& rotate) { object3d_->SetRotate(rotate); }
-void Collider::SetScale(const Vector3& scale) { object3d_->SetScale(scale); }
-void Collider::SetColor(const Vector4& color) { object3d_->SetColor(color); }
+void Collider::SetTranslate(const Vector3& translate) { transform_.translate = translate; }
+void Collider::SetRotate(const Quaternion& rotate) { transform_.rotate = rotate; }
+void Collider::SetScale(const Vector3& scale) { transform_.scale = scale; }
+void Collider::SetColor(const Vector4& color) { color_ = color; }
 // Light
 void Collider::SetLight(LightType type) { object3d_->SetLight(type); }
 void Collider::SetLightData(LightInfo light) { object3d_->SetLightData(light); }
-
 // IsCollision
 void Collider::SetIsCollisison(bool flag) { isCollision_ = flag; }
+
+///-------------------------------------------/// 
+/// Getter
+///-------------------------------------------///
+// Transform
+QuaternionTransform Collider::GetTransform() const { return transform_; }
+// Color
+Vector4 Collider::GetColor() const { return color_; }
+// IsCollision
+bool Collider::GetIsCollision() const { return isCollision_; }
+
 
 ///-------------------------------------------/// 
 /// 初期化
@@ -32,7 +42,13 @@ void Collider::Initialize() {
 	line_ = std::make_unique<Line>();
 #endif // _DEBUG
 
+	/// ===Transformの初期設定=== ///
+	transform_.translate = { 0.0f, 0.0f, 0.0f };
+	transform_.rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
+	transform_.scale = { 1.0f, 1.0f, 1.0f };
+	color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 }
+
 
 ///-------------------------------------------/// 
 /// 更新処理
@@ -51,6 +67,7 @@ void Collider::Update() {
 	// Object3Dの更新
 	object3d_->Update();
 }
+
 
 ///-------------------------------------------/// 
 /// 描画処理

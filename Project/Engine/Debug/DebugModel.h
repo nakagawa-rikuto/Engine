@@ -1,11 +1,11 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Collider/OBBCollider.h"
+#include "application/Game/Entity/GameCharacter/GameCharacter.h"
 
 ///=====================================================/// 
 /// DebugModel
 ///=====================================================///
-class DebugModel : public OBBCollider {
+class DebugModel : public GameCharacter<OBBCollider> {
 public:
 	DebugModel() = default;
 	~DebugModel();
@@ -23,17 +23,5 @@ public:
 public:
 	/// ===衝突応答=== ///
 	void OnCollision(Collider* collider) override;
-
-private:
-
-	/// ===BaseData=== ///
-	struct BaseData {
-		Vector3 translate = { 0.0f, 0.0f, 0.0f };
-		Quaternion rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
-		Vector3 scale = { 1.0f, 1.0f, 1.0f };
-		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	};
-	BaseData base_;
-
 };
 

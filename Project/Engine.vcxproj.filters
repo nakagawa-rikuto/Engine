@@ -146,6 +146,7 @@
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.cpp" />
     <ClCompile Include="Engine\Camera\FollowCamera.cpp" />
     <ClCompile Include="application\Game\Camera\GameCamera.cpp" />
+    <ClCompile Include="application\Game\Entity\GameCharacter\GameCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Service\AudioService.h" />
@@ -281,6 +282,7 @@
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\DissolveEffect.h" />
     <ClInclude Include="Engine\Camera\FollowCamera.h" />
     <ClInclude Include="application\Game\Camera\GameCamera.h" />
+    <ClInclude Include="application\Game\Entity\GameCharacter\GameCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Shaders\Particle\Particle.hlsli" />

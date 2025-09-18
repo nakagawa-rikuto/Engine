@@ -19,6 +19,12 @@ void AABBCollider::Initialize() {
 ///-------------------------------------------///
 void AABBCollider::Update() {
 
+	/// ===Object3Dの更新=== ///
+	object3d_->SetTranslate(transform_.translate);
+	object3d_->SetRotate(transform_.rotate);
+	object3d_->SetScale(transform_.scale);
+	object3d_->SetColor(color_);
+
 	// Colliderの更新処理
 	Collider::Update();
 }

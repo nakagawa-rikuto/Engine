@@ -23,6 +23,13 @@ void OBBCollider::Initialize() {
 ///-------------------------------------------///
 void OBBCollider::Update() {
 
+	/// ===Object3Dの更新=== ///
+	object3d_->SetTranslate(transform_.translate);
+	object3d_->SetRotate(transform_.rotate);
+	object3d_->SetScale(transform_.scale);
+	object3d_->SetColor(color_);
+
+	/// ===OBB=== ///
 	//センターの位置を更新
 	obb_.center = object3d_->GetTranslate();
 	// 回転によってOBBの軸を更新
