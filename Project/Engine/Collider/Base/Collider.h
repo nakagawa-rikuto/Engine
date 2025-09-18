@@ -59,8 +59,6 @@ public: /// ===Getter=== ///
     ColliderName GetColliderName();
 
 public: /// ===Setter=== ///
-
-    /// ===Object3D=== ///
     // Transform
     void SetTranslate(const Vector3& translate);
 	void SetRotate(const Quaternion& rotate);
@@ -70,23 +68,37 @@ public: /// ===Setter=== ///
 	// Light
 	void SetLight(LightType type);
 	void SetLightData(LightInfo light);
-
-    /// ===isCollision=== ///
+    // IsCollision
     void SetIsCollisison(bool flag);
 
+public: /// ===Getter=== ///
+    // Transform
+    QuaternionTransform GetTransform() const;
+    // Color
+    Vector4 GetColor() const;
+    // IsCollision
+    bool GetIsCollision() const;
+
 protected:
+    /// ===Collider=== ///
     // Type
     ColliderType type_;
     // ColliderName
     ColliderName name_;
 
+    /// ===Object=== ///
 	// Object3D
 	std::unique_ptr<Object3d> object3d_;
+    // Transform
+    QuaternionTransform transform_;
+    // color
+    Vector4 color_;
 
+    /// ===Collision=== ///
     // 衝突フラグ
     bool isCollision_ = false;
 
-    /// ===Debug用=== ///
+    /// ===Debug=== ///
 #ifdef _DEBUG
     // Line
     std::unique_ptr<Line> line_;

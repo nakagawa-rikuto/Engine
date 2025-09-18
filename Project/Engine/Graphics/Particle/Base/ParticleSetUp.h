@@ -9,7 +9,6 @@
 #include <memory>
 
 /// ===前方宣言=== ///
-class Camera;
 class SRVManager;
 
 /// ===選択肢=== ///

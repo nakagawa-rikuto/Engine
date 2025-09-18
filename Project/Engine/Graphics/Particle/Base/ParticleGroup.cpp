@@ -1,8 +1,9 @@
 #include "ParticleGroup.h"
 // Camera
-#include "application/Game/Camera/Camera.h"
+#include "application/Game/Camera/GameCamera.h"
 // Service
 #include "Engine/System/Service/GraphicsResourceGetter.h"
+#include "Engine/System/Service/CameraService.h"
 // Math
 #include "Math/sMath.h"
 #include "Math/MatrixMath.h"
@@ -20,7 +21,7 @@ ParticleGroup::~ParticleGroup() {
 ///-------------------------------------------/// 
 /// 初期化
 ///-------------------------------------------///
-void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, Camera* camera, shapeType type) {
+void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& translate, const uint32_t maxInstance, shapeType type) {
     /// ===乱数生成器の初期化=== ///
     std::random_device seedGenerator;
     randomEngine_.seed(seedGenerator());
@@ -40,15 +41,14 @@ void ParticleGroup::InstancingInit(const std::string& modelName, const Vector3& 
     /// ===パーティクルグループの初期化=== ///
     group_.particle = std::make_unique<ParticleSetUp>();
     group_.particle->Initialze(modelName, group_.maxInstance, type);
-
-    /// ===Cameraの設定=== ///
-    group_.camera = camera;
 }
 
 ///-------------------------------------------/// 
 /// 更新
 ///-------------------------------------------///
 void ParticleGroup::InstancingUpdate(std::list<ParticleData>::iterator it) {
+    /// ===Cameraの設定=== ///
+    group_.camera = CameraService::GetActiveCamera().get();
 
     Matrix4x4 worldMatrix = Math::MakeAffineEulerMatrix(it->transform.scale, it->transform.rotate, it->transform.translate);
     Matrix4x4 wvpMatrix;

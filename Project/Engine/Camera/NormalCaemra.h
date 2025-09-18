@@ -5,10 +5,10 @@
 ///=====================================================/// 
 /// カメラ基底クラス
 ///=====================================================///
-class Camera {
+class NormalCaemra {
 public:
-	Camera() = default;
-	virtual ~Camera() = default;
+	NormalCaemra() = default;
+	virtual ~NormalCaemra() = default;
 
 	// 初期化
 	virtual void Initialize();

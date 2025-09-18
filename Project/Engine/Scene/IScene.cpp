@@ -31,8 +31,8 @@ void IScene::SetSceneManager(SceneManager* sceneManager) { sceneManager_ = scene
 void IScene::Initialize() {
 
 	/// ===デフォルトカメラの生成=== ///
-	defaultCamera_ = std::make_shared<Camera>();
-	defaultCamera_->Initialize();
+	defaultCamera_ = std::make_shared<GameCamera>();
+	defaultCamera_->Init(CameraType::Normal);
 	defaultCamera_->SetTranslate({ 0.0f, 0.0f, -10.0f });
 	defaultCamera_->SetRotate({ 0.0f, 0.0f, 0.0f });
 

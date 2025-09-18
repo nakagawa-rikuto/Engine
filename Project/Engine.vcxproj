@@ -127,7 +127,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Graphics\3d\Line\LineObject3D.cpp" />
     <ClCompile Include="application\Drawing\3d\Line.cpp" />
     <ClCompile Include="Engine\Graphics\OffScreen\Effect\GrayScaleEffect.cpp" />
-    <ClCompile Include="application\Game\Camera\FollowCamera.cpp" />
+    <ClCompile Include="Engine\Camera\FollowCamera.cpp" />
+    <ClCompile Include="application\Game\Camera\GameCamera.cpp" />
+    <ClCompile Include="application\Game\Entity\GameCharacter\GameCharacter.cpp" />
     <ClCompile Include="Math\EasingMath.cpp" />
     <ClCompile Include="Engine\System\Managers\AnimationManager.cpp" />
     <ClCompile Include="Engine\System\Service\AudioService.cpp" />
@@ -141,7 +143,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Managers\AudioManager.cpp" />
     <ClCompile Include="application\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\System\Managers\CameraManager.cpp" />
-    <ClCompile Include="application\Game\Camera\Camera.cpp" />
+    <ClCompile Include="Engine\Camera\NormalCaemra.cpp" />
     <ClCompile Include="Engine\Core\DXCommon.cpp" />
     <ClCompile Include="Engine\System\Service\InputService.cpp" />
     <ClCompile Include="Engine\Core\Logger.cpp" />
@@ -253,7 +255,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Graphics\3d\Line\LineObject3D.h" />
     <ClInclude Include="application\Drawing\3d\Line.h" />
     <ClInclude Include="Engine\Graphics\OffScreen\Effect\GrayScaleEffect.h" />
-    <ClInclude Include="application\Game\Camera\FollowCamera.h" />
+    <ClInclude Include="Engine\Camera\FollowCamera.h" />
+    <ClInclude Include="application\Game\Camera\GameCamera.h" />
+    <ClInclude Include="application\Game\Entity\GameCharacter\GameCharacter.h" />
     <ClInclude Include="Math\EasingMath.h" />
     <ClInclude Include="Engine\System\Managers\AnimationManager.h" />
     <ClInclude Include="Engine\DataInfo\AnimationData.h" />
@@ -270,7 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Managers\AudioManager.h" />
     <ClInclude Include="application\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\System\Managers\CameraManager.h" />
-    <ClInclude Include="application\Game\Camera\Camera.h" />
+    <ClInclude Include="Engine\Camera\NormalCaemra.h" />
     <ClInclude Include="Engine\DataInfo\CData.h" />
     <ClInclude Include="Engine\Core\DXCommon.h" />
     <ClInclude Include="Engine\System\Service\InputService.h" />

@@ -1,6 +1,6 @@
 #pragma once
 /// ===Include=== ///
-#include "Camera.h"
+#include "NormalCaemra.h"
 
 /// === カメラの種類を表す列挙型 === ///
 enum class FollowCameraType {
@@ -14,7 +14,7 @@ enum class FollowCameraType {
 ///=====================================================/// 
 /// 追従カメラクラス
 ///=====================================================///
-class FollowCamera : public Camera {
+class FollowCamera : public NormalCaemra {
 public:
 	FollowCamera() = default;
 	~FollowCamera() override;

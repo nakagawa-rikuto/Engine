@@ -18,11 +18,17 @@ void SphereCollider::Initialize() {
 /// 更新
 ///-------------------------------------------///
 void SphereCollider::Update() {
-	
-	// Sphereのセンター座標を更新
+
+	/// ===Object3Dの更新=== ///
+	object3d_->SetTranslate(transform_.translate);
+	object3d_->SetRotate(transform_.rotate);
+	object3d_->SetScale(transform_.scale);
+	object3d_->SetColor(color_);
+
+	/// ===Sphere=== ///
 	sphere_.center = object3d_->GetTranslate();
 
-	// Colliderの更新処理
+	/// ===Colliderの更新=== ///
 	Collider::Update();
 }
 

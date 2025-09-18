@@ -1,11 +1,11 @@
 #pragma once
 /// ===Include=== ///
-#include "Engine/Collider/SphereCollider.h"
+#include "application/Game/Entity/GameCharacter/GameCharacter.h"
 
 ///=====================================================/// 
 /// DebugAnimationModel
 ///=====================================================///
-class DebugAnimationModel : public SphereCollider {
+class DebugAnimationModel : public GameCharacter<SphereCollider> {
 public:
 	DebugAnimationModel() = default;
 	~DebugAnimationModel();
@@ -24,22 +24,7 @@ public:
 	/// ===衝突応答=== ///
 	void OnCollision(Collider* collider) override;
 
-public:
-
-	Vector3& GetTranslate();
-	Quaternion& GetRotate();
-
 private:
-
-	/// ===BaseData=== ///
-	struct BaseData {
-		Vector3 translate = { 0.0f, 0.0f, 0.0f };
-		Quaternion rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
-		Vector3 scale = { 1.0f, 1.0f, 1.0f };
-		Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Vector3 velocity = { 0.0f, 0.0f, 0.0f };
-	};
-	BaseData base_;
 
 	struct MoveData {
 		float spped = 0.05f;

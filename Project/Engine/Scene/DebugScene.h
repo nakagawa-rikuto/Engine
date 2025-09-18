@@ -76,8 +76,8 @@ private:/// ===メンバ変数=== ///
 	// スプライト
 	std::unique_ptr<Sprite> sprite_;
 	//Camera
-	std::shared_ptr<Camera> camera_;
-	std::shared_ptr<Camera> camera2_;
+	std::shared_ptr<GameCamera> camera_;
+	std::shared_ptr<GameCamera> camera2_;
 	// モデル
 	std::unique_ptr<Object3d> model2_;
 	// モデルライト
@@ -125,8 +125,6 @@ private:/// ===メンバ変数=== ///
 
 	// カメラ
 	struct CameraInfo {
-		Vector3 Translate = { 0.0f, 0.0f, -13.0f };
-		Quaternion Rotate = { 0.0f, 0.0f, 0.0f, 1.0f };
 		bool Set = false;
 	};
 	CameraInfo cameraInfo_;

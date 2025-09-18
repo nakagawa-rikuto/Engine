@@ -4,7 +4,7 @@
 #include "Engine/System/Service/Render.h"
 #include "Engine/System/Service/CameraService.h"
 // Camera
-#include "application/Game/Camera/camera.h"
+#include "application/Game/Camera/GameCamera.h"
 // DXCommon
 #include "Engine/Core/DXCommon.h"
 // Math
@@ -35,7 +35,6 @@ void LineObject3D::Initialize(ID3D12Device* device) {
 
 	/// ===WorldTransform=== ///
 	worldTransform_ = { { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-	cameraTransform_ = { {1.0f, 1.0f,1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 
 	/// ===vertex=== ///
 	// Buffer
