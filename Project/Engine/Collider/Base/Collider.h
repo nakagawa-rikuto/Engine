@@ -52,26 +52,28 @@ public: /// ===衝突=== ///
     // 衝突時の応答処理
     virtual void OnCollision(Collider* collider) = 0;
 
+public: /// ===親子関係=== ///
+    void SetParent(ModelCommon* parent);
+    void ClearParent();
+
+public: /// ===Setter=== ///
+    // Transform
+    void SetTranslate(const Vector3& translate);
+    void SetRotate(const Quaternion& rotate);
+    void SetScale(const Vector3& scale);
+    // color
+    void SetColor(const Vector4& color);
+    // Light
+    void SetLight(LightType type);
+    void SetLightData(LightInfo light);
+    // IsCollision
+    void SetIsCollisison(bool flag);
+
 public: /// ===Getter=== ///
     // Type
     ColliderType GetColliderType();
     // CollsisionName
     ColliderName GetColliderName();
-
-public: /// ===Setter=== ///
-    // Transform
-    void SetTranslate(const Vector3& translate);
-	void SetRotate(const Quaternion& rotate);
-	void SetScale(const Vector3& scale);
-    // color
-	void SetColor(const Vector4& color);
-	// Light
-	void SetLight(LightType type);
-	void SetLightData(LightInfo light);
-    // IsCollision
-    void SetIsCollisison(bool flag);
-
-public: /// ===Getter=== ///
     // Transform
     QuaternionTransform GetTransform() const;
     // Color

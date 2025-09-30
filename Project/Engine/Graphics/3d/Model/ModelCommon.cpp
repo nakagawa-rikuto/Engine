@@ -10,12 +10,7 @@
 ///-------------------------------------------/// 
 /// コンストラクタ・デストラクタ
 ///-------------------------------------------///
-ModelCommon::ModelCommon() {
-	parent_ = nullptr;
-	vertexData_ = nullptr;
-	indexData_ = nullptr;
-	camera_ = nullptr;
-}
+ModelCommon::ModelCommon() = default;
 ModelCommon::~ModelCommon() {
 
 	// 親子関係の解除
