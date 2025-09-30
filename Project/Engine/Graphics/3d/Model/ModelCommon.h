@@ -9,6 +9,8 @@
 // c++
 #include <memory>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 /// ===前方宣言=== ///
 class GameCamera;
@@ -19,7 +21,7 @@ class GameCamera;
 class ModelCommon {
 public:
 	ModelCommon();
-	~ModelCommon();
+	virtual ~ModelCommon();
 
 	// 初期化
 	virtual void Initialize(const std::string& modelName, LightType type) = 0;
@@ -32,6 +34,12 @@ public:
 	void Create(ID3D12Device* device, LightType type);
 	// 描画処理
 	void Bind(ID3D12GraphicsCommandList* commandList);
+
+public: /// ===親子関係=== ///
+	// 親の設定
+	void SetParent(ModelCommon* parent);
+	// 親の解除
+	void ClearParent();
 
 public:/// ===Setter=== ///
 	// Light
@@ -52,6 +60,9 @@ protected: /// ===継承先で使用する変数=== ///
 	EulerTransform uvTransform_;
 	QuaternionTransform worldTransform_;
 	Vector4 color_;
+
+	/// ===親子関係=== ///
+	ModelCommon* parent_ = nullptr;
 
 	/// ===Light=== ///
 	LightInfo light_;
